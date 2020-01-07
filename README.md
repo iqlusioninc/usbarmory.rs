@@ -1,5 +1,6 @@
 # usbarmory.rs <a href="https://www.iqlusion.io"><img src="https://storage.googleapis.com/iqlusion-production-web/img/logo/iqlusion-rings-sm.png" alt="iqlusion" width="24" height="24"></a>
 
+[![Build Status][build-image]][build-link]
 ![Apache 2.0 + MIT Licensed][license-image]
 ![MSRV][msrv-image]
 [![Gitter Chat][gitter-image]][gitter-link]
@@ -42,6 +43,8 @@ without any additional terms or conditions.
 
 [//]: # (badges)
 
+[build-image]: https://github.com/iqlusioninc/usbarmory.rs/workflows/Rust/badge.svg?branch=develop&event=push
+[build-link]: https://github.com/iqlusioninc/usbarmory.rs/actions
 [license-image]: https://img.shields.io/badge/license-Apache2.0/MIT-blue.svg
 [license-link]: https://github.com/iqlusioninc/armistice/blob/develop/LICENSE
 [msrv-image]: https://img.shields.io/badge/rustc-1.40+-blue.svg
