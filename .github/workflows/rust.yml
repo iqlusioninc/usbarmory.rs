@@ -102,7 +102,7 @@ jobs:
 
       - name: Install QEMU
         run: |
-          sudo apt get update
+          sudo apt update
           sudo apt install qemu-system-arm
 
       - name: Install cargo-xbuild
