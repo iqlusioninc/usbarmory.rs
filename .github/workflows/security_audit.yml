@@ -51,7 +51,7 @@ jobs:
       - name: Install dev-dependencies
         if: steps.cache-cargo-bin.outputs.cache-hit != 'true'
         run: |
-          cargo install `cat dev-dependencies.txt`
+          which cargo-audit || cargo install `cat dev-dependencies.txt`
 
       - name: Run cargo audit
         uses: actions-rs/cargo@v1

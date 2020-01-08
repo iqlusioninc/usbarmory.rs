@@ -32,8 +32,10 @@ jobs:
       - name: Install dev-dependencies
         # NOTE we need this check because the cache action won't restore `.cargo/.{crates2.json,.crates.toml}`
         if: steps.cache-cargo-bin.outputs.cache-hit != 'true'
+        # FIXME `cache-hit` is not being set when the cache is found
+        # (is it because there's a permission error when un-tar-ing it?)
         run: |
-          cargo install `cat dev-dependencies.txt`
+          which cargo-audit || cargo install `cat dev-dependencies.txt`
 
       - name: Run cargo xcheck
         working-directory: ./firmware
@@ -179,7 +181,7 @@ jobs:
       - name: Install dev-dependencies
         if: steps.cache-cargo-bin.outputs.cache-hit != 'true'
         run: |
-          cargo install `cat dev-dependencies.txt`
+          which cargo-audit || cargo install `cat dev-dependencies.txt`
 
       - name: Install clippy
         run: rustup component add clippy
