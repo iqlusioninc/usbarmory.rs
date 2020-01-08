@@ -16,8 +16,7 @@ from [F-Secure].
 
 ## Status
 
-This project is an incomplete work-in-progress in an early developmental
-stage and will not be ready to use for some time.
+Check out the [`firmware/usbarmory`](firmware/usbarmory) directory.
 
 ## Contributing
 
