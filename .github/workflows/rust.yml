@@ -15,19 +15,19 @@ jobs:
       - name: Checkout sources
         uses: actions/checkout@v2
 
-      - name: Cache cargo installs
-        id: cache-cargo-bin
-        uses: actions/cache@v1
-        with:
-          path: ~/.cargo/bin
-          key: ${{ runner.os }}-cargo-bin-${{ hashFiles('dev-dependencies.txt') }}
-
       - name: Install nightly toolchain
         uses: actions-rs/toolchain@v1
         with:
           components: rust-src # needed by cargo-xbuild
           toolchain: nightly
           override: true
+
+      - name: Cache cargo installs
+        id: cache-cargo-bin
+        uses: actions/cache@v1
+        with:
+          path: ~/.cargo/bin
+          key: ${{ runner.os }}-cargo-bin-${{ hashFiles('dev-dependencies.txt') }}
 
       - name: Install dev-dependencies
         # NOTE we need this check because the cache action won't restore `.cargo/.{crates2.json,.crates.toml}`
@@ -53,6 +53,12 @@ jobs:
 #     - name: Checkout sources
 #       uses: actions/checkout@v2
 
+#     - name: Install toolchain
+#       uses: actions-rs/toolchain@v1
+#       with:
+#         toolchain: ${{ matrix.toolchain }}
+#         override: true
+
 #     - name: Cache cargo registry
 #       uses: actions/cache@v1
 #       with:
@@ -70,12 +76,6 @@ jobs:
 #       with:
 #         path: target
 #         key: ${{ runner.os }}-cargo-build-target-${{ hashFiles('common/Cargo.lock') }}
-
-#     - name: Install toolchain
-#       uses: actions-rs/toolchain@v1
-#       with:
-#         toolchain: ${{ matrix.toolchain }}
-#         override: true
 
 #     - name: Run cargo test
 #       working-directory: ./common
@@ -102,19 +102,19 @@ jobs:
 #     - name: Checkout sources
 #       uses: actions/checkout@v2
 
-#     - name: Cache cargo installs
-#       id: cache-cargo-bin
-#       uses: actions/cache@v1
-#       with:
-#         path: ~/.cargo/bin
-#         key: ${{ runner.os }}-cargo-bin-${{ hashFiles('dev-dependencies.txt') }}
-
 #     - name: Install nightly toolchain
 #       uses: actions-rs/toolchain@v1
 #       with:
 #         components: rust-src # needed by cargo-xbuild
 #         toolchain: nightly
 #         override: true
+
+#     - name: Cache cargo installs
+#       id: cache-cargo-bin
+#       uses: actions/cache@v1
+#       with:
+#         path: ~/.cargo/bin
+#         key: ${{ runner.os }}-cargo-bin-${{ hashFiles('dev-dependencies.txt') }}
 
 #     - name: Install QEMU
 #       run: |
@@ -162,19 +162,19 @@ jobs:
       - name: Checkout sources
         uses: actions/checkout@v2
 
-      - name: Cache cargo installs
-        id: cache-cargo-bin
-        uses: actions/cache@v1
-        with:
-          path: ~/.cargo/bin
-          key: ${{ runner.os }}-cargo-bin-${{ hashFiles('dev-dependencies.txt') }}
-
       - name: Install stable toolchain
         uses: actions-rs/toolchain@v1
         with:
           components: rust-src # needed by cargo-xbuild
           toolchain: nightly
           override: true
+
+      - name: Cache cargo installs
+        id: cache-cargo-bin
+        uses: actions/cache@v1
+        with:
+          path: ~/.cargo/bin
+          key: ${{ runner.os }}-cargo-bin-${{ hashFiles('dev-dependencies.txt') }}
 
       - name: Install dev-dependencies
         if: steps.cache-cargo-bin.outputs.cache-hit != 'true'

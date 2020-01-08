@@ -17,6 +17,12 @@ jobs:
       - name: Checkout sources
         uses: actions/checkout@v1
 
+      - name: Install stable toolchain
+        uses: actions-rs/toolchain@v1
+        with:
+          toolchain: stable
+          override: true
+
       - name: Cache cargo installs
         id: cache-cargo-bin
         uses: actions/cache@v1
@@ -41,12 +47,6 @@ jobs:
         with:
           path: target
           key: ${{ runner.os }}-cargo-build-security-audit-${{ hashFiles('firmware/Cargo.lock') }}
-
-      - name: Install stable toolchain
-        uses: actions-rs/toolchain@v1
-        with:
-          toolchain: stable
-          override: true
 
       - name: Install dev-dependencies
         if: steps.cache-cargo-bin.outputs.cache-hit != 'true'
