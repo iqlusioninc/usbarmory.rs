@@ -18,6 +18,7 @@ jobs:
         uses: actions/checkout@v1
 
       - name: Cache cargo installs
+        id: cache-cargo-bin
         uses: actions/cache@v1
         with:
           path: ~/.cargo/bin
@@ -48,6 +49,7 @@ jobs:
           override: true
 
       - name: Install dev-dependencies
+        if: steps.cache-cargo-bin.outputs.cache-hit != 'true'
         run: |
           cargo install `cat dev-dependencies.txt`
 
