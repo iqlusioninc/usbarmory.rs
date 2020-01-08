@@ -100,6 +100,7 @@ jobs:
 
       - name: Install QEMU
         run: |
+          sudo apt get update
           sudo apt install qemu-system-arm
 
       - name: Install cargo-xbuild
@@ -159,7 +160,6 @@ jobs:
           args: cargo-xbuild
 
       - name: Run cargo clippy
-        uses: actions-rs/cargo@v1
-        with:
-          command: xclippy
-          args: -- -D warnings
+        working-directory: ./firmware
+        run: |
+          cargo xclippy -- -D warnings
