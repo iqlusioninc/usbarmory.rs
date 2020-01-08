@@ -17,6 +17,12 @@ jobs:
       - name: Checkout sources
         uses: actions/checkout@v1
 
+      - name: Cache cargo installs
+        uses: actions/cache@v1
+        with:
+          path: ~/.cargo/bin
+          key: ${{ runner.os }}-cargo-bin-${{ hashFiles('dev-dependencies.txt') }}
+
       - name: Cache cargo registry
         uses: actions/cache@v1
         with:
@@ -41,8 +47,9 @@ jobs:
           toolchain: stable
           override: true
 
-      - name: Install cargo audit
-        run: cargo install cargo-audit
+      - name: Install dev-dependencies
+        run: |
+          cargo install `cat dev-dependencies.txt`
 
       - name: Run cargo audit
         uses: actions-rs/cargo@v1

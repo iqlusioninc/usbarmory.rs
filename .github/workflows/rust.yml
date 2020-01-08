@@ -15,6 +15,12 @@ jobs:
       - name: Checkout sources
         uses: actions/checkout@v2
 
+      - name: Cache cargo installs
+        uses: actions/cache@v1
+        with:
+          path: ~/.cargo/bin
+          key: ${{ runner.os }}-cargo-bin-${{ hashFiles('dev-dependencies.txt') }}
+
       - name: Install nightly toolchain
         uses: actions-rs/toolchain@v1
         with:
@@ -22,15 +28,9 @@ jobs:
           toolchain: nightly
           override: true
 
-      - name: Cache Cargo installs
-        uses: actions/cache@v1
-        with:
-          path: ~/.cargo/bin
-          key: ${{ runner.os }}-cargo-bin-${{ hashFiles('dev-dependencies.ssv') }}
-
       - name: Install dev-dependencies
         run: |
-          cargo install `cat dev-dependencies.ssv`
+          cargo install `cat dev-dependencies.txt`
 
       - name: Run cargo xcheck
         working-directory: ./firmware
@@ -97,6 +97,12 @@ jobs:
       - name: Checkout sources
         uses: actions/checkout@v2
 
+      - name: Cache cargo installs
+        uses: actions/cache@v1
+        with:
+          path: ~/.cargo/bin
+          key: ${{ runner.os }}-cargo-bin-${{ hashFiles('dev-dependencies.txt') }}
+
       - name: Install nightly toolchain
         uses: actions-rs/toolchain@v1
         with:
@@ -109,11 +115,9 @@ jobs:
           sudo apt update
           sudo apt install qemu-system-arm
 
-      - name: Install cargo-xbuild
-        uses: actions-rs/cargo@v1
-        with:
-          command: install
-          args: cargo-xbuild
+      - name: Install dev-dependencies
+        run: |
+          cargo install `cat dev-dependencies.txt`
 
       - name: Run examples
         working-directory: ./firmware/usbarmory
@@ -128,6 +132,12 @@ jobs:
     steps:
       - name: Checkout sources
         uses: actions/checkout@v2
+
+      - name: Cache cargo installs
+        uses: actions/cache@v1
+        with:
+          path: ~/.cargo/bin
+          key: ${{ runner.os }}-cargo-bin-${{ hashFiles('dev-dependencies.txt') }}
 
       - name: Install stable toolchain
         uses: actions-rs/toolchain@v1
@@ -150,6 +160,12 @@ jobs:
       - name: Checkout sources
         uses: actions/checkout@v2
 
+      - name: Cache cargo installs
+        uses: actions/cache@v1
+        with:
+          path: ~/.cargo/bin
+          key: ${{ runner.os }}-cargo-bin-${{ hashFiles('dev-dependencies.txt') }}
+
       - name: Install stable toolchain
         uses: actions-rs/toolchain@v1
         with:
@@ -157,14 +173,12 @@ jobs:
           toolchain: nightly
           override: true
 
+      - name: Install dev-dependencies
+        run: |
+          cargo install `cat dev-dependencies.txt`
+
       - name: Install clippy
         run: rustup component add clippy
-
-      - name: Install cargo-xbuild
-        uses: actions-rs/cargo@v1
-        with:
-          command: install
-          args: cargo-xbuild
 
       - name: Run cargo clippy
         working-directory: ./firmware
