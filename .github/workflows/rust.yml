@@ -93,44 +93,46 @@ jobs:
 #       run: |
 #         cargo test
 
-  target-test:
-    name: Run some firmware examples on the host using QEMU
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout sources
-        uses: actions/checkout@v2
+# XXX unfortunately, Ubuntu 18.04 ships with QEMU 2.11 which doesn't
+# support the mcimx6ul-evk (i.MX6UL) machine
+# target-test:
+#   name: Run some firmware examples on the host using QEMU
+#   runs-on: ubuntu-latest
+#   steps:
+#     - name: Checkout sources
+#       uses: actions/checkout@v2
 
-      - name: Cache cargo installs
-        id: cache-cargo-bin
-        uses: actions/cache@v1
-        with:
-          path: ~/.cargo/bin
-          key: ${{ runner.os }}-cargo-bin-${{ hashFiles('dev-dependencies.txt') }}
+#     - name: Cache cargo installs
+#       id: cache-cargo-bin
+#       uses: actions/cache@v1
+#       with:
+#         path: ~/.cargo/bin
+#         key: ${{ runner.os }}-cargo-bin-${{ hashFiles('dev-dependencies.txt') }}
 
-      - name: Install nightly toolchain
-        uses: actions-rs/toolchain@v1
-        with:
-          components: rust-src # needed by cargo-xbuild
-          toolchain: nightly
-          override: true
+#     - name: Install nightly toolchain
+#       uses: actions-rs/toolchain@v1
+#       with:
+#         components: rust-src # needed by cargo-xbuild
+#         toolchain: nightly
+#         override: true
 
-      - name: Install QEMU
-        run: |
-          sudo apt update
-          sudo apt install qemu-system-arm
+#     - name: Install QEMU
+#       run: |
+#         sudo apt update
+#         sudo apt install qemu-system-arm
 
-      - name: Install dev-dependencies
-        if: steps.cache-cargo-bin.outputs.cache-hit != 'true'
-        run: |
-          cargo install `cat dev-dependencies.txt`
+#     - name: Install dev-dependencies
+#       if: steps.cache-cargo-bin.outputs.cache-hit != 'true'
+#       run: |
+#         cargo install `cat dev-dependencies.txt`
 
-      - name: Set environment for cargo-xbuild
-        run: echo ::set-env name=RUST_TARGET_PATH::$(echo ${GITHUB_WORKSPACE}/firmware )
+#     - name: Set environment for cargo-xbuild
+#       run: echo ::set-env name=RUST_TARGET_PATH::$(echo ${GITHUB_WORKSPACE}/firmware )
 
-      - name: Run examples
-        working-directory: ./firmware/usbarmory
-        run: |
-          cargo xrun --example qemu-hello --release
+#     - name: Run examples
+#       working-directory: ./firmware/usbarmory
+#       run: |
+#         cargo xrun --example qemu-hello --release
 
   fmt:
     name: Rustfmt

@@ -30,7 +30,8 @@ xargo` (run this command *outside* the `firmware` directory)
 
 - `arm-none-eabi-gcc`, only required if modifying assembly (`.s`) files
 
-- `qemu-system-arm`, to run firmware on the host and for some unit testing
+- `qemu-system-arm` v4.x, to run firmware on the host and for some unit testing.
+  Install with `pacman -S qemu-arch-extra` on Arch Linux.
 
 ## Building examples
 
