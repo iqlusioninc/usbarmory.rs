@@ -17,35 +17,44 @@ jobs:
       - name: Checkout sources
         uses: actions/checkout@v1
 
-      - name: Cache cargo registry
-        uses: actions/cache@v1
-        with:
-          path: ~/.cargo/registry
-          key: ${{ runner.os }}-cargo-registry-${{ hashFiles('Cargo.lock') }}
-
-      - name: Cache cargo index
-        uses: actions/cache@v1
-        with:
-          path: ~/.cargo/git
-          key: ${{ runner.os }}-cargo-index-${{ hashFiles('Cargo.lock') }}
-
-      - name: Cache cargo build
-        uses: actions/cache@v1
-        with:
-          path: target
-          key: ${{ runner.os }}-cargo-build-security-audit-${{ hashFiles('Cargo.lock') }}
-
       - name: Install stable toolchain
         uses: actions-rs/toolchain@v1
         with:
           toolchain: stable
           override: true
 
-      - name: Install cargo audit
-        run: cargo install cargo-audit
+      - name: Cache cargo installs
+        id: cache-cargo-bin
+        uses: actions/cache@v1
+        with:
+          path: ~/.cargo/bin
+          key: ${{ runner.os }}-cargo-bin-${{ hashFiles('dev-dependencies.txt') }}
+
+      - name: Cache cargo registry
+        uses: actions/cache@v1
+        with:
+          path: ~/.cargo/registry
+          key: ${{ runner.os }}-cargo-registry-${{ hashFiles('firmware/Cargo.lock') }}
+
+      - name: Cache cargo index
+        uses: actions/cache@v1
+        with:
+          path: ~/.cargo/git
+          key: ${{ runner.os }}-cargo-index-${{ hashFiles('firmware/Cargo.lock') }}
+
+      - name: Cache cargo build
+        uses: actions/cache@v1
+        with:
+          path: target
+          key: ${{ runner.os }}-cargo-build-security-audit-${{ hashFiles('firmware/Cargo.lock') }}
+
+      - name: Install dev-dependencies
+        if: steps.cache-cargo-bin.outputs.cache-hit != 'true'
+        run: |
+          cargo install `cat dev-dependencies.txt`
 
       - name: Run cargo audit
         uses: actions-rs/cargo@v1
         with:
           command: audit
-          args: --deny-warnings --ignore RUSTSEC-2019-0031
+          args: --deny-warnings --ignore RUSTSEC-2019-0031 -f firmware/Cargo.lock

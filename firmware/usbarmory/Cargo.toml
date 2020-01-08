@@ -12,3 +12,8 @@ categories  = ["embedded", "hardware-support", "no-std"]
 keywords    = ["arm", "cortex-a"]
 
 [dependencies]
+usbarmory-rt = { path = "../usbarmory-rt" }
+
+[dev-dependencies]
+cortex-m-semihosting = { git = "https://github.com/japaric/cortex-m-semihosting", branch = "cortex-a" }
+panic-halt = "0.2.0"

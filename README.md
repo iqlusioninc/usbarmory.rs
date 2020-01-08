@@ -12,7 +12,7 @@ from [F-Secure].
 
 ## Minimum Supported Rust Version
 
-- Rust **1.40**
+- Rust **1.42**
 
 ## Status
 
@@ -47,7 +47,7 @@ without any additional terms or conditions.
 [build-link]: https://github.com/iqlusioninc/usbarmory.rs/actions
 [license-image]: https://img.shields.io/badge/license-Apache2.0/MIT-blue.svg
 [license-link]: https://github.com/iqlusioninc/armistice/blob/develop/LICENSE
-[msrv-image]: https://img.shields.io/badge/rustc-1.40+-blue.svg
+[msrv-image]: https://img.shields.io/badge/rustc-1.42+-red.svg
 [gitter-image]: https://badges.gitter.im/iqlusioninc/community.svg
 [gitter-link]: https://gitter.im/iqlusioninc/community
 

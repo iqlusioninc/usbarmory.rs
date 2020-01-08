@@ -9,88 +9,137 @@ name: Rust
 
 jobs:
   check:
-    name: Check
+    name: Check firmware
     runs-on: ubuntu-latest
     steps:
       - name: Checkout sources
-        uses: actions/checkout@v1
+        uses: actions/checkout@v2
 
-      - name: Install stable toolchain
+      - name: Install nightly toolchain
         uses: actions-rs/toolchain@v1
         with:
-          toolchain: stable
+          components: rust-src # needed by cargo-xbuild
+          toolchain: nightly
           override: true
 
-      - name: Run cargo check
-        uses: actions-rs/cargo@v1
-        with:
-          command: check
-
-  test:
-    name: Test Suite
-    strategy:
-      matrix:
-        toolchain:
-          - 1.40.0
-          - stable
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout sources
-        uses: actions/checkout@v1
-
-      - name: Cache cargo registry
+      - name: Cache cargo installs
+        id: cache-cargo-bin
         uses: actions/cache@v1
         with:
-          path: ~/.cargo/registry
-          key: ${{ runner.os }}-cargo-registry-${{ hashFiles('**/Cargo.lock') }}
+          path: ~/.cargo/bin
+          key: ${{ runner.os }}-cargo-bin-${{ hashFiles('dev-dependencies.txt') }}
 
-      - name: Cache cargo index
-        uses: actions/cache@v1
-        with:
-          path: ~/.cargo/git
-          key: ${{ runner.os }}-cargo-index-${{ hashFiles('**/Cargo.lock') }}
+      - name: Install dev-dependencies
+        # NOTE we need this check because the cache action won't restore `.cargo/.{crates2.json,.crates.toml}`
+        if: steps.cache-cargo-bin.outputs.cache-hit != 'true'
+        run: |
+          cargo install `cat dev-dependencies.txt`
 
-      - name: Cache cargo build
-        uses: actions/cache@v1
-        with:
-          path: target
-          key: ${{ runner.os }}-cargo-build-target-${{ hashFiles('**/Cargo.lock') }}
+      - name: Run cargo xcheck
+        working-directory: ./firmware
+        run: |
+          cargo xcheck
 
-      - name: Install toolchain
-        uses: actions-rs/toolchain@v1
-        with:
-          toolchain: ${{ matrix.toolchain }}
-          override: true
+# NOTE the `common` directory is currently empty so this is a no-op
+# host-test:
+#   name: Run tests on the host
+#   strategy:
+#     matrix:
+#       toolchain:
+#         - 1.40.0
+#         - stable
+#   runs-on: ubuntu-latest
+#   steps:
+#     - name: Checkout sources
+#       uses: actions/checkout@v2
 
-      - name: Install rustfmt
-        run: rustup component add rustfmt
+#     - name: Install toolchain
+#       uses: actions-rs/toolchain@v1
+#       with:
+#         toolchain: ${{ matrix.toolchain }}
+#         override: true
 
-      - name: Install clippy
-        run: rustup component add clippy
+#     - name: Cache cargo registry
+#       uses: actions/cache@v1
+#       with:
+#         path: ~/.cargo/registry
+#         key: ${{ runner.os }}-cargo-registry-${{ hashFiles('common/Cargo.lock') }}
 
-      - name: Run cargo test
-        uses: actions-rs/cargo@v1
-        env:
-          CARGO_INCREMENTAL: 0
-          RUSTFLAGS: -D warnings
-        with:
-          command: test
-          args: --release
+#     - name: Cache cargo index
+#       uses: actions/cache@v1
+#       with:
+#         path: ~/.cargo/git
+#         key: ${{ runner.os }}-cargo-index-${{ hashFiles('common/Cargo.lock') }}
 
-      - name: Run cargo test
-        uses: actions-rs/cargo@v1
-        env:
-          CARGO_INCREMENTAL: 0
-          RUSTFLAGS: -D warnings
-        with:
-          command: test
+#     - name: Cache cargo build
+#       uses: actions/cache@v1
+#       with:
+#         path: target
+#         key: ${{ runner.os }}-cargo-build-target-${{ hashFiles('common/Cargo.lock') }}
+
+#     - name: Run cargo test
+#       working-directory: ./common
+#       env:
+#         CARGO_INCREMENTAL: 0
+#         RUSTFLAGS: -D warnings
+#       run: |
+#         cargo test --release
+
+#     - name: Run cargo test
+#       working-directory: ./common
+#       env:
+#         CARGO_INCREMENTAL: 0
+#         RUSTFLAGS: -D warnings
+#       run: |
+#         cargo test
+
+# XXX unfortunately, Ubuntu 18.04 ships with QEMU 2.11 which doesn't
+# support the mcimx6ul-evk (i.MX6UL) machine
+# target-test:
+#   name: Run some firmware examples on the host using QEMU
+#   runs-on: ubuntu-latest
+#   steps:
+#     - name: Checkout sources
+#       uses: actions/checkout@v2
+
+#     - name: Install nightly toolchain
+#       uses: actions-rs/toolchain@v1
+#       with:
+#         components: rust-src # needed by cargo-xbuild
+#         toolchain: nightly
+#         override: true
+
+#     - name: Cache cargo installs
+#       id: cache-cargo-bin
+#       uses: actions/cache@v1
+#       with:
+#         path: ~/.cargo/bin
+#         key: ${{ runner.os }}-cargo-bin-${{ hashFiles('dev-dependencies.txt') }}
+
+#     - name: Install QEMU
+#       run: |
+#         sudo apt update
+#         sudo apt install qemu-system-arm
+
+#     - name: Install dev-dependencies
+#       if: steps.cache-cargo-bin.outputs.cache-hit != 'true'
+#       run: |
+#         cargo install `cat dev-dependencies.txt`
+
+#     - name: Set environment for cargo-xbuild
+#       run: echo ::set-env name=RUST_TARGET_PATH::$(echo ${GITHUB_WORKSPACE}/firmware )
+
+#     - name: Run examples
+#       working-directory: ./firmware/usbarmory
+#       run: |
+#         cargo xrun --example qemu-hello --release
 
   fmt:
     name: Rustfmt
     runs-on: ubuntu-latest
     steps:
       - name: Checkout sources
-        uses: actions/checkout@v1
+        uses: actions/checkout@v2
 
       - name: Install stable toolchain
         uses: actions-rs/toolchain@v1
@@ -102,29 +151,40 @@ jobs:
         run: rustup component add rustfmt
 
       - name: Run cargo fmt
-        uses: actions-rs/cargo@v1
-        with:
-          command: fmt
-          args: --all -- --check
+        working-directory: ./firmware
+        run: |
+          cargo fmt --all -- --check
 
   clippy:
     name: Clippy
     runs-on: ubuntu-latest
     steps:
       - name: Checkout sources
-        uses: actions/checkout@v1
+        uses: actions/checkout@v2
 
       - name: Install stable toolchain
         uses: actions-rs/toolchain@v1
         with:
-          toolchain: stable
+          components: rust-src # needed by cargo-xbuild
+          toolchain: nightly
           override: true
+
+      - name: Cache cargo installs
+        id: cache-cargo-bin
+        uses: actions/cache@v1
+        with:
+          path: ~/.cargo/bin
+          key: ${{ runner.os }}-cargo-bin-${{ hashFiles('dev-dependencies.txt') }}
+
+      - name: Install dev-dependencies
+        if: steps.cache-cargo-bin.outputs.cache-hit != 'true'
+        run: |
+          cargo install `cat dev-dependencies.txt`
 
       - name: Install clippy
         run: rustup component add clippy
 
       - name: Run cargo clippy
-        uses: actions-rs/cargo@v1
-        with:
-          command: clippy
-          args: -- -D warnings
+        working-directory: ./firmware
+        run: |
+          cargo xclippy -- -D warnings
