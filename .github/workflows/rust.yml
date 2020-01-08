@@ -22,11 +22,15 @@ jobs:
           toolchain: nightly
           override: true
 
-      - name: Install cargo-xbuild
-        uses: actions-rs/cargo@v1
+      - name: Cache Cargo installs
+        uses: actions/cache@v1
         with:
-          command: install
-          args: cargo-xbuild
+          path: ~/.cargo/bin
+          key: ${{ runner.os }}-cargo-bin-${{ hashFiles('dev-dependencies.ssv') }}
+
+      - name: Install dev-dependencies
+        run: |
+          cargo install `cat dev-dependencies.ssv`
 
       - name: Run cargo xcheck
         working-directory: ./firmware
