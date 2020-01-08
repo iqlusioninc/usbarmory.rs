@@ -21,19 +21,19 @@ jobs:
         uses: actions/cache@v1
         with:
           path: ~/.cargo/registry
-          key: ${{ runner.os }}-cargo-registry-${{ hashFiles('Cargo.lock') }}
+          key: ${{ runner.os }}-cargo-registry-${{ hashFiles('firmware/Cargo.lock') }}
 
       - name: Cache cargo index
         uses: actions/cache@v1
         with:
           path: ~/.cargo/git
-          key: ${{ runner.os }}-cargo-index-${{ hashFiles('Cargo.lock') }}
+          key: ${{ runner.os }}-cargo-index-${{ hashFiles('firmware/Cargo.lock') }}
 
       - name: Cache cargo build
         uses: actions/cache@v1
         with:
           path: target
-          key: ${{ runner.os }}-cargo-build-security-audit-${{ hashFiles('Cargo.lock') }}
+          key: ${{ runner.os }}-cargo-build-security-audit-${{ hashFiles('firmware/Cargo.lock') }}
 
       - name: Install stable toolchain
         uses: actions-rs/toolchain@v1
@@ -48,4 +48,4 @@ jobs:
         uses: actions-rs/cargo@v1
         with:
           command: audit
-          args: --deny-warnings --ignore RUSTSEC-2019-0031
+          args: --deny-warnings --ignore RUSTSEC-2019-0031 -f firmware/Cargo.lock

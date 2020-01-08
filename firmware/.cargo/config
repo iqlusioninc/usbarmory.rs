@@ -1,0 +1,3 @@
+[build]
+target = "armv7-none-eabi" # soft float ABI, emulated float operations
+# target = "armv7-none-eabihf" # hard float ABI, float operations on hardware

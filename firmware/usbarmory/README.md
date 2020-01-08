@@ -14,12 +14,66 @@ from [F-Secure].
 
 ## Minimum Supported Rust Version
 
-- Rust **1.40**
+- Rust **1.42**
 
 ## Status
 
 This project is an incomplete work-in-progress in an early developmental
 stage and will not be ready to use for some time.
+
+## Building dependencies
+
+- [Xargo](https://crates.io/crates/xargo), for the time being. `cargo install
+xargo` (run this command *outside* the `firmware` directory)
+
+## Development dependencies
+
+- `arm-none-eabi-gcc`, only required if modifying assembly (`.s`) files
+
+- `qemu-system-arm`, to run firmware on the host and for some unit testing
+
+## Building examples
+
+As the `armv7-none-eabi` target is not in `rustc` / `rustup` you'll have to use
+Rust nightly and Xargo for now.
+
+``` rust
+$ # run this command from this directory
+$ export RUST_TARGET_PATH=$(dirname `pwd`)
+
+$ xargo build --example $example_name
+```
+
+*NOTE* You'll need to set the `RUST_TARGET_PATH` variable to use *any* Xargo
+command that involves building, including `xargo run`.
+
+## Running on QEMU
+
+The examples whose name is prefixed with `qemu-` are meant to be run on QEMU and
+not on hardware. To run these example use the following QEMU command:
+
+(more details about QEMU & Rust, including debugging QEMU programs, can be found
+in the [Embedded Rust book][book])
+
+[book]: https://rust-embedded.github.io/book/start/qemu.html
+
+``` console
+$ qemu-system-arm \
+  -cpu cortex-a7 \
+  -machine mcimx6ul-evk  \
+  -nographic \
+  -semihosting-config enable=on,target=native \
+  -kernel $path_to_binary
+```
+
+Or simply run:
+
+``` rust
+$ xargo run --example $example_name
+```
+
+If a example doesn't explicitly terminate itself, press `C-a` + `c` to bring up
+the QEMU console then enter the `quit` command to terminate QEMU.
 
 ## Contributing
 
@@ -53,7 +107,7 @@ without any additional terms or conditions.
 [docs-link]: https://docs.rs/usbarmory/
 [license-image]: https://img.shields.io/badge/license-Apache2.0/MIT-blue.svg
 [license-link]: https://github.com/iqlusioninc/armistice/blob/develop/LICENSE
-[msrv-image]: https://img.shields.io/badge/rustc-1.40+-blue.svg
+[msrv-image]: https://img.shields.io/badge/rustc-1.42+-red.svg
 [gitter-image]: https://badges.gitter.im/iqlusioninc/community.svg
 [gitter-link]: https://gitter.im/iqlusioninc/community
 

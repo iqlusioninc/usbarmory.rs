@@ -9,88 +9,123 @@ name: Rust
 
 jobs:
   check:
-    name: Check
+    name: Check firmware
     runs-on: ubuntu-latest
     steps:
       - name: Checkout sources
-        uses: actions/checkout@v1
+        uses: actions/checkout@v2
 
-      - name: Install stable toolchain
+      - name: Install nightly toolchain
         uses: actions-rs/toolchain@v1
         with:
-          toolchain: stable
+          toolchain: nightly
           override: true
 
-      - name: Run cargo check
+      - name: Install cargo-xbuild
         uses: actions-rs/cargo@v1
         with:
-          command: check
+          command: install
+          args: cargo-xbuild
 
-  test:
-    name: Test Suite
-    strategy:
-      matrix:
-        toolchain:
-          - 1.40.0
-          - stable
+      - name: Run cargo xcheck
+        working-directory: ./firmware
+        uses: actions-rs/cargo@v1
+        with:
+          command: xcheck
+
+# NOTE the `common` directory is currently empty so this is a no-op
+# host-test:
+#   name: Run tests on the host
+#   strategy:
+#     matrix:
+#       toolchain:
+#         - 1.40.0
+#         - stable
+#   runs-on: ubuntu-latest
+#   steps:
+#     - name: Checkout sources
+#       uses: actions/checkout@v2
+
+#     - name: Cache cargo registry
+#       uses: actions/cache@v1
+#       with:
+#         path: ~/.cargo/registry
+#         key: ${{ runner.os }}-cargo-registry-${{ hashFiles('common/Cargo.lock') }}
+
+#     - name: Cache cargo index
+#       uses: actions/cache@v1
+#       with:
+#         path: ~/.cargo/git
+#         key: ${{ runner.os }}-cargo-index-${{ hashFiles('common/Cargo.lock') }}
+
+#     - name: Cache cargo build
+#       uses: actions/cache@v1
+#       with:
+#         path: target
+#         key: ${{ runner.os }}-cargo-build-target-${{ hashFiles('common/Cargo.lock') }}
+
+#     - name: Install toolchain
+#       uses: actions-rs/toolchain@v1
+#       with:
+#         toolchain: ${{ matrix.toolchain }}
+#         override: true
+
+#     - name: Run cargo test
+#       uses: actions-rs/cargo@v1
+#       working-directory: ./common
+#       env:
+#         CARGO_INCREMENTAL: 0
+#         RUSTFLAGS: -D warnings
+#       with:
+#         command: test
+#         args: --release
+
+#     - name: Run cargo test
+#       uses: actions-rs/cargo@v1
+#       env:
+#         CARGO_INCREMENTAL: 0
+#         RUSTFLAGS: -D warnings
+#       with:
+#         command: test
+
+  target-test:
+    name: Run some firmware examples on the host using QEMU
     runs-on: ubuntu-latest
     steps:
       - name: Checkout sources
-        uses: actions/checkout@v1
+        uses: actions/checkout@v2
 
-      - name: Cache cargo registry
-        uses: actions/cache@v1
-        with:
-          path: ~/.cargo/registry
-          key: ${{ runner.os }}-cargo-registry-${{ hashFiles('**/Cargo.lock') }}
-
-      - name: Cache cargo index
-        uses: actions/cache@v1
-        with:
-          path: ~/.cargo/git
-          key: ${{ runner.os }}-cargo-index-${{ hashFiles('**/Cargo.lock') }}
-
-      - name: Cache cargo build
-        uses: actions/cache@v1
-        with:
-          path: target
-          key: ${{ runner.os }}-cargo-build-target-${{ hashFiles('**/Cargo.lock') }}
-
-      - name: Install toolchain
+      - name: Install nightly toolchain
         uses: actions-rs/toolchain@v1
         with:
-          toolchain: ${{ matrix.toolchain }}
+          toolchain: nightly
           override: true
 
-      - name: Install rustfmt
-        run: rustup component add rustfmt
+      - name: Install QEMU
+        run: |
+          sudo apt install qemu-system-arm
 
-      - name: Install clippy
-        run: rustup component add clippy
-
-      - name: Run cargo test
+      - name: Install cargo-xbuild
         uses: actions-rs/cargo@v1
-        env:
-          CARGO_INCREMENTAL: 0
-          RUSTFLAGS: -D warnings
         with:
-          command: test
-          args: --release
+          command: install
+          args: cargo-xbuild
 
-      - name: Run cargo test
+      - name: Run examples
         uses: actions-rs/cargo@v1
+        working-directory: ./firmware/usbarmory
         env:
-          CARGO_INCREMENTAL: 0
-          RUSTFLAGS: -D warnings
+          RUST_TARGET_PATH: $GITHUB_WORKSPACE/firmware
         with:
-          command: test
+          command: xrun
+          args: --example qemu-hello --release
 
   fmt:
     name: Rustfmt
     runs-on: ubuntu-latest
     steps:
       - name: Checkout sources
-        uses: actions/checkout@v1
+        uses: actions/checkout@v2
 
       - name: Install stable toolchain
         uses: actions-rs/toolchain@v1
@@ -103,6 +138,7 @@ jobs:
 
       - name: Run cargo fmt
         uses: actions-rs/cargo@v1
+        working-directory: ./firmware
         with:
           command: fmt
           args: --all -- --check
@@ -112,19 +148,25 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout sources
-        uses: actions/checkout@v1
+        uses: actions/checkout@v2
 
       - name: Install stable toolchain
         uses: actions-rs/toolchain@v1
         with:
-          toolchain: stable
+          toolchain: nightly
           override: true
 
       - name: Install clippy
         run: rustup component add clippy
 
+      - name: Install cargo-xbuild
+        uses: actions-rs/cargo@v1
+        with:
+          command: install
+          args: cargo-xbuild
+
       - name: Run cargo clippy
         uses: actions-rs/cargo@v1
         with:
-          command: clippy
+          command: xclippy
           args: -- -D warnings

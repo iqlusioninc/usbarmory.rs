@@ -1,0 +1,6 @@
+[workspace]
+members = [
+  "cortex-a",
+  "usbarmory",
+  "usbarmory-rt",
+]
