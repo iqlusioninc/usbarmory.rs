@@ -119,10 +119,11 @@ jobs:
         run: |
           cargo install `cat dev-dependencies.txt`
 
+      - name: Set environment for cargo-xbuild
+        run: echo ::set-env name=RUST_TARGET_PATH::$(echo ${GITHUB_WORKSPACE}/firmware )
+
       - name: Run examples
         working-directory: ./firmware/usbarmory
-        env:
-          RUST_TARGET_PATH: $GITHUB_WORKSPACE/firmware
         run: |
           cargo xrun --example qemu-hello --release
 
