@@ -29,9 +29,8 @@ jobs:
 
       - name: Run cargo xcheck
         working-directory: ./firmware
-        uses: actions-rs/cargo@v1
-        with:
-          command: xcheck
+        run: |
+          cargo xcheck
 
 # NOTE the `common` directory is currently empty so this is a no-op
 # host-test:
@@ -71,22 +70,20 @@ jobs:
 #         override: true
 
 #     - name: Run cargo test
-#       uses: actions-rs/cargo@v1
 #       working-directory: ./common
 #       env:
 #         CARGO_INCREMENTAL: 0
 #         RUSTFLAGS: -D warnings
-#       with:
-#         command: test
-#         args: --release
+#       run: |
+#         cargo test --release
 
 #     - name: Run cargo test
-#       uses: actions-rs/cargo@v1
+#       working-directory: ./common
 #       env:
 #         CARGO_INCREMENTAL: 0
 #         RUSTFLAGS: -D warnings
-#       with:
-#         command: test
+#       run: |
+#         cargo test
 
   target-test:
     name: Run some firmware examples on the host using QEMU
@@ -112,13 +109,11 @@ jobs:
           args: cargo-xbuild
 
       - name: Run examples
-        uses: actions-rs/cargo@v1
         working-directory: ./firmware/usbarmory
         env:
           RUST_TARGET_PATH: $GITHUB_WORKSPACE/firmware
-        with:
-          command: xrun
-          args: --example qemu-hello --release
+        run: |
+          cargo xrun --example qemu-hello --release
 
   fmt:
     name: Rustfmt
@@ -137,11 +132,9 @@ jobs:
         run: rustup component add rustfmt
 
       - name: Run cargo fmt
-        uses: actions-rs/cargo@v1
         working-directory: ./firmware
-        with:
-          command: fmt
-          args: --all -- --check
+        run: |
+          cargo fmt --all -- --check
 
   clippy:
     name: Clippy
