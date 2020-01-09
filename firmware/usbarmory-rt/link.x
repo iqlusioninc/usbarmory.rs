@@ -8,7 +8,9 @@ MEMORY
   /* it may not be possible to interactively load a program in that memory region */
 
   /* On-chip RAM */
-  OCRAM : ORIGIN = 0x00900000, LENGTH = 128K
+  /* NOTE OCRAM starts at 0x00900000 but the first 28 KB are reserved and
+     the following 68 KB are free according to section 8.4.1 of the RM */
+  OCRAM : ORIGIN = 0x00907000, LENGTH = 68K
 
   /* Secure RAM */
   CAAM : ORIGIN = 0x00100000, LENGTH = 32K
