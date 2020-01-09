@@ -4,3 +4,7 @@ members = [
   "usbarmory",
   "usbarmory-rt",
 ]
+
+[profile.release]
+lto = true
+codegen-units = 1
