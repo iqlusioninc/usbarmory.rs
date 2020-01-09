@@ -55,7 +55,7 @@ pub fn reset() -> ! {
     /// System Reset Controller
     const SRC_BASE: usize = 0x020d_8000;
     /// SRC Control Register
-    const SRC_SCR: *mut u32 = (SRC_BASE + 0x0) as *mut _;
+    const SRC_SCR: *mut u32 = SRC_BASE as *mut _;
     // const SRC_SCR_CORES_DBG_RST_MASK: u32 = 1 << 21;
     const SRC_SCR_CORE0_RST_MASK: u32 = 1 << 13;
 
@@ -66,5 +66,7 @@ pub fn reset() -> ! {
 
     // TODO replace with `unreachable_unchecked`
     writeln!(Serial::get(), "reset failed").ok();
-    loop {}
+    loop {
+        continue;
+    }
 }
