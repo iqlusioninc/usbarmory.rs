@@ -1,5 +1,6 @@
 //! Low level access to Cortex-A processors
 
+#![feature(asm)]
 #![no_std]
 #![warn(missing_docs, rust_2018_idioms, unused_qualifications)]
 
@@ -11,7 +12,19 @@ pub fn nop() {
         fn __nop();
     }
 
-    unsafe {
-        __nop();
+    unsafe { __nop() }
+}
+
+/// Performs `n` CPU instructions to add a delay to the program
+///
+/// Note that this function may result in a delay of *more* than `n` CPU clock
+/// cycles due to time spent in higher priority interrupt handlers
+#[inline(never)]
+pub fn delay(n: u32) {
+    extern "C" {
+        fn __delay(n: u32);
+
     }
+
+    unsafe { __delay(n) }
 }

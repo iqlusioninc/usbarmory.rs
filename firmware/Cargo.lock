@@ -108,6 +108,7 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 name = "usbarmory"
 version = "0.0.0"
 dependencies = [
+ "cortex-a 0.0.0",
  "cortex-m-semihosting 0.3.5 (git+https://github.com/japaric/cortex-m-semihosting?branch=cortex-a)",
  "imx6ul-rac 0.0.0",
  "panic-halt 0.2.0 (registry+https://github.com/rust-lang/crates.io-index)",
