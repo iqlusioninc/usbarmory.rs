@@ -437,11 +437,16 @@ $ bootelf -s
 ## Starting application at 0x00900024 ...
 ```
 
-If you run the `leds` example you should see the blue LED turn on and white LED
-turn off.
+If you run the `leds` example you should see the blue LED turn on and the white
+LED turn off.
 
-The Rust programs cannot return to the u-boot console so to flash a new program
-you'll need to power cycle the Armory and repeat these steps.
+"One-off" applications, like `leds`, will reset the SoC and return you to the
+u-boot console; from there you can load a new program using `loadb` and
+`bootelf` as shown before.
+
+Some applications, like `blinky`, have "no end" and won't reset the board. To
+flash a new program after running these applications you'll have to power cycle
+the Armory (unplug and replug) and repeat these steps. 
 
 ## Contributing
 

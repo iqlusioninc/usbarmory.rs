@@ -17,5 +17,9 @@ fn main() -> ! {
 
     writeln!(serial, "Hello, world!").ok();
 
-    loop {}
+    // wait 5 seconds
+    usbarmory::delay(5 * usbarmory::CPU_FREQUENCY);
+
+    // then reset the board to return to the u-boot console
+    usbarmory::reset()
 }

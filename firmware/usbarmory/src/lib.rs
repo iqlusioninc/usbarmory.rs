@@ -4,28 +4,31 @@
 #![doc(html_root_url = "https://docs.rs/usbarmory/0.0.0")]
 #![warn(missing_docs, rust_2018_idioms, unused_qualifications)]
 
-use core::fmt::Write as _;
-
-use rac::src;
-use usbarmory_rt as _;
 pub use cortex_a::delay;
-
-use crate::serial::Serial;
+use rac::wdog;
+use usbarmory_rt as _;
 
 pub mod led;
 pub mod serial;
 
+/// Default CPU frequency
+///
+/// Useful to generate `delay`s in seconds, e.g. `delay(5 * CPU_FREQUENCY)`
+/// produces a delay of at least 5 seconds
+pub const CPU_FREQUENCY: u32 = 528_000_000;
+
 /// Software resets the Cortex-A core
-// FIXME this doesn't get us back to the u-boot console; i.e. it doesn't cause
-// the boot ROM to run again
+///
+/// This is useful to return to the u-boot console during development
 pub fn reset() -> ! {
     unsafe {
-        let old = src::SRC_SCR.read_volatile();
-        src::SRC_SCR.write_volatile(old | src::SRC_SCR_CORE0_RST_MASK);
+        let old = wdog::WDOG1_WCR.read_volatile();
+        wdog::WDOG1_WCR.write_volatile(old | wdog::WDOG_WCR_SRE);
     }
 
-    // TODO replace with `unreachable_unchecked`
-    writeln!(Serial::get(), "reset failed").ok();
+    // the watchdog reset may not be instantaneous so we use an infinite-loop
+    // "trap" to give it some time and satisfy the signature of the diverging
+    // function
     loop {
         continue;
     }

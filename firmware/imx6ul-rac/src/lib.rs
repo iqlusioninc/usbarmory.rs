@@ -12,3 +12,4 @@
 pub mod gpio;
 pub mod src;
 pub mod uart;
+pub mod wdog;

@@ -8,7 +8,10 @@ const SRC_BASE: usize = 0x020d_8000;
 pub const SRC_SCR: *mut u32 = SRC_BASE as *mut u32;
 
 /// Software reset for debug of arm platform only
-pub const SRC_SCR_CORES_DBG_RST_MASK: u32 = 1 << 21;
+pub const SRC_SCR_CORES_DBG_RST: u32 = 1 << 21;
+
+/// Software reset for core0 debug only
+pub const SRC_SCR_CORE0_DBG_RST: u32 = 1 << 17;
 
 /// Software reset for core0 only
-pub const SRC_SCR_CORE0_RST_MASK: u32 = 1 << 13;
+pub const SRC_SCR_CORE0_RST: u32 = 1 << 13;
