@@ -169,7 +169,7 @@ console. The UART2 pins are routed to the *third* bus interface (*C*DBUS) of the
 chip in order then you can connect to each device in turn to see which is used
 for the u-boot console and Linux logs.
 
-Any terminal emulator will do (e.g. `kermit`, `picocom`, etc.) but I recommend
+Any terminal emulator will do (e.g. `ckermit`, `picocom`, etc.) but I recommend
 using `minicom` as we'll use that in the next step. Create the following file to
 make the defaults settings of `minicom` compatible with the Debian u-boot
 console. 
@@ -335,6 +335,10 @@ C-Kermit terminal emulator for these binary transfers so let's set that up.
 > ckermit` command. 
 
 Create the following file to set the default settings of the tool:
+
+> NOTE: These are the settings recommended in the [u-boot manual]
+
+[u-boot manual]: https://www.denx.de/wiki/view/DULG/SystemSetup#Section_4.3.
 
 ``` console
 $ cat .kermrc
