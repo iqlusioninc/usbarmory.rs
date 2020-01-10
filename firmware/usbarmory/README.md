@@ -433,7 +433,7 @@ program by jumping into the entry point of the ELF. All this is done with the
 `bootelf` command:
 
 ``` console
-$ bootelf -s 90000000
+$ bootelf -s
 ## Starting application at 0x00900024 ...
 ```
 
