@@ -11,12 +11,7 @@ use rac::gpio;
 // and external assembly must use the stable C ABI
 #[no_mangle]
 unsafe extern "C" fn start() -> ! {
-    extern "Rust" {
-        // NOTE(Rust ABI) this subroutine is provided by a Rust crate
-        fn main() -> !;
-    }
-
-    // TODO RAM initialization
+    // NOTE RAM initialization is skipped here because u-boot takes care of it
 
     /* Initialize some peripherals that will always be configured in this way */
     // LEDS
@@ -28,6 +23,11 @@ unsafe extern "C" fn start() -> ! {
     // turn the white LED on and the blue LED off to indicate we are alive
     let old = gpio::GPIO4_DR.read_volatile();
     gpio::GPIO4_DR.write_volatile((old | BLUE) & !WHITE);
+
+    extern "Rust" {
+        // NOTE(Rust ABI) this subroutine is provided by a Rust crate
+        fn main() -> !;
+    }
 
     main()
 }
