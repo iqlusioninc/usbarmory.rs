@@ -1,3 +1,6 @@
+//! Security Control Register
+
+//! Reads the SCR register
 pub fn read() -> u16 {
     let scr;
     unsafe {
