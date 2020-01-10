@@ -1,3 +1,5 @@
+//! Blinks the Blue LED
+
 #![no_main]
 #![no_std]
 

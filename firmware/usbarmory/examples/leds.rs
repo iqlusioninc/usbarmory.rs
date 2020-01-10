@@ -1,3 +1,5 @@
+//! Turns the blue LED on and the white LED off
+
 #![no_main]
 #![no_std]
 

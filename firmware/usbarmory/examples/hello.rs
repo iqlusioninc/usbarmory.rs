@@ -1,6 +1,6 @@
-//! Writes "Hello, world!" the UART2 interface
+//! Writes "Hello, world!" to the UART2 interface
 //!
-//! This will display on the serial interface where you can see the u-boot
+//! The message will be displayed on the serial interface used for the u-boot
 //! console
 
 #![no_main]
