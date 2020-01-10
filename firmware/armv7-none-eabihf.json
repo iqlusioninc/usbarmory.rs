@@ -12,7 +12,7 @@
   "emit-debug-gdb-scripts": false,
   "env": "gnu",
   "executables": true,
-  "features": "+v7,+vfp3,-d32,+thumb2,-neon",
+  "features": "+v7,+vfp3,-d32,+thumb2,+strict-align,-neon",
   "linker": "rust-lld",
   "linker-flavor": "ld.lld",
   "llvm-target": "armv7-none-eabihf",
