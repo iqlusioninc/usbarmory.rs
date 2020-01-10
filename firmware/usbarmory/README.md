@@ -386,19 +386,21 @@ MBs). We'll load the ELF image into DRAM (DDR3 RAM) first using the `loadb`
 command: 
 
 > NOTE DRAM starts at address `0x8000_0000` and it has a size of 512 MB (you can
-> check these facts using the `bdinfo` command in the u-boot console)
+> check these facts using the `bdinfo` command in the u-boot console); part of
+> this memory is used by u-boot itself. `loadb` with no arguments will load data
+> into a part of DRAM that's not used by u-boot
 
 ``` console
-=> loadb 90000000
-## Ready for binary (kermit) download to 0x90000000 at 115200 bps...
+=> loadb
+## Ready for binary (kermit) download to 0x82000000 at 115200 bps...
 ```
 
 Now press `Ctrl-\`, followed by `c`. This will bring you to the C-Kermit
 console:
 
 ``` console
-=> loadb 90000000
-## Ready for binary (kermit) download to 0x90000000 at 115200 bps...
+=> loadb
+## Ready for binary (kermit) download to 0x82000000 at 115200 bps...
 
 (Back at x1)
 ----------------------------------------------------
@@ -427,7 +429,7 @@ or followed by ? to see other options.
 ----------------------------------------------------
 CACHE: Misaligned operation at range [90000000, 90001284]
 ## Total Size      = 0x00001284 = 4740 Bytes
-## Start Addr      = 0x90000000
+## Start Addr      = 0x82000000
 => 
 ```
 
