@@ -8,6 +8,7 @@ use core::fmt::Write as _;
 
 use rac::src;
 use usbarmory_rt as _;
+pub use cortex_a::delay;
 
 use crate::serial::Serial;
 

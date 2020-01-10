@@ -8,8 +8,8 @@ use usbarmory::led;
 fn main() -> ! {
     loop {
         led::Blue.on();
-        cortex_a::delay(500_000_000);
+        usbarmory::delay(500_000_000);
         led::Blue.off();
-        cortex_a::delay(500_000_000);
+        usbarmory::delay(500_000_000);
     }
 }
