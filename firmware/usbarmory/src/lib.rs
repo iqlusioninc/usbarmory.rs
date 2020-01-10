@@ -23,7 +23,7 @@ pub const CPU_FREQUENCY: u32 = 528_000_000;
 pub fn reset() -> ! {
     unsafe {
         let old = wdog::WDOG1_WCR.read_volatile();
-        wdog::WDOG1_WCR.write_volatile(old | wdog::WDOG_WCR_SRE);
+        wdog::WDOG1_WCR.write_volatile(old & !wdog::WDOG_WCR_SRS);
     }
 
     // the watchdog reset may not be instantaneous so we use an infinite-loop
