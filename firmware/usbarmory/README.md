@@ -169,7 +169,7 @@ console. The UART2 pins are routed to the *third* bus interface (*C*DBUS) of the
 chip in order then you can connect to each device in turn to see which is used
 for the u-boot console and Linux logs.
 
-Any terminal emulator will do (e.g. `kermit`, `picocom`, etc.) but I recommend
+Any terminal emulator will do (e.g. `ckermit`, `picocom`, etc.) but I recommend
 using `minicom` as we'll use that in the next step. Create the following file to
 make the defaults settings of `minicom` compatible with the Debian u-boot
 console. 
@@ -336,6 +336,10 @@ C-Kermit terminal emulator for these binary transfers so let's set that up.
 
 Create the following file to set the default settings of the tool:
 
+> NOTE: These are the settings recommended in the [u-boot manual]
+
+[u-boot manual]: https://www.denx.de/wiki/view/DULG/SystemSetup#Section_4.3.
+
 ``` console
 $ cat .kermrc
 set carrier-watch off
@@ -382,19 +386,21 @@ MBs). We'll load the ELF image into DRAM (DDR3 RAM) first using the `loadb`
 command: 
 
 > NOTE DRAM starts at address `0x8000_0000` and it has a size of 512 MB (you can
-> check these facts using the `bdinfo` command in the u-boot console)
+> check these facts using the `bdinfo` command in the u-boot console); part of
+> this memory is used by u-boot itself. `loadb` with no arguments will load data
+> into a part of DRAM that's not used by u-boot
 
 ``` console
-=> loadb 90000000
-## Ready for binary (kermit) download to 0x90000000 at 115200 bps...
+=> loadb
+## Ready for binary (kermit) download to 0x82000000 at 115200 bps...
 ```
 
 Now press `Ctrl-\`, followed by `c`. This will bring you to the C-Kermit
 console:
 
 ``` console
-=> loadb 90000000
-## Ready for binary (kermit) download to 0x90000000 at 115200 bps...
+=> loadb
+## Ready for binary (kermit) download to 0x82000000 at 115200 bps...
 
 (Back at x1)
 ----------------------------------------------------
@@ -423,7 +429,7 @@ or followed by ? to see other options.
 ----------------------------------------------------
 CACHE: Misaligned operation at range [90000000, 90001284]
 ## Total Size      = 0x00001284 = 4740 Bytes
-## Start Addr      = 0x90000000
+## Start Addr      = 0x82000000
 => 
 ```
 
@@ -433,15 +439,20 @@ program by jumping into the entry point of the ELF. All this is done with the
 `bootelf` command:
 
 ``` console
-$ bootelf -s 90000000
+$ bootelf -s
 ## Starting application at 0x00900024 ...
 ```
 
-If you run the `leds` example you should see the blue LED turn on and white LED
-turn off.
+If you run the `leds` example you should see the blue LED turn on and the white
+LED turn off.
 
-The Rust programs cannot return to the u-boot console so to flash a new program
-you'll need to power cycle the Armory and repeat these steps.
+"One-off" applications, like `leds`, will reset the SoC and return you to the
+u-boot console; from there you can load a new program using `loadb` and
+`bootelf` as shown before.
+
+Some applications, like `blinky`, have "no end" and won't reset the board. To
+flash a new program after running these applications you'll have to power cycle
+the Armory (unplug and replug) and repeat these steps. 
 
 ## Contributing
 

@@ -12,8 +12,11 @@ categories  = ["embedded", "hardware-support", "no-std"]
 keywords    = ["arm", "cortex-a"]
 
 [dependencies]
+cortex-a = { path = "../cortex-a" }
+rac = { package = "imx6ul-rac", path = "../imx6ul-rac" }
 usbarmory-rt = { path = "../usbarmory-rt" }
 
 [dev-dependencies]
 cortex-m-semihosting = { git = "https://github.com/japaric/cortex-m-semihosting", branch = "cortex-a" }
 panic-halt = "0.2.0"
+panic-serial = { path = "../panic-serial" }

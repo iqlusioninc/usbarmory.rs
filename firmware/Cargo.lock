@@ -65,9 +65,20 @@ dependencies = [
 ]
 
 [[package]]
+name = "imx6ul-rac"
+version = "0.0.0"
+
+[[package]]
 name = "panic-halt"
 version = "0.2.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
+
+[[package]]
+name = "panic-serial"
+version = "0.0.0"
+dependencies = [
+ "usbarmory 0.0.0",
+]
 
 [[package]]
 name = "rustc_version"
@@ -104,14 +115,20 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 name = "usbarmory"
 version = "0.0.0"
 dependencies = [
+ "cortex-a 0.0.0",
  "cortex-m-semihosting 0.3.5 (git+https://github.com/japaric/cortex-m-semihosting?branch=cortex-a)",
+ "imx6ul-rac 0.0.0",
  "panic-halt 0.2.0 (registry+https://github.com/rust-lang/crates.io-index)",
+ "panic-serial 0.0.0",
  "usbarmory-rt 0.0.0",
 ]
 
 [[package]]
 name = "usbarmory-rt"
 version = "0.0.0"
+dependencies = [
+ "imx6ul-rac 0.0.0",
+]
 
 [[package]]
 name = "vcell"

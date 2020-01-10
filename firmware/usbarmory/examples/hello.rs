@@ -1,6 +1,6 @@
-//! Writes "Hello, world!" the UART2 interface
+//! Writes "Hello, world!" to the UART2 interface
 //!
-//! This will display on the serial interface where you can see the u-boot
+//! The message will be displayed on the serial interface used for the u-boot
 //! console
 
 #![no_main]
@@ -9,7 +9,7 @@
 use core::fmt::Write as _;
 
 use panic_halt as _;
-use usbarmory::Serial;
+use usbarmory::serial::Serial;
 
 #[no_mangle]
 fn main() -> ! {
@@ -17,5 +17,9 @@ fn main() -> ! {
 
     writeln!(serial, "Hello, world!").ok();
 
-    loop {}
+    // wait 5 seconds
+    usbarmory::delay(5 * usbarmory::CPU_FREQUENCY);
+
+    // then reset the board to return to the u-boot console
+    usbarmory::reset()
 }
