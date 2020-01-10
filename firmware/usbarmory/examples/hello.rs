@@ -9,7 +9,7 @@
 use core::fmt::Write as _;
 
 use panic_halt as _;
-use usbarmory::Serial;
+use usbarmory::serial::Serial;
 
 #[no_mangle]
 fn main() -> ! {
