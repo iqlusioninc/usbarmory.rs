@@ -16,3 +16,27 @@ __delay:
   nop
   bne  1b
   bx lr
+
+  .global __enable_fiq
+  .section .text.__enable_fiq
+__enable_fiq:
+  cpsie f
+  bx lr
+
+  .global __disable_fiq
+  .section .text.__disable_fiq
+__disable_fiq:
+  cpsid f
+  bx lr
+
+  .global __enable_irq
+  .section .text.__enable_irq
+__enable_irq:
+  cpsie i
+  bx lr
+
+  .global __disable_irq_
+  .section .text.__disable_irq
+__disable_irq:
+  cpsid i
+  bx lr

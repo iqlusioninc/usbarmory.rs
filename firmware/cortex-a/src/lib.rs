@@ -1,8 +1,11 @@
 //! Low level access to Cortex-A processors
 
+// FIXME replace inline assembly with external assembly
 #![feature(asm)]
 #![no_std]
 #![warn(missing_docs, rust_2018_idioms, unused_qualifications)]
+
+pub mod register;
 
 /// "No OPeration" instruction
 ///
@@ -27,4 +30,48 @@ pub fn delay(n: u32) {
     }
 
     unsafe { __delay(n) }
+}
+
+/// Enables FIQ interrupts
+///
+/// # Safety
+///
+/// This operation can break critical sections based on masking FIQ
+pub unsafe fn enable_fiq() {
+    extern "C" {
+        fn __enable_fiq();
+    }
+
+    __enable_fiq()
+}
+
+/// Disable FIQ interrupts
+pub fn disable_fiq() {
+    extern "C" {
+        fn __disable_fiq();
+    }
+
+    unsafe { __disable_fiq() }
+}
+
+/// Enables IRQ interrupts
+///
+/// # Safety
+///
+/// This operation can break critical sections based on masking IRQ
+pub unsafe fn enable_irq() {
+    extern "C" {
+        fn __enable_irq();
+    }
+
+    __enable_irq()
+}
+
+/// Disable IRQ interrupts
+pub fn disable_irq() {
+    extern "C" {
+        fn __disable_irq();
+    }
+
+    unsafe { __disable_irq() }
 }
