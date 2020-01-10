@@ -16,6 +16,11 @@ impl Serial {
         Serial { _private: () }
     }
 
+    /// Blocks until all data has been transmitted
+    pub fn flush(&mut self) {
+        unsafe { while uart::UART2_USR2.read_volatile() & uart::UART_USR2_TXDC == 0 {} }
+    }
+
     /// [Blocking] Sends the given `bytes` through the serial interface
     pub fn write_all(&mut self, bytes: &[u8]) {
         for byte in bytes {
