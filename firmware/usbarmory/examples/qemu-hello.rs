@@ -1,10 +1,9 @@
 #![no_main]
 #![no_std]
 
-// use core::fmt::Write as _;
+use core::{fmt::Write as _, panic::PanicInfo};
 
 use cortex_m_semihosting::{debug, hio};
-use panic_halt as _;
 use usbarmory as _; // memory layout
 
 #[no_mangle]
@@ -18,6 +17,25 @@ fn main() -> ! {
 
     // exit QEMU
     debug::exit(debug::EXIT_SUCCESS);
+
+    loop {}
+}
+
+#[panic_handler]
+fn panic(info: &PanicInfo) -> ! {
+    if let Ok(mut stdout) = hio::hstdout() {
+        writeln!(stdout, "\n{}", info).ok();
+    }
+
+    debug::exit(debug::EXIT_FAILURE);
+
+    loop {}
+}
+
+#[allow(non_snake_case)]
+#[no_mangle]
+fn DefaultHandler() -> ! {
+    debug::exit(debug::EXIT_FAILURE);
 
     loop {}
 }

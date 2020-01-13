@@ -1,0 +1,9 @@
+[package]
+authors = ["iqlusion"]
+edition = "2018"
+name    = "exception-reset"
+version = "0.0.0"
+license = "Apache-2.0 OR MIT"
+
+[dependencies]
+usbarmory = { path = "../usbarmory" }

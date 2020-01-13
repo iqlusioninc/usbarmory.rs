@@ -17,7 +17,7 @@ pub mod serial;
 /// produces a delay of at least 5 seconds
 pub const CPU_FREQUENCY: u32 = 528_000_000;
 
-/// Software resets the Cortex-A core
+/// Uses the watchdog to reset the SoC
 ///
 /// This is useful to return to the u-boot console during development
 pub fn reset() -> ! {

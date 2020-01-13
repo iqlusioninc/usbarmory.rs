@@ -8,7 +8,8 @@ use core::{
     sync::atomic::{AtomicU64, Ordering},
 };
 
-use panic_halt as _;
+use exception_reset as _; // default exception handler
+use panic_serial as _; // panic handler
 use usbarmory::serial::Serial;
 
 // .bss
