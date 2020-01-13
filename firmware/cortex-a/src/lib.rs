@@ -22,7 +22,6 @@ pub fn nop() {
 ///
 /// Note that this function may result in a delay of *more* than `n` CPU clock
 /// cycles due to time spent in higher priority interrupt handlers
-#[inline(never)]
 pub fn delay(n: u32) {
     extern "C" {
         fn __delay(n: u32);
