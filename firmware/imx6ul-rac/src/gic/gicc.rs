@@ -7,6 +7,7 @@ const GICC_OFFSET: usize = 0x2000;
 const CTLR_OFFSET: usize = 0x0;
 const PMR_OFFSET: usize = 0x4;
 const IAR_OFFSET: usize = 0xc;
+const EOIR_OFFSET: usize = 0x10;
 
 /// CPU Interface Control Register
 pub const GICC_CTLR: *mut u32 = (super::GIC_BASE + GICC_OFFSET + CTLR_OFFSET) as *mut _;
@@ -16,3 +17,6 @@ pub const GICC_PMR: *mut u32 = (super::GIC_BASE + GICC_OFFSET + PMR_OFFSET) as *
 
 /// Interrupt Acknowledge Register
 pub const GICC_IAR: *mut u32 = (super::GIC_BASE + GICC_OFFSET + IAR_OFFSET) as *mut _;
+
+/// End of Interrupt Register
+pub const GICC_EOIR: *mut u32 = (super::GIC_BASE + GICC_OFFSET + EOIR_OFFSET) as *mut _;

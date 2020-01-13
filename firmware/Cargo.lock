@@ -52,6 +52,7 @@ dependencies = [
 name = "exception-reset"
 version = "0.0.0"
 dependencies = [
+ "cortex-a 0.0.0",
  "usbarmory 0.0.0",
 ]
 
@@ -129,6 +130,7 @@ dependencies = [
 name = "usbarmory-rt"
 version = "0.0.0"
 dependencies = [
+ "cortex-a 0.0.0",
  "imx6ul-rac 0.0.0",
 ]
 

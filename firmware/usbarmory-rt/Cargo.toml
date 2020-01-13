@@ -6,4 +6,5 @@ version = "0.0.0"
 license = "Apache-2.0 OR MIT"
 
 [dependencies]
+cortex-a = { path = "../cortex-a" }
 rac = { package = "imx6ul-rac", path = "../imx6ul-rac" }

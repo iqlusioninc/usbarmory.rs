@@ -19,23 +19,30 @@ static Y: AtomicU64 = AtomicU64::new(1);
 
 #[no_mangle]
 fn main() -> ! {
-    let mut serial = Serial::get();
-    writeln!(
-        serial,
-        "X={}, Y={}",
-        X.load(Ordering::Relaxed),
-        Y.load(Ordering::Relaxed)
-    )
-    .ok();
-    X.fetch_add(1, Ordering::Relaxed);
-    Y.fetch_add(1, Ordering::Relaxed);
-    writeln!(
-        serial,
-        "X={}, Y={}",
-        X.load(Ordering::Relaxed),
-        Y.load(Ordering::Relaxed)
-    )
-    .ok();
+    if let Some(serial) = Serial::take() {
+        writeln!(
+            &serial,
+            "X={}, Y={}",
+            X.load(Ordering::Relaxed),
+            Y.load(Ordering::Relaxed)
+        )
+        .ok();
 
-    loop {}
+        X.fetch_add(1, Ordering::Relaxed);
+        Y.fetch_add(1, Ordering::Relaxed);
+
+        writeln!(
+            &serial,
+            "X={}, Y={}",
+            X.load(Ordering::Relaxed),
+            Y.load(Ordering::Relaxed)
+        )
+        .ok();
+    }
+
+    // wait 5 seconds
+    usbarmory::delay(5 * usbarmory::CPU_FREQUENCY);
+
+    // then reset the board to return to the u-boot console
+    usbarmory::reset()
 }

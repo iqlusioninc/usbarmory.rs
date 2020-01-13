@@ -21,9 +21,10 @@ fn main() -> ! {
 #[allow(non_snake_case)]
 #[no_mangle]
 fn DataAbort() -> ! {
-    let mut serial = Serial::get();
-    serial.write_all(b"You've met with a terrible fate, haven't you?\n");
-    serial.flush();
+    if let Some(serial) = Serial::take() {
+        serial.write_all(b"You've met with a terrible fate, haven't you?\n");
+        serial.flush();
+    }
 
     // wait 5 seconds
     usbarmory::delay(5 * usbarmory::CPU_FREQUENCY);

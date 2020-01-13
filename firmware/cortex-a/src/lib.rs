@@ -74,3 +74,12 @@ pub fn disable_irq() {
 
     unsafe { __disable_irq() }
 }
+
+/// Data Memory Barrier
+pub fn dmb() {
+    extern "C" {
+        fn __dmb();
+    }
+
+    unsafe { __dmb() }
+}

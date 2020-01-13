@@ -33,6 +33,24 @@ PROVIDE(HypervisorCall = DefaultHandler);
 PROVIDE(IRQ = DefaultHandler);
 PROVIDE(FIQ = DefaultHandler);
 
+/* Same thing with unset interrupts */
+PROVIDE(SGI0 = DefaultHandler);
+PROVIDE(SGI1 = DefaultHandler);
+PROVIDE(SGI2 = DefaultHandler);
+PROVIDE(SGI3 = DefaultHandler);
+PROVIDE(SGI4 = DefaultHandler);
+PROVIDE(SGI5 = DefaultHandler);
+PROVIDE(SGI6 = DefaultHandler);
+PROVIDE(SGI7 = DefaultHandler);
+PROVIDE(SGI8 = DefaultHandler);
+PROVIDE(SGI9 = DefaultHandler);
+PROVIDE(SGI10 = DefaultHandler);
+PROVIDE(SGI11 = DefaultHandler);
+PROVIDE(SGI12 = DefaultHandler);
+PROVIDE(SGI13 = DefaultHandler);
+PROVIDE(SGI14 = DefaultHandler);
+PROVIDE(SGI15 = DefaultHandler);
+
 /* Make the linker exhaustively search these symbols, otherwise they may be ignored even if provided */
 EXTERN(_exceptions);
 

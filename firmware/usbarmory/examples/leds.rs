@@ -9,8 +9,13 @@ use usbarmory::led;
 
 #[no_mangle]
 fn main() -> ! {
-    led::Blue.on();
-    led::White.off();
+    if let Some(blue) = led::Blue::take() {
+        blue.on();
+    }
+
+    if let Some(white) = led::White::take() {
+        white.off();
+    }
 
     // wait 5 seconds
     usbarmory::delay(5 * usbarmory::CPU_FREQUENCY);
