@@ -18,5 +18,5 @@ usbarmory-rt = { path = "../usbarmory-rt" }
 
 [dev-dependencies]
 cortex-m-semihosting = { git = "https://github.com/japaric/cortex-m-semihosting", branch = "cortex-a" }
-panic-halt = "0.2.0"
 panic-serial = { path = "../panic-serial" }
+exception-reset = { path = "../exception-reset" }

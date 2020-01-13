@@ -4,8 +4,9 @@ ENTRY(_start);
 /* # Memory regions */
 MEMORY
 {
-  /* TODO figure out where u-boot places its own memory */
-  /* it may not be possible to interactively load a program in that memory region */
+  /* NOTE u-boot places its memory at the start of DRAM. When interactively */
+  /* loading programs u-boot will automatically place them after the memory */
+  /* it's using */
 
   /* On-chip RAM */
   /* NOTE OCRAM starts at 0x00900000 and its physical size is 128 KB but the
@@ -20,7 +21,38 @@ MEMORY
   DRAM : ORIGIN = 0x80000000, LENGTH = 512M
 }
 
+/* Initial Stack Pointer */
 __stack_top__ = ORIGIN(OCRAM) + LENGTH(OCRAM);
+
+/* Use the default exception handler to handle all exceptions that have not been set by the user */
+PROVIDE(UndefinedInstruction = DefaultHandler);
+PROVIDE(SupervisorCall = DefaultHandler);
+PROVIDE(PrefetchAbort = DefaultHandler);
+PROVIDE(DataAbort = DefaultHandler);
+PROVIDE(HypervisorCall = DefaultHandler);
+PROVIDE(IRQ = DefaultHandler);
+PROVIDE(FIQ = DefaultHandler);
+
+/* Same thing with unset interrupts */
+PROVIDE(SGI0 = DefaultHandler);
+PROVIDE(SGI1 = DefaultHandler);
+PROVIDE(SGI2 = DefaultHandler);
+PROVIDE(SGI3 = DefaultHandler);
+PROVIDE(SGI4 = DefaultHandler);
+PROVIDE(SGI5 = DefaultHandler);
+PROVIDE(SGI6 = DefaultHandler);
+PROVIDE(SGI7 = DefaultHandler);
+PROVIDE(SGI8 = DefaultHandler);
+PROVIDE(SGI9 = DefaultHandler);
+PROVIDE(SGI10 = DefaultHandler);
+PROVIDE(SGI11 = DefaultHandler);
+PROVIDE(SGI12 = DefaultHandler);
+PROVIDE(SGI13 = DefaultHandler);
+PROVIDE(SGI14 = DefaultHandler);
+PROVIDE(SGI15 = DefaultHandler);
+
+/* Make the linker exhaustively search these symbols, otherwise they may be ignored even if provided */
+EXTERN(_exceptions);
 
 /* # Linker sections */
 SECTIONS
@@ -28,6 +60,13 @@ SECTIONS
   /* ## Standard ELF sections */
   .text :
   {
+    /* must go first due to alignment requirements */
+    KEEP(*(.text._exceptions));
+
+    /* NOTE order the entry point to make the objdump easier to read */
+    *(.text._start);
+    *(.text.start);
+
     *(.text .text.*);
   } > OCRAM
 
@@ -55,3 +94,6 @@ SECTIONS
     *(.ARM.extab.*);
   }
 }
+
+/* alignment requirement */
+ASSERT(ADDR(.text) % 32 == 0, "exception vector is not 32-bit aligned");

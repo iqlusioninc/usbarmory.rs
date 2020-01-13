@@ -8,14 +8,15 @@
 
 use core::fmt::Write as _;
 
-use panic_halt as _;
+use exception_reset as _; // default exception handler
+use panic_serial as _; // panic handler
 use usbarmory::serial::Serial;
 
 #[no_mangle]
 fn main() -> ! {
-    let mut serial = Serial::get();
-
-    writeln!(serial, "Hello, world!").ok();
+    if let Some(serial) = Serial::take() {
+        writeln!(&serial, "Hello, world!").ok();
+    }
 
     // wait 5 seconds
     usbarmory::delay(5 * usbarmory::CPU_FREQUENCY);

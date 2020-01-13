@@ -49,6 +49,14 @@ dependencies = [
 ]
 
 [[package]]
+name = "exception-reset"
+version = "0.0.0"
+dependencies = [
+ "cortex-a 0.0.0",
+ "usbarmory 0.0.0",
+]
+
+[[package]]
 name = "generic-array"
 version = "0.12.3"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -67,11 +75,6 @@ dependencies = [
 [[package]]
 name = "imx6ul-rac"
 version = "0.0.0"
-
-[[package]]
-name = "panic-halt"
-version = "0.2.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
 
 [[package]]
 name = "panic-serial"
@@ -117,8 +120,8 @@ version = "0.0.0"
 dependencies = [
  "cortex-a 0.0.0",
  "cortex-m-semihosting 0.3.5 (git+https://github.com/japaric/cortex-m-semihosting?branch=cortex-a)",
+ "exception-reset 0.0.0",
  "imx6ul-rac 0.0.0",
- "panic-halt 0.2.0 (registry+https://github.com/rust-lang/crates.io-index)",
  "panic-serial 0.0.0",
  "usbarmory-rt 0.0.0",
 ]
@@ -127,6 +130,7 @@ dependencies = [
 name = "usbarmory-rt"
 version = "0.0.0"
 dependencies = [
+ "cortex-a 0.0.0",
  "imx6ul-rac 0.0.0",
 ]
 
@@ -151,7 +155,6 @@ dependencies = [
 "checksum cortex-m-semihosting 0.3.5 (git+https://github.com/japaric/cortex-m-semihosting?branch=cortex-a)" = "<none>"
 "checksum generic-array 0.12.3 (registry+https://github.com/rust-lang/crates.io-index)" = "c68f0274ae0e023facc3c97b2e00f076be70e254bc851d972503b328db79b2ec"
 "checksum generic-array 0.13.2 (registry+https://github.com/rust-lang/crates.io-index)" = "0ed1e761351b56f54eb9dcd0cfaca9fd0daecf93918e1cfc01c8a3d26ee7adcd"
-"checksum panic-halt 0.2.0 (registry+https://github.com/rust-lang/crates.io-index)" = "de96540e0ebde571dc55c73d60ef407c653844e6f9a1e2fdbd40c07b9252d812"
 "checksum rustc_version 0.2.3 (registry+https://github.com/rust-lang/crates.io-index)" = "138e3e0acb6c9fb258b19b67cb8abd63c00679d2851805ea151465464fe9030a"
 "checksum semver 0.9.0 (registry+https://github.com/rust-lang/crates.io-index)" = "1d7eb9ef2c18661902cc47e535f9bc51b78acd254da71d375c2f6720d9a40403"
 "checksum semver-parser 0.7.0 (registry+https://github.com/rust-lang/crates.io-index)" = "388a1df253eca08550bef6c72392cfe7c30914bf41df5269b68cbd6ff8f570a3"

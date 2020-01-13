@@ -1,7 +1,8 @@
 #![no_main]
 #![no_std]
 
-use panic_serial as _;
+use exception_reset as _; // default exception handler
+use panic_serial as _; // panic handler
 
 #[no_mangle]
 fn main() -> ! {
