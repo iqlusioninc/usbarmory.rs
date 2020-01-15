@@ -56,7 +56,7 @@ impl Serial {
     }
 
     /// Blocks until all data has been transmitted
-    pub fn flush(&self) {
+    pub fn flush() {
         unsafe { while uart::UART2_USR2.read_volatile() & uart::UART_USR2_TXDC == 0 {} }
     }
 

@@ -11,7 +11,7 @@ fn panic(info: &PanicInfo) -> ! {
         // other message (in the case we preempted a `write!` operation or a
         // `write!` operation panicked midway)
         writeln!(serial, "\n{}", info).ok();
-        serial.flush();
+        Serial::flush();
     });
 
     usbarmory::reset();
