@@ -28,7 +28,9 @@ where
 {
 }
 
-// NOTE(safety) must run only once; must be executed before IRQ interrupts are unmasked
+/// # Safety
+///
+/// must run only once; must be executed before IRQ interrupts are unmasked
 pub unsafe fn enable_gic() {
     // enable the CPU interface
     gicc::GICC_CTLR.write_volatile(1);
@@ -37,6 +39,10 @@ pub unsafe fn enable_gic() {
     gicd::GICD_CTLR.write_volatile(1);
 }
 
+/// # Safety
+///
+/// - `ptr` must be a valid pointer
+/// - `ceiling` must be the largest priority of all the contexts this will be called in
 pub unsafe fn lock<T, R>(
     ptr: *mut T,
     priority: &Priority,
@@ -98,7 +104,10 @@ where
     }
 }
 
-// NOTE(safety) must run before IRQ interrupts are unmasked
+/// # Safety
+///
+/// - Must only be used before IRQ interrupts are unmasked; otherwise it can
+/// break priority-based critical sections
 pub unsafe fn set_sgi_priority(sgi: u8, logical: u8) {
     debug_assert!(logical > IDLE_PRIORITY);
 
@@ -107,6 +116,9 @@ pub unsafe fn set_sgi_priority(sgi: u8, logical: u8) {
         .write_volatile(logical2hw(logical))
 }
 
+/// # Safety
+///
+/// - Can break priority based critical sections, like `lock`
 pub unsafe fn set_priority_mask(logical: u8) {
     gicc::GICC_PMR.write_volatile(u32::from(logical2hw(logical)));
 }
@@ -123,6 +135,11 @@ pub struct Priority {
 }
 
 impl Priority {
+    /// # Safety
+    ///
+    /// - Initial value must match the static priority of the context where
+    /// it'll be used
+    /// - Only a single instance must exist per interrupt handler
     #[inline(always)]
     pub unsafe fn new(value: u8) -> Self {
         Priority {

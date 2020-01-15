@@ -65,7 +65,7 @@ pub fn codegen(
                     ));
                 }
 
-                let ref elems = (0..cap)
+                let elems = &(0..cap)
                     .map(|_| quote!(core::mem::MaybeUninit::uninit()))
                     .collect::<Vec<_>>();
 

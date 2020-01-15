@@ -4,6 +4,7 @@ use rtfm_syntax::{analyze::Analysis, ast::App, Context};
 
 use crate::codegen::util;
 
+#[allow(clippy::cognitive_complexity)]
 pub fn codegen(
     ctxt: Context<'_>,
     priority: u8,

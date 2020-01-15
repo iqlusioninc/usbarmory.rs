@@ -45,7 +45,7 @@ pub fn codegen(
                         })
                         .collect::<Vec<_>>()
                 })
-                .unwrap_or(vec![]);
+                .unwrap_or_else(|| vec![]);
 
             if !late_fields.is_empty() {
                 let late_resources = util::late_resources_ident(cname);
@@ -84,8 +84,7 @@ pub fn codegen(
             }
         ));
 
-        let mut const_app = None;
-        if !init.args.resources.is_empty() {
+        let const_app = if !init.args.resources.is_empty() {
             let (item, constructor) = resources_struct::codegen(
                 Context::Init(crate::CORE),
                 PRIORITY,
@@ -95,8 +94,10 @@ pub fn codegen(
             );
 
             root_init.push(item);
-            const_app = Some(constructor);
-        }
+            Some(constructor)
+        } else {
+            None
+        };
 
         let locals_new = locals_new.iter();
         let call_init = Some(quote!(let late = #cname(#(#locals_new,)* #cname::Context::new());));
