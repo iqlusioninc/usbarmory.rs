@@ -136,6 +136,43 @@ jobs:
 #       run: |
 #         cargo xrun --example qemu-hello --release
 
+  # test that all our examples link
+  it_links:
+    name: Check that all examples link in dev and release mode
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout sources
+        uses: actions/checkout@v2
+
+      - name: Install nightly toolchain
+        uses: actions-rs/toolchain@v1
+        with:
+          components: rust-src # needed by cargo-xbuild
+          toolchain: nightly
+          override: true
+
+      - name: Cache cargo installs
+        id: cache-cargo-bin
+        uses: actions/cache@v1
+        with:
+          path: ~/.cargo/bin
+          key: ${{ runner.os }}-cargo-bin-${{ hashFiles('dev-dependencies.txt') }}
+
+      - name: Install dev-dependencies
+        if: steps.cache-cargo-bin.outputs.cache-hit != 'true'
+        run: |
+          which cargo-audit || cargo install `cat dev-dependencies.txt`
+
+      - name: Build examples using the dev profile
+        working-directory: ./firmware
+        run: |
+          cargo xbuild -p usbarmory --examples
+
+      - name: Build examples using the dev profile
+        working-directory: ./firmware
+        run: |
+          cargo xbuild -p usbarmory --examples --release
+
   fmt:
     name: Rustfmt
     runs-on: ubuntu-latest
