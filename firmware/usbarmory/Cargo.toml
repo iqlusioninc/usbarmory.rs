@@ -17,6 +17,8 @@ rac = { package = "imx6ul-rac", path = "../imx6ul-rac" }
 usbarmory-rt = { path = "../usbarmory-rt" }
 
 [dev-dependencies]
+cortex-a-rtfm = { path = "../cortex-a-rtfm" }
 cortex-m-semihosting = { git = "https://github.com/japaric/cortex-m-semihosting", branch = "cortex-a" }
-panic-serial = { path = "../panic-serial" }
 exception-reset = { path = "../exception-reset" }
+heapless = "0.5.2"
+panic-serial = { path = "../panic-serial" }
