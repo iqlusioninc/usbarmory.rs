@@ -1,6 +1,7 @@
 [workspace]
 members = [
   "cortex-a",
+  "cortex-a-rtfm",
   "exception-reset",
   "imx6ul-rac",
   "panic-serial",

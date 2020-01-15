@@ -83,3 +83,21 @@ pub fn dmb() {
 
     unsafe { __dmb() }
 }
+
+/// Data Synchronization Barrier
+pub fn dsb() {
+    extern "C" {
+        fn __dsb();
+    }
+
+    unsafe { __dsb() }
+}
+
+/// Instruction Synchronization Barrier
+pub fn isb() {
+    extern "C" {
+        fn __isb();
+    }
+
+    unsafe { __isb() }
+}

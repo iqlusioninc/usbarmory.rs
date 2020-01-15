@@ -15,7 +15,7 @@ unsafe fn DefaultHandler() -> ! {
         // NOTE the leading newline is to *not* append the panic message to some
         // other message (in the case we preempted a `write!` operation)
         serial.write_all(b"\nunhandled exception\n");
-        serial.flush();
+        Serial::flush();
     });
 
     usbarmory::reset()

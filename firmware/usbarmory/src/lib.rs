@@ -9,6 +9,7 @@ use rac::wdog;
 use usbarmory_rt as _;
 
 pub mod led;
+mod macros;
 pub mod serial;
 
 /// Default CPU frequency
