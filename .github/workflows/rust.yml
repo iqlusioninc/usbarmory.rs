@@ -170,14 +170,14 @@ jobs:
         run: echo ::set-env name=RUST_TARGET_PATH::$(echo ${GITHUB_WORKSPACE}/firmware )
 
       - name: Build examples using the dev profile
-        working-directory: ./firmware
+        working-directory: ./firmware/usbarmory
         run: |
-          cargo xbuild -p usbarmory --examples
+          cargo xbuild --examples
 
-      - name: Build examples using the dev profile
-        working-directory: ./firmware
+      - name: Build examples using the release profile
+        working-directory: ./firmware/usbarmory
         run: |
-          cargo xbuild -p usbarmory --examples --release
+          cargo xbuild --examples --release
 
   fmt:
     name: Rustfmt
