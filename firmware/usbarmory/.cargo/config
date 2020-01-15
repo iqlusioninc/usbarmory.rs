@@ -4,5 +4,10 @@ rustflags = [
   "-C", "link-arg=-Tlink.x",
 ]
 
+[target.armv7-none-eabihf]
+rustflags = [
+  "-C", "link-arg=-Tlink.x",
+]
+
 [build]
 target = "armv7-none-eabi"

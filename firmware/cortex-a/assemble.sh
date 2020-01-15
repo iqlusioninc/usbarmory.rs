@@ -9,7 +9,9 @@ main() {
     arm-none-eabi-as -march=armv7-a asm.s -o bin/$pkg_name.o
     ar crs bin/armv7-none-eabi.a bin/$pkg_name.o
 
-    # TODO armv7-none-eabihf
+    # cc uses the same flags for the gnueabihf variant
+    arm-none-eabi-as -march=armv7-a+vfpv3 asm.s -o bin/$pkg_name.o
+    ar crs bin/armv7-none-eabihf.a bin/$pkg_name.o
 
     rm bin/*.o
 }
