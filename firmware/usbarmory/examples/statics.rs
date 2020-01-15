@@ -3,42 +3,36 @@
 #![no_main]
 #![no_std]
 
-use core::{
-    fmt::Write,
-    sync::atomic::{AtomicU64, Ordering},
-};
+use core::sync::atomic::{AtomicU64, Ordering};
 
 use exception_reset as _; // default exception handler
 use panic_serial as _; // panic handler
-use usbarmory::serial::Serial;
+use usbarmory::{println, serial::Serial};
 
 // .bss
 static X: AtomicU64 = AtomicU64::new(0);
 // .data
 static Y: AtomicU64 = AtomicU64::new(1);
 
+// NOTE binary interfaces, using `no_mangle` and `extern`, are extremely unsafe
+// as no type checking is performed by the compiler; stick to safe interfaces
+// like `#[rtfm::app]`
 #[no_mangle]
 fn main() -> ! {
-    if let Some(serial) = Serial::take() {
-        writeln!(
-            &serial,
-            "X={}, Y={}",
-            X.load(Ordering::Relaxed),
-            Y.load(Ordering::Relaxed)
-        )
-        .ok();
+    println!(
+        "X={}, Y={}",
+        X.load(Ordering::Relaxed),
+        Y.load(Ordering::Relaxed)
+    );
 
-        X.fetch_add(1, Ordering::Relaxed);
-        Y.fetch_add(1, Ordering::Relaxed);
+    X.fetch_add(1, Ordering::Relaxed);
+    Y.fetch_add(1, Ordering::Relaxed);
 
-        writeln!(
-            &serial,
-            "X={}, Y={}",
-            X.load(Ordering::Relaxed),
-            Y.load(Ordering::Relaxed)
-        )
-        .ok();
-    }
+    println!(
+        "X={}, Y={}",
+        X.load(Ordering::Relaxed),
+        Y.load(Ordering::Relaxed)
+    );
 
     // wait 5 seconds
     usbarmory::delay(5 * usbarmory::CPU_FREQUENCY);

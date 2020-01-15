@@ -5,8 +5,11 @@
 
 use exception_reset as _;
 use panic_serial as _;
-use usbarmory::serial::Serial;
+use usbarmory::println;
 
+// NOTE binary interfaces, using `no_mangle` and `extern`, are extremely unsafe
+// as no type checking is performed by the compiler; stick to safe interfaces
+// like `#[rtfm::app]`
 #[no_mangle]
 fn main() -> ! {
     // unaligned memory access = data abort exception
@@ -20,11 +23,8 @@ fn main() -> ! {
 
 #[allow(non_snake_case)]
 #[no_mangle]
-fn DataAbort() -> ! {
-    if let Some(serial) = Serial::take() {
-        serial.write_all(b"You've met with a terrible fate, haven't you?\n");
-        serial.flush();
-    }
+extern "C" fn DataAbort() -> ! {
+    println!("You've met with a terrible fate, haven't you?");
 
     // wait 5 seconds
     usbarmory::delay(5 * usbarmory::CPU_FREQUENCY);

@@ -14,12 +14,10 @@
 #![no_main]
 #![no_std]
 
-use core::fmt::Write;
-
 use exception_reset as _;
 use panic_serial as _;
 use rac::gic::{gicc, gicd};
-use usbarmory::serial::Serial;
+use usbarmory::println;
 
 // Lowest priority
 const P0: u8 = 0b1111_1000;
@@ -30,6 +28,9 @@ const P1: u8 = 0b1111_0000;
 // Higher priority
 const P2: u8 = 0b1110_1000;
 
+// NOTE binary interfaces, using `no_mangle` and `extern`, are extremely unsafe
+// as no type checking is performed by the compiler; stick to safe interfaces
+// like `#[rtfm::app]`
 #[no_mangle]
 unsafe fn main() -> ! {
     // enable the CPU interface
@@ -45,24 +46,18 @@ unsafe fn main() -> ! {
     gicd::GICD_IPRIORITYR.add(1).write_volatile(P2);
 
     // set priority mask to its lowest value
-    set_priority_mask(P0);
+    gicc::GICC_PMR.write_volatile(u32::from(P0));
 
     // unmask IRQ interrupts
     // (FFI calls implicitly include a memory barrier)
     cortex_a::enable_irq();
 
-    if let Some(serial) = Serial::take() {
-        writeln!(&serial, "before SGI0").ok();
-        serial.release();
-    }
+    println!("before SGI0");
 
     // send a SGI0 to ourselves
     gicd::GICD_SGIR.write_volatile(0b10 << 24);
 
-    if let Some(serial) = Serial::take() {
-        writeln!(&serial, "after SGI0").ok();
-        serial.release();
-    }
+    println!("after SGI0");
 
     // wait 5 seconds
     usbarmory::delay(5 * usbarmory::CPU_FREQUENCY);
@@ -74,20 +69,14 @@ unsafe fn main() -> ! {
 #[inline(never)]
 #[no_mangle]
 fn SGI0() {
-    if let Some(serial) = Serial::take() {
-        writeln!(&serial, "in SGI0").ok();
-        serial.release();
-    }
+    println!("in SGI0");
 
     // set the priority mask high enough to mask SGI1
     unsafe {
-        set_priority_mask(P2);
+        gicc::GICC_PMR.write_volatile(u32::from(P2));
     }
 
-    if let Some(serial) = Serial::take() {
-        writeln!(&serial, "masked").ok();
-        serial.release();
-    }
+    println!("masked");
 
     // send a SGI1 to ourselves
     unsafe {
@@ -96,28 +85,20 @@ fn SGI0() {
 
     // restore the priority mask
     unsafe {
-        set_priority_mask(P0);
+        gicc::GICC_PMR.write_volatile(u32::from(P0));
     }
 
-    //~ preempted by SGI1 here
+    // force `GICC_PMR` to be completed before the following `Serial::take` operation
+    // without this SGI1 may interrupt SGI0 *after* the `Serial` interface has
+    // been taken resulting in SGI1 failing to take the `Serial` interface
+    cortex_a::isb(); //~ preempted by SGI1 here
 
-    if let Some(serial) = Serial::take() {
-        writeln!(&serial, "unmasked").ok();
-        serial.release();
-    }
+    println!("unmasked");
 }
 
 #[allow(non_snake_case)]
 #[inline(never)]
 #[no_mangle]
 fn SGI1() {
-    if let Some(serial) = Serial::take() {
-        writeln!(&serial, "in SGI1").ok();
-        serial.release();
-    }
-}
-
-unsafe fn set_priority_mask(threshold: u8) {
-    gicc::GICC_PMR.write_volatile(u32::from(threshold));
-    cortex_a::dmb();
+    println!("SGI1");
 }
