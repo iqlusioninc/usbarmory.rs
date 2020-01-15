@@ -50,5 +50,19 @@ __disable_irq:
   .global __dmb
   .section .text.__dmb
 __dmb:
-  dmb
+  dmb sy
+  bx lr
+
+
+  .global __dsb
+  .section .text.__dsb
+__dsb:
+  dsb sy
+  bx lr
+
+
+  .global __isb
+  .section .text.__isb
+__isb:
+  isb
   bx lr
