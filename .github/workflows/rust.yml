@@ -37,6 +37,9 @@ jobs:
         run: |
           which cargo-audit || cargo install `cat dev-dependencies.txt`
 
+      - name: Set environment for cargo-xbuild
+        run: echo ::set-env name=RUST_TARGET_PATH::$(echo ${GITHUB_WORKSPACE}/firmware )
+
       - name: Run cargo xcheck
         working-directory: ./firmware
         run: |
@@ -163,6 +166,9 @@ jobs:
         run: |
           which cargo-audit || cargo install `cat dev-dependencies.txt`
 
+      - name: Set environment for cargo-xbuild
+        run: echo ::set-env name=RUST_TARGET_PATH::$(echo ${GITHUB_WORKSPACE}/firmware )
+
       - name: Build examples using the dev profile
         working-directory: ./firmware
         run: |
@@ -222,6 +228,9 @@ jobs:
 
       - name: Install clippy
         run: rustup component add clippy
+
+      - name: Set environment for cargo-xbuild
+        run: echo ::set-env name=RUST_TARGET_PATH::$(echo ${GITHUB_WORKSPACE}/firmware )
 
       - name: Run cargo clippy
         working-directory: ./firmware
