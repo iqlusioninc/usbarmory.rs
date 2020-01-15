@@ -7,7 +7,7 @@ use core::sync::atomic::{AtomicU64, Ordering};
 
 use exception_reset as _; // default exception handler
 use panic_serial as _; // panic handler
-use usbarmory::{println, serial::Serial};
+use usbarmory::println;
 
 // .bss
 static X: AtomicU64 = AtomicU64::new(0);
