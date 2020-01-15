@@ -15,7 +15,7 @@
   "features": "+v7,+vfp3,-d32,+thumb2,+strict-align,-neon",
   "linker": "rust-lld",
   "linker-flavor": "ld.lld",
-  "llvm-target": "armv7-none-eabihf",
+  "llvm-target": "armv7a-none-eabihf",
   "max-atomic-width": 64,
   "os": "none",
   "panic-strategy": "abort",
