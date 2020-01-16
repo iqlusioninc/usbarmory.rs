@@ -8,11 +8,11 @@ GIC (General Interrupt Controller) as their interrupt controller
 This port supports the following functionality
 
 - Resources: late initialization and sharing (`lock` API)
-- Software tasks & message passing
+- Software tasks (`#[task]`) & message passing (`spawn` API)
+- Hardware tasks (`#[task(binds = ..)`)
 
 This port does not yet support the following functionality
 
-- Hardware tasks (`#[task(binds = ..)`)
 - Timer queue (`schedule` API)
 
 This port has hard-coded the following parameters but could be made more
