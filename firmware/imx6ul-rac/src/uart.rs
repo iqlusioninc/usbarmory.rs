@@ -4,11 +4,15 @@
 
 const UART2_BASE: usize = 0x021e_8000;
 const UTXD_OFFSET: usize = 0x40;
+const UCR1_OFFSET: usize = 0x80;
 const USR1_OFFSET: usize = 0x94;
 const USR2_OFFSET: usize = 0x98;
 
 /// UART2 Transmitter Register
 pub const UART2_UTXD: *mut u32 = (UART2_BASE + UTXD_OFFSET) as *mut _;
+
+/// UART2 Control Register 1
+pub const UART2_UCR1: *mut u32 = (UART2_BASE + UCR1_OFFSET) as *mut _;
 
 /// UART2 Status Register 1
 pub const UART2_USR1: *mut u32 = (UART2_BASE + USR1_OFFSET) as *mut _;
