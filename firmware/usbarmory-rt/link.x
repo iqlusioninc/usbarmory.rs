@@ -51,6 +51,8 @@ PROVIDE(SGI13 = DefaultHandler);
 PROVIDE(SGI14 = DefaultHandler);
 PROVIDE(SGI15 = DefaultHandler);
 
+INCLUDE interrupts.x
+
 /* Make the linker exhaustively search these symbols, otherwise they may be ignored even if provided */
 EXTERN(_exceptions);
 

@@ -124,11 +124,14 @@ pub fn codegen(app: &App, analysis: &Analysis) -> Vec<TokenStream2> {
                 level
             );
             let sgi = util::sgi_ident(util::prio2sgi(level));
+            // NOTE we use the Rust ABI here because the IRQ handler (written in
+            // Rust) expects that ABI and can inline these
             items.push(quote!(
                 #[allow(non_snake_case)]
                 #[doc = #doc]
+                #[inline(never)]
                 #[no_mangle]
-                unsafe fn #sgi() {
+                unsafe extern "C" fn #sgi() {
                     /// The priority of this interrupt handler
                     const PRIORITY: u8 = #level;
 

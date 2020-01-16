@@ -1,0 +1,128 @@
+32         IOMUXC              General-Purpose Register 1 from IOMUXC. Used to notify the core on the exception condition while booting.
+33         DAP                 Debug Access Port interrupt request
+34         SDMA                SDMA interrupt request from all channels
+35         TSC                 TSC interrupt
+36         SNVS_LP_HP          Logic OR of SNVS_LP and SNVS_HP interrupts SNVS_HP
+37         LCDIF               LCDIF sync interrupt
+38         BEE                 BEE interrupt
+39         CSI                 CMOS Sensor Interface interrupt request
+40         PXP                 PXP interrupt
+41         SCTR_1              SCTR compare interrupt
+42         SCTR_2              SCTR compare interrupt
+43         WDOG3               WDOG3 timer reset interrupt request
+44         Reserved            Reserved
+45         APBH DMA            Logical OR of APBH DMA channels 0-3 completion and error interrupts
+46         WEIM                WEIM interrupt request
+47         RAWNAND_BCH         BCH operation complete interrupt
+48         RAWNAND_GPMI        GPMI operation timeout error interrupt
+49         UART6               UART6 interrupt request
+50         Reserved            Reserved
+51         SNVS                SRTC consolidated interrupt
+52         SNVS_SEC            SRTC security interrupt
+53         CSU                 CSU interrupt request 1. Indicates to the processor that one or more alarm inputs were asserted.
+54         uSDHC1              uSDHC1 (Enhanced SDHC) interrupt request
+55         uSDHC2              uSDHC2 (Enhanced SDHC) interrupt request
+56         SAI3_1              SAI interrupt
+57         SAI3_2              SAI interrupt
+58         UART1               UART1 interrupt request
+59         UART2               UART2 interrupt request
+60         UART3               UART3 interrupt request
+61         UART4               UART4 interrupt request
+62         UART5               UART5 interrupt request
+63         eCSPI1              eCSPI1 interrupt request
+64         eCSPI2              eCSPI2 interrupt request
+65         eCSPI3              eCSPI3 interrupt request
+66         eCSPI4              eCSPI4 interrupt request
+67         I2C4                I2C4 interrupt request
+68         I2C1                I2C1 interrupt request
+69         I2C2                I2C2 interrupt request
+70         I2C3                I2C3 interrupt request
+71         UART7               UART-7 ORed interrupt
+72         UART8               UART-8 ORed interrupt
+73         Reserved            Reserved
+74         USB_OTG2            USBO2 USB OTG2
+75         USB_OTG1            USBO2 USB OTG1
+76         USB_UTMI0           UTMI0 interrupt request
+77         USB_UTMI1           UTMI1 interrupt request
+78         CAAM_JQ2            CAAM interrupt queue for JQ2
+79         CAAM_ERROR          CAAM interrupt for recoverable error
+80         CAAM_RTIC           CAAM interrupt for RTIC
+81         TEMP_MON             Temperature Sensor (temperature greater than threshold) interrupt request
+82         ASRC                 ASRC interrupt request
+83         Reserved             Reserved
+84         SPDIF                Logic OR of SPDIF Rx/Tx interrupts
+85         Reserved             Reserved
+86         PMU_1_1_2_5_3_0_REGULATORS Brown-out event on either the 1.1, 2.5, or 3.0 regulators
+87         GPT1                 Logical OR of GPT1 rollover interrupt line, input capture 1 and 2 lines, output compare 1, 2, and 3 interrupt lines
+88         EPIT1                EPIT1 output compare interrupt
+89         EPIT2                EPIT2 output compare interrupt
+90         GPIO1_INT7           INT7 interrupt request
+91         GPIO1_INT6           INT6 interrupt request
+92         GPIO1_INT5           INT5 interrupt request
+93         GPIO1_INT4           INT4 interrupt request
+94         GPIO1_INT3           INT3 interrupt request
+95         GPIO1_INT2           INT2 interrupt request
+96         GPIO1_INT1           INT1 interrupt request
+97         GPIO1_INT0           INT0 interrupt request
+98         GPIO1_0_15           Combined interrupt indication for GPIO1 signals 0 - 15
+99         GPIO1_16_31          Combined interrupt indication for GPIO1 signals 16 - 31
+100        GPIO2_0_15           Combined interrupt indication for GPIO2 signals 0 - 15
+101        GPIO2_16_31          Combined interrupt indication for GPIO2 signals 16 - 31
+102        GPIO3_0_15           Combined interrupt indication for GPIO3 signals 0 - 15
+103        GPIO3_16_31          Combined interrupt indication for GPIO3 signals 16 - 31
+104        GPIO4_0_15           Combined interrupt indication for GPIO4 signals 0 - 15
+105        GPIO4_16_31          Combined interrupt indication for GPIO4 signals 16 - 31
+106        GPIO5_0_15           Combined interrupt indication for GPIO5 signals 0 - 15
+107        GPIO5_16_31          Combined interrupt indication for GPIO5 signals 16 - 31
+108        Reserved             Reserved
+109        Reserved             Reserved
+110        Reserved             Reserved
+111        Reserved             Reserved
+112        WDOG1                WDOG1 timer reset interrupt request
+113        WDOG2                WDOG2 timer reset interrupt request
+114        KPP                  Key Pad interrupt request
+115      PWM1                Cumulative interrupt line for PWM1. Logical OR of rollover, compare, and FIFO waterlevel crossing interrupts.
+116      PWM2                Cumulative interrupt line for PWM2. Logical OR of rollover, compare, and FIFO waterlevel crossing interrupts.
+117      PWM3                Cumulative interrupt line for PWM3. Logical OR of rollover, compare, and FIFO waterlevel crossing interrupts.
+118      PWM4                Cumulative interrupt line for PWM4. Logical OR of rollover, compare, and FIFO waterlevel crossing interrupts.
+119      CCM1                CCM interrupt request 1
+120      CCM2                CCM interrupt request 2
+121      GPC                 GPC interrupt request 1
+122      Reserved            Reserved
+123      SRC                 SRC interrupt request
+124      Reserved            Reserved
+125      Reserved            Reserved
+126      CPU_PERF            Performance Unit interrupt
+127      CPU_CTI             CTI trigger outputs interrupt
+128      SRC_WDOG            Combined CPU WDOG interrupts (4x) out of SRC
+129      SAI1                SAI1 interrupt request
+130      SAI2                SAI2 interrupt request
+131      Reserved            Reserved
+132      ADC1                ADC1 interrupt request
+133      ADC2                ADC2 interrupt request
+134      Reserved            Reserved
+135      Reserved            Reserved
+136      SJC                 SJC interrupt from the General-Purpose register
+137      CAAM_RING0          CAAM job ring 0 interrupt
+138      CAAM_RING1          CAAM job ring 1 interrupt
+139      QSPI                QSPI interrupt request
+140      TZASC               TZASC (PL380) interrupt request
+141      GPT2                Logical OR of GPT2 rollover interrupt line, input capture 1 and 2 lines, output compare 1, 2, and 3 interrupt lines.
+142      CAN1                CAN 1 interrupt request
+143      CAN2                Combined interrupt of ini_int_busoff,ini_int_error,ipi_int_mbor,ipi_int_txwarning and ipi_int_waken
+144      SIM1                SIM interrupt request
+145      SIM2                SIM interrupt request
+146      PWM5                Cumulative interrupt line. OR of Rollover Interrupt line, Compare Interrupt line and FIFO Waterlevel crossing interrupt line.
+147      PWM6                Cumulative interrupt line. OR of Rollover Interrupt line, Compare Interrupt line and FIFO waterlevel crossing interrupt line.
+148        PWM7                Cumulative interrupt line. OR of Rollover Interrupt line, Compare Interrupt line and FIFO waterlevel crossing interrupt line.
+149        PWM8                Cumulative interrupt line. OR of Rollover Interrupt line, Compare Interrupt line and FIFO waterlevel crossing interrupt line.
+150        ENET1               ENET1 interrupt
+151        ENET1_TIMER         ENET1 1588 Timer interrupt [synchronous] request
+152        ENET2               ENET2 interrupt
+153        ENET2_TIMER         MAC 0 1588 Timer interrupt [synchronous] request
+154        Reserved            Reserved
+155        Reserved            Reserved
+156        Reserved            Reserved
+157        Reserved            Reserved
+158        Reserved            Reserved
+159        PMU_CORE_GPU_SOC_REGULATORS Brown-out event on either the core, GPU, or SoC regulators.
