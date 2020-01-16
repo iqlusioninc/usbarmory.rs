@@ -18,6 +18,7 @@ mod spawn;
 mod spawn_body;
 mod util;
 
+#[allow(clippy::cognitive_complexity)]
 pub fn app(app: &App, analysis: &Analysis) -> TokenStream {
     let assertion_stmts = assertions::codegen(analysis);
 

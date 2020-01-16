@@ -75,7 +75,7 @@ fn txt2rust(out_dir: &Path) -> Result<(), Box<dyn Error>> {
     }
 
     if entries.len() != NIRQS {
-        Err("`interrupts.txt` must have 128 entries")?;
+        return Err("`interrupts.txt` must have 128 entries".into());
     }
 
     // remove all "reserved" entries

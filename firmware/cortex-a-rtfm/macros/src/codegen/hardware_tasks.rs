@@ -66,13 +66,14 @@ pub fn codegen(
         root.push(module::codegen(Context::HardwareTask(name), needs_lt, app));
 
         // `${task}Locals`
-        let mut locals_pat = None;
-        if !task.locals.is_empty() {
+        let locals_pat = if !task.locals.is_empty() {
             let (struct_, pat) = locals::codegen(Context::HardwareTask(name), &task.locals, app);
 
             root.push(struct_);
-            locals_pat = Some(pat);
-        }
+            Some(pat)
+        } else {
+            None
+        };
 
         let attrs = &task.attrs;
         let context = &task.context;
