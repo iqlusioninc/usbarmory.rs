@@ -44,7 +44,7 @@ pub fn codegen(app: &App, analysis: &Analysis) -> Vec<TokenStream2> {
     for sgi in 0..sgis_in_use as u8 {
         let logical_prio = util::sgi2prio(sgi);
         stmts.push(quote!(
-            rtfm::export::set_priority(#sgi, #logical_prio);
+            rtfm::export::set_priority(u16::from(#sgi), #logical_prio);
         ));
     }
 
