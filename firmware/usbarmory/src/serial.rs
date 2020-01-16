@@ -10,6 +10,12 @@ use rac::uart;
 
 static TAKEN: AtomicBool = AtomicBool::new(false);
 
+/// Events that can trigger an interrupt
+pub enum Event {
+    /// RxFIFO contains data
+    ReceiveReady,
+}
+
 /// Handle to the serial interface
 pub struct Serial {
     _not_sync: PhantomData<*mut ()>,
@@ -60,15 +66,47 @@ impl Serial {
         unsafe { while uart::UART2_USR2.read_volatile() & uart::UART_USR2_TXDC == 0 {} }
     }
 
+    /// Starts listening for a event
+    ///
+    /// `event` will now trigger interrupts
+    pub fn listen(&self, event: Event) {
+        unsafe {
+            match event {
+                Event::ReceiveReady => {
+                    let old = uart::UART2_UCR2.read_volatile();
+                    uart::UART2_UCR1.write_volatile(old | (1 << 9));
+                }
+            }
+        }
+    }
+
+    /// Reads a single byte from the serial interface
+    ///
+    /// Returns `None` if no data is currently available
+    pub fn read(&self) -> Option<u8> {
+        unsafe {
+            if uart::UART2_USR1.read_volatile() & (1 << 9) == 0 {
+                None
+            } else {
+                Some(uart::UART2_URXD.read_volatile() as u8)
+            }
+        }
+    }
+
+    /// [Blocking] Sends a single `byte` through the serial interface
+    pub fn write(&self, byte: u8) {
+        unsafe {
+            // if the FIFO buffer is full wait until we can write the next byte
+            while uart::UART2_USR1.read_volatile() & uart::UART_USR1_TRDY == 0 {}
+
+            uart::UART2_UTXD.write_volatile(byte as u32);
+        }
+    }
+
     /// [Blocking] Sends the given `bytes` through the serial interface
     pub fn write_all(&self, bytes: &[u8]) {
         for byte in bytes {
-            unsafe {
-                // if the FIFO buffer is full wait until we can write the next byte
-                while uart::UART2_USR1.read_volatile() & uart::UART_USR1_TRDY == 0 {}
-
-                uart::UART2_UTXD.write_volatile(*byte as u32);
-            }
+            self.write(*byte);
         }
     }
 }

@@ -44,7 +44,17 @@ pub fn codegen(app: &App, analysis: &Analysis) -> Vec<TokenStream2> {
     for sgi in 0..sgis_in_use as u8 {
         let logical_prio = util::sgi2prio(sgi);
         stmts.push(quote!(
-            rtfm::export::set_sgi_priority(#sgi, #logical_prio);
+            rtfm::export::set_priority(u16::from(#sgi), #logical_prio);
+        ));
+    }
+
+    // enable SPI (Shared Peripheral Interrupts) and set their priorities
+    for task in app.hardware_tasks.values() {
+        let logical_prio = task.args.priority;
+        let symbol = &task.args.binds;
+        stmts.push(quote!(
+            rtfm::export::set_priority(rtfm::export::Interrupt::#symbol.irq(), #logical_prio);
+            rtfm::export::enable_spi(rtfm::export::Interrupt::#symbol.irq());
         ));
     }
 

@@ -3,6 +3,7 @@ use core::cell::Cell;
 pub use cortex_a::enable_irq;
 pub use heapless::{consts, i::Queue as iQueue, spsc::Queue};
 use rac::gic::{gicc, gicd};
+pub use usbarmory_rt::Interrupt;
 
 pub type FQ<N> = Queue<u8, N, u8>;
 pub type RQ<T, N> = Queue<(T, u8), N, u8>;
@@ -108,12 +109,24 @@ where
 ///
 /// - Must only be used before IRQ interrupts are unmasked; otherwise it can
 /// break priority-based critical sections
-pub unsafe fn set_sgi_priority(sgi: u8, logical: u8) {
+pub unsafe fn set_priority(irq: u16, logical: u8) {
     debug_assert!(logical > IDLE_PRIORITY);
 
     gicd::GICD_IPRIORITYR
-        .add(usize::from(sgi))
+        .add(usize::from(irq))
         .write_volatile(logical2hw(logical))
+}
+
+/// # Safety
+///
+/// - Must only be used before IRQ interrupts are unmasked; otherwise it can
+/// break mask-unmask-based critical sections
+pub unsafe fn enable_spi(spi: u16) {
+    debug_assert!(spi >= 32);
+
+    gicd::GICD_ISENABLER
+        .add(usize::from(spi) >> 5)
+        .write_volatile(1 << (spi % 32))
 }
 
 /// # Safety

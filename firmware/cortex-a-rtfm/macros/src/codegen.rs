@@ -4,6 +4,7 @@ use rtfm_syntax::{analyze::Analysis, ast::App};
 
 mod assertions;
 mod dispatchers;
+mod hardware_tasks;
 mod idle;
 mod init;
 mod locals;
@@ -17,6 +18,7 @@ mod spawn;
 mod spawn_body;
 mod util;
 
+#[allow(clippy::cognitive_complexity)]
 pub fn app(app: &App, analysis: &Analysis) -> TokenStream {
     let assertion_stmts = assertions::codegen(analysis);
 
@@ -30,6 +32,9 @@ pub fn app(app: &App, analysis: &Analysis) -> TokenStream {
 
     let (const_app_resources, mod_resources) = resources::codegen(app, analysis);
 
+    let (const_app_hardware_tasks, root_hardware_tasks, user_hardware_tasks) =
+        hardware_tasks::codegen(app, analysis);
+
     let (const_app_software_tasks, root_software_tasks, user_software_tasks) =
         software_tasks::codegen(app, analysis);
 
@@ -41,10 +46,12 @@ pub fn app(app: &App, analysis: &Analysis) -> TokenStream {
     quote!(
         #user_init
         #user_idle
+        #(#user_hardware_tasks)*
         #(#user_software_tasks)*
 
         #(#root_init)*
         #(#root_idle)*
+        #(#root_hardware_tasks)*
         #(#root_software_tasks)*
 
         #mod_resources
@@ -55,6 +62,7 @@ pub fn app(app: &App, analysis: &Analysis) -> TokenStream {
             #(#const_app_resources)*
             #const_app_init
             #const_app_idle
+            #(#const_app_hardware_tasks)*
             #(#const_app_software_tasks)*
             #(#const_app_dispatchers)*
             #(#const_app_spawn)*

@@ -24,6 +24,7 @@ const CORE: Core = 0;
 pub fn app(args: TokenStream, input: TokenStream) -> TokenStream {
     let mut settings = Settings::default();
     settings.optimize_priorities = true;
+    settings.parse_binds = true;
 
     let (app, analysis) = match rtfm_syntax::parse(args, input, settings) {
         Err(e) => return e.to_compile_error().into(),

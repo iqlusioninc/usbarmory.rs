@@ -260,6 +260,7 @@ version = "0.0.0"
 dependencies = [
  "cortex-a",
  "imx6ul-rac",
+ "quote",
 ]
 
 [[package]]

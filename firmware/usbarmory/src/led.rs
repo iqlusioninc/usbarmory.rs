@@ -7,6 +7,10 @@ use core::{
 
 use rac::gpio;
 
+// FIXME the two LEDs should be packed in a struct and it should not be possible
+// to move either out of that struct (rationale: concurrently acting on the LEDs
+// can lead to loss of GPIO4_DR data)
+
 const BLUE: u32 = 1 << 22;
 const WHITE: u32 = 1 << 21;
 
@@ -54,6 +58,18 @@ impl Blue {
             gpio::GPIO4_DR.write_volatile(old & !BLUE);
         }
     }
+
+    /// Toggles the LED
+    pub fn toggle(&self) {
+        unsafe {
+            let old = gpio::GPIO4_DR.read_volatile();
+            if old & BLUE == 0 {
+                gpio::GPIO4_DR.write_volatile(old | BLUE);
+            } else {
+                gpio::GPIO4_DR.write_volatile(old & !BLUE);
+            }
+        }
+    }
 }
 
 /// White LED
@@ -98,6 +114,17 @@ impl White {
         unsafe {
             let old = gpio::GPIO4_DR.read_volatile();
             gpio::GPIO4_DR.write_volatile(old & !WHITE);
+        }
+    }
+    /// Toggles the LED
+    pub fn toggle(&self) {
+        unsafe {
+            let old = gpio::GPIO4_DR.read_volatile();
+            if old & WHITE == 0 {
+                gpio::GPIO4_DR.write_volatile(old | WHITE);
+            } else {
+                gpio::GPIO4_DR.write_volatile(old & !WHITE);
+            }
         }
     }
 }
