@@ -91,3 +91,15 @@ unsafe extern "C" fn IRQ() {
     // end of interrupt
     gicc::GICC_EOIR.write_volatile(iid as u32);
 }
+
+// NOTE this is written in assembly because it should never touch the stack
+// pointer regardless of the optimization level used to compile the application
+// #[no_mangle]
+// fn DataAbort() -> ! {
+//     static MSG: &str = "\ndata abort exception (it could indicate a stack overflow)\n";
+//     Serial::borrow_unchecked(|serial| {
+//         serial.write_all(MSG.as_bytes());
+//     });
+//     Serial::flush();
+//     usbarmory::reset();
+// }

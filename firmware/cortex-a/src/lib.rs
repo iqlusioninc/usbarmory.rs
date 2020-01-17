@@ -101,3 +101,12 @@ pub fn isb() {
 
     unsafe { __isb() }
 }
+
+/// Wait For Interrupt
+pub fn wfi() {
+    extern "C" {
+        fn __wfi();
+    }
+
+    unsafe { __wfi() }
+}

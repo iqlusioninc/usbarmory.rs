@@ -1,6 +1,6 @@
 use core::cell::Cell;
 
-pub use cortex_a::enable_irq;
+pub use cortex_a::{enable_irq, wfi};
 pub use heapless::{consts, i::Queue as iQueue, spsc::Queue};
 use rac::gic::{gicc, gicd};
 pub use usbarmory_rt::Interrupt;

@@ -26,6 +26,9 @@ stage and will not be ready to use for some time.
 - [Xargo](https://crates.io/crates/xargo), for the time being. `cargo install
 xargo` (run this command *outside* the `firmware` directory)
 
+- [flip-lld], linker wrapper that adds zero-cost stack overflow protection.
+  `cargo install --git https://github.com/japaric/flip-lld`.
+
 ## Development dependencies
 
 - `arm-none-eabi-gcc`, only required if modifying assembly (`.s`) files
