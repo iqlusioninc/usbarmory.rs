@@ -80,7 +80,7 @@ pub fn codegen(
             vec![],
             None,
             quote!(loop {
-                // TODO check if this works as expected (needs hardware tasks or schedule)
+                // FIXME the processor is not waking up from WFI
                 // rtfm::export::wfi()
             }),
         )

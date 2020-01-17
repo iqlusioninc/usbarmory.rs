@@ -66,3 +66,9 @@ __dsb:
 __isb:
   isb
   bx lr
+
+  .global __wfi
+  .section .text.__wfi
+__wfi:
+  wfi
+  bx lr
