@@ -166,6 +166,11 @@ jobs:
         run: |
           which cargo-audit || cargo install `cat dev-dependencies.txt`
 
+      # TODO cache in dev-dependencies.txt when available on crates.io
+      - name: Install flip-lld
+        run: |
+          cargo install --git https://github.com/japaric/flip-lld
+
       - name: Set environment for cargo-xbuild
         run: echo ::set-env name=RUST_TARGET_PATH::$(echo ${GITHUB_WORKSPACE}/firmware )
 
