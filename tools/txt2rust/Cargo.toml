@@ -1,0 +1,13 @@
+[package]
+authors = ["iqlusion"]
+edition = "2018"
+license = "Apache-2.0 OR MIT"
+name    = "txt2rust"
+publish = false
+version = "0.0.0"
+
+[dependencies]
+anyhow = "1.0.26"
+proc-macro2 = "1.0.8"
+quote = "1.0.2"
+
