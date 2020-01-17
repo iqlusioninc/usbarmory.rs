@@ -18,9 +18,6 @@ MEMORY
   DRAM : ORIGIN = 0x80000000, LENGTH = 512M
 }
 
-/* Initial Stack Pointer */
-__stack_top__ = ORIGIN(OCRAM) + LENGTH(OCRAM);
-
 /* Use the default exception handler to handle all exceptions that have not been set by the user */
 PROVIDE(UndefinedInstruction = DefaultHandler);
 PROVIDE(SupervisorCall = DefaultHandler);
@@ -53,33 +50,40 @@ INCLUDE interrupts.x
 /* Make the linker exhaustively search these symbols, otherwise they may be ignored even if provided */
 EXTERN(_exceptions);
 
+/* Top of the stack */
+PROVIDE(__stack_top__ = ORIGIN(OCRAM) + LENGTH(OCRAM));
+
+/* Where to place things that are not the stack in RAM */
+PROVIDE(__ram_start__ = ORIGIN(OCRAM));
+
 /* # Linker sections */
 SECTIONS
 {
   /* ## Standard ELF sections */
-  .text :
+  .text __ram_start__ :
   {
-    /* must go first due to alignment requirements */
-    KEEP(*(.text._exceptions));
-
-    /* NOTE order the entry point to make the objdump easier to read */
+    /* put the entry point first to make the objdump easier to read */
     *(.text._start);
     *(.text.start);
+
+    /* the exception vector has an alignment requirement */
+    . = ALIGN(32);
+    KEEP(*(.text._exceptions));
 
     *(.text .text.*);
   } > OCRAM
 
-  .rodata :
+  .rodata ADDR(.text) + SIZEOF(.text) :
   {
     *(.rodata .rodata.*);
   } > OCRAM
 
-  .data :
+  .data ADDR(.rodata) + SIZEOF(.rodata) :
   {
     *(.data .data.*);
   } > OCRAM
 
-  .bss :
+  .bss ADDR(.data) + SIZEOF(.data) :
   {
     *(.bss .bss.*);
   } > OCRAM
@@ -95,4 +99,4 @@ SECTIONS
 }
 
 /* alignment requirement */
-ASSERT(ADDR(.text) % 32 == 0, "exception vector is not 32-bit aligned");
+ASSERT(_exceptions % 32 == 0, "exception vector is not 32-byte aligned");
