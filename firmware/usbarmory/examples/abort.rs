@@ -1,5 +1,7 @@
-// Generates a data abort exception to test that overriding exception handlers work
+// Generates an undefined instruction exception to test that overriding
+// exception handlers work
 
+#![feature(core_intrinsics)]
 #![no_main]
 #![no_std]
 
@@ -12,18 +14,17 @@ use usbarmory::println;
 // like `#[rtfm::app]`
 #[no_mangle]
 fn main() -> ! {
-    // unaligned memory access = data abort exception
+    // this operation will trigger the `UndefinedInstruction` handler defined
+    // below
     unsafe {
-        // this operation will trigger the `DataAbort` handler defined below
-        (1 as *const u16).read_volatile();
+        // this lowers to the UDF (undefined) instruction
+        core::intrinsics::abort();
     }
-
-    usbarmory::reset()
 }
 
 #[allow(non_snake_case)]
 #[no_mangle]
-extern "C" fn DataAbort() -> ! {
+extern "C" fn UndefinedInstruction() -> ! {
     println!("You've met with a terrible fate, haven't you?");
 
     // wait 5 seconds
