@@ -1,7 +1,5 @@
 //! Low level access to Cortex-A processors
 
-// FIXME replace inline assembly with external assembly
-#![feature(asm)]
 #![no_std]
 #![warn(missing_docs, rust_2018_idioms, unused_qualifications)]
 
