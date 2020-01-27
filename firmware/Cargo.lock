@@ -52,7 +52,7 @@ dependencies = [
  "cortex-a",
  "cortex-a-rtfm-macros",
  "heapless",
- "imx6ul-rac",
+ "imx6ul-pac",
  "rtfm-core",
  "usbarmory-rt",
 ]
@@ -134,10 +134,6 @@ dependencies = [
 
 [[package]]
 name = "imx6ul-pac"
-version = "0.1.0"
-
-[[package]]
-name = "imx6ul-rac"
 version = "0.0.0"
 
 [[package]]
@@ -253,7 +249,7 @@ dependencies = [
  "cortex-m-semihosting",
  "exception-reset",
  "heapless",
- "imx6ul-rac",
+ "imx6ul-pac",
  "panic-serial",
  "usbarmory-rt",
 ]
@@ -263,7 +259,7 @@ name = "usbarmory-rt"
 version = "0.0.0"
 dependencies = [
  "cortex-a",
- "imx6ul-rac",
+ "imx6ul-pac",
  "quote",
 ]
 

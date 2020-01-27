@@ -1,4 +1,11 @@
 //! Sanity check that static variables work
+//!
+//! Expected output:
+//!
+//! ```
+//! X=0, Y=1
+//! X=1, Y=2
+//! ```
 
 #![no_main]
 #![no_std]

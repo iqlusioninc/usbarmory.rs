@@ -14,27 +14,27 @@
 use exception_reset as _; // default exception handler
 use panic_serial as _; // panic handler
 use usbarmory::{
-    led::Blue,
+    led::Leds,
     serial::{Event, Serial},
 };
 
 #[rtfm::app]
 const APP: () = {
     struct Resources {
-        led: Blue,
+        leds: Leds,
         serial: Serial,
     }
 
     #[init]
     fn init(_cx: init::Context) -> init::LateResources {
-        let led = Blue::take().expect("UNREACHABLE");
+        let leds = Leds::take().expect("UNREACHABLE");
         let serial = Serial::take().expect("UNREACHABLE");
 
         // receiving data over the serial interface triggers the UART2 interrupt
         // signal
         serial.listen(Event::ReceiveReady);
 
-        init::LateResources { led, serial }
+        init::LateResources { leds, serial }
     }
 
     // as no `idle` function was defined the device will go to light sleep
@@ -44,10 +44,10 @@ const APP: () = {
     //
     // This task will be started when a new byte of data is received over the
     // serial interface. Hardware tasks cannot be `spawn`-ed.
-    #[task(binds = UART2, resources = [led, serial])]
+    #[task(binds = UART2, resources = [leds, serial])]
     fn on_new_data(cx: on_new_data::Context) {
         let serial = cx.resources.serial;
-        let led = cx.resources.led;
+        let leds = cx.resources.leds;
 
         if let Some(byte) = serial.read() {
             // reboot the device when the Enter key is received
@@ -55,7 +55,7 @@ const APP: () = {
                 usbarmory::reset();
             }
 
-            led.toggle();
+            leds.blue.toggle();
             serial.write(byte);
         } else {
             // this could be reached under these scenarios

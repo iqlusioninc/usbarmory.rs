@@ -2,37 +2,69 @@
 
 use core::{
     marker::PhantomData,
-    sync::atomic::{AtomicBool, Ordering},
+    sync::atomic::{AtomicU8, Ordering},
 };
 
-use rac::gpio;
-
-// FIXME the two LEDs should be packed in a struct and it should not be possible
-// to move either out of that struct (rationale: concurrently acting on the LEDs
-// can lead to loss of GPIO4_DR data)
+use pac::gpio::GPIO4;
 
 const BLUE: u32 = 1 << 22;
 const WHITE: u32 = 1 << 21;
 
-/// Blue LED
-pub struct Blue {
-    _not_sync: PhantomData<*mut ()>,
+/// On-board LEDs
+///
+/// *NOTE* `Leds` is `Send` but its fields (each individual LED) are not
+pub struct Leds {
+    /// Blue LED
+    pub blue: Blue,
+
+    /// White LED
+    pub white: White,
 }
 
-unsafe impl Send for Blue {}
+unsafe impl Send for Leds {}
 
-static BLUE_TAKEN: AtomicBool = AtomicBool::new(false);
+const NEVER: u8 = 0; // never taken
+const TAKEN: u8 = 1; // currently taken
+const FREE: u8 = 2; // free to take
+static STATE: AtomicU8 = AtomicU8::new(0);
 
-impl Blue {
-    /// Gets an exclusive handle to the `Blue` singleton
+impl Leds {
+    /// # Safety
+    ///
+    /// Creates a singleton from thin air; make sure we never hand out two
+    /// instances of it
+    unsafe fn new() -> Self {
+        Self {
+            blue: Blue {
+                _not_send_or_sync: PhantomData,
+            },
+            white: White {
+                _not_send_or_sync: PhantomData,
+            },
+        }
+    }
+
+    /// Gets an exclusive handle to the `Leds` singleton
     pub fn take() -> Option<Self> {
-        if BLUE_TAKEN
-            .compare_exchange(false, true, Ordering::AcqRel, Ordering::Acquire)
+        if STATE.load(Ordering::Acquire) == NEVER {
+            if STATE
+                .compare_exchange(NEVER, TAKEN, Ordering::AcqRel, Ordering::Acquire)
+                .is_ok()
+            {
+                return GPIO4::take().map(|gpio| {
+                    // GPIO4 was configured in the entry point (`start`)
+                    drop(gpio); // this seals the configuration
+
+                    unsafe { Self::new() }
+                });
+            }
+        }
+
+        if STATE
+            .compare_exchange(FREE, TAKEN, Ordering::AcqRel, Ordering::Acquire)
             .is_ok()
         {
-            Some(Blue {
-                _not_sync: PhantomData,
-            })
+            Some(unsafe { Self::new() })
         } else {
             None
         }
@@ -40,91 +72,86 @@ impl Blue {
 
     /// Release the exclusive handle so any other context can take it
     pub fn release(self) {
-        BLUE_TAKEN.store(false, Ordering::Release)
+        STATE.store(FREE, Ordering::Release);
     }
+}
 
+/// Blue LED
+pub struct Blue {
+    _not_send_or_sync: PhantomData<*mut ()>,
+}
+
+impl Blue {
     /// Turns the LED off
     pub fn off(&self) {
-        unsafe {
-            let old = gpio::GPIO4_DR.read_volatile();
-            gpio::GPIO4_DR.write_volatile(old | BLUE);
-        }
+        // NOTE(borrow_unchecked) the `GPIO4` singleton has been dropped; only
+        // the owner of `Leds` can access the peripheral
+        GPIO4::borrow_unchecked(|gpio| {
+            let old = gpio.DR.read();
+            gpio.DR.write(old | BLUE);
+        })
     }
 
     /// Turns the LED on
     pub fn on(&self) {
-        unsafe {
-            let old = gpio::GPIO4_DR.read_volatile();
-            gpio::GPIO4_DR.write_volatile(old & !BLUE);
-        }
+        // NOTE(borrow_unchecked) the `GPIO4` singleton has been dropped; only
+        // the owner of `Leds` can access the peripheral
+        GPIO4::borrow_unchecked(|gpio| {
+            let old = gpio.DR.read();
+            gpio.DR.write(old & !BLUE);
+        })
     }
 
     /// Toggles the LED
     pub fn toggle(&self) {
-        unsafe {
-            let old = gpio::GPIO4_DR.read_volatile();
+        // NOTE(borrow_unchecked) the `GPIO4` singleton has been dropped; only
+        // the owner of `Leds` can access the peripheral
+        GPIO4::borrow_unchecked(|gpio| {
+            let old = gpio.DR.read();
             if old & BLUE == 0 {
-                gpio::GPIO4_DR.write_volatile(old | BLUE);
+                gpio.DR.write(old | BLUE)
             } else {
-                gpio::GPIO4_DR.write_volatile(old & !BLUE);
+                gpio.DR.write(old & !BLUE)
             }
-        }
+        })
     }
 }
 
 /// White LED
 pub struct White {
-    _not_sync: PhantomData<*mut ()>,
+    _not_send_or_sync: PhantomData<*mut ()>,
 }
 
-unsafe impl Send for White {}
-
-static WHITE_TAKEN: AtomicBool = AtomicBool::new(false);
-
 impl White {
-    /// Gets an exclusive handle to the `White` singleton
-    pub fn take() -> Option<Self> {
-        if WHITE_TAKEN
-            .compare_exchange(false, true, Ordering::AcqRel, Ordering::Acquire)
-            .is_ok()
-        {
-            Some(White {
-                _not_sync: PhantomData,
-            })
-        } else {
-            None
-        }
-    }
-
-    /// Release the exclusive handle so any other context can take it
-    pub fn release(self) {
-        WHITE_TAKEN.store(false, Ordering::Release)
-    }
-
     /// Turns the LED off
     pub fn off(&self) {
-        unsafe {
-            let old = gpio::GPIO4_DR.read_volatile();
-            gpio::GPIO4_DR.write_volatile(old | WHITE);
-        }
+        // NOTE(borrow_unchecked) the `GPIO4` singleton has been dropped; only
+        // the owner of `Leds` can access the peripheral
+        GPIO4::borrow_unchecked(|gpio| {
+            let old = gpio.DR.read();
+            gpio.DR.write(old | WHITE);
+        })
     }
 
     /// Turns the LED on
     pub fn on(&self) {
-        unsafe {
-            let old = gpio::GPIO4_DR.read_volatile();
-            gpio::GPIO4_DR.write_volatile(old & !WHITE);
-        }
+        // NOTE(borrow_unchecked) the `GPIO4` singleton has been dropped; only
+        // the owner of `Leds` can access the peripheral
+        GPIO4::borrow_unchecked(|gpio| {
+            let old = gpio.DR.read();
+            gpio.DR.write(old & !WHITE);
+        })
     }
+
     /// Toggles the LED
     pub fn toggle(&self) {
-        unsafe {
-            let old = gpio::GPIO4_DR.read_volatile();
+        GPIO4::borrow_unchecked(|gpio| {
+            let old = gpio.DR.read();
             if old & WHITE == 0 {
-                gpio::GPIO4_DR.write_volatile(old | WHITE);
+                gpio.DR.write(old | WHITE)
             } else {
-                gpio::GPIO4_DR.write_volatile(old & !WHITE);
+                gpio.DR.write(old & !WHITE)
             }
-        }
+        })
     }
 }

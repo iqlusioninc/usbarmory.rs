@@ -7,7 +7,7 @@ license = "Apache-2.0 OR MIT"
 
 [dependencies]
 cortex-a = { path = "../cortex-a" }
-rac = { package = "imx6ul-rac", path = "../imx6ul-rac" }
+pac = { package = "imx6ul-pac", path = "../imx6ul-pac" }
 
 [build-dependencies]
 quote = "1.0.2"

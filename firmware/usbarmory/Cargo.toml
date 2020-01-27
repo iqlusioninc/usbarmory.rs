@@ -13,7 +13,7 @@ keywords    = ["arm", "cortex-a"]
 
 [dependencies]
 cortex-a = { path = "../cortex-a" }
-rac = { package = "imx6ul-rac", path = "../imx6ul-rac" }
+pac = { package = "imx6ul-pac", path = "../imx6ul-pac" }
 usbarmory-rt = { path = "../usbarmory-rt" }
 
 [dev-dependencies]

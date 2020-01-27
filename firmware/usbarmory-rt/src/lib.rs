@@ -3,7 +3,7 @@
 #![no_std]
 #![warn(missing_docs, rust_2018_idioms, unused_qualifications)]
 
-use rac::{gic::gicc, gpio};
+use pac::{gicc::GICC, gpio::GPIO4};
 
 // Software Generated Interrupts
 extern "C" {
@@ -44,12 +44,15 @@ unsafe extern "C" fn start() -> ! {
     // LEDS
     const BLUE: u32 = 1 << 22;
     const WHITE: u32 = 1 << 21;
-    // set them as outputs
-    let old = gpio::GPIO4_DIR.read_volatile();
-    gpio::GPIO4_DIR.write_volatile(old | BLUE | WHITE);
-    // turn the white LED on and the blue LED off to indicate we are alive
-    let old = gpio::GPIO4_DR.read_volatile();
-    gpio::GPIO4_DR.write_volatile((old | BLUE) & !WHITE);
+    // NOTE(borrow_unchecked) this is "before main"; no singletons exist yet
+    GPIO4::borrow_unchecked(|gpio| {
+        // set them as outputs
+        let old = gpio.GDIR.read();
+        gpio.GDIR.write(old | BLUE | WHITE);
+        // turn the white LED on and the blue LED off to indicate we are alive
+        let old = gpio.DR.read();
+        gpio.DR.write((old | BLUE) & !WHITE);
+    });
 
     extern "Rust" {
         // NOTE(Rust ABI) this subroutine is provided by a Rust crate
@@ -60,9 +63,10 @@ unsafe extern "C" fn start() -> ! {
 }
 
 #[no_mangle]
-unsafe extern "C" fn IRQ() {
-    // acknowledge interrupt
-    let iar = gicc::GICC_IAR.read_volatile();
+extern "C" fn IRQ() {
+    // NOTE(borrow_unchecked) IRQs are masked, plus this is a single-instruction
+    // read of a read-only register (that has side effects, though)
+    let iar = GICC::borrow_unchecked(|gicc| gicc.IAR.read());
 
     let iid = (iar & ((1 << 10) - 1)) as u16;
 
@@ -75,21 +79,26 @@ unsafe extern "C" fn IRQ() {
     } else if iid < (32 + 128) {
         // Shared Peripheral Interrupt
         // NOTE(get_unchecked) avoid panicking branch
-        *SPIS.get_unchecked((iid - 32) as usize)
+        unsafe { *SPIS.get_unchecked((iid - 32) as usize) }
     } else {
         extern "C" {
             fn DefaultHandler() -> !;
         }
 
-        DefaultHandler()
+        unsafe { DefaultHandler() }
     };
 
-    cortex_a::enable_irq();
-    f();
+    unsafe {
+        cortex_a::enable_irq();
+        f();
+    }
     cortex_a::disable_irq();
 
-    // end of interrupt
-    gicc::GICC_EOIR.write_volatile(iid as u32);
+    // NOTE(borrow_unchecked) single-instruction write to a write-only register
+    GICC::borrow_unchecked(|gicc| {
+        // end of interrupt
+        gicc.EOIR.write(iid as u32);
+    });
 }
 
 // NOTE this is written in assembly because it should never touch the stack
