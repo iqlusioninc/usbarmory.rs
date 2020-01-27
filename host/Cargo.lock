@@ -25,12 +25,24 @@ dependencies = [
 ]
 
 [[package]]
+name = "syn"
+version = "1.0.14"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "af6f3550d8dff9ef7dc34d384ac6f107e5d31c8f57d9f28e0081503f547ac8f5"
+dependencies = [
+ "proc-macro2",
+ "quote",
+ "unicode-xid",
+]
+
+[[package]]
 name = "txt2rust"
 version = "0.0.0"
 dependencies = [
  "anyhow",
  "proc-macro2",
  "quote",
+ "syn",
 ]
 
 [[package]]

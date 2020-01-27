@@ -55,7 +55,7 @@ pub mod gpio {
     where
         P: Peripheral,
     {
-        const OFFSET: usize = 0u32 as usize;
+        const OFFSET: usize = 0x00;
         #[doc = r" Performs a single load operation on the memory-mapped register"]
         pub fn read(&self) -> u32 {
             unsafe { ((P::BASE_ADDRESS + Self::OFFSET) as *const u32).read_volatile() }
@@ -79,7 +79,7 @@ pub mod gpio {
     where
         P: Peripheral,
     {
-        const OFFSET: usize = 4u32 as usize;
+        const OFFSET: usize = 0x04;
         #[doc = r" Performs a single load operation on the memory-mapped register"]
         pub fn read(&self) -> u32 {
             unsafe { ((P::BASE_ADDRESS + Self::OFFSET) as *const u32).read_volatile() }
@@ -103,7 +103,7 @@ pub mod gpio {
     where
         P: Peripheral,
     {
-        const OFFSET: usize = 8u32 as usize;
+        const OFFSET: usize = 0x08;
         #[doc = r" Performs a single load operation on the memory-mapped register"]
         pub fn read(&self) -> u32 {
             unsafe { ((P::BASE_ADDRESS + Self::OFFSET) as *const u32).read_volatile() }
@@ -122,7 +122,7 @@ pub mod gpio {
     where
         P: Peripheral,
     {
-        const OFFSET: usize = 12u32 as usize;
+        const OFFSET: usize = 0x0c;
         #[doc = r" Performs a single load operation on the memory-mapped register"]
         pub fn read(&self) -> u32 {
             unsafe { ((P::BASE_ADDRESS + Self::OFFSET) as *const u32).read_volatile() }
@@ -146,7 +146,7 @@ pub mod gpio {
     where
         P: Peripheral,
     {
-        const OFFSET: usize = 16u32 as usize;
+        const OFFSET: usize = 0x10;
         #[doc = r" Performs a single load operation on the memory-mapped register"]
         pub fn read(&self) -> u32 {
             unsafe { ((P::BASE_ADDRESS + Self::OFFSET) as *const u32).read_volatile() }
@@ -170,7 +170,7 @@ pub mod gpio {
     where
         P: Peripheral,
     {
-        const OFFSET: usize = 20u32 as usize;
+        const OFFSET: usize = 0x14;
         #[doc = r" Performs a single load operation on the memory-mapped register"]
         pub fn read(&self) -> u32 {
             unsafe { ((P::BASE_ADDRESS + Self::OFFSET) as *const u32).read_volatile() }
@@ -194,7 +194,7 @@ pub mod gpio {
     where
         P: Peripheral,
     {
-        const OFFSET: usize = 24u32 as usize;
+        const OFFSET: usize = 0x18;
         #[doc = r" Performs a single load operation on the memory-mapped register"]
         pub fn read(&self) -> u32 {
             unsafe { ((P::BASE_ADDRESS + Self::OFFSET) as *const u32).read_volatile() }
@@ -218,7 +218,7 @@ pub mod gpio {
     where
         P: Peripheral,
     {
-        const OFFSET: usize = 28u32 as usize;
+        const OFFSET: usize = 0x1c;
         #[doc = r" Performs a single load operation on the memory-mapped register"]
         pub fn read(&self) -> u32 {
             unsafe { ((P::BASE_ADDRESS + Self::OFFSET) as *const u32).read_volatile() }
@@ -279,7 +279,7 @@ pub mod gpio {
     #[doc = "GPIO1"]
     pub struct _1;
     impl Peripheral for _1 {
-        const BASE_ADDRESS: usize = 34193408u32 as usize;
+        const BASE_ADDRESS: usize = 0x0209_c000;
     }
     #[doc = "GPIO1"]
     pub type GPIO1 = Registers<_1>;
@@ -308,7 +308,7 @@ pub mod gpio {
     #[doc = "GPIO2"]
     pub struct _2;
     impl Peripheral for _2 {
-        const BASE_ADDRESS: usize = 34209792u32 as usize;
+        const BASE_ADDRESS: usize = 0x020a_0000;
     }
     #[doc = "GPIO2"]
     pub type GPIO2 = Registers<_2>;
@@ -337,7 +337,7 @@ pub mod gpio {
     #[doc = "GPIO3"]
     pub struct _3;
     impl Peripheral for _3 {
-        const BASE_ADDRESS: usize = 34226176u32 as usize;
+        const BASE_ADDRESS: usize = 0x020a_4000;
     }
     #[doc = "GPIO3"]
     pub type GPIO3 = Registers<_3>;
@@ -366,7 +366,7 @@ pub mod gpio {
     #[doc = "GPIO4"]
     pub struct _4;
     impl Peripheral for _4 {
-        const BASE_ADDRESS: usize = 34242560u32 as usize;
+        const BASE_ADDRESS: usize = 0x020a_8000;
     }
     #[doc = "GPIO4"]
     pub type GPIO4 = Registers<_4>;
@@ -395,7 +395,7 @@ pub mod gpio {
     #[doc = "GPIO5"]
     pub struct _5;
     impl Peripheral for _5 {
-        const BASE_ADDRESS: usize = 34258944u32 as usize;
+        const BASE_ADDRESS: usize = 0x020a_c000;
     }
     #[doc = "GPIO5"]
     pub type GPIO5 = Registers<_5>;
@@ -429,7 +429,7 @@ pub mod snvs {
         marker::PhantomData,
         sync::atomic::{AtomicBool, Ordering},
     };
-    const BASE_ADDRESS: usize = 34390016u32 as usize;
+    const BASE_ADDRESS: usize = 0x020c_c000;
     #[doc = r" The registers that make up the peripheral"]
     #[allow(non_snake_case)]
     pub struct Registers {
@@ -474,9 +474,9 @@ pub mod snvs {
         _not_send_or_sync: PhantomData<*mut ()>,
     }
     impl HPLR {
-        const OFFSET: usize = 0u32 as usize;
+        const OFFSET: usize = 0x00;
         #[doc = r" Reset value"]
-        pub const RESET_VALUE: u32 = 0u32 as u32;
+        pub const RESET_VALUE: u32 = 0x0000_0000;
         #[doc = r" Performs a single load operation on the memory-mapped register"]
         pub fn read(&self) -> u32 {
             unsafe { ((BASE_ADDRESS + Self::OFFSET) as *const u32).read_volatile() }
@@ -493,9 +493,9 @@ pub mod snvs {
         _not_send_or_sync: PhantomData<*mut ()>,
     }
     impl HPCOMR {
-        const OFFSET: usize = 4u32 as usize;
+        const OFFSET: usize = 0x04;
         #[doc = r" Reset value"]
-        pub const RESET_VALUE: u32 = 0u32 as u32;
+        pub const RESET_VALUE: u32 = 0x0000_0000;
         #[doc = r" Performs a single load operation on the memory-mapped register"]
         pub fn read(&self) -> u32 {
             unsafe { ((BASE_ADDRESS + Self::OFFSET) as *const u32).read_volatile() }
@@ -512,9 +512,9 @@ pub mod snvs {
         _not_send_or_sync: PhantomData<*mut ()>,
     }
     impl HPCR {
-        const OFFSET: usize = 8u32 as usize;
+        const OFFSET: usize = 0x08;
         #[doc = r" Reset value"]
-        pub const RESET_VALUE: u32 = 0u32 as u32;
+        pub const RESET_VALUE: u32 = 0x0000_0000;
         #[doc = r" Performs a single load operation on the memory-mapped register"]
         pub fn read(&self) -> u32 {
             unsafe { ((BASE_ADDRESS + Self::OFFSET) as *const u32).read_volatile() }
@@ -531,9 +531,9 @@ pub mod snvs {
         _not_send_or_sync: PhantomData<*mut ()>,
     }
     impl HPSR {
-        const OFFSET: usize = 20u32 as usize;
+        const OFFSET: usize = 0x14;
         #[doc = r" Reset value"]
-        pub const RESET_VALUE: u32 = 2147483648u32 as u32;
+        pub const RESET_VALUE: u32 = 0x8000_0000;
         #[doc = r" Performs a single load operation on the memory-mapped register"]
         pub fn read(&self) -> u32 {
             unsafe { ((BASE_ADDRESS + Self::OFFSET) as *const u32).read_volatile() }
@@ -550,9 +550,9 @@ pub mod snvs {
         _not_send_or_sync: PhantomData<*mut ()>,
     }
     impl HPRTCMR {
-        const OFFSET: usize = 36u32 as usize;
+        const OFFSET: usize = 0x24;
         #[doc = r" Reset value"]
-        pub const RESET_VALUE: u32 = 0u32 as u32;
+        pub const RESET_VALUE: u32 = 0x0000_0000;
         #[doc = r" Performs a single load operation on the memory-mapped register"]
         pub fn read(&self) -> u32 {
             unsafe { ((BASE_ADDRESS + Self::OFFSET) as *const u32).read_volatile() }
@@ -569,9 +569,9 @@ pub mod snvs {
         _not_send_or_sync: PhantomData<*mut ()>,
     }
     impl HPRTCLR {
-        const OFFSET: usize = 40u32 as usize;
+        const OFFSET: usize = 0x28;
         #[doc = r" Reset value"]
-        pub const RESET_VALUE: u32 = 0u32 as u32;
+        pub const RESET_VALUE: u32 = 0x0000_0000;
         #[doc = r" Performs a single load operation on the memory-mapped register"]
         pub fn read(&self) -> u32 {
             unsafe { ((BASE_ADDRESS + Self::OFFSET) as *const u32).read_volatile() }
@@ -588,9 +588,9 @@ pub mod snvs {
         _not_send_or_sync: PhantomData<*mut ()>,
     }
     impl HPTAMR {
-        const OFFSET: usize = 44u32 as usize;
+        const OFFSET: usize = 0x2c;
         #[doc = r" Reset value"]
-        pub const RESET_VALUE: u32 = 0u32 as u32;
+        pub const RESET_VALUE: u32 = 0x0000_0000;
         #[doc = r" Performs a single load operation on the memory-mapped register"]
         pub fn read(&self) -> u32 {
             unsafe { ((BASE_ADDRESS + Self::OFFSET) as *const u32).read_volatile() }
@@ -607,9 +607,9 @@ pub mod snvs {
         _not_send_or_sync: PhantomData<*mut ()>,
     }
     impl HPTALR {
-        const OFFSET: usize = 48u32 as usize;
+        const OFFSET: usize = 0x30;
         #[doc = r" Reset value"]
-        pub const RESET_VALUE: u32 = 0u32 as u32;
+        pub const RESET_VALUE: u32 = 0x0000_0000;
         #[doc = r" Performs a single load operation on the memory-mapped register"]
         pub fn read(&self) -> u32 {
             unsafe { ((BASE_ADDRESS + Self::OFFSET) as *const u32).read_volatile() }
@@ -626,9 +626,9 @@ pub mod snvs {
         _not_send_or_sync: PhantomData<*mut ()>,
     }
     impl LPLR {
-        const OFFSET: usize = 52u32 as usize;
+        const OFFSET: usize = 0x34;
         #[doc = r" Reset value"]
-        pub const RESET_VALUE: u32 = 0u32 as u32;
+        pub const RESET_VALUE: u32 = 0x0000_0000;
         #[doc = r" Performs a single load operation on the memory-mapped register"]
         pub fn read(&self) -> u32 {
             unsafe { ((BASE_ADDRESS + Self::OFFSET) as *const u32).read_volatile() }
@@ -645,9 +645,9 @@ pub mod snvs {
         _not_send_or_sync: PhantomData<*mut ()>,
     }
     impl LPCR {
-        const OFFSET: usize = 56u32 as usize;
+        const OFFSET: usize = 0x38;
         #[doc = r" Reset value"]
-        pub const RESET_VALUE: u32 = 32u32 as u32;
+        pub const RESET_VALUE: u32 = 0x0000_0020;
         #[doc = r" Performs a single load operation on the memory-mapped register"]
         pub fn read(&self) -> u32 {
             unsafe { ((BASE_ADDRESS + Self::OFFSET) as *const u32).read_volatile() }
@@ -664,9 +664,9 @@ pub mod snvs {
         _not_send_or_sync: PhantomData<*mut ()>,
     }
     impl LPSR {
-        const OFFSET: usize = 76u32 as usize;
+        const OFFSET: usize = 0x4c;
         #[doc = r" Reset value"]
-        pub const RESET_VALUE: u32 = 8u32 as u32;
+        pub const RESET_VALUE: u32 = 0x0000_0008;
         #[doc = r" Performs a single load operation on the memory-mapped register"]
         pub fn read(&self) -> u32 {
             unsafe { ((BASE_ADDRESS + Self::OFFSET) as *const u32).read_volatile() }
@@ -683,9 +683,9 @@ pub mod snvs {
         _not_send_or_sync: PhantomData<*mut ()>,
     }
     impl LPSMCMR {
-        const OFFSET: usize = 92u32 as usize;
+        const OFFSET: usize = 0x5c;
         #[doc = r" Reset value"]
-        pub const RESET_VALUE: u32 = 0u32 as u32;
+        pub const RESET_VALUE: u32 = 0x0000_0000;
         #[doc = r" Performs a single load operation on the memory-mapped register"]
         pub fn read(&self) -> u32 {
             unsafe { ((BASE_ADDRESS + Self::OFFSET) as *const u32).read_volatile() }
@@ -702,9 +702,9 @@ pub mod snvs {
         _not_send_or_sync: PhantomData<*mut ()>,
     }
     impl LPSMCLR {
-        const OFFSET: usize = 96u32 as usize;
+        const OFFSET: usize = 0x60;
         #[doc = r" Reset value"]
-        pub const RESET_VALUE: u32 = 0u32 as u32;
+        pub const RESET_VALUE: u32 = 0x0000_0000;
         #[doc = r" Performs a single load operation on the memory-mapped register"]
         pub fn read(&self) -> u32 {
             unsafe { ((BASE_ADDRESS + Self::OFFSET) as *const u32).read_volatile() }
@@ -721,9 +721,9 @@ pub mod snvs {
         _not_send_or_sync: PhantomData<*mut ()>,
     }
     impl LPGPR {
-        const OFFSET: usize = 104u32 as usize;
+        const OFFSET: usize = 0x68;
         #[doc = r" Reset value"]
-        pub const RESET_VALUE: u32 = 0u32 as u32;
+        pub const RESET_VALUE: u32 = 0x0000_0000;
         #[doc = r" Performs a single load operation on the memory-mapped register"]
         pub fn read(&self) -> u32 {
             unsafe { ((BASE_ADDRESS + Self::OFFSET) as *const u32).read_volatile() }
@@ -740,9 +740,9 @@ pub mod snvs {
         _not_send_or_sync: PhantomData<*mut ()>,
     }
     impl HPVIDR1 {
-        const OFFSET: usize = 3064u32 as usize;
+        const OFFSET: usize = 0x0bf8;
         #[doc = r" Reset value"]
-        pub const RESET_VALUE: u32 = 4064000u32 as u32;
+        pub const RESET_VALUE: u32 = 0x003e_0300;
         #[doc = r" Performs a single load operation on the memory-mapped register"]
         pub fn read(&self) -> u32 {
             unsafe { ((BASE_ADDRESS + Self::OFFSET) as *const u32).read_volatile() }
@@ -754,9 +754,9 @@ pub mod snvs {
         _not_send_or_sync: PhantomData<*mut ()>,
     }
     impl HPVIDR2 {
-        const OFFSET: usize = 3068u32 as usize;
+        const OFFSET: usize = 0x0bfc;
         #[doc = r" Reset value"]
-        pub const RESET_VALUE: u32 = 50331648u32 as u32;
+        pub const RESET_VALUE: u32 = 0x0300_0000;
         #[doc = r" Performs a single load operation on the memory-mapped register"]
         pub fn read(&self) -> u32 {
             unsafe { ((BASE_ADDRESS + Self::OFFSET) as *const u32).read_volatile() }
@@ -961,7 +961,7 @@ pub mod uart {
     where
         P: Peripheral,
     {
-        const OFFSET: usize = 0u32 as usize;
+        const OFFSET: usize = 0x00;
         #[doc = r" Performs a single load operation on the memory-mapped register"]
         pub fn read(&self) -> u32 {
             unsafe { ((P::BASE_ADDRESS + Self::OFFSET) as *const u32).read_volatile() }
@@ -980,7 +980,7 @@ pub mod uart {
     where
         P: Peripheral,
     {
-        const OFFSET: usize = 64u32 as usize;
+        const OFFSET: usize = 0x40;
         #[doc = r" Performs a single store operation on the memory-mapped register"]
         #[allow(unused_unsafe)]
         pub fn write(&self, bits: u32) {
@@ -1000,7 +1000,7 @@ pub mod uart {
     where
         P: Peripheral,
     {
-        const OFFSET: usize = 128u32 as usize;
+        const OFFSET: usize = 0x80;
         #[doc = r" Performs a single load operation on the memory-mapped register"]
         pub fn read(&self) -> u32 {
             unsafe { ((P::BASE_ADDRESS + Self::OFFSET) as *const u32).read_volatile() }
@@ -1024,7 +1024,7 @@ pub mod uart {
     where
         P: Peripheral,
     {
-        const OFFSET: usize = 132u32 as usize;
+        const OFFSET: usize = 0x84;
         #[doc = r" Performs a single load operation on the memory-mapped register"]
         pub fn read(&self) -> u32 {
             unsafe { ((P::BASE_ADDRESS + Self::OFFSET) as *const u32).read_volatile() }
@@ -1048,7 +1048,7 @@ pub mod uart {
     where
         P: Peripheral,
     {
-        const OFFSET: usize = 136u32 as usize;
+        const OFFSET: usize = 0x88;
         #[doc = r" Performs a single load operation on the memory-mapped register"]
         pub fn read(&self) -> u32 {
             unsafe { ((P::BASE_ADDRESS + Self::OFFSET) as *const u32).read_volatile() }
@@ -1072,7 +1072,7 @@ pub mod uart {
     where
         P: Peripheral,
     {
-        const OFFSET: usize = 140u32 as usize;
+        const OFFSET: usize = 0x8c;
         #[doc = r" Performs a single load operation on the memory-mapped register"]
         pub fn read(&self) -> u32 {
             unsafe { ((P::BASE_ADDRESS + Self::OFFSET) as *const u32).read_volatile() }
@@ -1096,7 +1096,7 @@ pub mod uart {
     where
         P: Peripheral,
     {
-        const OFFSET: usize = 144u32 as usize;
+        const OFFSET: usize = 0x90;
         #[doc = r" Performs a single load operation on the memory-mapped register"]
         pub fn read(&self) -> u32 {
             unsafe { ((P::BASE_ADDRESS + Self::OFFSET) as *const u32).read_volatile() }
@@ -1120,7 +1120,7 @@ pub mod uart {
     where
         P: Peripheral,
     {
-        const OFFSET: usize = 148u32 as usize;
+        const OFFSET: usize = 0x94;
         #[doc = r" Performs a single load operation on the memory-mapped register"]
         pub fn read(&self) -> u32 {
             unsafe { ((P::BASE_ADDRESS + Self::OFFSET) as *const u32).read_volatile() }
@@ -1144,7 +1144,7 @@ pub mod uart {
     where
         P: Peripheral,
     {
-        const OFFSET: usize = 152u32 as usize;
+        const OFFSET: usize = 0x98;
         #[doc = r" Performs a single load operation on the memory-mapped register"]
         pub fn read(&self) -> u32 {
             unsafe { ((P::BASE_ADDRESS + Self::OFFSET) as *const u32).read_volatile() }
@@ -1168,7 +1168,7 @@ pub mod uart {
     where
         P: Peripheral,
     {
-        const OFFSET: usize = 156u32 as usize;
+        const OFFSET: usize = 0x9c;
         #[doc = r" Performs a single load operation on the memory-mapped register"]
         pub fn read(&self) -> u32 {
             unsafe { ((P::BASE_ADDRESS + Self::OFFSET) as *const u32).read_volatile() }
@@ -1192,7 +1192,7 @@ pub mod uart {
     where
         P: Peripheral,
     {
-        const OFFSET: usize = 160u32 as usize;
+        const OFFSET: usize = 0xa0;
         #[doc = r" Performs a single load operation on the memory-mapped register"]
         pub fn read(&self) -> u32 {
             unsafe { ((P::BASE_ADDRESS + Self::OFFSET) as *const u32).read_volatile() }
@@ -1216,7 +1216,7 @@ pub mod uart {
     where
         P: Peripheral,
     {
-        const OFFSET: usize = 164u32 as usize;
+        const OFFSET: usize = 0xa4;
         #[doc = r" Performs a single load operation on the memory-mapped register"]
         pub fn read(&self) -> u32 {
             unsafe { ((P::BASE_ADDRESS + Self::OFFSET) as *const u32).read_volatile() }
@@ -1240,7 +1240,7 @@ pub mod uart {
     where
         P: Peripheral,
     {
-        const OFFSET: usize = 168u32 as usize;
+        const OFFSET: usize = 0xa8;
         #[doc = r" Performs a single load operation on the memory-mapped register"]
         pub fn read(&self) -> u32 {
             unsafe { ((P::BASE_ADDRESS + Self::OFFSET) as *const u32).read_volatile() }
@@ -1264,7 +1264,7 @@ pub mod uart {
     where
         P: Peripheral,
     {
-        const OFFSET: usize = 172u32 as usize;
+        const OFFSET: usize = 0xac;
         #[doc = r" Performs a single load operation on the memory-mapped register"]
         pub fn read(&self) -> u32 {
             unsafe { ((P::BASE_ADDRESS + Self::OFFSET) as *const u32).read_volatile() }
@@ -1283,7 +1283,7 @@ pub mod uart {
     where
         P: Peripheral,
     {
-        const OFFSET: usize = 176u32 as usize;
+        const OFFSET: usize = 0xb0;
         #[doc = r" Performs a single load operation on the memory-mapped register"]
         pub fn read(&self) -> u32 {
             unsafe { ((P::BASE_ADDRESS + Self::OFFSET) as *const u32).read_volatile() }
@@ -1307,7 +1307,7 @@ pub mod uart {
     where
         P: Peripheral,
     {
-        const OFFSET: usize = 180u32 as usize;
+        const OFFSET: usize = 0xb4;
         #[doc = r" Performs a single load operation on the memory-mapped register"]
         pub fn read(&self) -> u32 {
             unsafe { ((P::BASE_ADDRESS + Self::OFFSET) as *const u32).read_volatile() }
@@ -1331,7 +1331,7 @@ pub mod uart {
     where
         P: Peripheral,
     {
-        const OFFSET: usize = 184u32 as usize;
+        const OFFSET: usize = 0xb8;
         #[doc = r" Performs a single load operation on the memory-mapped register"]
         pub fn read(&self) -> u32 {
             unsafe { ((P::BASE_ADDRESS + Self::OFFSET) as *const u32).read_volatile() }
@@ -1428,7 +1428,7 @@ pub mod uart {
     #[doc = "UART1"]
     pub struct _1;
     impl Peripheral for _1 {
-        const BASE_ADDRESS: usize = 33685504u32 as usize;
+        const BASE_ADDRESS: usize = 0x0202_0000;
     }
     #[doc = "UART1"]
     pub type UART1 = Registers<_1>;
@@ -1457,7 +1457,7 @@ pub mod uart {
     #[doc = "UART2"]
     pub struct _2;
     impl Peripheral for _2 {
-        const BASE_ADDRESS: usize = 35553280u32 as usize;
+        const BASE_ADDRESS: usize = 0x021e_8000;
     }
     #[doc = "UART2"]
     pub type UART2 = Registers<_2>;
@@ -1486,7 +1486,7 @@ pub mod uart {
     #[doc = "UART3"]
     pub struct _3;
     impl Peripheral for _3 {
-        const BASE_ADDRESS: usize = 35569664u32 as usize;
+        const BASE_ADDRESS: usize = 0x021e_c000;
     }
     #[doc = "UART3"]
     pub type UART3 = Registers<_3>;
@@ -1515,7 +1515,7 @@ pub mod uart {
     #[doc = "UART4"]
     pub struct _4;
     impl Peripheral for _4 {
-        const BASE_ADDRESS: usize = 35586048u32 as usize;
+        const BASE_ADDRESS: usize = 0x021f_0000;
     }
     #[doc = "UART4"]
     pub type UART4 = Registers<_4>;
@@ -1544,7 +1544,7 @@ pub mod uart {
     #[doc = "UART5"]
     pub struct _5;
     impl Peripheral for _5 {
-        const BASE_ADDRESS: usize = 35602432u32 as usize;
+        const BASE_ADDRESS: usize = 0x021f_4000;
     }
     #[doc = "UART5"]
     pub type UART5 = Registers<_5>;
@@ -1573,7 +1573,7 @@ pub mod uart {
     #[doc = "UART6"]
     pub struct _6;
     impl Peripheral for _6 {
-        const BASE_ADDRESS: usize = 35635200u32 as usize;
+        const BASE_ADDRESS: usize = 0x021f_c000;
     }
     #[doc = "UART6"]
     pub type UART6 = Registers<_6>;
@@ -1602,7 +1602,7 @@ pub mod uart {
     #[doc = "UART7"]
     pub struct _7;
     impl Peripheral for _7 {
-        const BASE_ADDRESS: usize = 33652736u32 as usize;
+        const BASE_ADDRESS: usize = 0x0201_8000;
     }
     #[doc = "UART7"]
     pub type UART7 = Registers<_7>;
@@ -1631,7 +1631,7 @@ pub mod uart {
     #[doc = "UART8"]
     pub struct _8;
     impl Peripheral for _8 {
-        const BASE_ADDRESS: usize = 33701888u32 as usize;
+        const BASE_ADDRESS: usize = 0x0202_4000;
     }
     #[doc = "UART8"]
     pub type UART8 = Registers<_8>;
@@ -1699,7 +1699,7 @@ pub mod wdog {
     where
         P: Peripheral,
     {
-        const OFFSET: usize = 0u32 as usize;
+        const OFFSET: usize = 0x00;
         #[doc = r" Performs a single load operation on the memory-mapped register"]
         pub fn read(&self) -> u16 {
             unsafe { ((P::BASE_ADDRESS + Self::OFFSET) as *const u16).read_volatile() }
@@ -1723,7 +1723,7 @@ pub mod wdog {
     where
         P: Peripheral,
     {
-        const OFFSET: usize = 2u32 as usize;
+        const OFFSET: usize = 0x02;
         #[doc = r" Performs a single load operation on the memory-mapped register"]
         pub fn read(&self) -> u16 {
             unsafe { ((P::BASE_ADDRESS + Self::OFFSET) as *const u16).read_volatile() }
@@ -1747,7 +1747,7 @@ pub mod wdog {
     where
         P: Peripheral,
     {
-        const OFFSET: usize = 4u32 as usize;
+        const OFFSET: usize = 0x04;
         #[doc = r" Performs a single load operation on the memory-mapped register"]
         pub fn read(&self) -> u16 {
             unsafe { ((P::BASE_ADDRESS + Self::OFFSET) as *const u16).read_volatile() }
@@ -1766,7 +1766,7 @@ pub mod wdog {
     where
         P: Peripheral,
     {
-        const OFFSET: usize = 6u32 as usize;
+        const OFFSET: usize = 0x06;
         #[doc = r" Performs a single load operation on the memory-mapped register"]
         pub fn read(&self) -> u16 {
             unsafe { ((P::BASE_ADDRESS + Self::OFFSET) as *const u16).read_volatile() }
@@ -1790,7 +1790,7 @@ pub mod wdog {
     where
         P: Peripheral,
     {
-        const OFFSET: usize = 8u32 as usize;
+        const OFFSET: usize = 0x08;
         #[doc = r" Performs a single load operation on the memory-mapped register"]
         pub fn read(&self) -> u16 {
             unsafe { ((P::BASE_ADDRESS + Self::OFFSET) as *const u16).read_volatile() }
@@ -1839,7 +1839,7 @@ pub mod wdog {
     #[doc = "WDOG1"]
     pub struct _1;
     impl Peripheral for _1 {
-        const BASE_ADDRESS: usize = 34324480u32 as usize;
+        const BASE_ADDRESS: usize = 0x020b_c000;
     }
     #[doc = "WDOG1"]
     pub type WDOG1 = Registers<_1>;
@@ -1868,7 +1868,7 @@ pub mod wdog {
     #[doc = "WDOG2"]
     pub struct _2;
     impl Peripheral for _2 {
-        const BASE_ADDRESS: usize = 34340864u32 as usize;
+        const BASE_ADDRESS: usize = 0x020c_0000;
     }
     #[doc = "WDOG2"]
     pub type WDOG2 = Registers<_2>;
@@ -1897,7 +1897,7 @@ pub mod wdog {
     #[doc = "WDOG3"]
     pub struct _3;
     impl Peripheral for _3 {
-        const BASE_ADDRESS: usize = 35536896u32 as usize;
+        const BASE_ADDRESS: usize = 0x021e_4000;
     }
     #[doc = "WDOG3"]
     pub type WDOG3 = Registers<_3>;
@@ -1931,7 +1931,7 @@ pub mod gicc {
         marker::PhantomData,
         sync::atomic::{AtomicBool, Ordering},
     };
-    const BASE_ADDRESS: usize = 10493952u32 as usize;
+    const BASE_ADDRESS: usize = 0x00a0_2000;
     #[doc = r" The registers that make up the peripheral"]
     #[allow(non_snake_case)]
     pub struct Registers {
@@ -1952,9 +1952,9 @@ pub mod gicc {
         _not_send_or_sync: PhantomData<*mut ()>,
     }
     impl CTLR {
-        const OFFSET: usize = 0u32 as usize;
+        const OFFSET: usize = 0x00;
         #[doc = r" Reset value"]
-        pub const RESET_VALUE: u32 = 0u32 as u32;
+        pub const RESET_VALUE: u32 = 0x0000_0000;
         #[doc = r" Performs a single load operation on the memory-mapped register"]
         pub fn read(&self) -> u32 {
             unsafe { ((BASE_ADDRESS + Self::OFFSET) as *const u32).read_volatile() }
@@ -1971,9 +1971,9 @@ pub mod gicc {
         _not_send_or_sync: PhantomData<*mut ()>,
     }
     impl PMR {
-        const OFFSET: usize = 4u32 as usize;
+        const OFFSET: usize = 0x04;
         #[doc = r" Reset value"]
-        pub const RESET_VALUE: u32 = 0u32 as u32;
+        pub const RESET_VALUE: u32 = 0x0000_0000;
         #[doc = r" Performs a single load operation on the memory-mapped register"]
         pub fn read(&self) -> u32 {
             unsafe { ((BASE_ADDRESS + Self::OFFSET) as *const u32).read_volatile() }
@@ -1990,9 +1990,9 @@ pub mod gicc {
         _not_send_or_sync: PhantomData<*mut ()>,
     }
     impl IAR {
-        const OFFSET: usize = 12u32 as usize;
+        const OFFSET: usize = 0x0c;
         #[doc = r" Reset value"]
-        pub const RESET_VALUE: u32 = 1023u32 as u32;
+        pub const RESET_VALUE: u32 = 0x0000_03ff;
         #[doc = r" Performs a single load operation on the memory-mapped register"]
         pub fn read(&self) -> u32 {
             unsafe { ((BASE_ADDRESS + Self::OFFSET) as *const u32).read_volatile() }
@@ -2004,7 +2004,7 @@ pub mod gicc {
         _not_send_or_sync: PhantomData<*mut ()>,
     }
     impl EOIR {
-        const OFFSET: usize = 16u32 as usize;
+        const OFFSET: usize = 0x10;
         #[doc = r" Performs a single store operation on the memory-mapped register"]
         #[allow(unused_unsafe)]
         pub fn write(&self, bits: u32) {
@@ -2080,7 +2080,7 @@ pub mod gicd {
         marker::PhantomData,
         sync::atomic::{AtomicBool, Ordering},
     };
-    const BASE_ADDRESS: usize = 10489856u32 as usize;
+    const BASE_ADDRESS: usize = 0x00a0_1000;
     #[doc = r" The registers that make up the peripheral"]
     #[allow(non_snake_case)]
     pub struct Registers {
@@ -2101,9 +2101,9 @@ pub mod gicd {
         _not_send_or_sync: PhantomData<*mut ()>,
     }
     impl CTLR {
-        const OFFSET: usize = 0u32 as usize;
+        const OFFSET: usize = 0x00;
         #[doc = r" Reset value"]
-        pub const RESET_VALUE: u32 = 0u32 as u32;
+        pub const RESET_VALUE: u32 = 0x0000_0000;
         #[doc = r" Performs a single load operation on the memory-mapped register"]
         pub fn read(&self) -> u32 {
             unsafe { ((BASE_ADDRESS + Self::OFFSET) as *const u32).read_volatile() }
@@ -2120,7 +2120,7 @@ pub mod gicd {
         _not_send_or_sync: PhantomData<*mut ()>,
     }
     impl ISENABLER {
-        const OFFSET: usize = 256u32 as usize;
+        const OFFSET: usize = 0x0100;
         #[doc = r" Performs a single load operation on the memory-mapped register"]
         pub fn read(&self, idx: u8) -> u32 {
             assert!(idx < 4u16 as u8);
@@ -2147,7 +2147,7 @@ pub mod gicd {
         _not_send_or_sync: PhantomData<*mut ()>,
     }
     impl IPRIORITYR {
-        const OFFSET: usize = 1024u32 as usize;
+        const OFFSET: usize = 0x0400;
         #[doc = r" Performs a single load operation on the memory-mapped register"]
         pub fn read(&self, idx: u8) -> u8 {
             assert!(idx < 128u16 as u8);
@@ -2174,7 +2174,7 @@ pub mod gicd {
         _not_send_or_sync: PhantomData<*mut ()>,
     }
     impl SGIR {
-        const OFFSET: usize = 3840u32 as usize;
+        const OFFSET: usize = 0x0f00;
         #[doc = r" Performs a single store operation on the memory-mapped register"]
         #[allow(unused_unsafe)]
         pub fn write(&self, bits: u32) {

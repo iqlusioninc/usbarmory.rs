@@ -1,5 +1,6 @@
-use proc_macro2::TokenStream as TokenStream2;
+use proc_macro2::{Span, TokenStream as TokenStream2};
 use quote::{format_ident, quote};
+use syn::LitInt;
 
 use crate::{
     codegen,
@@ -99,13 +100,15 @@ pub fn krate(peripherals: &[Peripheral]) -> TokenStream2 {
                     let reset_value = reg
                         .reset_value
                         .map(|rv| {
+                            let rv = unsuffixed_hex(rv, false);
                             quote!(
                                 /// Reset value
-                                pub const RESET_VALUE: #uxx = #rv as #uxx;
+                                pub const RESET_VALUE: #uxx = #rv;
                             )
                         })
                         .unwrap_or_else(|| quote!());
 
+                    let offset = unsuffixed_hex(offset, true);
                     mod_items.push(quote!(
                         #[doc = #doc]
                         #[allow(non_camel_case_types)]
@@ -114,7 +117,7 @@ pub fn krate(peripherals: &[Peripheral]) -> TokenStream2 {
                         }
 
                         impl #name_i {
-                            const OFFSET: usize = #offset as usize;
+                            const OFFSET: usize = #offset;
                             #reset_value
 
                             #(#methods)*
@@ -172,6 +175,7 @@ pub fn krate(peripherals: &[Peripheral]) -> TokenStream2 {
                     }
                 ));
 
+                let base_addr = unsuffixed_hex(*base_addr, false);
                 let mod_i = format_ident!("{}", pname_s.to_lowercase());
                 items.push(quote!(
                     #[allow(non_snake_case)]
@@ -179,7 +183,7 @@ pub fn krate(peripherals: &[Peripheral]) -> TokenStream2 {
                     pub mod #mod_i {
                         use core::{marker::PhantomData, sync::atomic::{AtomicBool, Ordering}};
 
-                        const BASE_ADDRESS: usize = #base_addr as usize;
+                        const BASE_ADDRESS: usize = #base_addr;
 
                         /// The registers that make up the peripheral
                         #[allow(non_snake_case)]
@@ -277,6 +281,7 @@ pub fn krate(peripherals: &[Peripheral]) -> TokenStream2 {
                         ));
                     }
 
+                    let offset = unsuffixed_hex(offset, true);
                     mod_items.push(quote!(
                         #[doc = #doc]
                         #[allow(non_camel_case_types)]
@@ -292,7 +297,7 @@ pub fn krate(peripherals: &[Peripheral]) -> TokenStream2 {
                         where
                             P: Peripheral,
                         {
-                            const OFFSET: usize = #offset as usize;
+                            const OFFSET: usize = #offset;
 
                             #(#methods)*
                         }
@@ -325,12 +330,13 @@ pub fn krate(peripherals: &[Peripheral]) -> TokenStream2 {
                     let name_i = format_ident!("{}", name_s);
                     let n = format_ident!("_{}", instance);
 
+                    let base_addr = unsuffixed_hex(*base_addr, false);
                     mod_items.push(quote!(
                         #[doc = #name_s]
                         pub struct #n;
 
                         impl Peripheral for #n {
-                            const BASE_ADDRESS: usize = #base_addr as usize;
+                            const BASE_ADDRESS: usize = #base_addr;
                         }
 
                         #[doc = #name_s]
@@ -412,4 +418,18 @@ pub fn common() -> TokenStream2 {
             const BASE_ADDRESS: usize;
         }
     )
+}
+
+fn unsuffixed_hex(val: u32, compact: bool) -> LitInt {
+    if compact {
+        if val <= 0xff {
+            return LitInt::new(&format!("{:#04x}", val), Span::call_site());
+        } else if val <= 0xffff {
+            return LitInt::new(&format!("{:#06x}", val), Span::call_site());
+        }
+    }
+
+    let high = val >> 16;
+    let low = val & 0xffff;
+    LitInt::new(&format!("{:#06x}_{:04x}", high, low), Span::call_site())
 }
