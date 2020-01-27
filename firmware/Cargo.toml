@@ -3,7 +3,7 @@ members = [
   "cortex-a",
   "cortex-a-rtfm",
   "exception-reset",
-  "imx6ul-rac",
+  "imx6ul-pac",
   "panic-serial",
   "usbarmory",
   "usbarmory-rt",

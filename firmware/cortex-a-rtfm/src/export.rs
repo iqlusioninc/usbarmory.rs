@@ -2,7 +2,7 @@ use core::cell::Cell;
 
 pub use cortex_a::{enable_irq, wfi};
 pub use heapless::{consts, i::Queue as iQueue, spsc::Queue};
-use rac::gic::{gicc, gicd};
+use pac::{gicc::GICC, gicd::GICD};
 pub use usbarmory_rt::Interrupt;
 
 pub type FQ<N> = Queue<u8, N, u8>;
@@ -33,11 +33,18 @@ where
 ///
 /// must run only once; must be executed before IRQ interrupts are unmasked
 pub unsafe fn enable_gic() {
+    let gicc = GICC::take().expect("UNREACHABLE");
+    let gicd = GICD::take().expect("UNREACHABLE");
+
     // enable the CPU interface
-    gicc::GICC_CTLR.write_volatile(1);
+    gicc.CTLR.write(1);
 
     // enable the distributor
-    gicd::GICD_CTLR.write_volatile(1);
+    gicd.CTLR.write(1);
+
+    // this seals the GICC and GICD configuration; RTFM now owns these
+    // peripherals
+    drop((gicc, gicd))
 }
 
 /// # Safety
@@ -77,9 +84,10 @@ pub unsafe fn lock<T, R>(
 
 // NOTE(safety) single-instruction volatile write
 pub fn pend_sgi(sgi: u8) {
-    unsafe {
-        gicd::GICD_SGIR.write_volatile(0b10 << 24 | (u32::from(sgi) & 0b1111));
-    }
+    // single-instruction write operation to a write-only register
+    GICD::borrow_unchecked(|gicd| {
+        gicd.SGIR.write(0b10 << 24 | (u32::from(sgi) & 0b1111));
+    });
 }
 
 // To avoid breaking the scheduler the value of `GICC_PMR` at the exit of an
@@ -93,16 +101,20 @@ pub fn run<F>(priority: u8, f: F)
 where
     F: FnOnce(),
 {
-    if priority == 1 {
-        // if the logical priority of this interrupt is `1` then `GICC_PMR` can
-        // only be `IDLE_PRIORITY`
-        f();
-        unsafe { gicc::GICC_PMR.write_volatile(u32::from(logical2hw(IDLE_PRIORITY))) }
-    } else {
-        let initial = unsafe { gicc::GICC_PMR.read_volatile() };
-        f();
-        unsafe { gicc::GICC_PMR.write_volatile(initial) }
-    }
+    // NOTE(borrow_unchecked) no context performs a Read-Modify-Write operation
+    // on this register
+    GICC::borrow_unchecked(|gicc| {
+        if priority == 1 {
+            // if the logical priority of this interrupt is `1` then `GICC_PMR` can
+            // only be `IDLE_PRIORITY`
+            f();
+            unsafe { gicc.PMR.write(u32::from(logical2hw(IDLE_PRIORITY))) }
+        } else {
+            let initial = gicc.PMR.read();
+            f();
+            unsafe { gicc.PMR.write(initial) }
+        }
+    });
 }
 
 /// # Safety
@@ -112,9 +124,9 @@ where
 pub unsafe fn set_priority(irq: u16, logical: u8) {
     debug_assert!(logical > IDLE_PRIORITY);
 
-    gicd::GICD_IPRIORITYR
-        .add(usize::from(irq))
-        .write_volatile(logical2hw(logical))
+    // NOTE(borrow_unchecked) this runs in a critical section, before IRQs are
+    // unmasked
+    GICD::borrow_unchecked(|gicd| gicd.IPRIORITYR.write(irq as u8, logical2hw(logical)));
 }
 
 /// # Safety
@@ -124,16 +136,20 @@ pub unsafe fn set_priority(irq: u16, logical: u8) {
 pub unsafe fn enable_spi(spi: u16) {
     debug_assert!(spi >= 32);
 
-    gicd::GICD_ISENABLER
-        .add(usize::from(spi) >> 5)
-        .write_volatile(1 << (spi % 32))
+    // NOTE(borrow_unchecked) this runs in a critical section, before IRQs are
+    // unmasked
+    GICD::borrow_unchecked(|gicd| gicd.ISENABLER.write((spi >> 5) as u8, 1 << (spi % 32)));
 }
 
 /// # Safety
 ///
 /// - Can break priority based critical sections, like `lock`
 pub unsafe fn set_priority_mask(logical: u8) {
-    gicc::GICC_PMR.write_volatile(u32::from(logical2hw(logical)));
+    // NOTE(borrow_unchecked) no context performs a Read-Modify-Write operation
+    // on this register
+    GICC::borrow_unchecked(|gicc| {
+        gicc.PMR.write(u32::from(logical2hw(logical)));
+    })
 }
 
 fn logical2hw(logical: u8) -> u8 {

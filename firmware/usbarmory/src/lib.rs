@@ -5,7 +5,7 @@
 #![warn(missing_docs, rust_2018_idioms, unused_qualifications)]
 
 pub use cortex_a::delay;
-use rac::wdog;
+use pac::wdog::WDOG1;
 use usbarmory_rt as _;
 
 pub mod led;
@@ -22,10 +22,18 @@ pub const CPU_FREQUENCY: u32 = 528_000_000;
 ///
 /// This is useful to return to the u-boot console during development
 pub fn reset() -> ! {
-    unsafe {
-        let old = wdog::WDOG1_WCR.read_volatile();
-        wdog::WDOG1_WCR.write_volatile(old & !wdog::WDOG_WCR_SRS);
-    }
+    /// Software Reset Signal
+    pub const WDOG_WCR_SRS: u16 = 1 << 4;
+
+    cortex_a::disable_fiq();
+    cortex_a::disable_irq();
+
+    // NOTE(borrow_unchecked) interrupts have been disabled; we are now in a
+    // critical section
+    WDOG1::borrow_unchecked(|wdog| {
+        let old = wdog.WCR.read();
+        wdog.WCR.write(old & !WDOG_WCR_SRS);
+    });
 
     // the watchdog reset may not be instantaneous so we use an infinite-loop
     // "trap" to give it some time and satisfy the signature of the diverging
