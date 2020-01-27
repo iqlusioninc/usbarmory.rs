@@ -1,7 +1,7 @@
 //! Test the FPU
 //!
-//! NOTE you must use the `armv7-none-eabihf` target to use the hardware FPU;
-//! the other target, `armv7-none-eabihf`, will perform floating point
+//! NOTE you must use the `armv7a-none-eabihf` target to use the hardware FPU;
+//! the other target, `armv7a-none-eabihf`, will perform floating point
 //! operations in software
 
 #![no_main]
