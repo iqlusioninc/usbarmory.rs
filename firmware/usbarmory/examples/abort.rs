@@ -1,7 +1,6 @@
 // Generates an undefined instruction exception to test that overriding
 // exception handlers work
 
-#![feature(core_intrinsics)]
 #![no_main]
 #![no_std]
 
@@ -16,10 +15,7 @@ use usbarmory::println;
 fn main() -> ! {
     // this operation will trigger the `UndefinedInstruction` handler defined
     // below
-    unsafe {
-        // this lowers to the UDF (undefined) instruction
-        core::intrinsics::abort();
-    }
+    cortex_a::udf()
 }
 
 #[allow(non_snake_case)]

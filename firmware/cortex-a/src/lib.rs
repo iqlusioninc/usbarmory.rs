@@ -108,3 +108,14 @@ pub fn wfi() {
 
     unsafe { __wfi() }
 }
+
+/// UnDeFined instruction
+///
+/// Calling this will result in a `UndefinedInstrution` exception
+pub fn udf() -> ! {
+    extern "C" {
+        fn __udf() -> !;
+    }
+
+    unsafe { __udf() }
+}
