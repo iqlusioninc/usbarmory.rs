@@ -20,5 +20,5 @@ usbarmory-rt = { path = "../usbarmory-rt" }
 cortex-a-rtfm = { path = "../cortex-a-rtfm" }
 cortex-m-semihosting = { git = "https://github.com/japaric/cortex-m-semihosting", branch = "cortex-a" }
 exception-reset = { path = "../exception-reset" }
-heapless = "0.5.2"
+heapless = "0.5.3"
 panic-serial = { path = "../panic-serial" }
