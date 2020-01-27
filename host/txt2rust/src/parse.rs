@@ -149,27 +149,31 @@ fn width(txt: &str) -> Option<u8> {
 
 fn access(txt: &str) -> Option<Access> {
     Some(match txt {
-        "R" => Access::Read,
+        "R" => Access::ReadOnly,
         "R/W" => Access::ReadWrite,
-        "W" => Access::Write,
+        "W" => Access::WriteOnly,
         "w1c" => Access::WriteOneToClear,
         _ => return None,
     })
 }
 
-// `12AB_34CDh`
+// `12AB_34CDh` OR `0030h`
 fn reset_value(mut txt: &str) -> Option<u32> {
     if !txt.ends_with("h") {
         return None;
     }
 
     txt = &txt[..txt.len() - 1];
-    let mut parts = txt.splitn(2, '_');
+    if txt.contains('_') {
+        let mut parts = txt.splitn(2, '_');
 
-    let higher = u16::from_str_radix(parts.next()?, 16).ok()?;
-    let lower = u16::from_str_radix(parts.next()?, 16).ok()?;
+        let higher = u16::from_str_radix(parts.next()?, 16).ok()?;
+        let lower = u16::from_str_radix(parts.next()?, 16).ok()?;
 
-    Some(u32::from(higher) << 16 | u32::from(lower))
+        Some(u32::from(higher) << 16 | u32::from(lower))
+    } else {
+        u16::from_str_radix(txt, 16).ok().map(u32::from)
+    }
 }
 
 #[cfg(test)]

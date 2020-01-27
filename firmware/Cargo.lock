@@ -133,6 +133,10 @@ dependencies = [
 ]
 
 [[package]]
+name = "imx6ul-pac"
+version = "0.1.0"
+
+[[package]]
 name = "imx6ul-rac"
 version = "0.0.0"
 

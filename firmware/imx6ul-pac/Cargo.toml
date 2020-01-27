@@ -1,6 +1,7 @@
 [package]
 authors = ["iqlusion"]
 edition = "2018"
-name = "imx6ul-rac"
-version = "0.0.0"
 license = "Apache-2.0 OR MIT"
+name = "imx6ul-pac"
+publish = false
+version = "0.0.0"

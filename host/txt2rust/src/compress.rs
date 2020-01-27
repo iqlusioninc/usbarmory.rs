@@ -11,7 +11,11 @@ pub struct Register<'a> {
     /// Width in bits
     pub width: u8,
     pub access: Access,
-    pub reset_value: u32,
+    pub reset_value: Option<u32>,
+    /// Contiguous instances; it is assumed there's no space between these
+    pub instances: u16,
+    /// Whether the `write` / `clear` operation should be `unsafe` or not
+    pub unsafe_write: bool,
 }
 
 impl PartialEq for Register<'_> {
@@ -74,7 +78,9 @@ pub fn registers(mut all_registers: Vec<parse::Register>) -> Vec<Peripheral> {
                     name: reg.name.trim_start_matches(&instance_prefix),
                     width: reg.width,
                     access: reg.access,
-                    reset_value: reg.reset_value,
+                    reset_value: Some(reg.reset_value),
+                    instances: 1,
+                    unsafe_write: false,
                 })
                 .collect::<Vec<_>>();
 
@@ -112,7 +118,9 @@ pub fn registers(mut all_registers: Vec<parse::Register>) -> Vec<Peripheral> {
                 name: reg.name.trim_start_matches(name).trim_start_matches("_"),
                 width: reg.width,
                 access: reg.access,
-                reset_value: reg.reset_value,
+                reset_value: Some(reg.reset_value),
+                instances: 1,
+                unsafe_write: false,
             })
             .collect::<Vec<_>>();
 
