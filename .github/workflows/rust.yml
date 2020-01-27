@@ -28,8 +28,26 @@ jobs:
         run: |
           cargo check
 
+  host-check:
+    name: Check host crates
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout sources
+        uses: actions/checkout@v2
+
+      - name: Install stable toolchain
+        uses: actions-rs/toolchain@v1
+        with:
+          toolchain: stable
+          override: true
+
+      - name: Run cargo check
+        working-directory: ./host
+        run: |
+          cargo check
+
 # NOTE the `common` directory is currently empty so this is a no-op
-# host-test:
+# common-test:
 #   name: Run tests on the host
 #   strategy:
 #     matrix:
