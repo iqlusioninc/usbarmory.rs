@@ -14,7 +14,7 @@ from [F-Secure].
 
 ## Minimum Supported Rust Version
 
-- Rust **1.42**
+- Rust **1.42** / `nightly-2020-01-24` or newer
 
 ## Status
 
@@ -23,13 +23,15 @@ stage and will not be ready to use for some time.
 
 ## Building dependencies
 
-- [Xargo](https://crates.io/crates/xargo), for the time being. `cargo install
-xargo` (run this command *outside* the `firmware` directory)
-
 - [flip-lld], linker wrapper that adds zero-cost stack overflow protection.
   `cargo install --git https://github.com/japaric/flip-lld`.
 
 ## Development dependencies
+
+- `arm-none-eabi-binutils` OR (`cargo-binutils` + `llvm-tools-preview`), if you
+  need to inspect ELF files. `pacman -S arm-none-eabi-binutils` for the former;
+  `cargo install cargo-binutils` (run it outside the `firmware` directory) and
+  `rustup component add llvm-tools-preview` for the latter.
 
 - `arm-none-eabi-gcc`, only required if modifying assembly (`.s`) files
 
@@ -38,18 +40,10 @@ xargo` (run this command *outside* the `firmware` directory)
 
 ## Building examples
 
-As the `armv7-none-eabi` target is not in `rustc` / `rustup` you'll have to use
-Rust nightly and Xargo for now.
-
 ``` rust
-$ # run this command from this directory
-$ export RUST_TARGET_PATH=$(dirname `pwd`)
-
-$ xargo build --example $example_name
+$ # on this directory
+$ cargo build --example $example_name
 ```
-
-*NOTE* You'll need to set the `RUST_TARGET_PATH` variable to use *any* Xargo
-command that involves building, including `xargo run`.
 
 ## Running on QEMU
 
@@ -68,13 +62,13 @@ $ qemu-system-arm \
   -machine mcimx6ul-evk  \
   -nographic \
   -semihosting-config enable=on,target=native \
-  -kernel ../target/armv7-none-eabi/release/examples/qemu-hello
+  -kernel ../target/armv7a-none-eabi/release/examples/qemu-hello
 ```
 
 Or simply run:
 
 ``` rust
-$ xargo run --example qemu-hello
+$ cargo run --example qemu-hello
 ```
 
 If a example doesn't explicitly terminate itself, press `C-a` + `c` to bring up
@@ -99,7 +93,37 @@ that makes up the program (that is machine code, strings, initial values for
 static variables, etc.) and *metadata* to indicates where this data should be
 loaded when the programs starts executing.
 
-> TODO binutils
+Because of metadata the size of ELF files on disk does not accurately reflect
+the size of the program once it's loaded in memory. To see the real size of the
+program you need to run the `size` program on the ELF file.
+
+``` rust
+$ cargo build --example hello --release
+
+$ stat --printf="%s\n" ../target/armv7a-none-eabi/release/examples/hello
+40104
+
+$ # if you installed `arm-none-eabi-binutils`
+$ arm-none-eabi-size -Ax ../target/armv7a-none-eabi/release/examples/hello
+../target/armv7a-none-eabi/release/examples/hello  :
+section             size       addr
+.text              0x564   0x91f820
+.rodata            0x27b   0x91fd84
+.data                0x0   0x91ffff
+.bss                 0x1   0x91ffff
+
+$ # if you installed `cargo-binutils`
+$ cargo size --release --example hello -- -A
+hello  :
+section              size      addr
+.text                1380  0x91f820
+.rodata               635  0x91fd84
+.data                   0  0x91ffff
+.bss                    1  0x91ffff
+```
+
+The ELF file is 40 KB on disk but only uses around 2 KB of memory when loaded
+in RAM.
 
 ### One time setup
 
@@ -358,8 +382,6 @@ set window 5
 
 ### Loading an ELF image
 
-> TODO
-
 Once you are done configuring u-boot on the target and C-Kermit on the host use
 the following procedure to load ELF images:
 
@@ -417,7 +439,7 @@ Type ? or HELP for help.
 Then tell C-Kermit where to find the ELF image using the `send` command:
 
 ``` console
-(/tmp) C-Kermit> send /a/b/usbarmory.rs/firmware/target/armv7-none-eabi/release/examples/leds
+(/tmp) C-Kermit> send /a/b/usbarmory.rs/firmware/target/armv7a-none-eabi/release/examples/leds
 ```
 
 You'll briefly see a progress bar and then return to the C-Kermit console. Now

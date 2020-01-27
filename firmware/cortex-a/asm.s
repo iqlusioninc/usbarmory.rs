@@ -72,3 +72,8 @@ __isb:
 __wfi:
   wfi
   bx lr
+
+  .global __udf
+  .section .text.__udf
+__udf:
+  udf

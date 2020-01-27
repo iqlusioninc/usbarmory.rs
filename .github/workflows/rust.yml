@@ -8,6 +8,7 @@ on:
 name: Rust
 
 jobs:
+  # TODO switch to beta and then to stable
   check:
     name: Check firmware
     runs-on: ubuntu-latest
@@ -18,32 +19,14 @@ jobs:
       - name: Install nightly toolchain
         uses: actions-rs/toolchain@v1
         with:
-          components: rust-src # needed by cargo-xbuild
+          target: armv7a-none-eabi
           toolchain: nightly
           override: true
 
-      - name: Cache cargo installs
-        id: cache-cargo-bin
-        uses: actions/cache@v1
-        with:
-          path: ~/.cargo/bin
-          key: ${{ runner.os }}-cargo-bin-${{ hashFiles('dev-dependencies.txt') }}
-
-      - name: Install dev-dependencies
-        # NOTE we need this check because the cache action won't restore `.cargo/.{crates2.json,.crates.toml}`
-        if: steps.cache-cargo-bin.outputs.cache-hit != 'true'
-        # FIXME `cache-hit` is not being set when the cache is found
-        # (is it because there's a permission error when un-tar-ing it?)
-        run: |
-          which cargo-audit || cargo install `cat dev-dependencies.txt`
-
-      - name: Set environment for cargo-xbuild
-        run: echo ::set-env name=RUST_TARGET_PATH::$(echo ${GITHUB_WORKSPACE}/firmware )
-
-      - name: Run cargo xcheck
+      - name: Run cargo check
         working-directory: ./firmware
         run: |
-          cargo xcheck
+          cargo check
 
 # NOTE the `common` directory is currently empty so this is a no-op
 # host-test:
@@ -110,35 +93,25 @@ jobs:
 #     - name: Install nightly toolchain
 #       uses: actions-rs/toolchain@v1
 #       with:
-#         components: rust-src # needed by cargo-xbuild
+#         target: armv7a-none-eabi
 #         toolchain: nightly
 #         override: true
-
-#     - name: Cache cargo installs
-#       id: cache-cargo-bin
-#       uses: actions/cache@v1
-#       with:
-#         path: ~/.cargo/bin
-#         key: ${{ runner.os }}-cargo-bin-${{ hashFiles('dev-dependencies.txt') }}
 
 #     - name: Install QEMU
 #       run: |
 #         sudo apt update
 #         sudo apt install qemu-system-arm
 
-#     - name: Install dev-dependencies
-#       if: steps.cache-cargo-bin.outputs.cache-hit != 'true'
+#     - name: Install flip-lld
 #       run: |
-#         cargo install `cat dev-dependencies.txt`
-
-#     - name: Set environment for cargo-xbuild
-#       run: echo ::set-env name=RUST_TARGET_PATH::$(echo ${GITHUB_WORKSPACE}/firmware )
+#         cargo install --git https://github.com/japaric/flip-lld
 
 #     - name: Run examples
 #       working-directory: ./firmware/usbarmory
 #       run: |
-#         cargo xrun --example qemu-hello --release
+#         cargo run --example qemu-hello --release
 
+  # TODO switch to beta and then to stable
   # test that all our examples link
   it_links:
     name: Check that all examples link in dev and release mode
@@ -150,39 +123,36 @@ jobs:
       - name: Install nightly toolchain
         uses: actions-rs/toolchain@v1
         with:
-          components: rust-src # needed by cargo-xbuild
+          target: armv7a-none-eabi
           toolchain: nightly
           override: true
 
-      - name: Cache cargo installs
-        id: cache-cargo-bin
-        uses: actions/cache@v1
-        with:
-          path: ~/.cargo/bin
-          key: ${{ runner.os }}-cargo-bin-${{ hashFiles('dev-dependencies.txt') }}
+      # - name: Cache cargo installs
+      #   id: cache-cargo-bin
+      #   uses: actions/cache@v1
+      #   with:
+      #     path: ~/.cargo/bin
+      #     key: ${{ runner.os }}-cargo-bin-${{ hashFiles('dev-dependencies.txt') }}
 
-      - name: Install dev-dependencies
-        if: steps.cache-cargo-bin.outputs.cache-hit != 'true'
-        run: |
-          which cargo-audit || cargo install `cat dev-dependencies.txt`
+      # - name: Install dev-dependencies
+      #   if: steps.cache-cargo-bin.outputs.cache-hit != 'true'
+      #   run: |
+      #     which flip-lld || cargo install `cat dev-dependencies.txt`
 
       # TODO cache in dev-dependencies.txt when available on crates.io
       - name: Install flip-lld
         run: |
           cargo install --git https://github.com/japaric/flip-lld
 
-      - name: Set environment for cargo-xbuild
-        run: echo ::set-env name=RUST_TARGET_PATH::$(echo ${GITHUB_WORKSPACE}/firmware )
-
       - name: Build examples using the dev profile
         working-directory: ./firmware/usbarmory
         run: |
-          cargo xbuild --examples
+          cargo build --examples
 
       - name: Build examples using the release profile
         working-directory: ./firmware/usbarmory
         run: |
-          cargo xbuild --examples --release
+          cargo build --examples --release
 
   fmt:
     name: Rustfmt
@@ -205,6 +175,7 @@ jobs:
         run: |
           cargo fmt --all -- --check
 
+  # TODO switch to beta and then to stable
   clippy:
     name: Clippy
     runs-on: ubuntu-latest
@@ -212,32 +183,17 @@ jobs:
       - name: Checkout sources
         uses: actions/checkout@v2
 
-      - name: Install stable toolchain
+      - name: Install nightly toolchain
         uses: actions-rs/toolchain@v1
         with:
-          components: rust-src # needed by cargo-xbuild
+          target: armv7a-none-eabi
           toolchain: nightly
           override: true
-
-      - name: Cache cargo installs
-        id: cache-cargo-bin
-        uses: actions/cache@v1
-        with:
-          path: ~/.cargo/bin
-          key: ${{ runner.os }}-cargo-bin-${{ hashFiles('dev-dependencies.txt') }}
-
-      - name: Install dev-dependencies
-        if: steps.cache-cargo-bin.outputs.cache-hit != 'true'
-        run: |
-          which cargo-audit || cargo install `cat dev-dependencies.txt`
 
       - name: Install clippy
         run: rustup component add clippy
 
-      - name: Set environment for cargo-xbuild
-        run: echo ::set-env name=RUST_TARGET_PATH::$(echo ${GITHUB_WORKSPACE}/firmware )
-
       - name: Run cargo clippy
         working-directory: ./firmware
         run: |
-          cargo xclippy -- -D warnings
+          cargo clippy -- -D warnings

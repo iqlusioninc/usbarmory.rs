@@ -81,7 +81,7 @@ dependencies = [
 [[package]]
 name = "cortex-m-semihosting"
 version = "0.3.5"
-source = "git+https://github.com/japaric/cortex-m-semihosting?branch=cortex-a#c68cad0d3705e218d33f9918f789d463ca80e29d"
+source = "git+https://github.com/japaric/cortex-m-semihosting?branch=cortex-a#585e741cef93a0a1376326ea864f4b17ea9ad429"
 dependencies = [
  "cortex-m",
 ]
@@ -123,9 +123,9 @@ dependencies = [
 
 [[package]]
 name = "heapless"
-version = "0.5.2"
+version = "0.5.3"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "11f6c9395cad684c09e7172ac2b333b838f4099d0545ffd89ba7a89d10dfd605"
+checksum = "10b591a0032f114b7a77d4fbfab452660c553055515b7d7ece355db080d19087"
 dependencies = [
  "as-slice",
  "generic-array 0.13.2",
