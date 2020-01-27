@@ -46,18 +46,17 @@ impl Leds {
 
     /// Gets an exclusive handle to the `Leds` singleton
     pub fn take() -> Option<Self> {
-        if STATE.load(Ordering::Acquire) == NEVER {
-            if STATE
+        if STATE.load(Ordering::Acquire) == NEVER
+            && STATE
                 .compare_exchange(NEVER, TAKEN, Ordering::AcqRel, Ordering::Acquire)
                 .is_ok()
-            {
-                return GPIO4::take().map(|gpio| {
-                    // GPIO4 was configured in the entry point (`start`)
-                    drop(gpio); // this seals the configuration
+        {
+            return GPIO4::take().map(|gpio| {
+                // GPIO4 was configured in the entry point (`start`)
+                drop(gpio); // this seals the configuration
 
-                    unsafe { Self::new() }
-                });
-            }
+                unsafe { Self::new() }
+            });
         }
 
         if STATE

@@ -35,18 +35,17 @@ impl Serial {
 
     /// Gets an exclusive handle to the `Serial` singleton
     pub fn take() -> Option<Self> {
-        if STATE.load(Ordering::Acquire) == NEVER {
-            if STATE
+        if STATE.load(Ordering::Acquire) == NEVER
+            && STATE
                 .compare_exchange(NEVER, TAKEN, Ordering::AcqRel, Ordering::Acquire)
                 .is_ok()
-            {
-                return UART2::take().map(|uart| {
-                    // u-boot already initialized this
-                    drop(uart); // this seals the UART2 configuration
+        {
+            return UART2::take().map(|uart| {
+                // u-boot already initialized this
+                drop(uart); // this seals the UART2 configuration
 
-                    unsafe { Serial::new() }
-                });
-            }
+                unsafe { Serial::new() }
+            });
         }
 
         if STATE
