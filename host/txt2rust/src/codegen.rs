@@ -143,6 +143,7 @@ pub fn krate(peripherals: &[Peripheral]) -> TokenStream2 {
                 ));
 
                 mod_items.push(quote!(
+                    #[allow(non_camel_case_types)]
                     #[doc = #pname_s]
                     pub type #pname_i = Registers;
 
@@ -281,6 +282,17 @@ pub fn krate(peripherals: &[Peripheral]) -> TokenStream2 {
                         ));
                     }
 
+                    let reset_value = reg
+                        .reset_value
+                        .map(|rv| {
+                            let rv = unsuffixed_hex(rv, false);
+                            quote!(
+                                /// Reset value
+                                pub const RESET_VALUE: #uxx = #rv;
+                            )
+                        })
+                        .unwrap_or_else(|| quote!());
+
                     let offset = unsuffixed_hex(offset, true);
                     mod_items.push(quote!(
                         #[doc = #doc]
@@ -298,6 +310,7 @@ pub fn krate(peripherals: &[Peripheral]) -> TokenStream2 {
                             P: Peripheral,
                         {
                             const OFFSET: usize = #offset;
+                            #reset_value
 
                             #(#methods)*
                         }
@@ -339,6 +352,7 @@ pub fn krate(peripherals: &[Peripheral]) -> TokenStream2 {
                             const BASE_ADDRESS: usize = #base_addr;
                         }
 
+                        #[allow(non_camel_case_types)]
                         #[doc = #name_s]
                         pub type #name_i = Registers<#n>;
 
