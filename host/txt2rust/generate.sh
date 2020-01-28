@@ -10,6 +10,8 @@ main() {
     pdftotext -layout -f 1141 -l 1142 $1 gpio.txt
     pdftotext -layout -f 2921 -l 2922 $1 snvs.txt
     pdftotext -layout -f 3101 -l 3107 $1 uart.txt
+    pdftotext -layout -f 3309 -l 3309 $1 usb-nc.txt
+    pdftotext -layout -f 3315 -l 3319 $1 usb.txt
     pdftotext -layout -f 3584 -l 3584 $1 wdog.txt
     cargo run -- *.txt
 
