@@ -23,7 +23,7 @@ impl Rtc {
     /// singleton has already been `take`-n.
     pub fn initialize() -> Option<Self> {
         /// HP Real-Time Counter Enable
-        const SNVS_HPCR_RTC_EN: u32 = 1 << 0;
+        const SNVS_HPCR_RTC_EN: u32 = 1;
 
         // FIXME we don't want to take the whole SNVS peripheral here; just some
         // registers
@@ -43,7 +43,7 @@ impl Rtc {
     /// Returns the time elapsed since the RTC was initialized
     ///
     /// The RTC is a monotonic timer that can't be reset.
-    pub fn elapsed(&self) -> Duration {
+    pub fn elapsed(self) -> Duration {
         // NOTE(borrow_unchecked) `SNVS` has been dropped at this point; this is
         // the only method that will access these registers
         SNVS::borrow_unchecked(|snvs| {
