@@ -444,210 +444,38 @@ pub mod gpio {
     }
 }
 #[allow(non_snake_case)]
-#[doc = "SNVS"]
-pub mod snvs {
+#[doc = "SNVS_LP"]
+pub mod snvs_lp {
     use core::{
         marker::PhantomData,
         sync::atomic::{AtomicBool, Ordering},
     };
-    const BASE_ADDRESS: usize = 0x020c_c000;
+    const BASE_ADDRESS: usize = 0x020c_c034;
     #[doc = r" The registers that make up the peripheral"]
     #[allow(non_snake_case)]
     pub struct Registers {
         _not_sync: PhantomData<*mut ()>,
-        #[doc = "SNVS_HP Lock register"]
-        pub HPLR: HPLR,
-        #[doc = "SNVS_HP Command register"]
-        pub HPCOMR: HPCOMR,
-        #[doc = "SNVS_HP Control register"]
-        pub HPCR: HPCR,
-        #[doc = "SNVS_HP Status register"]
-        pub HPSR: HPSR,
-        #[doc = "SNVS_HP Real-Time Counter MSB Register"]
-        pub HPRTCMR: HPRTCMR,
-        #[doc = "SNVS_HP Real-Time Counter LSB Register"]
-        pub HPRTCLR: HPRTCLR,
-        #[doc = "SNVS_HP Time Alarm MSB Register"]
-        pub HPTAMR: HPTAMR,
-        #[doc = "SNVS_HP Time Alarm LSB Register"]
-        pub HPTALR: HPTALR,
         #[doc = "SNVS_LP Lock Register"]
-        pub LPLR: LPLR,
+        pub LR: LR,
         #[doc = "SNVS_LP Control Register"]
-        pub LPCR: LPCR,
+        pub CR: CR,
         #[doc = "SNVS_LP Status Register"]
-        pub LPSR: LPSR,
+        pub SR: SR,
         #[doc = "SNVS_LP Secure Monotonic Counter MSB Register"]
-        pub LPSMCMR: LPSMCMR,
+        pub SMCMR: SMCMR,
         #[doc = "SNVS_LP Secure Monotonic Counter LSB Register"]
-        pub LPSMCLR: LPSMCLR,
+        pub SMCLR: SMCLR,
         #[doc = "SNVS_LP General-Purpose Register"]
-        pub LPGPR: LPGPR,
-        #[doc = "SNVS_HP Version ID Register 1"]
-        pub HPVIDR1: HPVIDR1,
-        #[doc = "SNVS_HP Version ID Register 2"]
-        pub HPVIDR2: HPVIDR2,
+        pub GPR: GPR,
     }
     unsafe impl Send for Registers {}
-    #[doc = "SNVS_HP Lock register"]
-    #[allow(non_camel_case_types)]
-    pub struct HPLR {
-        _not_send_or_sync: PhantomData<*mut ()>,
-    }
-    impl HPLR {
-        const OFFSET: usize = 0x00;
-        #[doc = r" Reset value"]
-        pub const RESET_VALUE: u32 = 0x0000_0000;
-        #[doc = r" Performs a single load operation on the memory-mapped register"]
-        pub fn read(&self) -> u32 {
-            unsafe { ((BASE_ADDRESS + Self::OFFSET) as *const u32).read_volatile() }
-        }
-        #[doc = r" Performs a single store operation on the memory-mapped register"]
-        #[allow(unused_unsafe)]
-        pub fn write(&self, bits: u32) {
-            unsafe { ((BASE_ADDRESS + Self::OFFSET) as *mut u32).write_volatile(bits) }
-        }
-    }
-    #[doc = "SNVS_HP Command register"]
-    #[allow(non_camel_case_types)]
-    pub struct HPCOMR {
-        _not_send_or_sync: PhantomData<*mut ()>,
-    }
-    impl HPCOMR {
-        const OFFSET: usize = 0x04;
-        #[doc = r" Reset value"]
-        pub const RESET_VALUE: u32 = 0x0000_0000;
-        #[doc = r" Performs a single load operation on the memory-mapped register"]
-        pub fn read(&self) -> u32 {
-            unsafe { ((BASE_ADDRESS + Self::OFFSET) as *const u32).read_volatile() }
-        }
-        #[doc = r" Performs a single store operation on the memory-mapped register"]
-        #[allow(unused_unsafe)]
-        pub fn write(&self, bits: u32) {
-            unsafe { ((BASE_ADDRESS + Self::OFFSET) as *mut u32).write_volatile(bits) }
-        }
-    }
-    #[doc = "SNVS_HP Control register"]
-    #[allow(non_camel_case_types)]
-    pub struct HPCR {
-        _not_send_or_sync: PhantomData<*mut ()>,
-    }
-    impl HPCR {
-        const OFFSET: usize = 0x08;
-        #[doc = r" Reset value"]
-        pub const RESET_VALUE: u32 = 0x0000_0000;
-        #[doc = r" Performs a single load operation on the memory-mapped register"]
-        pub fn read(&self) -> u32 {
-            unsafe { ((BASE_ADDRESS + Self::OFFSET) as *const u32).read_volatile() }
-        }
-        #[doc = r" Performs a single store operation on the memory-mapped register"]
-        #[allow(unused_unsafe)]
-        pub fn write(&self, bits: u32) {
-            unsafe { ((BASE_ADDRESS + Self::OFFSET) as *mut u32).write_volatile(bits) }
-        }
-    }
-    #[doc = "SNVS_HP Status register"]
-    #[allow(non_camel_case_types)]
-    pub struct HPSR {
-        _not_send_or_sync: PhantomData<*mut ()>,
-    }
-    impl HPSR {
-        const OFFSET: usize = 0x14;
-        #[doc = r" Reset value"]
-        pub const RESET_VALUE: u32 = 0x8000_0000;
-        #[doc = r" Performs a single load operation on the memory-mapped register"]
-        pub fn read(&self) -> u32 {
-            unsafe { ((BASE_ADDRESS + Self::OFFSET) as *const u32).read_volatile() }
-        }
-        #[doc = r" Performs a single store operation on the memory-mapped register"]
-        #[allow(unused_unsafe)]
-        pub fn write(&self, bits: u32) {
-            unsafe { ((BASE_ADDRESS + Self::OFFSET) as *mut u32).write_volatile(bits) }
-        }
-    }
-    #[doc = "SNVS_HP Real-Time Counter MSB Register"]
-    #[allow(non_camel_case_types)]
-    pub struct HPRTCMR {
-        _not_send_or_sync: PhantomData<*mut ()>,
-    }
-    impl HPRTCMR {
-        const OFFSET: usize = 0x24;
-        #[doc = r" Reset value"]
-        pub const RESET_VALUE: u32 = 0x0000_0000;
-        #[doc = r" Performs a single load operation on the memory-mapped register"]
-        pub fn read(&self) -> u32 {
-            unsafe { ((BASE_ADDRESS + Self::OFFSET) as *const u32).read_volatile() }
-        }
-        #[doc = r" Performs a single store operation on the memory-mapped register"]
-        #[allow(unused_unsafe)]
-        pub fn write(&self, bits: u32) {
-            unsafe { ((BASE_ADDRESS + Self::OFFSET) as *mut u32).write_volatile(bits) }
-        }
-    }
-    #[doc = "SNVS_HP Real-Time Counter LSB Register"]
-    #[allow(non_camel_case_types)]
-    pub struct HPRTCLR {
-        _not_send_or_sync: PhantomData<*mut ()>,
-    }
-    impl HPRTCLR {
-        const OFFSET: usize = 0x28;
-        #[doc = r" Reset value"]
-        pub const RESET_VALUE: u32 = 0x0000_0000;
-        #[doc = r" Performs a single load operation on the memory-mapped register"]
-        pub fn read(&self) -> u32 {
-            unsafe { ((BASE_ADDRESS + Self::OFFSET) as *const u32).read_volatile() }
-        }
-        #[doc = r" Performs a single store operation on the memory-mapped register"]
-        #[allow(unused_unsafe)]
-        pub fn write(&self, bits: u32) {
-            unsafe { ((BASE_ADDRESS + Self::OFFSET) as *mut u32).write_volatile(bits) }
-        }
-    }
-    #[doc = "SNVS_HP Time Alarm MSB Register"]
-    #[allow(non_camel_case_types)]
-    pub struct HPTAMR {
-        _not_send_or_sync: PhantomData<*mut ()>,
-    }
-    impl HPTAMR {
-        const OFFSET: usize = 0x2c;
-        #[doc = r" Reset value"]
-        pub const RESET_VALUE: u32 = 0x0000_0000;
-        #[doc = r" Performs a single load operation on the memory-mapped register"]
-        pub fn read(&self) -> u32 {
-            unsafe { ((BASE_ADDRESS + Self::OFFSET) as *const u32).read_volatile() }
-        }
-        #[doc = r" Performs a single store operation on the memory-mapped register"]
-        #[allow(unused_unsafe)]
-        pub fn write(&self, bits: u32) {
-            unsafe { ((BASE_ADDRESS + Self::OFFSET) as *mut u32).write_volatile(bits) }
-        }
-    }
-    #[doc = "SNVS_HP Time Alarm LSB Register"]
-    #[allow(non_camel_case_types)]
-    pub struct HPTALR {
-        _not_send_or_sync: PhantomData<*mut ()>,
-    }
-    impl HPTALR {
-        const OFFSET: usize = 0x30;
-        #[doc = r" Reset value"]
-        pub const RESET_VALUE: u32 = 0x0000_0000;
-        #[doc = r" Performs a single load operation on the memory-mapped register"]
-        pub fn read(&self) -> u32 {
-            unsafe { ((BASE_ADDRESS + Self::OFFSET) as *const u32).read_volatile() }
-        }
-        #[doc = r" Performs a single store operation on the memory-mapped register"]
-        #[allow(unused_unsafe)]
-        pub fn write(&self, bits: u32) {
-            unsafe { ((BASE_ADDRESS + Self::OFFSET) as *mut u32).write_volatile(bits) }
-        }
-    }
     #[doc = "SNVS_LP Lock Register"]
     #[allow(non_camel_case_types)]
-    pub struct LPLR {
+    pub struct LR {
         _not_send_or_sync: PhantomData<*mut ()>,
     }
-    impl LPLR {
-        const OFFSET: usize = 0x34;
+    impl LR {
+        const OFFSET: usize = 0x00;
         #[doc = r" Reset value"]
         pub const RESET_VALUE: u32 = 0x0000_0000;
         #[doc = r" Performs a single load operation on the memory-mapped register"]
@@ -662,11 +490,11 @@ pub mod snvs {
     }
     #[doc = "SNVS_LP Control Register"]
     #[allow(non_camel_case_types)]
-    pub struct LPCR {
+    pub struct CR {
         _not_send_or_sync: PhantomData<*mut ()>,
     }
-    impl LPCR {
-        const OFFSET: usize = 0x38;
+    impl CR {
+        const OFFSET: usize = 0x04;
         #[doc = r" Reset value"]
         pub const RESET_VALUE: u32 = 0x0000_0020;
         #[doc = r" Performs a single load operation on the memory-mapped register"]
@@ -681,11 +509,11 @@ pub mod snvs {
     }
     #[doc = "SNVS_LP Status Register"]
     #[allow(non_camel_case_types)]
-    pub struct LPSR {
+    pub struct SR {
         _not_send_or_sync: PhantomData<*mut ()>,
     }
-    impl LPSR {
-        const OFFSET: usize = 0x4c;
+    impl SR {
+        const OFFSET: usize = 0x18;
         #[doc = r" Reset value"]
         pub const RESET_VALUE: u32 = 0x0000_0008;
         #[doc = r" Performs a single load operation on the memory-mapped register"]
@@ -700,11 +528,11 @@ pub mod snvs {
     }
     #[doc = "SNVS_LP Secure Monotonic Counter MSB Register"]
     #[allow(non_camel_case_types)]
-    pub struct LPSMCMR {
+    pub struct SMCMR {
         _not_send_or_sync: PhantomData<*mut ()>,
     }
-    impl LPSMCMR {
-        const OFFSET: usize = 0x5c;
+    impl SMCMR {
+        const OFFSET: usize = 0x28;
         #[doc = r" Reset value"]
         pub const RESET_VALUE: u32 = 0x0000_0000;
         #[doc = r" Performs a single load operation on the memory-mapped register"]
@@ -719,11 +547,11 @@ pub mod snvs {
     }
     #[doc = "SNVS_LP Secure Monotonic Counter LSB Register"]
     #[allow(non_camel_case_types)]
-    pub struct LPSMCLR {
+    pub struct SMCLR {
         _not_send_or_sync: PhantomData<*mut ()>,
     }
-    impl LPSMCLR {
-        const OFFSET: usize = 0x60;
+    impl SMCLR {
+        const OFFSET: usize = 0x2c;
         #[doc = r" Reset value"]
         pub const RESET_VALUE: u32 = 0x0000_0000;
         #[doc = r" Performs a single load operation on the memory-mapped register"]
@@ -738,11 +566,11 @@ pub mod snvs {
     }
     #[doc = "SNVS_LP General-Purpose Register"]
     #[allow(non_camel_case_types)]
-    pub struct LPGPR {
+    pub struct GPR {
         _not_send_or_sync: PhantomData<*mut ()>,
     }
-    impl LPGPR {
-        const OFFSET: usize = 0x68;
+    impl GPR {
+        const OFFSET: usize = 0x34;
         #[doc = r" Reset value"]
         pub const RESET_VALUE: u32 = 0x0000_0000;
         #[doc = r" Performs a single load operation on the memory-mapped register"]
@@ -755,34 +583,6 @@ pub mod snvs {
             unsafe { ((BASE_ADDRESS + Self::OFFSET) as *mut u32).write_volatile(bits) }
         }
     }
-    #[doc = "SNVS_HP Version ID Register 1"]
-    #[allow(non_camel_case_types)]
-    pub struct HPVIDR1 {
-        _not_send_or_sync: PhantomData<*mut ()>,
-    }
-    impl HPVIDR1 {
-        const OFFSET: usize = 0x0bf8;
-        #[doc = r" Reset value"]
-        pub const RESET_VALUE: u32 = 0x003e_0300;
-        #[doc = r" Performs a single load operation on the memory-mapped register"]
-        pub fn read(&self) -> u32 {
-            unsafe { ((BASE_ADDRESS + Self::OFFSET) as *const u32).read_volatile() }
-        }
-    }
-    #[doc = "SNVS_HP Version ID Register 2"]
-    #[allow(non_camel_case_types)]
-    pub struct HPVIDR2 {
-        _not_send_or_sync: PhantomData<*mut ()>,
-    }
-    impl HPVIDR2 {
-        const OFFSET: usize = 0x0bfc;
-        #[doc = r" Reset value"]
-        pub const RESET_VALUE: u32 = 0x0300_0000;
-        #[doc = r" Performs a single load operation on the memory-mapped register"]
-        pub fn read(&self) -> u32 {
-            unsafe { ((BASE_ADDRESS + Self::OFFSET) as *const u32).read_volatile() }
-        }
-    }
     impl Registers {
         #[doc = r" # Safety"]
         #[doc = r""]
@@ -791,61 +591,31 @@ pub mod snvs {
         unsafe fn new() -> Self {
             Self {
                 _not_sync: PhantomData,
-                HPLR: HPLR {
+                LR: LR {
                     _not_send_or_sync: PhantomData,
                 },
-                HPCOMR: HPCOMR {
+                CR: CR {
                     _not_send_or_sync: PhantomData,
                 },
-                HPCR: HPCR {
+                SR: SR {
                     _not_send_or_sync: PhantomData,
                 },
-                HPSR: HPSR {
+                SMCMR: SMCMR {
                     _not_send_or_sync: PhantomData,
                 },
-                HPRTCMR: HPRTCMR {
+                SMCLR: SMCLR {
                     _not_send_or_sync: PhantomData,
                 },
-                HPRTCLR: HPRTCLR {
-                    _not_send_or_sync: PhantomData,
-                },
-                HPTAMR: HPTAMR {
-                    _not_send_or_sync: PhantomData,
-                },
-                HPTALR: HPTALR {
-                    _not_send_or_sync: PhantomData,
-                },
-                LPLR: LPLR {
-                    _not_send_or_sync: PhantomData,
-                },
-                LPCR: LPCR {
-                    _not_send_or_sync: PhantomData,
-                },
-                LPSR: LPSR {
-                    _not_send_or_sync: PhantomData,
-                },
-                LPSMCMR: LPSMCMR {
-                    _not_send_or_sync: PhantomData,
-                },
-                LPSMCLR: LPSMCLR {
-                    _not_send_or_sync: PhantomData,
-                },
-                LPGPR: LPGPR {
-                    _not_send_or_sync: PhantomData,
-                },
-                HPVIDR1: HPVIDR1 {
-                    _not_send_or_sync: PhantomData,
-                },
-                HPVIDR2: HPVIDR2 {
+                GPR: GPR {
                     _not_send_or_sync: PhantomData,
                 },
             }
         }
     }
     #[allow(non_camel_case_types)]
-    #[doc = "SNVS"]
-    pub type SNVS = Registers;
-    impl SNVS {
+    #[doc = "SNVS_LP"]
+    pub type SNVS_LP = Registers;
+    impl SNVS_LP {
         #[doc = r" Takes the singleton that represents this peripheral instance"]
         pub fn take() -> Option<Self> {
             static TAKEN: AtomicBool = AtomicBool::new(false);
@@ -866,52 +636,335 @@ pub mod snvs {
         pub fn borrow_unchecked<T>(f: impl FnOnce(&Self) -> T) -> T {
             f(&Registers {
                 _not_sync: PhantomData,
-                HPLR: HPLR {
+                LR: LR {
                     _not_send_or_sync: PhantomData,
                 },
-                HPCOMR: HPCOMR {
+                CR: CR {
                     _not_send_or_sync: PhantomData,
                 },
-                HPCR: HPCR {
+                SR: SR {
                     _not_send_or_sync: PhantomData,
                 },
-                HPSR: HPSR {
+                SMCMR: SMCMR {
                     _not_send_or_sync: PhantomData,
                 },
-                HPRTCMR: HPRTCMR {
+                SMCLR: SMCLR {
                     _not_send_or_sync: PhantomData,
                 },
-                HPRTCLR: HPRTCLR {
+                GPR: GPR {
                     _not_send_or_sync: PhantomData,
                 },
-                HPTAMR: HPTAMR {
+            })
+        }
+    }
+}
+#[allow(non_snake_case)]
+#[doc = "SNVS_HP"]
+pub mod snvs_hp {
+    use core::{
+        marker::PhantomData,
+        sync::atomic::{AtomicBool, Ordering},
+    };
+    const BASE_ADDRESS: usize = 0x020c_c000;
+    #[doc = r" The registers that make up the peripheral"]
+    #[allow(non_snake_case)]
+    pub struct Registers {
+        _not_sync: PhantomData<*mut ()>,
+        #[doc = "SNVS_HP Lock register"]
+        pub LR: LR,
+        #[doc = "SNVS_HP Command register"]
+        pub COMR: COMR,
+        #[doc = "SNVS_HP Control register"]
+        pub CR: CR,
+        #[doc = "SNVS_HP Status register"]
+        pub SR: SR,
+        #[doc = "SNVS_HP Real-Time Counter MSB Register"]
+        pub RTCMR: RTCMR,
+        #[doc = "SNVS_HP Real-Time Counter LSB Register"]
+        pub RTCLR: RTCLR,
+        #[doc = "SNVS_HP Time Alarm MSB Register"]
+        pub TAMR: TAMR,
+        #[doc = "SNVS_HP Time Alarm LSB Register"]
+        pub TALR: TALR,
+        #[doc = "SNVS_HP Version ID Register 1"]
+        pub VIDR1: VIDR1,
+        #[doc = "SNVS_HP Version ID Register 2"]
+        pub VIDR2: VIDR2,
+    }
+    unsafe impl Send for Registers {}
+    #[doc = "SNVS_HP Lock register"]
+    #[allow(non_camel_case_types)]
+    pub struct LR {
+        _not_send_or_sync: PhantomData<*mut ()>,
+    }
+    impl LR {
+        const OFFSET: usize = 0x00;
+        #[doc = r" Reset value"]
+        pub const RESET_VALUE: u32 = 0x0000_0000;
+        #[doc = r" Performs a single load operation on the memory-mapped register"]
+        pub fn read(&self) -> u32 {
+            unsafe { ((BASE_ADDRESS + Self::OFFSET) as *const u32).read_volatile() }
+        }
+        #[doc = r" Performs a single store operation on the memory-mapped register"]
+        #[allow(unused_unsafe)]
+        pub fn write(&self, bits: u32) {
+            unsafe { ((BASE_ADDRESS + Self::OFFSET) as *mut u32).write_volatile(bits) }
+        }
+    }
+    #[doc = "SNVS_HP Command register"]
+    #[allow(non_camel_case_types)]
+    pub struct COMR {
+        _not_send_or_sync: PhantomData<*mut ()>,
+    }
+    impl COMR {
+        const OFFSET: usize = 0x04;
+        #[doc = r" Reset value"]
+        pub const RESET_VALUE: u32 = 0x0000_0000;
+        #[doc = r" Performs a single load operation on the memory-mapped register"]
+        pub fn read(&self) -> u32 {
+            unsafe { ((BASE_ADDRESS + Self::OFFSET) as *const u32).read_volatile() }
+        }
+        #[doc = r" Performs a single store operation on the memory-mapped register"]
+        #[allow(unused_unsafe)]
+        pub fn write(&self, bits: u32) {
+            unsafe { ((BASE_ADDRESS + Self::OFFSET) as *mut u32).write_volatile(bits) }
+        }
+    }
+    #[doc = "SNVS_HP Control register"]
+    #[allow(non_camel_case_types)]
+    pub struct CR {
+        _not_send_or_sync: PhantomData<*mut ()>,
+    }
+    impl CR {
+        const OFFSET: usize = 0x08;
+        #[doc = r" Reset value"]
+        pub const RESET_VALUE: u32 = 0x0000_0000;
+        #[doc = r" Performs a single load operation on the memory-mapped register"]
+        pub fn read(&self) -> u32 {
+            unsafe { ((BASE_ADDRESS + Self::OFFSET) as *const u32).read_volatile() }
+        }
+        #[doc = r" Performs a single store operation on the memory-mapped register"]
+        #[allow(unused_unsafe)]
+        pub fn write(&self, bits: u32) {
+            unsafe { ((BASE_ADDRESS + Self::OFFSET) as *mut u32).write_volatile(bits) }
+        }
+    }
+    #[doc = "SNVS_HP Status register"]
+    #[allow(non_camel_case_types)]
+    pub struct SR {
+        _not_send_or_sync: PhantomData<*mut ()>,
+    }
+    impl SR {
+        const OFFSET: usize = 0x14;
+        #[doc = r" Reset value"]
+        pub const RESET_VALUE: u32 = 0x8000_0000;
+        #[doc = r" Performs a single load operation on the memory-mapped register"]
+        pub fn read(&self) -> u32 {
+            unsafe { ((BASE_ADDRESS + Self::OFFSET) as *const u32).read_volatile() }
+        }
+        #[doc = r" Performs a single store operation on the memory-mapped register"]
+        #[allow(unused_unsafe)]
+        pub fn write(&self, bits: u32) {
+            unsafe { ((BASE_ADDRESS + Self::OFFSET) as *mut u32).write_volatile(bits) }
+        }
+    }
+    #[doc = "SNVS_HP Real-Time Counter MSB Register"]
+    #[allow(non_camel_case_types)]
+    pub struct RTCMR {
+        _not_send_or_sync: PhantomData<*mut ()>,
+    }
+    impl RTCMR {
+        const OFFSET: usize = 0x24;
+        #[doc = r" Reset value"]
+        pub const RESET_VALUE: u32 = 0x0000_0000;
+        #[doc = r" Performs a single load operation on the memory-mapped register"]
+        pub fn read(&self) -> u32 {
+            unsafe { ((BASE_ADDRESS + Self::OFFSET) as *const u32).read_volatile() }
+        }
+        #[doc = r" Performs a single store operation on the memory-mapped register"]
+        #[allow(unused_unsafe)]
+        pub fn write(&self, bits: u32) {
+            unsafe { ((BASE_ADDRESS + Self::OFFSET) as *mut u32).write_volatile(bits) }
+        }
+    }
+    #[doc = "SNVS_HP Real-Time Counter LSB Register"]
+    #[allow(non_camel_case_types)]
+    pub struct RTCLR {
+        _not_send_or_sync: PhantomData<*mut ()>,
+    }
+    impl RTCLR {
+        const OFFSET: usize = 0x28;
+        #[doc = r" Reset value"]
+        pub const RESET_VALUE: u32 = 0x0000_0000;
+        #[doc = r" Performs a single load operation on the memory-mapped register"]
+        pub fn read(&self) -> u32 {
+            unsafe { ((BASE_ADDRESS + Self::OFFSET) as *const u32).read_volatile() }
+        }
+        #[doc = r" Performs a single store operation on the memory-mapped register"]
+        #[allow(unused_unsafe)]
+        pub fn write(&self, bits: u32) {
+            unsafe { ((BASE_ADDRESS + Self::OFFSET) as *mut u32).write_volatile(bits) }
+        }
+    }
+    #[doc = "SNVS_HP Time Alarm MSB Register"]
+    #[allow(non_camel_case_types)]
+    pub struct TAMR {
+        _not_send_or_sync: PhantomData<*mut ()>,
+    }
+    impl TAMR {
+        const OFFSET: usize = 0x2c;
+        #[doc = r" Reset value"]
+        pub const RESET_VALUE: u32 = 0x0000_0000;
+        #[doc = r" Performs a single load operation on the memory-mapped register"]
+        pub fn read(&self) -> u32 {
+            unsafe { ((BASE_ADDRESS + Self::OFFSET) as *const u32).read_volatile() }
+        }
+        #[doc = r" Performs a single store operation on the memory-mapped register"]
+        #[allow(unused_unsafe)]
+        pub fn write(&self, bits: u32) {
+            unsafe { ((BASE_ADDRESS + Self::OFFSET) as *mut u32).write_volatile(bits) }
+        }
+    }
+    #[doc = "SNVS_HP Time Alarm LSB Register"]
+    #[allow(non_camel_case_types)]
+    pub struct TALR {
+        _not_send_or_sync: PhantomData<*mut ()>,
+    }
+    impl TALR {
+        const OFFSET: usize = 0x30;
+        #[doc = r" Reset value"]
+        pub const RESET_VALUE: u32 = 0x0000_0000;
+        #[doc = r" Performs a single load operation on the memory-mapped register"]
+        pub fn read(&self) -> u32 {
+            unsafe { ((BASE_ADDRESS + Self::OFFSET) as *const u32).read_volatile() }
+        }
+        #[doc = r" Performs a single store operation on the memory-mapped register"]
+        #[allow(unused_unsafe)]
+        pub fn write(&self, bits: u32) {
+            unsafe { ((BASE_ADDRESS + Self::OFFSET) as *mut u32).write_volatile(bits) }
+        }
+    }
+    #[doc = "SNVS_HP Version ID Register 1"]
+    #[allow(non_camel_case_types)]
+    pub struct VIDR1 {
+        _not_send_or_sync: PhantomData<*mut ()>,
+    }
+    impl VIDR1 {
+        const OFFSET: usize = 0x0bf8;
+        #[doc = r" Reset value"]
+        pub const RESET_VALUE: u32 = 0x003e_0300;
+        #[doc = r" Performs a single load operation on the memory-mapped register"]
+        pub fn read(&self) -> u32 {
+            unsafe { ((BASE_ADDRESS + Self::OFFSET) as *const u32).read_volatile() }
+        }
+    }
+    #[doc = "SNVS_HP Version ID Register 2"]
+    #[allow(non_camel_case_types)]
+    pub struct VIDR2 {
+        _not_send_or_sync: PhantomData<*mut ()>,
+    }
+    impl VIDR2 {
+        const OFFSET: usize = 0x0bfc;
+        #[doc = r" Reset value"]
+        pub const RESET_VALUE: u32 = 0x0300_0000;
+        #[doc = r" Performs a single load operation on the memory-mapped register"]
+        pub fn read(&self) -> u32 {
+            unsafe { ((BASE_ADDRESS + Self::OFFSET) as *const u32).read_volatile() }
+        }
+    }
+    impl Registers {
+        #[doc = r" # Safety"]
+        #[doc = r""]
+        #[doc = r" Creates a singleton from thin air; make sure we"]
+        #[doc = r" never hand out two instances of it"]
+        unsafe fn new() -> Self {
+            Self {
+                _not_sync: PhantomData,
+                LR: LR {
                     _not_send_or_sync: PhantomData,
                 },
-                HPTALR: HPTALR {
+                COMR: COMR {
                     _not_send_or_sync: PhantomData,
                 },
-                LPLR: LPLR {
+                CR: CR {
                     _not_send_or_sync: PhantomData,
                 },
-                LPCR: LPCR {
+                SR: SR {
                     _not_send_or_sync: PhantomData,
                 },
-                LPSR: LPSR {
+                RTCMR: RTCMR {
                     _not_send_or_sync: PhantomData,
                 },
-                LPSMCMR: LPSMCMR {
+                RTCLR: RTCLR {
                     _not_send_or_sync: PhantomData,
                 },
-                LPSMCLR: LPSMCLR {
+                TAMR: TAMR {
                     _not_send_or_sync: PhantomData,
                 },
-                LPGPR: LPGPR {
+                TALR: TALR {
                     _not_send_or_sync: PhantomData,
                 },
-                HPVIDR1: HPVIDR1 {
+                VIDR1: VIDR1 {
                     _not_send_or_sync: PhantomData,
                 },
-                HPVIDR2: HPVIDR2 {
+                VIDR2: VIDR2 {
+                    _not_send_or_sync: PhantomData,
+                },
+            }
+        }
+    }
+    #[allow(non_camel_case_types)]
+    #[doc = "SNVS_HP"]
+    pub type SNVS_HP = Registers;
+    impl SNVS_HP {
+        #[doc = r" Takes the singleton that represents this peripheral instance"]
+        pub fn take() -> Option<Self> {
+            static TAKEN: AtomicBool = AtomicBool::new(false);
+            if TAKEN
+                .compare_exchange(false, true, Ordering::AcqRel, Ordering::Acquire)
+                .is_ok()
+            {
+                Some(unsafe { Registers::new() })
+            } else {
+                None
+            }
+        }
+        #[doc = r" Borrows the singleton without checking if it's"]
+        #[doc = r" currently being held by a context"]
+        #[doc = r""]
+        #[doc = r" **WARNING** this can break Read-Modify-Write"]
+        #[doc = r" operations being performed in other contexts."]
+        pub fn borrow_unchecked<T>(f: impl FnOnce(&Self) -> T) -> T {
+            f(&Registers {
+                _not_sync: PhantomData,
+                LR: LR {
+                    _not_send_or_sync: PhantomData,
+                },
+                COMR: COMR {
+                    _not_send_or_sync: PhantomData,
+                },
+                CR: CR {
+                    _not_send_or_sync: PhantomData,
+                },
+                SR: SR {
+                    _not_send_or_sync: PhantomData,
+                },
+                RTCMR: RTCMR {
+                    _not_send_or_sync: PhantomData,
+                },
+                RTCLR: RTCLR {
+                    _not_send_or_sync: PhantomData,
+                },
+                TAMR: TAMR {
+                    _not_send_or_sync: PhantomData,
+                },
+                TALR: TALR {
+                    _not_send_or_sync: PhantomData,
+                },
+                VIDR1: VIDR1 {
+                    _not_send_or_sync: PhantomData,
+                },
+                VIDR2: VIDR2 {
                     _not_send_or_sync: PhantomData,
                 },
             })
