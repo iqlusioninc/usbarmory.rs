@@ -1,5 +1,8 @@
 //! LEDs
 
+// References
+// - chapter 26 of the RM
+
 use core::{
     marker::PhantomData,
     sync::atomic::{AtomicU8, Ordering},

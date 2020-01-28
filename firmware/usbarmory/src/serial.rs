@@ -1,5 +1,8 @@
 //! Serial interface
 
+// References
+// - chapter 53 of the RM
+
 use core::{
     fmt,
     marker::PhantomData,
