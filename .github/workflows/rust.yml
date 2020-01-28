@@ -145,6 +145,24 @@ jobs:
           toolchain: nightly
           override: true
 
+    - name: Cache cargo registry
+      uses: actions/cache@v1
+      with:
+        path: ~/.cargo/registry
+        key: ${{ runner.os }}-cargo-registry-${{ hashFiles('firmware/Cargo.lock') }}
+
+    - name: Cache cargo index
+      uses: actions/cache@v1
+      with:
+        path: ~/.cargo/git
+        key: ${{ runner.os }}-cargo-index-${{ hashFiles('firmware/Cargo.lock') }}
+
+    - name: Cache cargo build
+      uses: actions/cache@v1
+      with:
+        path: firmware/target
+        key: ${{ runner.os }}-cargo-build-target-${{ hashFiles('firmware/Cargo.lock') }}
+
       # - name: Cache cargo installs
       #   id: cache-cargo-bin
       #   uses: actions/cache@v1
