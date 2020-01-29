@@ -171,6 +171,12 @@ dependencies = [
 ]
 
 [[package]]
+name = "rand_core"
+version = "0.5.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "90bde5296fc891b0cef12a6d03ddccc162ce7b2aff54160af9338f8d40df6d19"
+
+[[package]]
 name = "rtfm-core"
 version = "0.3.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -251,6 +257,7 @@ dependencies = [
  "heapless",
  "imx6ul-pac",
  "panic-serial",
+ "rand_core",
  "usbarmory-rt",
 ]
 

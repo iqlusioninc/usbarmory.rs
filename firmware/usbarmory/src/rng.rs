@@ -5,6 +5,7 @@
 use core::cmp;
 
 use pac::rng::RNG;
+use rand_core::{block::BlockRngCore, CryptoRng};
 
 /// A Random Number Generator backed by the hardware
 ///
@@ -119,6 +120,12 @@ impl Rng {
         self.inner.CR.write(CR_AR);
     }
 
+    /// Returns the current level of the FIFO buffer
+    fn fifo_level(&self) -> u8 {
+        let sr = self.inner.SR.read();
+        ((sr >> SR_FIFO_LVL_OFFSET) & SR_FIFO_LVL_MASK) as u8
+    }
+
     /// Software resets the hardware RNG
     fn software_reset(&self) {
         self.inner.CMD.write(CMD_SR);
@@ -127,7 +134,11 @@ impl Rng {
     /// Waits until the FIFO buffer has at least this many `words`
     ///
     /// Returns the number of 32-bit words that the FIFO buffer currently holds
+    ///
+    /// This method panics if `words` is greater than `FIFO_SIZE`
     fn wait_for_fifo_level(&self, words: u8) -> u8 {
+        assert!(words <= FIFO_SIZE as u8);
+
         let esr = self.inner.ESR.read();
 
         if esr != 0 {
@@ -140,12 +151,26 @@ impl Rng {
         // busy wait until there's at least `words` of random data in the FIFO
         // buffer
         loop {
-            let sr = self.inner.SR.read();
-            let fifo_level = ((sr >> SR_FIFO_LVL_OFFSET) & SR_FIFO_LVL_MASK) as u8;
+            let fifo_level = self.fifo_level();
 
             if fifo_level >= words {
                 break fifo_level;
             }
+        }
+    }
+}
+
+impl CryptoRng for Rng {}
+
+impl BlockRngCore for Rng {
+    type Item = u32;
+    type Results = [u32; FIFO_SIZE];
+
+    fn generate(&mut self, results: &mut [u32; FIFO_SIZE]) {
+        self.wait_for_fifo_level(FIFO_SIZE as u8);
+
+        for slot in results {
+            *slot = self.inner.OUT.read();
         }
     }
 }
