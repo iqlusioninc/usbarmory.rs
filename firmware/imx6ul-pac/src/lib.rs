@@ -444,6 +444,201 @@ pub mod gpio {
     }
 }
 #[allow(non_snake_case)]
+#[doc = "RNG"]
+pub mod rng {
+    use core::{
+        marker::PhantomData,
+        sync::atomic::{AtomicBool, Ordering},
+    };
+    const BASE_ADDRESS: usize = 0x0228_4000;
+    #[doc = r" The registers that make up the peripheral"]
+    #[allow(non_snake_case)]
+    pub struct Registers {
+        _not_sync: PhantomData<*mut ()>,
+        #[doc = "RNGB version ID register"]
+        pub VER: VER,
+        #[doc = "RNGB command register"]
+        pub CMD: CMD,
+        #[doc = "RNGB control register"]
+        pub CR: CR,
+        #[doc = "RNGB status register"]
+        pub SR: SR,
+        #[doc = "RNGB error status register"]
+        pub ESR: ESR,
+        #[doc = "RNGB Output FIFO"]
+        pub OUT: OUT,
+    }
+    unsafe impl Send for Registers {}
+    #[doc = "RNGB version ID register"]
+    #[allow(non_camel_case_types)]
+    pub struct VER {
+        _not_send_or_sync: PhantomData<*mut ()>,
+    }
+    impl VER {
+        const OFFSET: usize = 0x00;
+        #[doc = r" Reset value"]
+        pub const RESET_VALUE: u32 = 0x1000_0280;
+        #[doc = r" Performs a single load operation on the memory-mapped register"]
+        pub fn read(&self) -> u32 {
+            unsafe { ((BASE_ADDRESS + Self::OFFSET) as *const u32).read_volatile() }
+        }
+    }
+    #[doc = "RNGB command register"]
+    #[allow(non_camel_case_types)]
+    pub struct CMD {
+        _not_send_or_sync: PhantomData<*mut ()>,
+    }
+    impl CMD {
+        const OFFSET: usize = 0x04;
+        #[doc = r" Reset value"]
+        pub const RESET_VALUE: u32 = 0x0000_0000;
+        #[doc = r" Performs a single load operation on the memory-mapped register"]
+        pub fn read(&self) -> u32 {
+            unsafe { ((BASE_ADDRESS + Self::OFFSET) as *const u32).read_volatile() }
+        }
+        #[doc = r" Performs a single store operation on the memory-mapped register"]
+        #[allow(unused_unsafe)]
+        pub fn write(&self, bits: u32) {
+            unsafe { ((BASE_ADDRESS + Self::OFFSET) as *mut u32).write_volatile(bits) }
+        }
+    }
+    #[doc = "RNGB control register"]
+    #[allow(non_camel_case_types)]
+    pub struct CR {
+        _not_send_or_sync: PhantomData<*mut ()>,
+    }
+    impl CR {
+        const OFFSET: usize = 0x08;
+        #[doc = r" Reset value"]
+        pub const RESET_VALUE: u32 = 0x0000_0000;
+        #[doc = r" Performs a single load operation on the memory-mapped register"]
+        pub fn read(&self) -> u32 {
+            unsafe { ((BASE_ADDRESS + Self::OFFSET) as *const u32).read_volatile() }
+        }
+        #[doc = r" Performs a single store operation on the memory-mapped register"]
+        #[allow(unused_unsafe)]
+        pub fn write(&self, bits: u32) {
+            unsafe { ((BASE_ADDRESS + Self::OFFSET) as *mut u32).write_volatile(bits) }
+        }
+    }
+    #[doc = "RNGB status register"]
+    #[allow(non_camel_case_types)]
+    pub struct SR {
+        _not_send_or_sync: PhantomData<*mut ()>,
+    }
+    impl SR {
+        const OFFSET: usize = 0x0c;
+        #[doc = r" Reset value"]
+        pub const RESET_VALUE: u32 = 0x0000_500d;
+        #[doc = r" Performs a single load operation on the memory-mapped register"]
+        pub fn read(&self) -> u32 {
+            unsafe { ((BASE_ADDRESS + Self::OFFSET) as *const u32).read_volatile() }
+        }
+    }
+    #[doc = "RNGB error status register"]
+    #[allow(non_camel_case_types)]
+    pub struct ESR {
+        _not_send_or_sync: PhantomData<*mut ()>,
+    }
+    impl ESR {
+        const OFFSET: usize = 0x10;
+        #[doc = r" Reset value"]
+        pub const RESET_VALUE: u32 = 0x0000_0000;
+        #[doc = r" Performs a single load operation on the memory-mapped register"]
+        pub fn read(&self) -> u32 {
+            unsafe { ((BASE_ADDRESS + Self::OFFSET) as *const u32).read_volatile() }
+        }
+    }
+    #[doc = "RNGB Output FIFO"]
+    #[allow(non_camel_case_types)]
+    pub struct OUT {
+        _not_send_or_sync: PhantomData<*mut ()>,
+    }
+    impl OUT {
+        const OFFSET: usize = 0x14;
+        #[doc = r" Reset value"]
+        pub const RESET_VALUE: u32 = 0x0000_0000;
+        #[doc = r" Performs a single load operation on the memory-mapped register"]
+        pub fn read(&self) -> u32 {
+            unsafe { ((BASE_ADDRESS + Self::OFFSET) as *const u32).read_volatile() }
+        }
+    }
+    impl Registers {
+        #[doc = r" # Safety"]
+        #[doc = r""]
+        #[doc = r" Creates a singleton from thin air; make sure we"]
+        #[doc = r" never hand out two instances of it"]
+        unsafe fn new() -> Self {
+            Self {
+                _not_sync: PhantomData,
+                VER: VER {
+                    _not_send_or_sync: PhantomData,
+                },
+                CMD: CMD {
+                    _not_send_or_sync: PhantomData,
+                },
+                CR: CR {
+                    _not_send_or_sync: PhantomData,
+                },
+                SR: SR {
+                    _not_send_or_sync: PhantomData,
+                },
+                ESR: ESR {
+                    _not_send_or_sync: PhantomData,
+                },
+                OUT: OUT {
+                    _not_send_or_sync: PhantomData,
+                },
+            }
+        }
+    }
+    #[allow(non_camel_case_types)]
+    #[doc = "RNG"]
+    pub type RNG = Registers;
+    impl RNG {
+        #[doc = r" Takes the singleton that represents this peripheral instance"]
+        pub fn take() -> Option<Self> {
+            static TAKEN: AtomicBool = AtomicBool::new(false);
+            if TAKEN
+                .compare_exchange(false, true, Ordering::AcqRel, Ordering::Acquire)
+                .is_ok()
+            {
+                Some(unsafe { Registers::new() })
+            } else {
+                None
+            }
+        }
+        #[doc = r" Borrows the singleton without checking if it's"]
+        #[doc = r" currently being held by a context"]
+        #[doc = r""]
+        #[doc = r" **WARNING** this can break Read-Modify-Write"]
+        #[doc = r" operations being performed in other contexts."]
+        pub fn borrow_unchecked<T>(f: impl FnOnce(&Self) -> T) -> T {
+            f(&Registers {
+                _not_sync: PhantomData,
+                VER: VER {
+                    _not_send_or_sync: PhantomData,
+                },
+                CMD: CMD {
+                    _not_send_or_sync: PhantomData,
+                },
+                CR: CR {
+                    _not_send_or_sync: PhantomData,
+                },
+                SR: SR {
+                    _not_send_or_sync: PhantomData,
+                },
+                ESR: ESR {
+                    _not_send_or_sync: PhantomData,
+                },
+                OUT: OUT {
+                    _not_send_or_sync: PhantomData,
+                },
+            })
+        }
+    }
+}
+#[allow(non_snake_case)]
 #[doc = "SNVS_LP"]
 pub mod snvs_lp {
     use core::{

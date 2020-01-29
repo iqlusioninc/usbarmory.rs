@@ -1,14 +1,25 @@
 #!/bin/bash
 
+# how-to use: `./generate.sh IMX6ULRM.pdf IMX6ULLRM.pdf`
+
 set -euxo pipefail
 
 main() {
+    local ulrm=$1
+    local ullrm=$1
+
     if [ $(md5sum $1 | cut -d' ' -f1) != 48a58957d65fbbde8602376d09776b5b ]; then
-        echo 'md5sum check failed; you may need to update the start and end pages'
+        echo 'md5sum check of the first PDF failed; you may need to update the start and end pages that are used in this script'
     fi
 
+    if [ $(md5sum $2 | cut -d' ' -f1) != f7df5baacd27cce0c3fa4af9e36d4b3e ]; then
+        echo 'md5sum check of the second PDF failed; you may need to update the start and end pages that are used in this script'
+    fi
+
+    rm *.txt
     pdftotext -layout -f 1141 -l 1142 $1 gpio.txt
     pdftotext -layout -f 2921 -l 2922 $1 snvs.txt
+    pdftotext -layout -f 3093 -l 3093 $2 rngb.txt
     pdftotext -layout -f 3101 -l 3107 $1 uart.txt
     pdftotext -layout -f 3309 -l 3309 $1 usb-nc.txt
     pdftotext -layout -f 3315 -l 3319 $1 usb.txt
