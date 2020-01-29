@@ -70,7 +70,7 @@ impl Rng {
         let statpf = (self.inner.SR.read() >> SR_STATPF_OFFSET) & SR_STATPF_MASK;
 
         Stats {
-            monobit_test_failed: statpf & (1 << 0) != 0,
+            monobit_test_failed: statpf & 1 != 0,
             length_1_run_test_failed: statpf & (1 << 1) != 0,
             length_2_run_test_failed: statpf & (1 << 2) != 0,
             length_3_run_test_failed: statpf & (1 << 3) != 0,
