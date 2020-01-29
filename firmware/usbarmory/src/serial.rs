@@ -1,7 +1,7 @@
 //! Serial interface
 
 // References
-// - chapter 53 of the RM
+// - chapter 53 of the ULRM
 
 use core::{
     fmt,

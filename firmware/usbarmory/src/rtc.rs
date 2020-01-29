@@ -2,7 +2,7 @@
 
 use core::{marker::PhantomData, time::Duration};
 
-use pac::snvs::SNVS;
+use pac::snvs_hp::SNVS_HP;
 
 /// A handle to the initialized RTC
 ///
@@ -19,19 +19,19 @@ impl Rtc {
     /// Initializes the RTC
     ///
     /// The `RTC` can only be initialized once. This function will return `Some`
-    /// at most once. This function will return `None` if the `SNVS` peripheral
-    /// singleton has already been `take`-n.
+    /// at most once. This function will return `None` if the `SNVS_HP`
+    /// peripheral singleton has already been `take`-n.
     pub fn initialize() -> Option<Self> {
         /// HP Real-Time Counter Enable
-        const SNVS_HPCR_RTC_EN: u32 = 1;
+        const SNVS_HP_CR_RTC_EN: u32 = 1;
 
         // FIXME we don't want to take the whole SNVS peripheral here; just some
         // registers
-        SNVS::take().map(|snvs| {
+        SNVS_HP::take().map(|snvs| {
             // enable the RTC with no calibration
-            snvs.HPCR.write(SNVS_HPCR_RTC_EN);
+            snvs.CR.write(SNVS_HP_CR_RTC_EN);
 
-            // seal the SNVS configuration
+            // seal the SNVS_HP configuration
             drop(snvs);
 
             Rtc {
@@ -44,19 +44,20 @@ impl Rtc {
     ///
     /// The RTC is a monotonic timer that can't be reset.
     pub fn elapsed(self) -> Duration {
-        // NOTE(borrow_unchecked) `SNVS` has been dropped at this point; this is
-        // the only method that will access these registers
-        SNVS::borrow_unchecked(|snvs| {
-            // The RM recommends that we perform two consecutive reads of these
-            // registers because the RTC Clock is not synchronized with the
-            // processor clock so we could observe torn reads. The RM says that
-            // at most this can result in three reads of these pair of registers
-            let mut high = snvs.HPRTCMR.read();
-            let mut low = snvs.HPRTCLR.read();
+        // NOTE(borrow_unchecked) `SNVS_HP` has been dropped at this point; this
+        // is the only method that will access these registers
+        SNVS_HP::borrow_unchecked(|snvs| {
+            // The ULRM recommends that we perform two consecutive reads of
+            // these registers because the RTC Clock is not synchronized with
+            // the processor clock so we could observe torn reads. The ULRM says
+            // that at most this can result in three reads of these pair of
+            // registers
+            let mut high = snvs.RTCMR.read();
+            let mut low = snvs.RTCLR.read();
 
             loop {
-                let new_high = snvs.HPRTCMR.read();
-                let new_low = snvs.HPRTCLR.read();
+                let new_high = snvs.RTCMR.read();
+                let new_low = snvs.RTCLR.read();
 
                 if new_low == low && new_high == high {
                     // The RTC is clocked at `32_768` Hz

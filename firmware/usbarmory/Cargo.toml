@@ -14,6 +14,7 @@ keywords    = ["arm", "cortex-a"]
 [dependencies]
 cortex-a = { path = "../cortex-a" }
 pac = { package = "imx6ul-pac", path = "../imx6ul-pac" }
+rand_core = "0.5.1"
 usbarmory-rt = { path = "../usbarmory-rt" }
 
 [dev-dependencies]

@@ -24,7 +24,33 @@ fn main() -> Result<(), anyhow::Error> {
             "{:?} appears to contain no register table",
             path
         );
-        peripherals.extend(compress::registers(registers));
+
+        // ad-hoc: it's more convenient to split the SNVS in a Low-Power (LP)
+        // domain peripheral and a High-Power(HP) peripheral
+        if registers[0].name.starts_with("SNVS_") {
+            const LP: &str = "SNVS_LP";
+            const HP: &str = "SNVS_HP";
+
+            let mut lp = vec![];
+            let mut hp = vec![];
+            for mut register in registers {
+                if register.name.starts_with(LP) {
+                    register.name =
+                        Box::leak(Box::from(format!("{}_{}", LP, &register.name[LP.len()..])));
+                    lp.push(register);
+                } else if register.name.starts_with(HP) {
+                    register.name =
+                        Box::leak(Box::from(format!("{}_{}", HP, &register.name[HP.len()..])));
+                    hp.push(register);
+                } else {
+                    panic!("unexpected SNVS register: {}", register.name);
+                }
+            }
+            peripherals.extend(compress::registers(lp));
+            peripherals.extend(compress::registers(hp));
+        } else {
+            peripherals.extend(compress::registers(registers));
+        }
     }
     peripherals.push(gic::gicc());
     peripherals.push(gic::gicd());
