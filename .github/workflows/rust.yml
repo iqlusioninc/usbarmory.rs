@@ -125,7 +125,7 @@ jobs:
 #         cargo install --git https://github.com/japaric/flip-lld
 
 #     - name: Run examples
-#       working-directory: ./firmware/usbarmory
+#       working-directory: ./firmware
 #       run: |
 #         cargo run --example qemu-hello --release
 
@@ -181,12 +181,12 @@ jobs:
           cargo install --git https://github.com/japaric/flip-lld
 
       - name: Build examples using the dev profile
-        working-directory: ./firmware/usbarmory
+        working-directory: ./firmware
         run: |
           cargo build --examples
 
       - name: Build examples using the release profile
-        working-directory: ./firmware/usbarmory
+        working-directory: ./firmware
         run: |
           cargo build --examples --release
 
