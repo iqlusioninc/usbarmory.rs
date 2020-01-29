@@ -91,6 +91,11 @@ SECTIONS
   /* ## Discarded sections */
   /DISCARD/ :
   {
+    /* We are not using a debugger so we discard the DWARF sections
+       This makes the ELF file much smaller, which makes transfers over the
+       slow serial interface much faster */
+    *(.debug_*);
+
     /* Information required for unwinding that's used by Rust applications */
     *(.ARM.exidx);
     *(.ARM.exidx.*);
