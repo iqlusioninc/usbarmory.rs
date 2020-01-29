@@ -1,7 +1,7 @@
 //! LEDs
 
 // References
-// - chapter 26 of the RM
+// - chapter 26 of the ULRM
 
 use core::{
     marker::PhantomData,

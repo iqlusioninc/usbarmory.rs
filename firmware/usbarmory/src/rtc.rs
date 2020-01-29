@@ -47,10 +47,11 @@ impl Rtc {
         // NOTE(borrow_unchecked) `SNVS_HP` has been dropped at this point; this
         // is the only method that will access these registers
         SNVS_HP::borrow_unchecked(|snvs| {
-            // The RM recommends that we perform two consecutive reads of these
-            // registers because the RTC Clock is not synchronized with the
-            // processor clock so we could observe torn reads. The RM says that
-            // at most this can result in three reads of these pair of registers
+            // The ULRM recommends that we perform two consecutive reads of
+            // these registers because the RTC Clock is not synchronized with
+            // the processor clock so we could observe torn reads. The ULRM says
+            // that at most this can result in three reads of these pair of
+            // registers
             let mut high = snvs.RTCMR.read();
             let mut low = snvs.RTCLR.read();
 

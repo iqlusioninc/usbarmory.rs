@@ -2,7 +2,8 @@
 //!
 //! # References
 //!
-//! - 'RM': i.MX 6UltraLite Applications Processor Reference Manual
+//! - 'ULRM': i.MX 6UltraLite Applications Processor Reference Manual (IMX6ULRM)
+//! - 'ULLRM': i.MX 6ULL Applications ProcessorReference Manual (IMX6ULLRM)
 
 #![no_std]
 #![doc(html_root_url = "https://docs.rs/usbarmory/0.0.0")]
@@ -14,6 +15,7 @@ use usbarmory_rt as _;
 
 pub mod led;
 mod macros;
+pub mod rng;
 pub mod rtc;
 pub mod serial;
 
