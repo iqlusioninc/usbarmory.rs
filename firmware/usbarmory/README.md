@@ -26,6 +26,9 @@ stage and will not be ready to use for some time.
 - [flip-lld], linker wrapper that adds zero-cost stack overflow protection.
   `cargo install --git https://github.com/japaric/flip-lld`.
 
+- `armv7a-none-eabi` compiler support. Install with `rustup target add
+  armv7a-none-eabi`.
+
 ## Development dependencies
 
 - `arm-none-eabi-binutils` OR (`cargo-binutils` + `llvm-tools-preview`), if you
