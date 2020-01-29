@@ -1,3 +1,16 @@
+[target.armv7a-none-eabi]
+runner = "qemu-system-arm -cpu cortex-a7 -machine mcimx6ul-evk -nographic -semihosting-config enable=on,target=native -kernel"
+rustflags = [
+  "-C", "linker=flip-lld",
+  "-C", "link-arg=-Tlink.x",
+]
+
+[target.armv7a-none-eabihf]
+rustflags = [
+  "-C", "linker=flip-lld",
+  "-C", "link-arg=-Tlink.x",
+]
+
 [build]
 target = "armv7a-none-eabi" # soft float ABI, emulated float operations
 # target = "armv7a-none-eabihf" # hard float ABI, float operations on hardware
