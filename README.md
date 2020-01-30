@@ -7,7 +7,7 @@
 
 <img src="https://storage.googleapis.com/iqlusion-production-web/github/usbarmory/usbarmory-ferris.png" alt="USB armory mkII" width="384" height="384">
 
-Bare metal Rust development support for [USB armory MkII devices][usbarmory]
+Bare metal Rust development support for [USB armory Mk II devices][usbarmory]
 from [F-Secure].
 
 ## Status
@@ -54,8 +54,8 @@ without any additional terms or conditions.
 
 [//]: # (general links)
 
-[usbarmory]: https://inversepath.com/usbarmory.html
-[F-Secure]: https://www.f-secure.com/
+[usbarmory]: https://github.com/f-secure-foundry/usbarmory/wiki
+[F-Secure]: https://foundry.f-secure.com/
 [CONTRIBUTING.md]: https://github.com/iqlusioninc/armistice/blob/develop/CONTRIBUTING.md
 [CODE_OF_CONDUCT.md]: https://github.com/iqlusioninc/armistice/blob/develop/CODE_OF_CONDUCT.md
 [Apache License, Version 2.0]: https://www.apache.org/licenses/LICENSE-2.0
