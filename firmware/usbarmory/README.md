@@ -14,7 +14,7 @@ from [F-Secure].
 
 ## Minimum Supported Rust Version
 
-- Rust **1.42** / `nightly-2020-01-24` or newer
+- Rust **1.42**, you can use `1.42.0-beta.*` until that version is released
 
 ## Status
 
