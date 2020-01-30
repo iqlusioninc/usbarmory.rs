@@ -5,18 +5,20 @@
 ![MSRV][msrv-image]
 [![Gitter Chat][gitter-image]][gitter-link]
 
+<img src="https://storage.googleapis.com/iqlusion-production-web/github/usbarmory/usbarmory-ferris.png" alt="USB armory mkII" width="384" height="384">
+
 Bare metal Rust development support for [USB armory MkII devices][usbarmory]
 from [F-Secure].
 
-<img src="https://storage.googleapis.com/iqlusion-production-web/github/usbarmory/usbarmory-mkII.png" alt="USB armory mkII" width="375" height="175">
+## Status
+
+Initial support for running bare metal Rust applications is now available.
+
+Check out the [`firmware/usbarmory`](firmware/usbarmory) directory.
 
 ## Minimum Supported Rust Version
 
 - Rust **1.42**
-
-## Status
-
-Check out the [`firmware/usbarmory`](firmware/usbarmory) directory.
 
 ## Contributing
 
