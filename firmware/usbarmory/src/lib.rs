@@ -6,7 +6,10 @@
 //! - 'ULLRM': i.MX 6ULL Applications ProcessorReference Manual (IMX6ULLRM)
 
 #![no_std]
-#![doc(html_root_url = "https://docs.rs/usbarmory/0.0.0")]
+#![doc(
+    html_logo_url = "https://storage.googleapis.com/iqlusion-production-web/github/usbarmory/usbarmory-ferris.png",
+    html_root_url = "https://docs.rs/usbarmory/0.0.0"
+)]
 #![warn(missing_docs, rust_2018_idioms, unused_qualifications)]
 
 pub use cortex_a::delay;
