@@ -7,7 +7,7 @@
 ![MSRV][msrv-image]
 [![Gitter Chat][gitter-image]][gitter-link]
 
-Board support package for [USB armory MkII devices][usbarmory]
+Board support package for [USB armory Mk II devices][usbarmory]
 from [F-Secure].
 
 <img src="https://storage.googleapis.com/iqlusion-production-web/github/usbarmory/usbarmory-mkII.png" alt="USB armory mkII" width="375" height="175">
@@ -140,8 +140,8 @@ First flash [a pre-compiled Debian image][debian-images] (we have tested the
 20191219 release) into the SD card. The steps for this are documented
 [here][debian-flash]; a summary is reproduced below:
 
-[debian-images]: https://github.com/inversepath/usbarmory-debian-base_image/releases
-[debian-flash]: https://github.com/inversepath/usbarmory-debian-base_image#installation
+[debian-images]: https://github.com/f-secure-foundry/usbarmory-debian-base_image/releases
+[debian-flash]: https://github.com/f-secure-foundry/usbarmory-debian-base_image#installation
  
 ``` rust
 $ ls *.raw.xz
@@ -520,8 +520,8 @@ without any additional terms or conditions.
 
 [//]: # (general links)
 
-[usbarmory]: https://inversepath.com/usbarmory.html
-[F-Secure]: https://www.f-secure.com/
+[usbarmory]: https://github.com/f-secure-foundry/usbarmory/wiki
+[F-Secure]: https://foundry.f-secure.com/
 [CONTRIBUTING.md]: https://github.com/iqlusioninc/armistice/blob/develop/CONTRIBUTING.md
 [CODE_OF_CONDUCT.md]: https://github.com/iqlusioninc/armistice/blob/develop/CODE_OF_CONDUCT.md
 [Apache License, Version 2.0]: https://www.apache.org/licenses/LICENSE-2.0
