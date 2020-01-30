@@ -8,7 +8,6 @@ on:
 name: Rust
 
 jobs:
-  # TODO switch to beta and then to stable
   check:
     name: Check firmware
     runs-on: ubuntu-latest
@@ -16,11 +15,11 @@ jobs:
       - name: Checkout sources
         uses: actions/checkout@v2
 
-      - name: Install nightly toolchain
+      - name: Install beta toolchain
         uses: actions-rs/toolchain@v1
         with:
           target: armv7a-none-eabi
-          toolchain: nightly
+          toolchain: beta
           override: true
 
       - name: Run cargo check
@@ -108,11 +107,11 @@ jobs:
 #     - name: Checkout sources
 #       uses: actions/checkout@v2
 
-#     - name: Install nightly toolchain
+#     - name: Install beta toolchain
 #       uses: actions-rs/toolchain@v1
 #       with:
 #         target: armv7a-none-eabi
-#         toolchain: nightly
+#         toolchain: beta
 #         override: true
 
 #     - name: Install QEMU
@@ -129,7 +128,6 @@ jobs:
 #       run: |
 #         cargo run --example qemu-hello --release
 
-  # TODO switch to beta and then to stable
   # test that all our examples link
   it_links:
     name: Check that all examples link in dev and release mode
@@ -138,11 +136,11 @@ jobs:
       - name: Checkout sources
         uses: actions/checkout@v2
 
-      - name: Install nightly toolchain
+      - name: Install beta toolchain
         uses: actions-rs/toolchain@v1
         with:
           target: armv7a-none-eabi
-          toolchain: nightly
+          toolchain: beta
           override: true
 
       - name: Cache cargo registry
@@ -211,7 +209,6 @@ jobs:
         run: |
           cargo fmt --all -- --check
 
-  # TODO switch to beta and then to stable
   clippy:
     name: Clippy
     runs-on: ubuntu-latest
@@ -219,11 +216,11 @@ jobs:
       - name: Checkout sources
         uses: actions/checkout@v2
 
-      - name: Install nightly toolchain
+      - name: Install beta toolchain
         uses: actions-rs/toolchain@v1
         with:
           target: armv7a-none-eabi
-          toolchain: nightly
+          toolchain: beta
           override: true
 
       - name: Install clippy
