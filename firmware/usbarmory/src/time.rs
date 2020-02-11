@@ -43,7 +43,7 @@ impl Instant {
     }
 
     /// Returns the amount of time elapsed from another instant to this one.
-    pub fn duration_since(&self, earlier: Instant) -> Duration {
+    pub fn duration_since(self, earlier: Instant) -> Duration {
         assert!(
             self.value <= earlier.value,
             "supplied instant is later than self"
@@ -63,8 +63,8 @@ impl Instant {
     }
 
     /// Returns the amount of time elapsed since this instant was created.
-    pub fn elapsed(&self) -> Duration {
-        Instant::now() - *self
+    pub fn elapsed(self) -> Duration {
+        Instant::now() - self
     }
 }
 
