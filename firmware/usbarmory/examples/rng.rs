@@ -28,7 +28,7 @@ use panic_serial as _; // panic handler
 use usbarmory::{
     println,
     rng::{self, Rng},
-    rtc::Rtc,
+    time::Instant,
 };
 
 // NOTE binary interfaces, using `no_mangle` and `extern`, are extremely unsafe
@@ -36,11 +36,11 @@ use usbarmory::{
 // like `#[rtfm::app]`
 #[no_mangle]
 fn main() -> ! {
+    let start = Instant::now();
     let rng = Rng::initialize().expect("UNREACHABLE");
 
-    let rtc = Rtc::initialize().expect("UNREACHABLE");
     rng.wait_for_initial_seed();
-    let elapsed = rtc.elapsed();
+    let elapsed = start.elapsed();
 
     println!("first seed generated in {:?}", elapsed);
 

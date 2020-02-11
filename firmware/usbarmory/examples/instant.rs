@@ -12,23 +12,20 @@
 
 use exception_reset as _; // default exception handler
 use panic_serial as _; // panic handler
-use usbarmory::{println, rtc::Rtc, serial::Serial};
+use usbarmory::{println, time::Instant, serial::Serial};
 
 // NOTE binary interfaces, using `no_mangle` and `extern`, are extremely unsafe
 // as no type checking is performed by the compiler; stick to safe interfaces
 // like `#[rtfm::app]`
 #[no_mangle]
 fn main() -> ! {
-    let rtc = Rtc::initialize().expect("UNREACHABLE");
-
-    let now = rtc.elapsed();
-    println!("{:?}", now);
+    let before = Instant::now();
 
     // wait 5 seconds
     usbarmory::delay(5 * usbarmory::CPU_FREQUENCY);
 
-    let then = rtc.elapsed();
-    println!("{:?}", then);
+    let elapsed = before.elapsed();
+    println!("{:?}", elapsed);
 
     Serial::flush();
 

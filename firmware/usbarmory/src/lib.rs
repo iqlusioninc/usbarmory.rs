@@ -22,8 +22,8 @@ use crate::serial::Serial;
 pub mod led;
 mod macros;
 pub mod rng;
-pub mod rtc;
 pub mod serial;
+pub mod time;
 
 /// Default CPU frequency
 ///
