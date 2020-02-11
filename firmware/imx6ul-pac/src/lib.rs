@@ -3931,6 +3931,8 @@ pub mod gicc {
         pub IAR: IAR,
         #[doc = "End of Interrupt Register"]
         pub EOIR: EOIR,
+        #[doc = "Running Priority Register"]
+        pub RPR: RPR,
     }
     unsafe impl Send for Registers {}
     #[doc = "CPU Interface Control Register"]
@@ -3998,6 +4000,20 @@ pub mod gicc {
             unsafe { ((BASE_ADDRESS + Self::OFFSET) as *mut u32).write_volatile(bits) }
         }
     }
+    #[doc = "Running Priority Register"]
+    #[allow(non_camel_case_types)]
+    pub struct RPR {
+        _not_send_or_sync: PhantomData<*mut ()>,
+    }
+    impl RPR {
+        const OFFSET: usize = 0x14;
+        #[doc = r" Reset value"]
+        pub const RESET_VALUE: u32 = 0x0000_00ff;
+        #[doc = r" Performs a single load operation on the memory-mapped register"]
+        pub fn read(&self) -> u32 {
+            unsafe { ((BASE_ADDRESS + Self::OFFSET) as *const u32).read_volatile() }
+        }
+    }
     impl Registers {
         #[doc = r" # Safety"]
         #[doc = r""]
@@ -4016,6 +4032,9 @@ pub mod gicc {
                     _not_send_or_sync: PhantomData,
                 },
                 EOIR: EOIR {
+                    _not_send_or_sync: PhantomData,
+                },
+                RPR: RPR {
                     _not_send_or_sync: PhantomData,
                 },
             }
@@ -4055,6 +4074,9 @@ pub mod gicc {
                     _not_send_or_sync: PhantomData,
                 },
                 EOIR: EOIR {
+                    _not_send_or_sync: PhantomData,
+                },
+                RPR: RPR {
                     _not_send_or_sync: PhantomData,
                 },
             })
