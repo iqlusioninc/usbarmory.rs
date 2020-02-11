@@ -38,3 +38,11 @@ macro_rules! println {
         }
     };
 }
+
+/// Flushes all the contents of the in-memory logger and then reboots the system
+#[macro_export]
+macro_rules! memlog_flush_and_reset {
+    () => {
+        $crate::memlog_flush_and_reset(file!(), line!())
+    };
+}

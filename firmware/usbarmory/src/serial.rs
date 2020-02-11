@@ -29,6 +29,9 @@ pub struct Serial {
 
 unsafe impl Send for Serial {}
 
+/// Transmitter Ready Interrupt
+const UART_USR1_TRDY: u32 = 1 << 13;
+
 impl Serial {
     unsafe fn new() -> Self {
         Serial {
@@ -113,7 +116,7 @@ impl Serial {
     /// Reads a single byte from the serial interface
     ///
     /// Returns `None` if no data is currently available
-    pub fn read(&self) -> Option<u8> {
+    pub fn try_read(&self) -> Option<u8> {
         /// Receiver Ready Interrupt
         const UART_USR1_RRDY: u32 = 1 << 9;
 
@@ -128,11 +131,28 @@ impl Serial {
         })
     }
 
+    /// [Non-blocking] Writes *some* of the given `bytes` through the serial
+    /// interface
+    ///
+    /// Returns the number of bytes that were actually written
+    pub fn try_write_all(&self, bytes: &[u8]) -> usize {
+        UART2::borrow_unchecked(|uart| {
+            let mut n = 0;
+            for byte in bytes {
+                if uart.USR1.read() & UART_USR1_TRDY == 0 {
+                    // can't write any more bytes; abort the process
+                    break;
+                }
+
+                uart.UTXD.write(*byte as u32);
+                n += 1;
+            }
+            n
+        })
+    }
+
     /// [Blocking] Sends a single `byte` through the serial interface
     pub fn write(&self, byte: u8) {
-        /// Transmitter Ready Interrupt
-        const UART_USR1_TRDY: u32 = 1 << 13;
-
         // NOTE(borrow_unchecked) the `UART2` singleton has been dropped; only
         // the owner of `Serial` can access the peripheral
         UART2::borrow_unchecked(|uart| {

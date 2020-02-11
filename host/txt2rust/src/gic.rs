@@ -69,6 +69,16 @@ pub fn gicc() -> Peripheral<'static> {
             instances: 1,
             unsafe_write: false,
         },
+        Register {
+            offset: 0x14,
+            description: "Running Priority Register".into(),
+            name: "RPR",
+            width,
+            reset_value: Some(0xff),
+            access: Access::ReadOnly,
+            instances: 1,
+            unsafe_write: false,
+        },
     ];
 
     Peripheral {

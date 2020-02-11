@@ -16,7 +16,7 @@ main() {
         echo 'md5sum check of the second PDF failed; you may need to update the start and end pages that are used in this script'
     fi
 
-    rm *.txt
+    rm -f *.txt
     pdftotext -layout -f 1141 -l 1142 $1 gpio.txt
     pdftotext -layout -f 2921 -l 2922 $1 snvs.txt
     pdftotext -layout -f 3093 -l 3093 $2 rngb.txt

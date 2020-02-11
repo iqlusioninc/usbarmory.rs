@@ -3,7 +3,7 @@
 #![no_std]
 #![warn(missing_docs, rust_2018_idioms, unused_qualifications)]
 
-use pac::{gicc::GICC, gpio::GPIO4};
+use pac::{gicc::GICC, gpio::GPIO4, snvs_hp::SNVS_HP};
 
 // Software Generated Interrupts
 extern "C" {
@@ -52,6 +52,14 @@ unsafe extern "C" fn start() -> ! {
         // turn the white LED on and the blue LED off to indicate we are alive
         let old = gpio.DR.read();
         gpio.DR.write((old | BLUE) & !WHITE);
+    });
+
+    /// HP Real-Time Counter Enable
+    const SNVS_HP_CR_RTC_EN: u32 = 1;
+
+    // enable the RTC with no calibration
+    SNVS_HP::borrow_unchecked(|snvs| {
+        snvs.CR.write(SNVS_HP_CR_RTC_EN);
     });
 
     extern "Rust" {

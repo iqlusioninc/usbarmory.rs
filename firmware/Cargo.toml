@@ -4,6 +4,7 @@ members = [
   "cortex-a-rtfm",
   "exception-reset",
   "imx6ul-pac",
+  "memlog",
   "panic-serial",
   "usbarmory",
   "usbarmory-rt",
@@ -12,3 +13,10 @@ members = [
 [profile.release]
 lto = true
 codegen-units = 1
+
+# compile `syn` and other procedural macro dependencies without optimizations.
+# This significantly improves 'from scratch' build times (75% reduction)
+[profile.release.build-override]
+codegen-units = 16
+debug = false
+opt-level = 0

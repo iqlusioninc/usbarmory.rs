@@ -49,7 +49,7 @@ const APP: () = {
         let serial = cx.resources.serial;
         let leds = cx.resources.leds;
 
-        if let Some(byte) = serial.read() {
+        if let Some(byte) = serial.try_read() {
             // reboot the device when the Enter key is received
             if byte == b'\r' {
                 usbarmory::reset();
