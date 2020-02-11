@@ -4,6 +4,7 @@ members = [
   "cortex-a-rtfm",
   "exception-reset",
   "imx6ul-pac",
+  "memlog",
   "panic-serial",
   "usbarmory",
   "usbarmory-rt",

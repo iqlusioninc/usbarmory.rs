@@ -13,8 +13,11 @@
 #![warn(missing_docs, rust_2018_idioms, unused_qualifications)]
 
 pub use cortex_a::delay;
+pub use memlog::memlog;
 use pac::wdog::WDOG1;
 use usbarmory_rt as _;
+
+use crate::serial::Serial;
 
 pub mod led;
 mod macros;
@@ -51,4 +54,35 @@ pub fn reset() -> ! {
     loop {
         continue;
     }
+}
+
+/// Implementation detail
+pub fn memlog_flush_and_reset(file: &str, line: u32) -> ! {
+    cortex_a::disable_irq();
+    cortex_a::disable_fiq();
+
+    // called twice to handle the wrap-around case
+    for _ in 0..2 {
+        memlog::peek(|s| {
+            // NOTE(borrow_unchecked) this runs with interrupts disabled (critical
+            // section)
+            Serial::borrow_unchecked(|serial| serial.write_all(s));
+            s.len()
+        });
+    }
+
+    Serial::borrow_unchecked(|mut serial| {
+        use core::fmt::Write;
+        write!(serial, "\n\rmemlog_flush_and_reset @ {}:{}\n\r", file, line).ok();
+    });
+
+    Serial::flush();
+
+    reset()
+}
+
+/// [Non-blocking] Transmits some of the contents of the in-memory logger over
+/// the serial interface
+pub fn memlog_try_flush() {
+    memlog::peek(|s| Serial::borrow_unchecked(|serial| serial.try_write_all(s)))
 }

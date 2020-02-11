@@ -146,6 +146,13 @@ dependencies = [
 ]
 
 [[package]]
+name = "memlog"
+version = "0.0.0"
+dependencies = [
+ "imx6ul-pac",
+]
+
+[[package]]
 name = "panic-serial"
 version = "0.0.0"
 dependencies = [
@@ -256,6 +263,7 @@ dependencies = [
  "exception-reset",
  "heapless",
  "imx6ul-pac",
+ "memlog",
  "panic-serial",
  "rand_core",
  "usbarmory-rt",
