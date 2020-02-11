@@ -44,7 +44,8 @@ pub struct Peripheral<'a> {
 pub fn registers(mut all_registers: Vec<parse::Register>) -> Vec<Peripheral> {
     all_registers.sort_by_key(|register| register.abs_addr);
 
-    let (name, numbered) = find_common_prefix(all_registers[0].name, all_registers[1].name);
+    let names = all_registers.iter().map(|reg| reg.name).collect::<Vec<_>>();
+    let (name, numbered) = find_common_prefix(&names);
 
     if numbered {
         let mut peripherals = Vec::<Peripheral>::new();
@@ -142,15 +143,12 @@ fn extract_instance(s: &str) -> u8 {
         .expect("split_instance: string doesn't start with a u8 integer")
 }
 
-fn find_common_prefix<'a>(
-    rega: &'a str,
-    regb: &'a str,
-) -> (/* prefix */ &'a str, /* numbered */ bool) {
-    let mut parts = rega.rsplitn(2, '_');
+fn find_common_prefix<'a>(regs: &[&'a str]) -> (/* prefix */ &'a str, /* numbered */ bool) {
+    let mut parts = regs[0].rsplitn(2, '_');
     let _suffix = parts.next();
 
     while let Some(mut maybe_prefix) = parts.next() {
-        if regb.starts_with(maybe_prefix) {
+        if regs[1].starts_with(maybe_prefix) {
             let mut numbered = false;
 
             while let Some(i) = maybe_prefix.char_indices().rev().next().and_then(|(i, c)| {
@@ -164,14 +162,16 @@ fn find_common_prefix<'a>(
                 numbered = true;
             }
 
-            return (maybe_prefix, numbered);
-        } else {
-            parts = maybe_prefix.rsplitn(2, '_');
-            let _suffix = parts.next();
+            if regs.iter().all(|reg| reg.starts_with(maybe_prefix)) {
+                return (maybe_prefix, numbered);
+            }
         }
+
+        parts = maybe_prefix.rsplitn(2, '_');
+        let _suffix = parts.next();
     }
 
-    panic!("no common prefix between `{}` and `{}`", rega, regb);
+    panic!("no common prefix between `{}` and `{}`", regs[0], regs[1]);
 }
 
 #[cfg(test)]
