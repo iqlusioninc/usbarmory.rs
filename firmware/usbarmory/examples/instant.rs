@@ -12,7 +12,7 @@
 
 use exception_reset as _; // default exception handler
 use panic_serial as _; // panic handler
-use usbarmory::{println, time::Instant, serial::Serial};
+use usbarmory::{println, serial::Serial, time::Instant};
 
 // NOTE binary interfaces, using `no_mangle` and `extern`, are extremely unsafe
 // as no type checking is performed by the compiler; stick to safe interfaces
