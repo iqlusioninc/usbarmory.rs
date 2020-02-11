@@ -44,8 +44,8 @@ pub fn krate(peripherals: &[Peripheral]) -> TokenStream2 {
 
                     let mut methods = vec![];
 
-                    let (iarg, iassert, ioffset) = if reg.instances == 1 {
-                        (quote!(), quote!(), quote!())
+                    let (iarg, iparam, iassert, ioffset) = if reg.instances == 1 {
+                        (quote!(), quote!(), quote!(), quote!())
                     } else {
                         let uxx = if reg.instances <= 1 << 8 {
                             quote!(u8)
@@ -54,7 +54,8 @@ pub fn krate(peripherals: &[Peripheral]) -> TokenStream2 {
                         };
                         let max = reg.instances;
                         (
-                            quote!(, idx: #uxx),
+                            quote!(idx ,),
+                            quote!(idx: #uxx ,),
                             quote!(assert!(idx < #max as #uxx);),
                             quote!(.add(usize::from(idx))),
                         )
@@ -63,7 +64,7 @@ pub fn krate(peripherals: &[Peripheral]) -> TokenStream2 {
                     if reg.access != Access::WriteOnly {
                         methods.push(quote!(
                             /// Performs a single load operation on the memory-mapped register
-                            pub fn read(&self #iarg) -> #uxx {
+                            pub fn read(&self , #iparam) -> #uxx {
                                 #iassert
                                 unsafe {
                                     ((BASE_ADDRESS + Self::OFFSET) as *const #uxx) #ioffset .read_volatile()
@@ -88,13 +89,28 @@ pub fn krate(peripherals: &[Peripheral]) -> TokenStream2 {
                         methods.push(quote!(
                             /// Performs a single store operation on the memory-mapped register
                             #[allow(unused_unsafe)]
-                            pub #unsafety fn #method(&self #iarg , #arg: #uxx) {
+                            pub #unsafety fn #method(&self , #iparam #arg: #uxx) {
                                 #iassert
                                 unsafe {
                                     ((BASE_ADDRESS + Self::OFFSET) as *mut #uxx) #ioffset .write_volatile(#arg)
                                 }
                             }
                         ));
+
+                        if reg.access == Access::ReadWrite {
+                            methods.push(quote!(
+                                /// Performs a read-modify-write on the memory-mapped register
+                                ///
+                                /// This is a short-hand for `self.write(f(self.read()))`
+                                #[allow(unused_unsafe)]
+                                pub #unsafety fn rmw(
+                                    &self , #iparam
+                                    f: impl FnOnce(#uxx) -> #uxx,
+                                ) {
+                                    self.write(#iarg f(self.read(#iarg)))
+                                }
+                            ))
+                        }
                     }
 
                     let reset_value = reg
@@ -229,8 +245,8 @@ pub fn krate(peripherals: &[Peripheral]) -> TokenStream2 {
 
                     let mut methods = vec![];
 
-                    let (iarg, iassert, ioffset) = if reg.instances == 1 {
-                        (quote!(), quote!(), quote!())
+                    let (iarg, iparam, iassert, ioffset) = if reg.instances == 1 {
+                        (quote!(), quote!(), quote!(), quote!())
                     } else {
                         let uxx = if reg.instances <= 1 << 8 {
                             quote!(u8)
@@ -239,7 +255,8 @@ pub fn krate(peripherals: &[Peripheral]) -> TokenStream2 {
                         };
                         let max = reg.instances;
                         (
-                            quote!(, idx: #uxx),
+                            quote!(idx ,),
+                            quote!(idx: #uxx ,),
                             quote!(assert!(idx < #max as #uxx);),
                             quote!(.add(usize::from(idx))),
                         )
@@ -248,7 +265,7 @@ pub fn krate(peripherals: &[Peripheral]) -> TokenStream2 {
                     if reg.access != Access::WriteOnly {
                         methods.push(quote!(
                             /// Performs a single load operation on the memory-mapped register
-                            pub fn read(&self #iarg) -> #uxx {
+                            pub fn read(&self , #iparam) -> #uxx {
                                 #iassert
                                 unsafe {
                                     ((P::BASE_ADDRESS + Self::OFFSET) as *const #uxx) #ioffset .read_volatile()
@@ -273,13 +290,28 @@ pub fn krate(peripherals: &[Peripheral]) -> TokenStream2 {
                         methods.push(quote!(
                             /// Performs a single store operation on the memory-mapped register
                             #[allow(unused_unsafe)]
-                            pub #unsafety fn #method(&self #iarg , #arg: #uxx) {
+                            pub #unsafety fn #method(&self , #iparam #arg: #uxx) {
                                 #iassert
                                 unsafe {
                                     ((P::BASE_ADDRESS + Self::OFFSET) as *mut #uxx) #ioffset .write_volatile(#arg)
                                 }
                             }
                         ));
+
+                        if reg.access == Access::ReadWrite {
+                            methods.push(quote!(
+                                /// Performs a read-modify-write on the memory-mapped register
+                                ///
+                                /// This is a short-hand for `self.write(f(self.read()))`
+                                #[allow(unused_unsafe)]
+                                pub #unsafety fn rmw(
+                                    &self , #iparam
+                                    f: impl FnOnce(#uxx) -> #uxx,
+                                ) {
+                                    self.write(#iarg f(self.read(#iarg)))
+                                }
+                            ))
+                        }
                     }
 
                     let reset_value = reg

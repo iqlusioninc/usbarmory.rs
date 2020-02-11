@@ -9,6 +9,1929 @@ pub trait Peripheral {
     const BASE_ADDRESS: usize;
 }
 #[allow(non_snake_case)]
+#[doc = "CCM_ANALOG"]
+pub mod ccm_analog {
+    use core::{
+        marker::PhantomData,
+        sync::atomic::{AtomicBool, Ordering},
+    };
+    const BASE_ADDRESS: usize = 0x020c_8000;
+    #[doc = r" The registers that make up the peripheral"]
+    #[allow(non_snake_case)]
+    pub struct Registers {
+        _not_sync: PhantomData<*mut ()>,
+        #[doc = "Analog ARM PLL control Register"]
+        pub PLL_ARM: PLL_ARM,
+        #[doc = "Analog ARM PLL control Register"]
+        pub PLL_ARM_SET: PLL_ARM_SET,
+        #[doc = "Analog ARM PLL control Register"]
+        pub PLL_ARM_CLR: PLL_ARM_CLR,
+        #[doc = "Analog ARM PLL control Register"]
+        pub PLL_ARM_TOG: PLL_ARM_TOG,
+        #[doc = "Analog USB1 480MHz PLL Control Register"]
+        pub PLL_USB1: PLL_USB1,
+        #[doc = "Analog USB1 480MHz PLL Control Register"]
+        pub PLL_USB1_SET: PLL_USB1_SET,
+        #[doc = "Analog USB1 480MHz PLL Control Register"]
+        pub PLL_USB1_CLR: PLL_USB1_CLR,
+        #[doc = "Analog USB1 480MHz PLL Control Register"]
+        pub PLL_USB1_TOG: PLL_USB1_TOG,
+        #[doc = "Analog USB2 480MHz PLL Control Register"]
+        pub PLL_USB2: PLL_USB2,
+        #[doc = "Analog USB2 480MHz PLL Control Register"]
+        pub PLL_USB2_SET: PLL_USB2_SET,
+        #[doc = "Analog USB2 480MHz PLL Control Register"]
+        pub PLL_USB2_CLR: PLL_USB2_CLR,
+        #[doc = "Analog USB2 480MHz PLL Control Register"]
+        pub PLL_USB2_TOG: PLL_USB2_TOG,
+        #[doc = "Analog System PLL Control Register"]
+        pub PLL_SYS: PLL_SYS,
+        #[doc = "Analog System PLL Control Register"]
+        pub PLL_SYS_SET: PLL_SYS_SET,
+        #[doc = "Analog System PLL Control Register"]
+        pub PLL_SYS_CLR: PLL_SYS_CLR,
+        #[doc = "Analog System PLL Control Register"]
+        pub PLL_SYS_TOG: PLL_SYS_TOG,
+        #[doc = "528MHz System PLL Spread Spectrum Register"]
+        pub PLL_SYS_SS: PLL_SYS_SS,
+        #[doc = "Numerator of 528MHz System PLL Fractional Loop Divider Register"]
+        pub PLL_SYS_NUM: PLL_SYS_NUM,
+        #[doc = "Denominator of 528MHz System PLL Fractional Loop Divider Register"]
+        pub PLL_SYS_DENOM: PLL_SYS_DENOM,
+        #[doc = "Analog Audio PLL control Register"]
+        pub PLL_AUDIO: PLL_AUDIO,
+        #[doc = "Analog Audio PLL control Register"]
+        pub PLL_AUDIO_SET: PLL_AUDIO_SET,
+        #[doc = "Analog Audio PLL control Register"]
+        pub PLL_AUDIO_CLR: PLL_AUDIO_CLR,
+        #[doc = "Analog Audio PLL control Register"]
+        pub PLL_AUDIO_TOG: PLL_AUDIO_TOG,
+        #[doc = "Numerator of Audio PLL Fractional Loop Divider Register"]
+        pub PLL_AUDIO_NUM: PLL_AUDIO_NUM,
+        #[doc = "Denominator of Audio PLL Fractional Loop Divider Register"]
+        pub PLL_AUDIO_DENOM: PLL_AUDIO_DENOM,
+        #[doc = "Analog Video PLL control Register"]
+        pub PLL_VIDEO: PLL_VIDEO,
+        #[doc = "Analog Video PLL control Register"]
+        pub PLL_VIDEO_SET: PLL_VIDEO_SET,
+        #[doc = "Analog Video PLL control Register"]
+        pub PLL_VIDEO_CLR: PLL_VIDEO_CLR,
+        #[doc = "Analog Video PLL control Register"]
+        pub PLL_VIDEO_TOG: PLL_VIDEO_TOG,
+        #[doc = "Numerator of Video PLL Fractional Loop Divider Register"]
+        pub PLL_VIDEO_NUM: PLL_VIDEO_NUM,
+        #[doc = "Denominator of Video PLL Fractional Loop Divider Register"]
+        pub PLL_VIDEO_DENOM: PLL_VIDEO_DENOM,
+        #[doc = "Analog ENET PLL Control Register"]
+        pub PLL_ENET: PLL_ENET,
+        #[doc = "Analog ENET PLL Control Register"]
+        pub PLL_ENET_SET: PLL_ENET_SET,
+        #[doc = "Analog ENET PLL Control Register"]
+        pub PLL_ENET_CLR: PLL_ENET_CLR,
+        #[doc = "Analog ENET PLL Control Register"]
+        pub PLL_ENET_TOG: PLL_ENET_TOG,
+        #[doc = "480MHz Clock (PLL3) Phase Fractional Divider Control Register"]
+        pub PFD_480: PFD_480,
+        #[doc = "480MHz Clock (PLL3) Phase Fractional Divider Control Register"]
+        pub PFD_480_SET: PFD_480_SET,
+        #[doc = "480MHz Clock (PLL3) Phase Fractional Divider Control Register"]
+        pub PFD_480_CLR: PFD_480_CLR,
+        #[doc = "480MHz Clock (PLL3) Phase Fractional Divider Control Register"]
+        pub PFD_480_TOG: PFD_480_TOG,
+        #[doc = "528MHz Clock (PLL2) Phase Fractional Divider Control Register"]
+        pub PFD_528: PFD_528,
+        #[doc = "528MHz Clock (PLL2) Phase Fractional Divider Control Register"]
+        pub PFD_528_SET: PFD_528_SET,
+        #[doc = "528MHz Clock (PLL2) Phase Fractional Divider Control Register"]
+        pub PFD_528_CLR: PFD_528_CLR,
+        #[doc = "528MHz Clock (PLL2) Phase Fractional Divider Control Register"]
+        pub PFD_528_TOG: PFD_528_TOG,
+        #[doc = "Miscellaneous Register 0"]
+        pub MISC0: MISC0,
+        #[doc = "Miscellaneous Register 0"]
+        pub MISC0_SET: MISC0_SET,
+        #[doc = "Miscellaneous Register 0"]
+        pub MISC0_CLR: MISC0_CLR,
+        #[doc = "Miscellaneous Register 0"]
+        pub MISC0_TOG: MISC0_TOG,
+        #[doc = "Miscellaneous Register 1"]
+        pub MISC1: MISC1,
+        #[doc = "Miscellaneous Register 1"]
+        pub MISC1_SET: MISC1_SET,
+        #[doc = "Miscellaneous Register 1"]
+        pub MISC1_CLR: MISC1_CLR,
+        #[doc = "Miscellaneous Register 1"]
+        pub MISC1_TOG: MISC1_TOG,
+        #[doc = "Miscellaneous Register 2"]
+        pub MISC2: MISC2,
+        #[doc = "Miscellaneous Register 2"]
+        pub MISC2_SET: MISC2_SET,
+        #[doc = "Miscellaneous Register 2"]
+        pub MISC2_CLR: MISC2_CLR,
+        #[doc = "Miscellaneous Register 2"]
+        pub MISC2_TOG: MISC2_TOG,
+    }
+    unsafe impl Send for Registers {}
+    #[doc = "Analog ARM PLL control Register"]
+    #[allow(non_camel_case_types)]
+    pub struct PLL_ARM {
+        _not_send_or_sync: PhantomData<*mut ()>,
+    }
+    impl PLL_ARM {
+        const OFFSET: usize = 0x00;
+        #[doc = r" Reset value"]
+        pub const RESET_VALUE: u32 = 0x0001_3063;
+        #[doc = r" Performs a single load operation on the memory-mapped register"]
+        pub fn read(&self) -> u32 {
+            unsafe { ((BASE_ADDRESS + Self::OFFSET) as *const u32).read_volatile() }
+        }
+        #[doc = r" Performs a single store operation on the memory-mapped register"]
+        #[allow(unused_unsafe)]
+        pub fn write(&self, bits: u32) {
+            unsafe { ((BASE_ADDRESS + Self::OFFSET) as *mut u32).write_volatile(bits) }
+        }
+        #[doc = r" Performs a read-modify-write on the memory-mapped register"]
+        #[doc = r""]
+        #[doc = r" This is a short-hand for `self.write(f(self.read()))`"]
+        #[allow(unused_unsafe)]
+        pub fn rmw(&self, f: impl FnOnce(u32) -> u32) {
+            self.write(f(self.read()))
+        }
+    }
+    #[doc = "Analog ARM PLL control Register"]
+    #[allow(non_camel_case_types)]
+    pub struct PLL_ARM_SET {
+        _not_send_or_sync: PhantomData<*mut ()>,
+    }
+    impl PLL_ARM_SET {
+        const OFFSET: usize = 0x04;
+        #[doc = r" Reset value"]
+        pub const RESET_VALUE: u32 = 0x0001_3063;
+        #[doc = r" Performs a single load operation on the memory-mapped register"]
+        pub fn read(&self) -> u32 {
+            unsafe { ((BASE_ADDRESS + Self::OFFSET) as *const u32).read_volatile() }
+        }
+        #[doc = r" Performs a single store operation on the memory-mapped register"]
+        #[allow(unused_unsafe)]
+        pub fn write(&self, bits: u32) {
+            unsafe { ((BASE_ADDRESS + Self::OFFSET) as *mut u32).write_volatile(bits) }
+        }
+        #[doc = r" Performs a read-modify-write on the memory-mapped register"]
+        #[doc = r""]
+        #[doc = r" This is a short-hand for `self.write(f(self.read()))`"]
+        #[allow(unused_unsafe)]
+        pub fn rmw(&self, f: impl FnOnce(u32) -> u32) {
+            self.write(f(self.read()))
+        }
+    }
+    #[doc = "Analog ARM PLL control Register"]
+    #[allow(non_camel_case_types)]
+    pub struct PLL_ARM_CLR {
+        _not_send_or_sync: PhantomData<*mut ()>,
+    }
+    impl PLL_ARM_CLR {
+        const OFFSET: usize = 0x08;
+        #[doc = r" Reset value"]
+        pub const RESET_VALUE: u32 = 0x0001_3063;
+        #[doc = r" Performs a single load operation on the memory-mapped register"]
+        pub fn read(&self) -> u32 {
+            unsafe { ((BASE_ADDRESS + Self::OFFSET) as *const u32).read_volatile() }
+        }
+        #[doc = r" Performs a single store operation on the memory-mapped register"]
+        #[allow(unused_unsafe)]
+        pub fn write(&self, bits: u32) {
+            unsafe { ((BASE_ADDRESS + Self::OFFSET) as *mut u32).write_volatile(bits) }
+        }
+        #[doc = r" Performs a read-modify-write on the memory-mapped register"]
+        #[doc = r""]
+        #[doc = r" This is a short-hand for `self.write(f(self.read()))`"]
+        #[allow(unused_unsafe)]
+        pub fn rmw(&self, f: impl FnOnce(u32) -> u32) {
+            self.write(f(self.read()))
+        }
+    }
+    #[doc = "Analog ARM PLL control Register"]
+    #[allow(non_camel_case_types)]
+    pub struct PLL_ARM_TOG {
+        _not_send_or_sync: PhantomData<*mut ()>,
+    }
+    impl PLL_ARM_TOG {
+        const OFFSET: usize = 0x0c;
+        #[doc = r" Reset value"]
+        pub const RESET_VALUE: u32 = 0x0001_3063;
+        #[doc = r" Performs a single load operation on the memory-mapped register"]
+        pub fn read(&self) -> u32 {
+            unsafe { ((BASE_ADDRESS + Self::OFFSET) as *const u32).read_volatile() }
+        }
+        #[doc = r" Performs a single store operation on the memory-mapped register"]
+        #[allow(unused_unsafe)]
+        pub fn write(&self, bits: u32) {
+            unsafe { ((BASE_ADDRESS + Self::OFFSET) as *mut u32).write_volatile(bits) }
+        }
+        #[doc = r" Performs a read-modify-write on the memory-mapped register"]
+        #[doc = r""]
+        #[doc = r" This is a short-hand for `self.write(f(self.read()))`"]
+        #[allow(unused_unsafe)]
+        pub fn rmw(&self, f: impl FnOnce(u32) -> u32) {
+            self.write(f(self.read()))
+        }
+    }
+    #[doc = "Analog USB1 480MHz PLL Control Register"]
+    #[allow(non_camel_case_types)]
+    pub struct PLL_USB1 {
+        _not_send_or_sync: PhantomData<*mut ()>,
+    }
+    impl PLL_USB1 {
+        const OFFSET: usize = 0x10;
+        #[doc = r" Reset value"]
+        pub const RESET_VALUE: u32 = 0x0001_2000;
+        #[doc = r" Performs a single load operation on the memory-mapped register"]
+        pub fn read(&self) -> u32 {
+            unsafe { ((BASE_ADDRESS + Self::OFFSET) as *const u32).read_volatile() }
+        }
+        #[doc = r" Performs a single store operation on the memory-mapped register"]
+        #[allow(unused_unsafe)]
+        pub fn write(&self, bits: u32) {
+            unsafe { ((BASE_ADDRESS + Self::OFFSET) as *mut u32).write_volatile(bits) }
+        }
+        #[doc = r" Performs a read-modify-write on the memory-mapped register"]
+        #[doc = r""]
+        #[doc = r" This is a short-hand for `self.write(f(self.read()))`"]
+        #[allow(unused_unsafe)]
+        pub fn rmw(&self, f: impl FnOnce(u32) -> u32) {
+            self.write(f(self.read()))
+        }
+    }
+    #[doc = "Analog USB1 480MHz PLL Control Register"]
+    #[allow(non_camel_case_types)]
+    pub struct PLL_USB1_SET {
+        _not_send_or_sync: PhantomData<*mut ()>,
+    }
+    impl PLL_USB1_SET {
+        const OFFSET: usize = 0x14;
+        #[doc = r" Reset value"]
+        pub const RESET_VALUE: u32 = 0x0001_2000;
+        #[doc = r" Performs a single load operation on the memory-mapped register"]
+        pub fn read(&self) -> u32 {
+            unsafe { ((BASE_ADDRESS + Self::OFFSET) as *const u32).read_volatile() }
+        }
+        #[doc = r" Performs a single store operation on the memory-mapped register"]
+        #[allow(unused_unsafe)]
+        pub fn write(&self, bits: u32) {
+            unsafe { ((BASE_ADDRESS + Self::OFFSET) as *mut u32).write_volatile(bits) }
+        }
+        #[doc = r" Performs a read-modify-write on the memory-mapped register"]
+        #[doc = r""]
+        #[doc = r" This is a short-hand for `self.write(f(self.read()))`"]
+        #[allow(unused_unsafe)]
+        pub fn rmw(&self, f: impl FnOnce(u32) -> u32) {
+            self.write(f(self.read()))
+        }
+    }
+    #[doc = "Analog USB1 480MHz PLL Control Register"]
+    #[allow(non_camel_case_types)]
+    pub struct PLL_USB1_CLR {
+        _not_send_or_sync: PhantomData<*mut ()>,
+    }
+    impl PLL_USB1_CLR {
+        const OFFSET: usize = 0x18;
+        #[doc = r" Reset value"]
+        pub const RESET_VALUE: u32 = 0x0001_2000;
+        #[doc = r" Performs a single load operation on the memory-mapped register"]
+        pub fn read(&self) -> u32 {
+            unsafe { ((BASE_ADDRESS + Self::OFFSET) as *const u32).read_volatile() }
+        }
+        #[doc = r" Performs a single store operation on the memory-mapped register"]
+        #[allow(unused_unsafe)]
+        pub fn write(&self, bits: u32) {
+            unsafe { ((BASE_ADDRESS + Self::OFFSET) as *mut u32).write_volatile(bits) }
+        }
+        #[doc = r" Performs a read-modify-write on the memory-mapped register"]
+        #[doc = r""]
+        #[doc = r" This is a short-hand for `self.write(f(self.read()))`"]
+        #[allow(unused_unsafe)]
+        pub fn rmw(&self, f: impl FnOnce(u32) -> u32) {
+            self.write(f(self.read()))
+        }
+    }
+    #[doc = "Analog USB1 480MHz PLL Control Register"]
+    #[allow(non_camel_case_types)]
+    pub struct PLL_USB1_TOG {
+        _not_send_or_sync: PhantomData<*mut ()>,
+    }
+    impl PLL_USB1_TOG {
+        const OFFSET: usize = 0x1c;
+        #[doc = r" Reset value"]
+        pub const RESET_VALUE: u32 = 0x0001_2000;
+        #[doc = r" Performs a single load operation on the memory-mapped register"]
+        pub fn read(&self) -> u32 {
+            unsafe { ((BASE_ADDRESS + Self::OFFSET) as *const u32).read_volatile() }
+        }
+        #[doc = r" Performs a single store operation on the memory-mapped register"]
+        #[allow(unused_unsafe)]
+        pub fn write(&self, bits: u32) {
+            unsafe { ((BASE_ADDRESS + Self::OFFSET) as *mut u32).write_volatile(bits) }
+        }
+        #[doc = r" Performs a read-modify-write on the memory-mapped register"]
+        #[doc = r""]
+        #[doc = r" This is a short-hand for `self.write(f(self.read()))`"]
+        #[allow(unused_unsafe)]
+        pub fn rmw(&self, f: impl FnOnce(u32) -> u32) {
+            self.write(f(self.read()))
+        }
+    }
+    #[doc = "Analog USB2 480MHz PLL Control Register"]
+    #[allow(non_camel_case_types)]
+    pub struct PLL_USB2 {
+        _not_send_or_sync: PhantomData<*mut ()>,
+    }
+    impl PLL_USB2 {
+        const OFFSET: usize = 0x20;
+        #[doc = r" Reset value"]
+        pub const RESET_VALUE: u32 = 0x0001_2000;
+        #[doc = r" Performs a single load operation on the memory-mapped register"]
+        pub fn read(&self) -> u32 {
+            unsafe { ((BASE_ADDRESS + Self::OFFSET) as *const u32).read_volatile() }
+        }
+        #[doc = r" Performs a single store operation on the memory-mapped register"]
+        #[allow(unused_unsafe)]
+        pub fn write(&self, bits: u32) {
+            unsafe { ((BASE_ADDRESS + Self::OFFSET) as *mut u32).write_volatile(bits) }
+        }
+        #[doc = r" Performs a read-modify-write on the memory-mapped register"]
+        #[doc = r""]
+        #[doc = r" This is a short-hand for `self.write(f(self.read()))`"]
+        #[allow(unused_unsafe)]
+        pub fn rmw(&self, f: impl FnOnce(u32) -> u32) {
+            self.write(f(self.read()))
+        }
+    }
+    #[doc = "Analog USB2 480MHz PLL Control Register"]
+    #[allow(non_camel_case_types)]
+    pub struct PLL_USB2_SET {
+        _not_send_or_sync: PhantomData<*mut ()>,
+    }
+    impl PLL_USB2_SET {
+        const OFFSET: usize = 0x24;
+        #[doc = r" Reset value"]
+        pub const RESET_VALUE: u32 = 0x0001_2000;
+        #[doc = r" Performs a single load operation on the memory-mapped register"]
+        pub fn read(&self) -> u32 {
+            unsafe { ((BASE_ADDRESS + Self::OFFSET) as *const u32).read_volatile() }
+        }
+        #[doc = r" Performs a single store operation on the memory-mapped register"]
+        #[allow(unused_unsafe)]
+        pub fn write(&self, bits: u32) {
+            unsafe { ((BASE_ADDRESS + Self::OFFSET) as *mut u32).write_volatile(bits) }
+        }
+        #[doc = r" Performs a read-modify-write on the memory-mapped register"]
+        #[doc = r""]
+        #[doc = r" This is a short-hand for `self.write(f(self.read()))`"]
+        #[allow(unused_unsafe)]
+        pub fn rmw(&self, f: impl FnOnce(u32) -> u32) {
+            self.write(f(self.read()))
+        }
+    }
+    #[doc = "Analog USB2 480MHz PLL Control Register"]
+    #[allow(non_camel_case_types)]
+    pub struct PLL_USB2_CLR {
+        _not_send_or_sync: PhantomData<*mut ()>,
+    }
+    impl PLL_USB2_CLR {
+        const OFFSET: usize = 0x28;
+        #[doc = r" Reset value"]
+        pub const RESET_VALUE: u32 = 0x0001_2000;
+        #[doc = r" Performs a single load operation on the memory-mapped register"]
+        pub fn read(&self) -> u32 {
+            unsafe { ((BASE_ADDRESS + Self::OFFSET) as *const u32).read_volatile() }
+        }
+        #[doc = r" Performs a single store operation on the memory-mapped register"]
+        #[allow(unused_unsafe)]
+        pub fn write(&self, bits: u32) {
+            unsafe { ((BASE_ADDRESS + Self::OFFSET) as *mut u32).write_volatile(bits) }
+        }
+        #[doc = r" Performs a read-modify-write on the memory-mapped register"]
+        #[doc = r""]
+        #[doc = r" This is a short-hand for `self.write(f(self.read()))`"]
+        #[allow(unused_unsafe)]
+        pub fn rmw(&self, f: impl FnOnce(u32) -> u32) {
+            self.write(f(self.read()))
+        }
+    }
+    #[doc = "Analog USB2 480MHz PLL Control Register"]
+    #[allow(non_camel_case_types)]
+    pub struct PLL_USB2_TOG {
+        _not_send_or_sync: PhantomData<*mut ()>,
+    }
+    impl PLL_USB2_TOG {
+        const OFFSET: usize = 0x2c;
+        #[doc = r" Reset value"]
+        pub const RESET_VALUE: u32 = 0x0001_2000;
+        #[doc = r" Performs a single load operation on the memory-mapped register"]
+        pub fn read(&self) -> u32 {
+            unsafe { ((BASE_ADDRESS + Self::OFFSET) as *const u32).read_volatile() }
+        }
+        #[doc = r" Performs a single store operation on the memory-mapped register"]
+        #[allow(unused_unsafe)]
+        pub fn write(&self, bits: u32) {
+            unsafe { ((BASE_ADDRESS + Self::OFFSET) as *mut u32).write_volatile(bits) }
+        }
+        #[doc = r" Performs a read-modify-write on the memory-mapped register"]
+        #[doc = r""]
+        #[doc = r" This is a short-hand for `self.write(f(self.read()))`"]
+        #[allow(unused_unsafe)]
+        pub fn rmw(&self, f: impl FnOnce(u32) -> u32) {
+            self.write(f(self.read()))
+        }
+    }
+    #[doc = "Analog System PLL Control Register"]
+    #[allow(non_camel_case_types)]
+    pub struct PLL_SYS {
+        _not_send_or_sync: PhantomData<*mut ()>,
+    }
+    impl PLL_SYS {
+        const OFFSET: usize = 0x30;
+        #[doc = r" Reset value"]
+        pub const RESET_VALUE: u32 = 0x0001_3001;
+        #[doc = r" Performs a single load operation on the memory-mapped register"]
+        pub fn read(&self) -> u32 {
+            unsafe { ((BASE_ADDRESS + Self::OFFSET) as *const u32).read_volatile() }
+        }
+        #[doc = r" Performs a single store operation on the memory-mapped register"]
+        #[allow(unused_unsafe)]
+        pub fn write(&self, bits: u32) {
+            unsafe { ((BASE_ADDRESS + Self::OFFSET) as *mut u32).write_volatile(bits) }
+        }
+        #[doc = r" Performs a read-modify-write on the memory-mapped register"]
+        #[doc = r""]
+        #[doc = r" This is a short-hand for `self.write(f(self.read()))`"]
+        #[allow(unused_unsafe)]
+        pub fn rmw(&self, f: impl FnOnce(u32) -> u32) {
+            self.write(f(self.read()))
+        }
+    }
+    #[doc = "Analog System PLL Control Register"]
+    #[allow(non_camel_case_types)]
+    pub struct PLL_SYS_SET {
+        _not_send_or_sync: PhantomData<*mut ()>,
+    }
+    impl PLL_SYS_SET {
+        const OFFSET: usize = 0x34;
+        #[doc = r" Reset value"]
+        pub const RESET_VALUE: u32 = 0x0001_3001;
+        #[doc = r" Performs a single load operation on the memory-mapped register"]
+        pub fn read(&self) -> u32 {
+            unsafe { ((BASE_ADDRESS + Self::OFFSET) as *const u32).read_volatile() }
+        }
+        #[doc = r" Performs a single store operation on the memory-mapped register"]
+        #[allow(unused_unsafe)]
+        pub fn write(&self, bits: u32) {
+            unsafe { ((BASE_ADDRESS + Self::OFFSET) as *mut u32).write_volatile(bits) }
+        }
+        #[doc = r" Performs a read-modify-write on the memory-mapped register"]
+        #[doc = r""]
+        #[doc = r" This is a short-hand for `self.write(f(self.read()))`"]
+        #[allow(unused_unsafe)]
+        pub fn rmw(&self, f: impl FnOnce(u32) -> u32) {
+            self.write(f(self.read()))
+        }
+    }
+    #[doc = "Analog System PLL Control Register"]
+    #[allow(non_camel_case_types)]
+    pub struct PLL_SYS_CLR {
+        _not_send_or_sync: PhantomData<*mut ()>,
+    }
+    impl PLL_SYS_CLR {
+        const OFFSET: usize = 0x38;
+        #[doc = r" Reset value"]
+        pub const RESET_VALUE: u32 = 0x0001_3001;
+        #[doc = r" Performs a single load operation on the memory-mapped register"]
+        pub fn read(&self) -> u32 {
+            unsafe { ((BASE_ADDRESS + Self::OFFSET) as *const u32).read_volatile() }
+        }
+        #[doc = r" Performs a single store operation on the memory-mapped register"]
+        #[allow(unused_unsafe)]
+        pub fn write(&self, bits: u32) {
+            unsafe { ((BASE_ADDRESS + Self::OFFSET) as *mut u32).write_volatile(bits) }
+        }
+        #[doc = r" Performs a read-modify-write on the memory-mapped register"]
+        #[doc = r""]
+        #[doc = r" This is a short-hand for `self.write(f(self.read()))`"]
+        #[allow(unused_unsafe)]
+        pub fn rmw(&self, f: impl FnOnce(u32) -> u32) {
+            self.write(f(self.read()))
+        }
+    }
+    #[doc = "Analog System PLL Control Register"]
+    #[allow(non_camel_case_types)]
+    pub struct PLL_SYS_TOG {
+        _not_send_or_sync: PhantomData<*mut ()>,
+    }
+    impl PLL_SYS_TOG {
+        const OFFSET: usize = 0x3c;
+        #[doc = r" Reset value"]
+        pub const RESET_VALUE: u32 = 0x0001_3001;
+        #[doc = r" Performs a single load operation on the memory-mapped register"]
+        pub fn read(&self) -> u32 {
+            unsafe { ((BASE_ADDRESS + Self::OFFSET) as *const u32).read_volatile() }
+        }
+        #[doc = r" Performs a single store operation on the memory-mapped register"]
+        #[allow(unused_unsafe)]
+        pub fn write(&self, bits: u32) {
+            unsafe { ((BASE_ADDRESS + Self::OFFSET) as *mut u32).write_volatile(bits) }
+        }
+        #[doc = r" Performs a read-modify-write on the memory-mapped register"]
+        #[doc = r""]
+        #[doc = r" This is a short-hand for `self.write(f(self.read()))`"]
+        #[allow(unused_unsafe)]
+        pub fn rmw(&self, f: impl FnOnce(u32) -> u32) {
+            self.write(f(self.read()))
+        }
+    }
+    #[doc = "528MHz System PLL Spread Spectrum Register"]
+    #[allow(non_camel_case_types)]
+    pub struct PLL_SYS_SS {
+        _not_send_or_sync: PhantomData<*mut ()>,
+    }
+    impl PLL_SYS_SS {
+        const OFFSET: usize = 0x40;
+        #[doc = r" Reset value"]
+        pub const RESET_VALUE: u32 = 0x0000_0000;
+        #[doc = r" Performs a single load operation on the memory-mapped register"]
+        pub fn read(&self) -> u32 {
+            unsafe { ((BASE_ADDRESS + Self::OFFSET) as *const u32).read_volatile() }
+        }
+        #[doc = r" Performs a single store operation on the memory-mapped register"]
+        #[allow(unused_unsafe)]
+        pub fn write(&self, bits: u32) {
+            unsafe { ((BASE_ADDRESS + Self::OFFSET) as *mut u32).write_volatile(bits) }
+        }
+        #[doc = r" Performs a read-modify-write on the memory-mapped register"]
+        #[doc = r""]
+        #[doc = r" This is a short-hand for `self.write(f(self.read()))`"]
+        #[allow(unused_unsafe)]
+        pub fn rmw(&self, f: impl FnOnce(u32) -> u32) {
+            self.write(f(self.read()))
+        }
+    }
+    #[doc = "Numerator of 528MHz System PLL Fractional Loop Divider Register"]
+    #[allow(non_camel_case_types)]
+    pub struct PLL_SYS_NUM {
+        _not_send_or_sync: PhantomData<*mut ()>,
+    }
+    impl PLL_SYS_NUM {
+        const OFFSET: usize = 0x50;
+        #[doc = r" Reset value"]
+        pub const RESET_VALUE: u32 = 0x0000_0000;
+        #[doc = r" Performs a single load operation on the memory-mapped register"]
+        pub fn read(&self) -> u32 {
+            unsafe { ((BASE_ADDRESS + Self::OFFSET) as *const u32).read_volatile() }
+        }
+        #[doc = r" Performs a single store operation on the memory-mapped register"]
+        #[allow(unused_unsafe)]
+        pub fn write(&self, bits: u32) {
+            unsafe { ((BASE_ADDRESS + Self::OFFSET) as *mut u32).write_volatile(bits) }
+        }
+        #[doc = r" Performs a read-modify-write on the memory-mapped register"]
+        #[doc = r""]
+        #[doc = r" This is a short-hand for `self.write(f(self.read()))`"]
+        #[allow(unused_unsafe)]
+        pub fn rmw(&self, f: impl FnOnce(u32) -> u32) {
+            self.write(f(self.read()))
+        }
+    }
+    #[doc = "Denominator of 528MHz System PLL Fractional Loop Divider Register"]
+    #[allow(non_camel_case_types)]
+    pub struct PLL_SYS_DENOM {
+        _not_send_or_sync: PhantomData<*mut ()>,
+    }
+    impl PLL_SYS_DENOM {
+        const OFFSET: usize = 0x60;
+        #[doc = r" Reset value"]
+        pub const RESET_VALUE: u32 = 0x0000_0012;
+        #[doc = r" Performs a single load operation on the memory-mapped register"]
+        pub fn read(&self) -> u32 {
+            unsafe { ((BASE_ADDRESS + Self::OFFSET) as *const u32).read_volatile() }
+        }
+        #[doc = r" Performs a single store operation on the memory-mapped register"]
+        #[allow(unused_unsafe)]
+        pub fn write(&self, bits: u32) {
+            unsafe { ((BASE_ADDRESS + Self::OFFSET) as *mut u32).write_volatile(bits) }
+        }
+        #[doc = r" Performs a read-modify-write on the memory-mapped register"]
+        #[doc = r""]
+        #[doc = r" This is a short-hand for `self.write(f(self.read()))`"]
+        #[allow(unused_unsafe)]
+        pub fn rmw(&self, f: impl FnOnce(u32) -> u32) {
+            self.write(f(self.read()))
+        }
+    }
+    #[doc = "Analog Audio PLL control Register"]
+    #[allow(non_camel_case_types)]
+    pub struct PLL_AUDIO {
+        _not_send_or_sync: PhantomData<*mut ()>,
+    }
+    impl PLL_AUDIO {
+        const OFFSET: usize = 0x70;
+        #[doc = r" Reset value"]
+        pub const RESET_VALUE: u32 = 0x0001_1006;
+        #[doc = r" Performs a single load operation on the memory-mapped register"]
+        pub fn read(&self) -> u32 {
+            unsafe { ((BASE_ADDRESS + Self::OFFSET) as *const u32).read_volatile() }
+        }
+        #[doc = r" Performs a single store operation on the memory-mapped register"]
+        #[allow(unused_unsafe)]
+        pub fn write(&self, bits: u32) {
+            unsafe { ((BASE_ADDRESS + Self::OFFSET) as *mut u32).write_volatile(bits) }
+        }
+        #[doc = r" Performs a read-modify-write on the memory-mapped register"]
+        #[doc = r""]
+        #[doc = r" This is a short-hand for `self.write(f(self.read()))`"]
+        #[allow(unused_unsafe)]
+        pub fn rmw(&self, f: impl FnOnce(u32) -> u32) {
+            self.write(f(self.read()))
+        }
+    }
+    #[doc = "Analog Audio PLL control Register"]
+    #[allow(non_camel_case_types)]
+    pub struct PLL_AUDIO_SET {
+        _not_send_or_sync: PhantomData<*mut ()>,
+    }
+    impl PLL_AUDIO_SET {
+        const OFFSET: usize = 0x74;
+        #[doc = r" Reset value"]
+        pub const RESET_VALUE: u32 = 0x0001_1006;
+        #[doc = r" Performs a single load operation on the memory-mapped register"]
+        pub fn read(&self) -> u32 {
+            unsafe { ((BASE_ADDRESS + Self::OFFSET) as *const u32).read_volatile() }
+        }
+        #[doc = r" Performs a single store operation on the memory-mapped register"]
+        #[allow(unused_unsafe)]
+        pub fn write(&self, bits: u32) {
+            unsafe { ((BASE_ADDRESS + Self::OFFSET) as *mut u32).write_volatile(bits) }
+        }
+        #[doc = r" Performs a read-modify-write on the memory-mapped register"]
+        #[doc = r""]
+        #[doc = r" This is a short-hand for `self.write(f(self.read()))`"]
+        #[allow(unused_unsafe)]
+        pub fn rmw(&self, f: impl FnOnce(u32) -> u32) {
+            self.write(f(self.read()))
+        }
+    }
+    #[doc = "Analog Audio PLL control Register"]
+    #[allow(non_camel_case_types)]
+    pub struct PLL_AUDIO_CLR {
+        _not_send_or_sync: PhantomData<*mut ()>,
+    }
+    impl PLL_AUDIO_CLR {
+        const OFFSET: usize = 0x78;
+        #[doc = r" Reset value"]
+        pub const RESET_VALUE: u32 = 0x0001_1006;
+        #[doc = r" Performs a single load operation on the memory-mapped register"]
+        pub fn read(&self) -> u32 {
+            unsafe { ((BASE_ADDRESS + Self::OFFSET) as *const u32).read_volatile() }
+        }
+        #[doc = r" Performs a single store operation on the memory-mapped register"]
+        #[allow(unused_unsafe)]
+        pub fn write(&self, bits: u32) {
+            unsafe { ((BASE_ADDRESS + Self::OFFSET) as *mut u32).write_volatile(bits) }
+        }
+        #[doc = r" Performs a read-modify-write on the memory-mapped register"]
+        #[doc = r""]
+        #[doc = r" This is a short-hand for `self.write(f(self.read()))`"]
+        #[allow(unused_unsafe)]
+        pub fn rmw(&self, f: impl FnOnce(u32) -> u32) {
+            self.write(f(self.read()))
+        }
+    }
+    #[doc = "Analog Audio PLL control Register"]
+    #[allow(non_camel_case_types)]
+    pub struct PLL_AUDIO_TOG {
+        _not_send_or_sync: PhantomData<*mut ()>,
+    }
+    impl PLL_AUDIO_TOG {
+        const OFFSET: usize = 0x7c;
+        #[doc = r" Reset value"]
+        pub const RESET_VALUE: u32 = 0x0001_1006;
+        #[doc = r" Performs a single load operation on the memory-mapped register"]
+        pub fn read(&self) -> u32 {
+            unsafe { ((BASE_ADDRESS + Self::OFFSET) as *const u32).read_volatile() }
+        }
+        #[doc = r" Performs a single store operation on the memory-mapped register"]
+        #[allow(unused_unsafe)]
+        pub fn write(&self, bits: u32) {
+            unsafe { ((BASE_ADDRESS + Self::OFFSET) as *mut u32).write_volatile(bits) }
+        }
+        #[doc = r" Performs a read-modify-write on the memory-mapped register"]
+        #[doc = r""]
+        #[doc = r" This is a short-hand for `self.write(f(self.read()))`"]
+        #[allow(unused_unsafe)]
+        pub fn rmw(&self, f: impl FnOnce(u32) -> u32) {
+            self.write(f(self.read()))
+        }
+    }
+    #[doc = "Numerator of Audio PLL Fractional Loop Divider Register"]
+    #[allow(non_camel_case_types)]
+    pub struct PLL_AUDIO_NUM {
+        _not_send_or_sync: PhantomData<*mut ()>,
+    }
+    impl PLL_AUDIO_NUM {
+        const OFFSET: usize = 0x80;
+        #[doc = r" Reset value"]
+        pub const RESET_VALUE: u32 = 0x05f5_e100;
+        #[doc = r" Performs a single load operation on the memory-mapped register"]
+        pub fn read(&self) -> u32 {
+            unsafe { ((BASE_ADDRESS + Self::OFFSET) as *const u32).read_volatile() }
+        }
+        #[doc = r" Performs a single store operation on the memory-mapped register"]
+        #[allow(unused_unsafe)]
+        pub fn write(&self, bits: u32) {
+            unsafe { ((BASE_ADDRESS + Self::OFFSET) as *mut u32).write_volatile(bits) }
+        }
+        #[doc = r" Performs a read-modify-write on the memory-mapped register"]
+        #[doc = r""]
+        #[doc = r" This is a short-hand for `self.write(f(self.read()))`"]
+        #[allow(unused_unsafe)]
+        pub fn rmw(&self, f: impl FnOnce(u32) -> u32) {
+            self.write(f(self.read()))
+        }
+    }
+    #[doc = "Denominator of Audio PLL Fractional Loop Divider Register"]
+    #[allow(non_camel_case_types)]
+    pub struct PLL_AUDIO_DENOM {
+        _not_send_or_sync: PhantomData<*mut ()>,
+    }
+    impl PLL_AUDIO_DENOM {
+        const OFFSET: usize = 0x90;
+        #[doc = r" Reset value"]
+        pub const RESET_VALUE: u32 = 0x2964_619c;
+        #[doc = r" Performs a single load operation on the memory-mapped register"]
+        pub fn read(&self) -> u32 {
+            unsafe { ((BASE_ADDRESS + Self::OFFSET) as *const u32).read_volatile() }
+        }
+        #[doc = r" Performs a single store operation on the memory-mapped register"]
+        #[allow(unused_unsafe)]
+        pub fn write(&self, bits: u32) {
+            unsafe { ((BASE_ADDRESS + Self::OFFSET) as *mut u32).write_volatile(bits) }
+        }
+        #[doc = r" Performs a read-modify-write on the memory-mapped register"]
+        #[doc = r""]
+        #[doc = r" This is a short-hand for `self.write(f(self.read()))`"]
+        #[allow(unused_unsafe)]
+        pub fn rmw(&self, f: impl FnOnce(u32) -> u32) {
+            self.write(f(self.read()))
+        }
+    }
+    #[doc = "Analog Video PLL control Register"]
+    #[allow(non_camel_case_types)]
+    pub struct PLL_VIDEO {
+        _not_send_or_sync: PhantomData<*mut ()>,
+    }
+    impl PLL_VIDEO {
+        const OFFSET: usize = 0xa0;
+        #[doc = r" Reset value"]
+        pub const RESET_VALUE: u32 = 0x0001_100c;
+        #[doc = r" Performs a single load operation on the memory-mapped register"]
+        pub fn read(&self) -> u32 {
+            unsafe { ((BASE_ADDRESS + Self::OFFSET) as *const u32).read_volatile() }
+        }
+        #[doc = r" Performs a single store operation on the memory-mapped register"]
+        #[allow(unused_unsafe)]
+        pub fn write(&self, bits: u32) {
+            unsafe { ((BASE_ADDRESS + Self::OFFSET) as *mut u32).write_volatile(bits) }
+        }
+        #[doc = r" Performs a read-modify-write on the memory-mapped register"]
+        #[doc = r""]
+        #[doc = r" This is a short-hand for `self.write(f(self.read()))`"]
+        #[allow(unused_unsafe)]
+        pub fn rmw(&self, f: impl FnOnce(u32) -> u32) {
+            self.write(f(self.read()))
+        }
+    }
+    #[doc = "Analog Video PLL control Register"]
+    #[allow(non_camel_case_types)]
+    pub struct PLL_VIDEO_SET {
+        _not_send_or_sync: PhantomData<*mut ()>,
+    }
+    impl PLL_VIDEO_SET {
+        const OFFSET: usize = 0xa4;
+        #[doc = r" Reset value"]
+        pub const RESET_VALUE: u32 = 0x0001_100c;
+        #[doc = r" Performs a single load operation on the memory-mapped register"]
+        pub fn read(&self) -> u32 {
+            unsafe { ((BASE_ADDRESS + Self::OFFSET) as *const u32).read_volatile() }
+        }
+        #[doc = r" Performs a single store operation on the memory-mapped register"]
+        #[allow(unused_unsafe)]
+        pub fn write(&self, bits: u32) {
+            unsafe { ((BASE_ADDRESS + Self::OFFSET) as *mut u32).write_volatile(bits) }
+        }
+        #[doc = r" Performs a read-modify-write on the memory-mapped register"]
+        #[doc = r""]
+        #[doc = r" This is a short-hand for `self.write(f(self.read()))`"]
+        #[allow(unused_unsafe)]
+        pub fn rmw(&self, f: impl FnOnce(u32) -> u32) {
+            self.write(f(self.read()))
+        }
+    }
+    #[doc = "Analog Video PLL control Register"]
+    #[allow(non_camel_case_types)]
+    pub struct PLL_VIDEO_CLR {
+        _not_send_or_sync: PhantomData<*mut ()>,
+    }
+    impl PLL_VIDEO_CLR {
+        const OFFSET: usize = 0xa8;
+        #[doc = r" Reset value"]
+        pub const RESET_VALUE: u32 = 0x0001_100c;
+        #[doc = r" Performs a single load operation on the memory-mapped register"]
+        pub fn read(&self) -> u32 {
+            unsafe { ((BASE_ADDRESS + Self::OFFSET) as *const u32).read_volatile() }
+        }
+        #[doc = r" Performs a single store operation on the memory-mapped register"]
+        #[allow(unused_unsafe)]
+        pub fn write(&self, bits: u32) {
+            unsafe { ((BASE_ADDRESS + Self::OFFSET) as *mut u32).write_volatile(bits) }
+        }
+        #[doc = r" Performs a read-modify-write on the memory-mapped register"]
+        #[doc = r""]
+        #[doc = r" This is a short-hand for `self.write(f(self.read()))`"]
+        #[allow(unused_unsafe)]
+        pub fn rmw(&self, f: impl FnOnce(u32) -> u32) {
+            self.write(f(self.read()))
+        }
+    }
+    #[doc = "Analog Video PLL control Register"]
+    #[allow(non_camel_case_types)]
+    pub struct PLL_VIDEO_TOG {
+        _not_send_or_sync: PhantomData<*mut ()>,
+    }
+    impl PLL_VIDEO_TOG {
+        const OFFSET: usize = 0xac;
+        #[doc = r" Reset value"]
+        pub const RESET_VALUE: u32 = 0x0001_100c;
+        #[doc = r" Performs a single load operation on the memory-mapped register"]
+        pub fn read(&self) -> u32 {
+            unsafe { ((BASE_ADDRESS + Self::OFFSET) as *const u32).read_volatile() }
+        }
+        #[doc = r" Performs a single store operation on the memory-mapped register"]
+        #[allow(unused_unsafe)]
+        pub fn write(&self, bits: u32) {
+            unsafe { ((BASE_ADDRESS + Self::OFFSET) as *mut u32).write_volatile(bits) }
+        }
+        #[doc = r" Performs a read-modify-write on the memory-mapped register"]
+        #[doc = r""]
+        #[doc = r" This is a short-hand for `self.write(f(self.read()))`"]
+        #[allow(unused_unsafe)]
+        pub fn rmw(&self, f: impl FnOnce(u32) -> u32) {
+            self.write(f(self.read()))
+        }
+    }
+    #[doc = "Numerator of Video PLL Fractional Loop Divider Register"]
+    #[allow(non_camel_case_types)]
+    pub struct PLL_VIDEO_NUM {
+        _not_send_or_sync: PhantomData<*mut ()>,
+    }
+    impl PLL_VIDEO_NUM {
+        const OFFSET: usize = 0xb0;
+        #[doc = r" Reset value"]
+        pub const RESET_VALUE: u32 = 0x05f5_e100;
+        #[doc = r" Performs a single load operation on the memory-mapped register"]
+        pub fn read(&self) -> u32 {
+            unsafe { ((BASE_ADDRESS + Self::OFFSET) as *const u32).read_volatile() }
+        }
+        #[doc = r" Performs a single store operation on the memory-mapped register"]
+        #[allow(unused_unsafe)]
+        pub fn write(&self, bits: u32) {
+            unsafe { ((BASE_ADDRESS + Self::OFFSET) as *mut u32).write_volatile(bits) }
+        }
+        #[doc = r" Performs a read-modify-write on the memory-mapped register"]
+        #[doc = r""]
+        #[doc = r" This is a short-hand for `self.write(f(self.read()))`"]
+        #[allow(unused_unsafe)]
+        pub fn rmw(&self, f: impl FnOnce(u32) -> u32) {
+            self.write(f(self.read()))
+        }
+    }
+    #[doc = "Denominator of Video PLL Fractional Loop Divider Register"]
+    #[allow(non_camel_case_types)]
+    pub struct PLL_VIDEO_DENOM {
+        _not_send_or_sync: PhantomData<*mut ()>,
+    }
+    impl PLL_VIDEO_DENOM {
+        const OFFSET: usize = 0xc0;
+        #[doc = r" Reset value"]
+        pub const RESET_VALUE: u32 = 0x10a2_4447;
+        #[doc = r" Performs a single load operation on the memory-mapped register"]
+        pub fn read(&self) -> u32 {
+            unsafe { ((BASE_ADDRESS + Self::OFFSET) as *const u32).read_volatile() }
+        }
+        #[doc = r" Performs a single store operation on the memory-mapped register"]
+        #[allow(unused_unsafe)]
+        pub fn write(&self, bits: u32) {
+            unsafe { ((BASE_ADDRESS + Self::OFFSET) as *mut u32).write_volatile(bits) }
+        }
+        #[doc = r" Performs a read-modify-write on the memory-mapped register"]
+        #[doc = r""]
+        #[doc = r" This is a short-hand for `self.write(f(self.read()))`"]
+        #[allow(unused_unsafe)]
+        pub fn rmw(&self, f: impl FnOnce(u32) -> u32) {
+            self.write(f(self.read()))
+        }
+    }
+    #[doc = "Analog ENET PLL Control Register"]
+    #[allow(non_camel_case_types)]
+    pub struct PLL_ENET {
+        _not_send_or_sync: PhantomData<*mut ()>,
+    }
+    impl PLL_ENET {
+        const OFFSET: usize = 0xe0;
+        #[doc = r" Reset value"]
+        pub const RESET_VALUE: u32 = 0x0001_1001;
+        #[doc = r" Performs a single load operation on the memory-mapped register"]
+        pub fn read(&self) -> u32 {
+            unsafe { ((BASE_ADDRESS + Self::OFFSET) as *const u32).read_volatile() }
+        }
+        #[doc = r" Performs a single store operation on the memory-mapped register"]
+        #[allow(unused_unsafe)]
+        pub fn write(&self, bits: u32) {
+            unsafe { ((BASE_ADDRESS + Self::OFFSET) as *mut u32).write_volatile(bits) }
+        }
+        #[doc = r" Performs a read-modify-write on the memory-mapped register"]
+        #[doc = r""]
+        #[doc = r" This is a short-hand for `self.write(f(self.read()))`"]
+        #[allow(unused_unsafe)]
+        pub fn rmw(&self, f: impl FnOnce(u32) -> u32) {
+            self.write(f(self.read()))
+        }
+    }
+    #[doc = "Analog ENET PLL Control Register"]
+    #[allow(non_camel_case_types)]
+    pub struct PLL_ENET_SET {
+        _not_send_or_sync: PhantomData<*mut ()>,
+    }
+    impl PLL_ENET_SET {
+        const OFFSET: usize = 0xe4;
+        #[doc = r" Reset value"]
+        pub const RESET_VALUE: u32 = 0x0001_1001;
+        #[doc = r" Performs a single load operation on the memory-mapped register"]
+        pub fn read(&self) -> u32 {
+            unsafe { ((BASE_ADDRESS + Self::OFFSET) as *const u32).read_volatile() }
+        }
+        #[doc = r" Performs a single store operation on the memory-mapped register"]
+        #[allow(unused_unsafe)]
+        pub fn write(&self, bits: u32) {
+            unsafe { ((BASE_ADDRESS + Self::OFFSET) as *mut u32).write_volatile(bits) }
+        }
+        #[doc = r" Performs a read-modify-write on the memory-mapped register"]
+        #[doc = r""]
+        #[doc = r" This is a short-hand for `self.write(f(self.read()))`"]
+        #[allow(unused_unsafe)]
+        pub fn rmw(&self, f: impl FnOnce(u32) -> u32) {
+            self.write(f(self.read()))
+        }
+    }
+    #[doc = "Analog ENET PLL Control Register"]
+    #[allow(non_camel_case_types)]
+    pub struct PLL_ENET_CLR {
+        _not_send_or_sync: PhantomData<*mut ()>,
+    }
+    impl PLL_ENET_CLR {
+        const OFFSET: usize = 0xe8;
+        #[doc = r" Reset value"]
+        pub const RESET_VALUE: u32 = 0x0001_1001;
+        #[doc = r" Performs a single load operation on the memory-mapped register"]
+        pub fn read(&self) -> u32 {
+            unsafe { ((BASE_ADDRESS + Self::OFFSET) as *const u32).read_volatile() }
+        }
+        #[doc = r" Performs a single store operation on the memory-mapped register"]
+        #[allow(unused_unsafe)]
+        pub fn write(&self, bits: u32) {
+            unsafe { ((BASE_ADDRESS + Self::OFFSET) as *mut u32).write_volatile(bits) }
+        }
+        #[doc = r" Performs a read-modify-write on the memory-mapped register"]
+        #[doc = r""]
+        #[doc = r" This is a short-hand for `self.write(f(self.read()))`"]
+        #[allow(unused_unsafe)]
+        pub fn rmw(&self, f: impl FnOnce(u32) -> u32) {
+            self.write(f(self.read()))
+        }
+    }
+    #[doc = "Analog ENET PLL Control Register"]
+    #[allow(non_camel_case_types)]
+    pub struct PLL_ENET_TOG {
+        _not_send_or_sync: PhantomData<*mut ()>,
+    }
+    impl PLL_ENET_TOG {
+        const OFFSET: usize = 0xec;
+        #[doc = r" Reset value"]
+        pub const RESET_VALUE: u32 = 0x0001_1001;
+        #[doc = r" Performs a single load operation on the memory-mapped register"]
+        pub fn read(&self) -> u32 {
+            unsafe { ((BASE_ADDRESS + Self::OFFSET) as *const u32).read_volatile() }
+        }
+        #[doc = r" Performs a single store operation on the memory-mapped register"]
+        #[allow(unused_unsafe)]
+        pub fn write(&self, bits: u32) {
+            unsafe { ((BASE_ADDRESS + Self::OFFSET) as *mut u32).write_volatile(bits) }
+        }
+        #[doc = r" Performs a read-modify-write on the memory-mapped register"]
+        #[doc = r""]
+        #[doc = r" This is a short-hand for `self.write(f(self.read()))`"]
+        #[allow(unused_unsafe)]
+        pub fn rmw(&self, f: impl FnOnce(u32) -> u32) {
+            self.write(f(self.read()))
+        }
+    }
+    #[doc = "480MHz Clock (PLL3) Phase Fractional Divider Control Register"]
+    #[allow(non_camel_case_types)]
+    pub struct PFD_480 {
+        _not_send_or_sync: PhantomData<*mut ()>,
+    }
+    impl PFD_480 {
+        const OFFSET: usize = 0xf0;
+        #[doc = r" Reset value"]
+        pub const RESET_VALUE: u32 = 0x1311_100c;
+        #[doc = r" Performs a single load operation on the memory-mapped register"]
+        pub fn read(&self) -> u32 {
+            unsafe { ((BASE_ADDRESS + Self::OFFSET) as *const u32).read_volatile() }
+        }
+        #[doc = r" Performs a single store operation on the memory-mapped register"]
+        #[allow(unused_unsafe)]
+        pub fn write(&self, bits: u32) {
+            unsafe { ((BASE_ADDRESS + Self::OFFSET) as *mut u32).write_volatile(bits) }
+        }
+        #[doc = r" Performs a read-modify-write on the memory-mapped register"]
+        #[doc = r""]
+        #[doc = r" This is a short-hand for `self.write(f(self.read()))`"]
+        #[allow(unused_unsafe)]
+        pub fn rmw(&self, f: impl FnOnce(u32) -> u32) {
+            self.write(f(self.read()))
+        }
+    }
+    #[doc = "480MHz Clock (PLL3) Phase Fractional Divider Control Register"]
+    #[allow(non_camel_case_types)]
+    pub struct PFD_480_SET {
+        _not_send_or_sync: PhantomData<*mut ()>,
+    }
+    impl PFD_480_SET {
+        const OFFSET: usize = 0xf4;
+        #[doc = r" Reset value"]
+        pub const RESET_VALUE: u32 = 0x1311_100c;
+        #[doc = r" Performs a single load operation on the memory-mapped register"]
+        pub fn read(&self) -> u32 {
+            unsafe { ((BASE_ADDRESS + Self::OFFSET) as *const u32).read_volatile() }
+        }
+        #[doc = r" Performs a single store operation on the memory-mapped register"]
+        #[allow(unused_unsafe)]
+        pub fn write(&self, bits: u32) {
+            unsafe { ((BASE_ADDRESS + Self::OFFSET) as *mut u32).write_volatile(bits) }
+        }
+        #[doc = r" Performs a read-modify-write on the memory-mapped register"]
+        #[doc = r""]
+        #[doc = r" This is a short-hand for `self.write(f(self.read()))`"]
+        #[allow(unused_unsafe)]
+        pub fn rmw(&self, f: impl FnOnce(u32) -> u32) {
+            self.write(f(self.read()))
+        }
+    }
+    #[doc = "480MHz Clock (PLL3) Phase Fractional Divider Control Register"]
+    #[allow(non_camel_case_types)]
+    pub struct PFD_480_CLR {
+        _not_send_or_sync: PhantomData<*mut ()>,
+    }
+    impl PFD_480_CLR {
+        const OFFSET: usize = 0xf8;
+        #[doc = r" Reset value"]
+        pub const RESET_VALUE: u32 = 0x1311_100c;
+        #[doc = r" Performs a single load operation on the memory-mapped register"]
+        pub fn read(&self) -> u32 {
+            unsafe { ((BASE_ADDRESS + Self::OFFSET) as *const u32).read_volatile() }
+        }
+        #[doc = r" Performs a single store operation on the memory-mapped register"]
+        #[allow(unused_unsafe)]
+        pub fn write(&self, bits: u32) {
+            unsafe { ((BASE_ADDRESS + Self::OFFSET) as *mut u32).write_volatile(bits) }
+        }
+        #[doc = r" Performs a read-modify-write on the memory-mapped register"]
+        #[doc = r""]
+        #[doc = r" This is a short-hand for `self.write(f(self.read()))`"]
+        #[allow(unused_unsafe)]
+        pub fn rmw(&self, f: impl FnOnce(u32) -> u32) {
+            self.write(f(self.read()))
+        }
+    }
+    #[doc = "480MHz Clock (PLL3) Phase Fractional Divider Control Register"]
+    #[allow(non_camel_case_types)]
+    pub struct PFD_480_TOG {
+        _not_send_or_sync: PhantomData<*mut ()>,
+    }
+    impl PFD_480_TOG {
+        const OFFSET: usize = 0xfc;
+        #[doc = r" Reset value"]
+        pub const RESET_VALUE: u32 = 0x1311_100c;
+        #[doc = r" Performs a single load operation on the memory-mapped register"]
+        pub fn read(&self) -> u32 {
+            unsafe { ((BASE_ADDRESS + Self::OFFSET) as *const u32).read_volatile() }
+        }
+        #[doc = r" Performs a single store operation on the memory-mapped register"]
+        #[allow(unused_unsafe)]
+        pub fn write(&self, bits: u32) {
+            unsafe { ((BASE_ADDRESS + Self::OFFSET) as *mut u32).write_volatile(bits) }
+        }
+        #[doc = r" Performs a read-modify-write on the memory-mapped register"]
+        #[doc = r""]
+        #[doc = r" This is a short-hand for `self.write(f(self.read()))`"]
+        #[allow(unused_unsafe)]
+        pub fn rmw(&self, f: impl FnOnce(u32) -> u32) {
+            self.write(f(self.read()))
+        }
+    }
+    #[doc = "528MHz Clock (PLL2) Phase Fractional Divider Control Register"]
+    #[allow(non_camel_case_types)]
+    pub struct PFD_528 {
+        _not_send_or_sync: PhantomData<*mut ()>,
+    }
+    impl PFD_528 {
+        const OFFSET: usize = 0x0100;
+        #[doc = r" Reset value"]
+        pub const RESET_VALUE: u32 = 0x1018_101b;
+        #[doc = r" Performs a single load operation on the memory-mapped register"]
+        pub fn read(&self) -> u32 {
+            unsafe { ((BASE_ADDRESS + Self::OFFSET) as *const u32).read_volatile() }
+        }
+        #[doc = r" Performs a single store operation on the memory-mapped register"]
+        #[allow(unused_unsafe)]
+        pub fn write(&self, bits: u32) {
+            unsafe { ((BASE_ADDRESS + Self::OFFSET) as *mut u32).write_volatile(bits) }
+        }
+        #[doc = r" Performs a read-modify-write on the memory-mapped register"]
+        #[doc = r""]
+        #[doc = r" This is a short-hand for `self.write(f(self.read()))`"]
+        #[allow(unused_unsafe)]
+        pub fn rmw(&self, f: impl FnOnce(u32) -> u32) {
+            self.write(f(self.read()))
+        }
+    }
+    #[doc = "528MHz Clock (PLL2) Phase Fractional Divider Control Register"]
+    #[allow(non_camel_case_types)]
+    pub struct PFD_528_SET {
+        _not_send_or_sync: PhantomData<*mut ()>,
+    }
+    impl PFD_528_SET {
+        const OFFSET: usize = 0x0104;
+        #[doc = r" Reset value"]
+        pub const RESET_VALUE: u32 = 0x1018_101b;
+        #[doc = r" Performs a single load operation on the memory-mapped register"]
+        pub fn read(&self) -> u32 {
+            unsafe { ((BASE_ADDRESS + Self::OFFSET) as *const u32).read_volatile() }
+        }
+        #[doc = r" Performs a single store operation on the memory-mapped register"]
+        #[allow(unused_unsafe)]
+        pub fn write(&self, bits: u32) {
+            unsafe { ((BASE_ADDRESS + Self::OFFSET) as *mut u32).write_volatile(bits) }
+        }
+        #[doc = r" Performs a read-modify-write on the memory-mapped register"]
+        #[doc = r""]
+        #[doc = r" This is a short-hand for `self.write(f(self.read()))`"]
+        #[allow(unused_unsafe)]
+        pub fn rmw(&self, f: impl FnOnce(u32) -> u32) {
+            self.write(f(self.read()))
+        }
+    }
+    #[doc = "528MHz Clock (PLL2) Phase Fractional Divider Control Register"]
+    #[allow(non_camel_case_types)]
+    pub struct PFD_528_CLR {
+        _not_send_or_sync: PhantomData<*mut ()>,
+    }
+    impl PFD_528_CLR {
+        const OFFSET: usize = 0x0108;
+        #[doc = r" Reset value"]
+        pub const RESET_VALUE: u32 = 0x1018_101b;
+        #[doc = r" Performs a single load operation on the memory-mapped register"]
+        pub fn read(&self) -> u32 {
+            unsafe { ((BASE_ADDRESS + Self::OFFSET) as *const u32).read_volatile() }
+        }
+        #[doc = r" Performs a single store operation on the memory-mapped register"]
+        #[allow(unused_unsafe)]
+        pub fn write(&self, bits: u32) {
+            unsafe { ((BASE_ADDRESS + Self::OFFSET) as *mut u32).write_volatile(bits) }
+        }
+        #[doc = r" Performs a read-modify-write on the memory-mapped register"]
+        #[doc = r""]
+        #[doc = r" This is a short-hand for `self.write(f(self.read()))`"]
+        #[allow(unused_unsafe)]
+        pub fn rmw(&self, f: impl FnOnce(u32) -> u32) {
+            self.write(f(self.read()))
+        }
+    }
+    #[doc = "528MHz Clock (PLL2) Phase Fractional Divider Control Register"]
+    #[allow(non_camel_case_types)]
+    pub struct PFD_528_TOG {
+        _not_send_or_sync: PhantomData<*mut ()>,
+    }
+    impl PFD_528_TOG {
+        const OFFSET: usize = 0x010c;
+        #[doc = r" Reset value"]
+        pub const RESET_VALUE: u32 = 0x1018_101b;
+        #[doc = r" Performs a single load operation on the memory-mapped register"]
+        pub fn read(&self) -> u32 {
+            unsafe { ((BASE_ADDRESS + Self::OFFSET) as *const u32).read_volatile() }
+        }
+        #[doc = r" Performs a single store operation on the memory-mapped register"]
+        #[allow(unused_unsafe)]
+        pub fn write(&self, bits: u32) {
+            unsafe { ((BASE_ADDRESS + Self::OFFSET) as *mut u32).write_volatile(bits) }
+        }
+        #[doc = r" Performs a read-modify-write on the memory-mapped register"]
+        #[doc = r""]
+        #[doc = r" This is a short-hand for `self.write(f(self.read()))`"]
+        #[allow(unused_unsafe)]
+        pub fn rmw(&self, f: impl FnOnce(u32) -> u32) {
+            self.write(f(self.read()))
+        }
+    }
+    #[doc = "Miscellaneous Register 0"]
+    #[allow(non_camel_case_types)]
+    pub struct MISC0 {
+        _not_send_or_sync: PhantomData<*mut ()>,
+    }
+    impl MISC0 {
+        const OFFSET: usize = 0x0150;
+        #[doc = r" Reset value"]
+        pub const RESET_VALUE: u32 = 0x0400_0000;
+        #[doc = r" Performs a single load operation on the memory-mapped register"]
+        pub fn read(&self) -> u32 {
+            unsafe { ((BASE_ADDRESS + Self::OFFSET) as *const u32).read_volatile() }
+        }
+        #[doc = r" Performs a single store operation on the memory-mapped register"]
+        #[allow(unused_unsafe)]
+        pub fn write(&self, bits: u32) {
+            unsafe { ((BASE_ADDRESS + Self::OFFSET) as *mut u32).write_volatile(bits) }
+        }
+        #[doc = r" Performs a read-modify-write on the memory-mapped register"]
+        #[doc = r""]
+        #[doc = r" This is a short-hand for `self.write(f(self.read()))`"]
+        #[allow(unused_unsafe)]
+        pub fn rmw(&self, f: impl FnOnce(u32) -> u32) {
+            self.write(f(self.read()))
+        }
+    }
+    #[doc = "Miscellaneous Register 0"]
+    #[allow(non_camel_case_types)]
+    pub struct MISC0_SET {
+        _not_send_or_sync: PhantomData<*mut ()>,
+    }
+    impl MISC0_SET {
+        const OFFSET: usize = 0x0154;
+        #[doc = r" Reset value"]
+        pub const RESET_VALUE: u32 = 0x0400_0000;
+        #[doc = r" Performs a single load operation on the memory-mapped register"]
+        pub fn read(&self) -> u32 {
+            unsafe { ((BASE_ADDRESS + Self::OFFSET) as *const u32).read_volatile() }
+        }
+        #[doc = r" Performs a single store operation on the memory-mapped register"]
+        #[allow(unused_unsafe)]
+        pub fn write(&self, bits: u32) {
+            unsafe { ((BASE_ADDRESS + Self::OFFSET) as *mut u32).write_volatile(bits) }
+        }
+        #[doc = r" Performs a read-modify-write on the memory-mapped register"]
+        #[doc = r""]
+        #[doc = r" This is a short-hand for `self.write(f(self.read()))`"]
+        #[allow(unused_unsafe)]
+        pub fn rmw(&self, f: impl FnOnce(u32) -> u32) {
+            self.write(f(self.read()))
+        }
+    }
+    #[doc = "Miscellaneous Register 0"]
+    #[allow(non_camel_case_types)]
+    pub struct MISC0_CLR {
+        _not_send_or_sync: PhantomData<*mut ()>,
+    }
+    impl MISC0_CLR {
+        const OFFSET: usize = 0x0158;
+        #[doc = r" Reset value"]
+        pub const RESET_VALUE: u32 = 0x0400_0000;
+        #[doc = r" Performs a single load operation on the memory-mapped register"]
+        pub fn read(&self) -> u32 {
+            unsafe { ((BASE_ADDRESS + Self::OFFSET) as *const u32).read_volatile() }
+        }
+        #[doc = r" Performs a single store operation on the memory-mapped register"]
+        #[allow(unused_unsafe)]
+        pub fn write(&self, bits: u32) {
+            unsafe { ((BASE_ADDRESS + Self::OFFSET) as *mut u32).write_volatile(bits) }
+        }
+        #[doc = r" Performs a read-modify-write on the memory-mapped register"]
+        #[doc = r""]
+        #[doc = r" This is a short-hand for `self.write(f(self.read()))`"]
+        #[allow(unused_unsafe)]
+        pub fn rmw(&self, f: impl FnOnce(u32) -> u32) {
+            self.write(f(self.read()))
+        }
+    }
+    #[doc = "Miscellaneous Register 0"]
+    #[allow(non_camel_case_types)]
+    pub struct MISC0_TOG {
+        _not_send_or_sync: PhantomData<*mut ()>,
+    }
+    impl MISC0_TOG {
+        const OFFSET: usize = 0x015c;
+        #[doc = r" Reset value"]
+        pub const RESET_VALUE: u32 = 0x0400_0000;
+        #[doc = r" Performs a single load operation on the memory-mapped register"]
+        pub fn read(&self) -> u32 {
+            unsafe { ((BASE_ADDRESS + Self::OFFSET) as *const u32).read_volatile() }
+        }
+        #[doc = r" Performs a single store operation on the memory-mapped register"]
+        #[allow(unused_unsafe)]
+        pub fn write(&self, bits: u32) {
+            unsafe { ((BASE_ADDRESS + Self::OFFSET) as *mut u32).write_volatile(bits) }
+        }
+        #[doc = r" Performs a read-modify-write on the memory-mapped register"]
+        #[doc = r""]
+        #[doc = r" This is a short-hand for `self.write(f(self.read()))`"]
+        #[allow(unused_unsafe)]
+        pub fn rmw(&self, f: impl FnOnce(u32) -> u32) {
+            self.write(f(self.read()))
+        }
+    }
+    #[doc = "Miscellaneous Register 1"]
+    #[allow(non_camel_case_types)]
+    pub struct MISC1 {
+        _not_send_or_sync: PhantomData<*mut ()>,
+    }
+    impl MISC1 {
+        const OFFSET: usize = 0x0160;
+        #[doc = r" Reset value"]
+        pub const RESET_VALUE: u32 = 0x0000_0000;
+        #[doc = r" Performs a single load operation on the memory-mapped register"]
+        pub fn read(&self) -> u32 {
+            unsafe { ((BASE_ADDRESS + Self::OFFSET) as *const u32).read_volatile() }
+        }
+        #[doc = r" Performs a single store operation on the memory-mapped register"]
+        #[allow(unused_unsafe)]
+        pub fn write(&self, bits: u32) {
+            unsafe { ((BASE_ADDRESS + Self::OFFSET) as *mut u32).write_volatile(bits) }
+        }
+        #[doc = r" Performs a read-modify-write on the memory-mapped register"]
+        #[doc = r""]
+        #[doc = r" This is a short-hand for `self.write(f(self.read()))`"]
+        #[allow(unused_unsafe)]
+        pub fn rmw(&self, f: impl FnOnce(u32) -> u32) {
+            self.write(f(self.read()))
+        }
+    }
+    #[doc = "Miscellaneous Register 1"]
+    #[allow(non_camel_case_types)]
+    pub struct MISC1_SET {
+        _not_send_or_sync: PhantomData<*mut ()>,
+    }
+    impl MISC1_SET {
+        const OFFSET: usize = 0x0164;
+        #[doc = r" Reset value"]
+        pub const RESET_VALUE: u32 = 0x0000_0000;
+        #[doc = r" Performs a single load operation on the memory-mapped register"]
+        pub fn read(&self) -> u32 {
+            unsafe { ((BASE_ADDRESS + Self::OFFSET) as *const u32).read_volatile() }
+        }
+        #[doc = r" Performs a single store operation on the memory-mapped register"]
+        #[allow(unused_unsafe)]
+        pub fn write(&self, bits: u32) {
+            unsafe { ((BASE_ADDRESS + Self::OFFSET) as *mut u32).write_volatile(bits) }
+        }
+        #[doc = r" Performs a read-modify-write on the memory-mapped register"]
+        #[doc = r""]
+        #[doc = r" This is a short-hand for `self.write(f(self.read()))`"]
+        #[allow(unused_unsafe)]
+        pub fn rmw(&self, f: impl FnOnce(u32) -> u32) {
+            self.write(f(self.read()))
+        }
+    }
+    #[doc = "Miscellaneous Register 1"]
+    #[allow(non_camel_case_types)]
+    pub struct MISC1_CLR {
+        _not_send_or_sync: PhantomData<*mut ()>,
+    }
+    impl MISC1_CLR {
+        const OFFSET: usize = 0x0168;
+        #[doc = r" Reset value"]
+        pub const RESET_VALUE: u32 = 0x0000_0000;
+        #[doc = r" Performs a single load operation on the memory-mapped register"]
+        pub fn read(&self) -> u32 {
+            unsafe { ((BASE_ADDRESS + Self::OFFSET) as *const u32).read_volatile() }
+        }
+        #[doc = r" Performs a single store operation on the memory-mapped register"]
+        #[allow(unused_unsafe)]
+        pub fn write(&self, bits: u32) {
+            unsafe { ((BASE_ADDRESS + Self::OFFSET) as *mut u32).write_volatile(bits) }
+        }
+        #[doc = r" Performs a read-modify-write on the memory-mapped register"]
+        #[doc = r""]
+        #[doc = r" This is a short-hand for `self.write(f(self.read()))`"]
+        #[allow(unused_unsafe)]
+        pub fn rmw(&self, f: impl FnOnce(u32) -> u32) {
+            self.write(f(self.read()))
+        }
+    }
+    #[doc = "Miscellaneous Register 1"]
+    #[allow(non_camel_case_types)]
+    pub struct MISC1_TOG {
+        _not_send_or_sync: PhantomData<*mut ()>,
+    }
+    impl MISC1_TOG {
+        const OFFSET: usize = 0x016c;
+        #[doc = r" Reset value"]
+        pub const RESET_VALUE: u32 = 0x0000_0000;
+        #[doc = r" Performs a single load operation on the memory-mapped register"]
+        pub fn read(&self) -> u32 {
+            unsafe { ((BASE_ADDRESS + Self::OFFSET) as *const u32).read_volatile() }
+        }
+        #[doc = r" Performs a single store operation on the memory-mapped register"]
+        #[allow(unused_unsafe)]
+        pub fn write(&self, bits: u32) {
+            unsafe { ((BASE_ADDRESS + Self::OFFSET) as *mut u32).write_volatile(bits) }
+        }
+        #[doc = r" Performs a read-modify-write on the memory-mapped register"]
+        #[doc = r""]
+        #[doc = r" This is a short-hand for `self.write(f(self.read()))`"]
+        #[allow(unused_unsafe)]
+        pub fn rmw(&self, f: impl FnOnce(u32) -> u32) {
+            self.write(f(self.read()))
+        }
+    }
+    #[doc = "Miscellaneous Register 2"]
+    #[allow(non_camel_case_types)]
+    pub struct MISC2 {
+        _not_send_or_sync: PhantomData<*mut ()>,
+    }
+    impl MISC2 {
+        const OFFSET: usize = 0x0170;
+        #[doc = r" Reset value"]
+        pub const RESET_VALUE: u32 = 0x0027_2727;
+        #[doc = r" Performs a single load operation on the memory-mapped register"]
+        pub fn read(&self) -> u32 {
+            unsafe { ((BASE_ADDRESS + Self::OFFSET) as *const u32).read_volatile() }
+        }
+        #[doc = r" Performs a single store operation on the memory-mapped register"]
+        #[allow(unused_unsafe)]
+        pub fn write(&self, bits: u32) {
+            unsafe { ((BASE_ADDRESS + Self::OFFSET) as *mut u32).write_volatile(bits) }
+        }
+        #[doc = r" Performs a read-modify-write on the memory-mapped register"]
+        #[doc = r""]
+        #[doc = r" This is a short-hand for `self.write(f(self.read()))`"]
+        #[allow(unused_unsafe)]
+        pub fn rmw(&self, f: impl FnOnce(u32) -> u32) {
+            self.write(f(self.read()))
+        }
+    }
+    #[doc = "Miscellaneous Register 2"]
+    #[allow(non_camel_case_types)]
+    pub struct MISC2_SET {
+        _not_send_or_sync: PhantomData<*mut ()>,
+    }
+    impl MISC2_SET {
+        const OFFSET: usize = 0x0174;
+        #[doc = r" Reset value"]
+        pub const RESET_VALUE: u32 = 0x0027_2727;
+        #[doc = r" Performs a single load operation on the memory-mapped register"]
+        pub fn read(&self) -> u32 {
+            unsafe { ((BASE_ADDRESS + Self::OFFSET) as *const u32).read_volatile() }
+        }
+        #[doc = r" Performs a single store operation on the memory-mapped register"]
+        #[allow(unused_unsafe)]
+        pub fn write(&self, bits: u32) {
+            unsafe { ((BASE_ADDRESS + Self::OFFSET) as *mut u32).write_volatile(bits) }
+        }
+        #[doc = r" Performs a read-modify-write on the memory-mapped register"]
+        #[doc = r""]
+        #[doc = r" This is a short-hand for `self.write(f(self.read()))`"]
+        #[allow(unused_unsafe)]
+        pub fn rmw(&self, f: impl FnOnce(u32) -> u32) {
+            self.write(f(self.read()))
+        }
+    }
+    #[doc = "Miscellaneous Register 2"]
+    #[allow(non_camel_case_types)]
+    pub struct MISC2_CLR {
+        _not_send_or_sync: PhantomData<*mut ()>,
+    }
+    impl MISC2_CLR {
+        const OFFSET: usize = 0x0178;
+        #[doc = r" Reset value"]
+        pub const RESET_VALUE: u32 = 0x0027_2727;
+        #[doc = r" Performs a single load operation on the memory-mapped register"]
+        pub fn read(&self) -> u32 {
+            unsafe { ((BASE_ADDRESS + Self::OFFSET) as *const u32).read_volatile() }
+        }
+        #[doc = r" Performs a single store operation on the memory-mapped register"]
+        #[allow(unused_unsafe)]
+        pub fn write(&self, bits: u32) {
+            unsafe { ((BASE_ADDRESS + Self::OFFSET) as *mut u32).write_volatile(bits) }
+        }
+        #[doc = r" Performs a read-modify-write on the memory-mapped register"]
+        #[doc = r""]
+        #[doc = r" This is a short-hand for `self.write(f(self.read()))`"]
+        #[allow(unused_unsafe)]
+        pub fn rmw(&self, f: impl FnOnce(u32) -> u32) {
+            self.write(f(self.read()))
+        }
+    }
+    #[doc = "Miscellaneous Register 2"]
+    #[allow(non_camel_case_types)]
+    pub struct MISC2_TOG {
+        _not_send_or_sync: PhantomData<*mut ()>,
+    }
+    impl MISC2_TOG {
+        const OFFSET: usize = 0x017c;
+        #[doc = r" Reset value"]
+        pub const RESET_VALUE: u32 = 0x0027_2727;
+        #[doc = r" Performs a single load operation on the memory-mapped register"]
+        pub fn read(&self) -> u32 {
+            unsafe { ((BASE_ADDRESS + Self::OFFSET) as *const u32).read_volatile() }
+        }
+        #[doc = r" Performs a single store operation on the memory-mapped register"]
+        #[allow(unused_unsafe)]
+        pub fn write(&self, bits: u32) {
+            unsafe { ((BASE_ADDRESS + Self::OFFSET) as *mut u32).write_volatile(bits) }
+        }
+        #[doc = r" Performs a read-modify-write on the memory-mapped register"]
+        #[doc = r""]
+        #[doc = r" This is a short-hand for `self.write(f(self.read()))`"]
+        #[allow(unused_unsafe)]
+        pub fn rmw(&self, f: impl FnOnce(u32) -> u32) {
+            self.write(f(self.read()))
+        }
+    }
+    impl Registers {
+        #[doc = r" # Safety"]
+        #[doc = r""]
+        #[doc = r" Creates a singleton from thin air; make sure we"]
+        #[doc = r" never hand out two instances of it"]
+        unsafe fn new() -> Self {
+            Self {
+                _not_sync: PhantomData,
+                PLL_ARM: PLL_ARM {
+                    _not_send_or_sync: PhantomData,
+                },
+                PLL_ARM_SET: PLL_ARM_SET {
+                    _not_send_or_sync: PhantomData,
+                },
+                PLL_ARM_CLR: PLL_ARM_CLR {
+                    _not_send_or_sync: PhantomData,
+                },
+                PLL_ARM_TOG: PLL_ARM_TOG {
+                    _not_send_or_sync: PhantomData,
+                },
+                PLL_USB1: PLL_USB1 {
+                    _not_send_or_sync: PhantomData,
+                },
+                PLL_USB1_SET: PLL_USB1_SET {
+                    _not_send_or_sync: PhantomData,
+                },
+                PLL_USB1_CLR: PLL_USB1_CLR {
+                    _not_send_or_sync: PhantomData,
+                },
+                PLL_USB1_TOG: PLL_USB1_TOG {
+                    _not_send_or_sync: PhantomData,
+                },
+                PLL_USB2: PLL_USB2 {
+                    _not_send_or_sync: PhantomData,
+                },
+                PLL_USB2_SET: PLL_USB2_SET {
+                    _not_send_or_sync: PhantomData,
+                },
+                PLL_USB2_CLR: PLL_USB2_CLR {
+                    _not_send_or_sync: PhantomData,
+                },
+                PLL_USB2_TOG: PLL_USB2_TOG {
+                    _not_send_or_sync: PhantomData,
+                },
+                PLL_SYS: PLL_SYS {
+                    _not_send_or_sync: PhantomData,
+                },
+                PLL_SYS_SET: PLL_SYS_SET {
+                    _not_send_or_sync: PhantomData,
+                },
+                PLL_SYS_CLR: PLL_SYS_CLR {
+                    _not_send_or_sync: PhantomData,
+                },
+                PLL_SYS_TOG: PLL_SYS_TOG {
+                    _not_send_or_sync: PhantomData,
+                },
+                PLL_SYS_SS: PLL_SYS_SS {
+                    _not_send_or_sync: PhantomData,
+                },
+                PLL_SYS_NUM: PLL_SYS_NUM {
+                    _not_send_or_sync: PhantomData,
+                },
+                PLL_SYS_DENOM: PLL_SYS_DENOM {
+                    _not_send_or_sync: PhantomData,
+                },
+                PLL_AUDIO: PLL_AUDIO {
+                    _not_send_or_sync: PhantomData,
+                },
+                PLL_AUDIO_SET: PLL_AUDIO_SET {
+                    _not_send_or_sync: PhantomData,
+                },
+                PLL_AUDIO_CLR: PLL_AUDIO_CLR {
+                    _not_send_or_sync: PhantomData,
+                },
+                PLL_AUDIO_TOG: PLL_AUDIO_TOG {
+                    _not_send_or_sync: PhantomData,
+                },
+                PLL_AUDIO_NUM: PLL_AUDIO_NUM {
+                    _not_send_or_sync: PhantomData,
+                },
+                PLL_AUDIO_DENOM: PLL_AUDIO_DENOM {
+                    _not_send_or_sync: PhantomData,
+                },
+                PLL_VIDEO: PLL_VIDEO {
+                    _not_send_or_sync: PhantomData,
+                },
+                PLL_VIDEO_SET: PLL_VIDEO_SET {
+                    _not_send_or_sync: PhantomData,
+                },
+                PLL_VIDEO_CLR: PLL_VIDEO_CLR {
+                    _not_send_or_sync: PhantomData,
+                },
+                PLL_VIDEO_TOG: PLL_VIDEO_TOG {
+                    _not_send_or_sync: PhantomData,
+                },
+                PLL_VIDEO_NUM: PLL_VIDEO_NUM {
+                    _not_send_or_sync: PhantomData,
+                },
+                PLL_VIDEO_DENOM: PLL_VIDEO_DENOM {
+                    _not_send_or_sync: PhantomData,
+                },
+                PLL_ENET: PLL_ENET {
+                    _not_send_or_sync: PhantomData,
+                },
+                PLL_ENET_SET: PLL_ENET_SET {
+                    _not_send_or_sync: PhantomData,
+                },
+                PLL_ENET_CLR: PLL_ENET_CLR {
+                    _not_send_or_sync: PhantomData,
+                },
+                PLL_ENET_TOG: PLL_ENET_TOG {
+                    _not_send_or_sync: PhantomData,
+                },
+                PFD_480: PFD_480 {
+                    _not_send_or_sync: PhantomData,
+                },
+                PFD_480_SET: PFD_480_SET {
+                    _not_send_or_sync: PhantomData,
+                },
+                PFD_480_CLR: PFD_480_CLR {
+                    _not_send_or_sync: PhantomData,
+                },
+                PFD_480_TOG: PFD_480_TOG {
+                    _not_send_or_sync: PhantomData,
+                },
+                PFD_528: PFD_528 {
+                    _not_send_or_sync: PhantomData,
+                },
+                PFD_528_SET: PFD_528_SET {
+                    _not_send_or_sync: PhantomData,
+                },
+                PFD_528_CLR: PFD_528_CLR {
+                    _not_send_or_sync: PhantomData,
+                },
+                PFD_528_TOG: PFD_528_TOG {
+                    _not_send_or_sync: PhantomData,
+                },
+                MISC0: MISC0 {
+                    _not_send_or_sync: PhantomData,
+                },
+                MISC0_SET: MISC0_SET {
+                    _not_send_or_sync: PhantomData,
+                },
+                MISC0_CLR: MISC0_CLR {
+                    _not_send_or_sync: PhantomData,
+                },
+                MISC0_TOG: MISC0_TOG {
+                    _not_send_or_sync: PhantomData,
+                },
+                MISC1: MISC1 {
+                    _not_send_or_sync: PhantomData,
+                },
+                MISC1_SET: MISC1_SET {
+                    _not_send_or_sync: PhantomData,
+                },
+                MISC1_CLR: MISC1_CLR {
+                    _not_send_or_sync: PhantomData,
+                },
+                MISC1_TOG: MISC1_TOG {
+                    _not_send_or_sync: PhantomData,
+                },
+                MISC2: MISC2 {
+                    _not_send_or_sync: PhantomData,
+                },
+                MISC2_SET: MISC2_SET {
+                    _not_send_or_sync: PhantomData,
+                },
+                MISC2_CLR: MISC2_CLR {
+                    _not_send_or_sync: PhantomData,
+                },
+                MISC2_TOG: MISC2_TOG {
+                    _not_send_or_sync: PhantomData,
+                },
+            }
+        }
+    }
+    #[allow(non_camel_case_types)]
+    #[doc = "CCM_ANALOG"]
+    pub type CCM_ANALOG = Registers;
+    impl CCM_ANALOG {
+        #[doc = r" Takes the singleton that represents this peripheral instance"]
+        pub fn take() -> Option<Self> {
+            static TAKEN: AtomicBool = AtomicBool::new(false);
+            if TAKEN
+                .compare_exchange(false, true, Ordering::AcqRel, Ordering::Acquire)
+                .is_ok()
+            {
+                Some(unsafe { Registers::new() })
+            } else {
+                None
+            }
+        }
+        #[doc = r" Borrows the singleton without checking if it's"]
+        #[doc = r" currently being held by a context"]
+        #[doc = r""]
+        #[doc = r" **WARNING** this can break Read-Modify-Write"]
+        #[doc = r" operations being performed in other contexts."]
+        pub fn borrow_unchecked<T>(f: impl FnOnce(&Self) -> T) -> T {
+            f(&Registers {
+                _not_sync: PhantomData,
+                PLL_ARM: PLL_ARM {
+                    _not_send_or_sync: PhantomData,
+                },
+                PLL_ARM_SET: PLL_ARM_SET {
+                    _not_send_or_sync: PhantomData,
+                },
+                PLL_ARM_CLR: PLL_ARM_CLR {
+                    _not_send_or_sync: PhantomData,
+                },
+                PLL_ARM_TOG: PLL_ARM_TOG {
+                    _not_send_or_sync: PhantomData,
+                },
+                PLL_USB1: PLL_USB1 {
+                    _not_send_or_sync: PhantomData,
+                },
+                PLL_USB1_SET: PLL_USB1_SET {
+                    _not_send_or_sync: PhantomData,
+                },
+                PLL_USB1_CLR: PLL_USB1_CLR {
+                    _not_send_or_sync: PhantomData,
+                },
+                PLL_USB1_TOG: PLL_USB1_TOG {
+                    _not_send_or_sync: PhantomData,
+                },
+                PLL_USB2: PLL_USB2 {
+                    _not_send_or_sync: PhantomData,
+                },
+                PLL_USB2_SET: PLL_USB2_SET {
+                    _not_send_or_sync: PhantomData,
+                },
+                PLL_USB2_CLR: PLL_USB2_CLR {
+                    _not_send_or_sync: PhantomData,
+                },
+                PLL_USB2_TOG: PLL_USB2_TOG {
+                    _not_send_or_sync: PhantomData,
+                },
+                PLL_SYS: PLL_SYS {
+                    _not_send_or_sync: PhantomData,
+                },
+                PLL_SYS_SET: PLL_SYS_SET {
+                    _not_send_or_sync: PhantomData,
+                },
+                PLL_SYS_CLR: PLL_SYS_CLR {
+                    _not_send_or_sync: PhantomData,
+                },
+                PLL_SYS_TOG: PLL_SYS_TOG {
+                    _not_send_or_sync: PhantomData,
+                },
+                PLL_SYS_SS: PLL_SYS_SS {
+                    _not_send_or_sync: PhantomData,
+                },
+                PLL_SYS_NUM: PLL_SYS_NUM {
+                    _not_send_or_sync: PhantomData,
+                },
+                PLL_SYS_DENOM: PLL_SYS_DENOM {
+                    _not_send_or_sync: PhantomData,
+                },
+                PLL_AUDIO: PLL_AUDIO {
+                    _not_send_or_sync: PhantomData,
+                },
+                PLL_AUDIO_SET: PLL_AUDIO_SET {
+                    _not_send_or_sync: PhantomData,
+                },
+                PLL_AUDIO_CLR: PLL_AUDIO_CLR {
+                    _not_send_or_sync: PhantomData,
+                },
+                PLL_AUDIO_TOG: PLL_AUDIO_TOG {
+                    _not_send_or_sync: PhantomData,
+                },
+                PLL_AUDIO_NUM: PLL_AUDIO_NUM {
+                    _not_send_or_sync: PhantomData,
+                },
+                PLL_AUDIO_DENOM: PLL_AUDIO_DENOM {
+                    _not_send_or_sync: PhantomData,
+                },
+                PLL_VIDEO: PLL_VIDEO {
+                    _not_send_or_sync: PhantomData,
+                },
+                PLL_VIDEO_SET: PLL_VIDEO_SET {
+                    _not_send_or_sync: PhantomData,
+                },
+                PLL_VIDEO_CLR: PLL_VIDEO_CLR {
+                    _not_send_or_sync: PhantomData,
+                },
+                PLL_VIDEO_TOG: PLL_VIDEO_TOG {
+                    _not_send_or_sync: PhantomData,
+                },
+                PLL_VIDEO_NUM: PLL_VIDEO_NUM {
+                    _not_send_or_sync: PhantomData,
+                },
+                PLL_VIDEO_DENOM: PLL_VIDEO_DENOM {
+                    _not_send_or_sync: PhantomData,
+                },
+                PLL_ENET: PLL_ENET {
+                    _not_send_or_sync: PhantomData,
+                },
+                PLL_ENET_SET: PLL_ENET_SET {
+                    _not_send_or_sync: PhantomData,
+                },
+                PLL_ENET_CLR: PLL_ENET_CLR {
+                    _not_send_or_sync: PhantomData,
+                },
+                PLL_ENET_TOG: PLL_ENET_TOG {
+                    _not_send_or_sync: PhantomData,
+                },
+                PFD_480: PFD_480 {
+                    _not_send_or_sync: PhantomData,
+                },
+                PFD_480_SET: PFD_480_SET {
+                    _not_send_or_sync: PhantomData,
+                },
+                PFD_480_CLR: PFD_480_CLR {
+                    _not_send_or_sync: PhantomData,
+                },
+                PFD_480_TOG: PFD_480_TOG {
+                    _not_send_or_sync: PhantomData,
+                },
+                PFD_528: PFD_528 {
+                    _not_send_or_sync: PhantomData,
+                },
+                PFD_528_SET: PFD_528_SET {
+                    _not_send_or_sync: PhantomData,
+                },
+                PFD_528_CLR: PFD_528_CLR {
+                    _not_send_or_sync: PhantomData,
+                },
+                PFD_528_TOG: PFD_528_TOG {
+                    _not_send_or_sync: PhantomData,
+                },
+                MISC0: MISC0 {
+                    _not_send_or_sync: PhantomData,
+                },
+                MISC0_SET: MISC0_SET {
+                    _not_send_or_sync: PhantomData,
+                },
+                MISC0_CLR: MISC0_CLR {
+                    _not_send_or_sync: PhantomData,
+                },
+                MISC0_TOG: MISC0_TOG {
+                    _not_send_or_sync: PhantomData,
+                },
+                MISC1: MISC1 {
+                    _not_send_or_sync: PhantomData,
+                },
+                MISC1_SET: MISC1_SET {
+                    _not_send_or_sync: PhantomData,
+                },
+                MISC1_CLR: MISC1_CLR {
+                    _not_send_or_sync: PhantomData,
+                },
+                MISC1_TOG: MISC1_TOG {
+                    _not_send_or_sync: PhantomData,
+                },
+                MISC2: MISC2 {
+                    _not_send_or_sync: PhantomData,
+                },
+                MISC2_SET: MISC2_SET {
+                    _not_send_or_sync: PhantomData,
+                },
+                MISC2_CLR: MISC2_CLR {
+                    _not_send_or_sync: PhantomData,
+                },
+                MISC2_TOG: MISC2_TOG {
+                    _not_send_or_sync: PhantomData,
+                },
+            })
+        }
+    }
+}
+#[allow(non_snake_case)]
 #[doc = "GPIO"]
 pub mod gpio {
     use crate::Peripheral;
@@ -67,6 +1990,13 @@ pub mod gpio {
         pub fn write(&self, bits: u32) {
             unsafe { ((P::BASE_ADDRESS + Self::OFFSET) as *mut u32).write_volatile(bits) }
         }
+        #[doc = r" Performs a read-modify-write on the memory-mapped register"]
+        #[doc = r""]
+        #[doc = r" This is a short-hand for `self.write(f(self.read()))`"]
+        #[allow(unused_unsafe)]
+        pub fn rmw(&self, f: impl FnOnce(u32) -> u32) {
+            self.write(f(self.read()))
+        }
     }
     #[doc = "GPIO direction register"]
     #[allow(non_camel_case_types)]
@@ -92,6 +2022,13 @@ pub mod gpio {
         #[allow(unused_unsafe)]
         pub fn write(&self, bits: u32) {
             unsafe { ((P::BASE_ADDRESS + Self::OFFSET) as *mut u32).write_volatile(bits) }
+        }
+        #[doc = r" Performs a read-modify-write on the memory-mapped register"]
+        #[doc = r""]
+        #[doc = r" This is a short-hand for `self.write(f(self.read()))`"]
+        #[allow(unused_unsafe)]
+        pub fn rmw(&self, f: impl FnOnce(u32) -> u32) {
+            self.write(f(self.read()))
         }
     }
     #[doc = "GPIO pad status register"]
@@ -140,6 +2077,13 @@ pub mod gpio {
         pub fn write(&self, bits: u32) {
             unsafe { ((P::BASE_ADDRESS + Self::OFFSET) as *mut u32).write_volatile(bits) }
         }
+        #[doc = r" Performs a read-modify-write on the memory-mapped register"]
+        #[doc = r""]
+        #[doc = r" This is a short-hand for `self.write(f(self.read()))`"]
+        #[allow(unused_unsafe)]
+        pub fn rmw(&self, f: impl FnOnce(u32) -> u32) {
+            self.write(f(self.read()))
+        }
     }
     #[doc = "GPIO interrupt configuration register2"]
     #[allow(non_camel_case_types)]
@@ -166,6 +2110,13 @@ pub mod gpio {
         pub fn write(&self, bits: u32) {
             unsafe { ((P::BASE_ADDRESS + Self::OFFSET) as *mut u32).write_volatile(bits) }
         }
+        #[doc = r" Performs a read-modify-write on the memory-mapped register"]
+        #[doc = r""]
+        #[doc = r" This is a short-hand for `self.write(f(self.read()))`"]
+        #[allow(unused_unsafe)]
+        pub fn rmw(&self, f: impl FnOnce(u32) -> u32) {
+            self.write(f(self.read()))
+        }
     }
     #[doc = "GPIO interrupt mask register"]
     #[allow(non_camel_case_types)]
@@ -191,6 +2142,13 @@ pub mod gpio {
         #[allow(unused_unsafe)]
         pub fn write(&self, bits: u32) {
             unsafe { ((P::BASE_ADDRESS + Self::OFFSET) as *mut u32).write_volatile(bits) }
+        }
+        #[doc = r" Performs a read-modify-write on the memory-mapped register"]
+        #[doc = r""]
+        #[doc = r" This is a short-hand for `self.write(f(self.read()))`"]
+        #[allow(unused_unsafe)]
+        pub fn rmw(&self, f: impl FnOnce(u32) -> u32) {
+            self.write(f(self.read()))
         }
     }
     #[doc = "GPIO interrupt status register"]
@@ -243,6 +2201,13 @@ pub mod gpio {
         #[allow(unused_unsafe)]
         pub fn write(&self, bits: u32) {
             unsafe { ((P::BASE_ADDRESS + Self::OFFSET) as *mut u32).write_volatile(bits) }
+        }
+        #[doc = r" Performs a read-modify-write on the memory-mapped register"]
+        #[doc = r""]
+        #[doc = r" This is a short-hand for `self.write(f(self.read()))`"]
+        #[allow(unused_unsafe)]
+        pub fn rmw(&self, f: impl FnOnce(u32) -> u32) {
+            self.write(f(self.read()))
         }
     }
     impl<P> Registers<P>
@@ -501,6 +2466,13 @@ pub mod rng {
         pub fn write(&self, bits: u32) {
             unsafe { ((BASE_ADDRESS + Self::OFFSET) as *mut u32).write_volatile(bits) }
         }
+        #[doc = r" Performs a read-modify-write on the memory-mapped register"]
+        #[doc = r""]
+        #[doc = r" This is a short-hand for `self.write(f(self.read()))`"]
+        #[allow(unused_unsafe)]
+        pub fn rmw(&self, f: impl FnOnce(u32) -> u32) {
+            self.write(f(self.read()))
+        }
     }
     #[doc = "RNGB control register"]
     #[allow(non_camel_case_types)]
@@ -519,6 +2491,13 @@ pub mod rng {
         #[allow(unused_unsafe)]
         pub fn write(&self, bits: u32) {
             unsafe { ((BASE_ADDRESS + Self::OFFSET) as *mut u32).write_volatile(bits) }
+        }
+        #[doc = r" Performs a read-modify-write on the memory-mapped register"]
+        #[doc = r""]
+        #[doc = r" This is a short-hand for `self.write(f(self.read()))`"]
+        #[allow(unused_unsafe)]
+        pub fn rmw(&self, f: impl FnOnce(u32) -> u32) {
+            self.write(f(self.read()))
         }
     }
     #[doc = "RNGB status register"]
@@ -682,6 +2661,13 @@ pub mod snvs_lp {
         pub fn write(&self, bits: u32) {
             unsafe { ((BASE_ADDRESS + Self::OFFSET) as *mut u32).write_volatile(bits) }
         }
+        #[doc = r" Performs a read-modify-write on the memory-mapped register"]
+        #[doc = r""]
+        #[doc = r" This is a short-hand for `self.write(f(self.read()))`"]
+        #[allow(unused_unsafe)]
+        pub fn rmw(&self, f: impl FnOnce(u32) -> u32) {
+            self.write(f(self.read()))
+        }
     }
     #[doc = "SNVS_LP Control Register"]
     #[allow(non_camel_case_types)]
@@ -700,6 +2686,13 @@ pub mod snvs_lp {
         #[allow(unused_unsafe)]
         pub fn write(&self, bits: u32) {
             unsafe { ((BASE_ADDRESS + Self::OFFSET) as *mut u32).write_volatile(bits) }
+        }
+        #[doc = r" Performs a read-modify-write on the memory-mapped register"]
+        #[doc = r""]
+        #[doc = r" This is a short-hand for `self.write(f(self.read()))`"]
+        #[allow(unused_unsafe)]
+        pub fn rmw(&self, f: impl FnOnce(u32) -> u32) {
+            self.write(f(self.read()))
         }
     }
     #[doc = "SNVS_LP Status Register"]
@@ -720,6 +2713,13 @@ pub mod snvs_lp {
         pub fn write(&self, bits: u32) {
             unsafe { ((BASE_ADDRESS + Self::OFFSET) as *mut u32).write_volatile(bits) }
         }
+        #[doc = r" Performs a read-modify-write on the memory-mapped register"]
+        #[doc = r""]
+        #[doc = r" This is a short-hand for `self.write(f(self.read()))`"]
+        #[allow(unused_unsafe)]
+        pub fn rmw(&self, f: impl FnOnce(u32) -> u32) {
+            self.write(f(self.read()))
+        }
     }
     #[doc = "SNVS_LP Secure Monotonic Counter MSB Register"]
     #[allow(non_camel_case_types)]
@@ -738,6 +2738,13 @@ pub mod snvs_lp {
         #[allow(unused_unsafe)]
         pub fn write(&self, bits: u32) {
             unsafe { ((BASE_ADDRESS + Self::OFFSET) as *mut u32).write_volatile(bits) }
+        }
+        #[doc = r" Performs a read-modify-write on the memory-mapped register"]
+        #[doc = r""]
+        #[doc = r" This is a short-hand for `self.write(f(self.read()))`"]
+        #[allow(unused_unsafe)]
+        pub fn rmw(&self, f: impl FnOnce(u32) -> u32) {
+            self.write(f(self.read()))
         }
     }
     #[doc = "SNVS_LP Secure Monotonic Counter LSB Register"]
@@ -758,6 +2765,13 @@ pub mod snvs_lp {
         pub fn write(&self, bits: u32) {
             unsafe { ((BASE_ADDRESS + Self::OFFSET) as *mut u32).write_volatile(bits) }
         }
+        #[doc = r" Performs a read-modify-write on the memory-mapped register"]
+        #[doc = r""]
+        #[doc = r" This is a short-hand for `self.write(f(self.read()))`"]
+        #[allow(unused_unsafe)]
+        pub fn rmw(&self, f: impl FnOnce(u32) -> u32) {
+            self.write(f(self.read()))
+        }
     }
     #[doc = "SNVS_LP General-Purpose Register"]
     #[allow(non_camel_case_types)]
@@ -776,6 +2790,13 @@ pub mod snvs_lp {
         #[allow(unused_unsafe)]
         pub fn write(&self, bits: u32) {
             unsafe { ((BASE_ADDRESS + Self::OFFSET) as *mut u32).write_volatile(bits) }
+        }
+        #[doc = r" Performs a read-modify-write on the memory-mapped register"]
+        #[doc = r""]
+        #[doc = r" This is a short-hand for `self.write(f(self.read()))`"]
+        #[allow(unused_unsafe)]
+        pub fn rmw(&self, f: impl FnOnce(u32) -> u32) {
+            self.write(f(self.read()))
         }
     }
     impl Registers {
@@ -905,6 +2926,13 @@ pub mod snvs_hp {
         pub fn write(&self, bits: u32) {
             unsafe { ((BASE_ADDRESS + Self::OFFSET) as *mut u32).write_volatile(bits) }
         }
+        #[doc = r" Performs a read-modify-write on the memory-mapped register"]
+        #[doc = r""]
+        #[doc = r" This is a short-hand for `self.write(f(self.read()))`"]
+        #[allow(unused_unsafe)]
+        pub fn rmw(&self, f: impl FnOnce(u32) -> u32) {
+            self.write(f(self.read()))
+        }
     }
     #[doc = "SNVS_HP Command register"]
     #[allow(non_camel_case_types)]
@@ -923,6 +2951,13 @@ pub mod snvs_hp {
         #[allow(unused_unsafe)]
         pub fn write(&self, bits: u32) {
             unsafe { ((BASE_ADDRESS + Self::OFFSET) as *mut u32).write_volatile(bits) }
+        }
+        #[doc = r" Performs a read-modify-write on the memory-mapped register"]
+        #[doc = r""]
+        #[doc = r" This is a short-hand for `self.write(f(self.read()))`"]
+        #[allow(unused_unsafe)]
+        pub fn rmw(&self, f: impl FnOnce(u32) -> u32) {
+            self.write(f(self.read()))
         }
     }
     #[doc = "SNVS_HP Control register"]
@@ -943,6 +2978,13 @@ pub mod snvs_hp {
         pub fn write(&self, bits: u32) {
             unsafe { ((BASE_ADDRESS + Self::OFFSET) as *mut u32).write_volatile(bits) }
         }
+        #[doc = r" Performs a read-modify-write on the memory-mapped register"]
+        #[doc = r""]
+        #[doc = r" This is a short-hand for `self.write(f(self.read()))`"]
+        #[allow(unused_unsafe)]
+        pub fn rmw(&self, f: impl FnOnce(u32) -> u32) {
+            self.write(f(self.read()))
+        }
     }
     #[doc = "SNVS_HP Status register"]
     #[allow(non_camel_case_types)]
@@ -961,6 +3003,13 @@ pub mod snvs_hp {
         #[allow(unused_unsafe)]
         pub fn write(&self, bits: u32) {
             unsafe { ((BASE_ADDRESS + Self::OFFSET) as *mut u32).write_volatile(bits) }
+        }
+        #[doc = r" Performs a read-modify-write on the memory-mapped register"]
+        #[doc = r""]
+        #[doc = r" This is a short-hand for `self.write(f(self.read()))`"]
+        #[allow(unused_unsafe)]
+        pub fn rmw(&self, f: impl FnOnce(u32) -> u32) {
+            self.write(f(self.read()))
         }
     }
     #[doc = "SNVS_HP Real-Time Counter MSB Register"]
@@ -981,6 +3030,13 @@ pub mod snvs_hp {
         pub fn write(&self, bits: u32) {
             unsafe { ((BASE_ADDRESS + Self::OFFSET) as *mut u32).write_volatile(bits) }
         }
+        #[doc = r" Performs a read-modify-write on the memory-mapped register"]
+        #[doc = r""]
+        #[doc = r" This is a short-hand for `self.write(f(self.read()))`"]
+        #[allow(unused_unsafe)]
+        pub fn rmw(&self, f: impl FnOnce(u32) -> u32) {
+            self.write(f(self.read()))
+        }
     }
     #[doc = "SNVS_HP Real-Time Counter LSB Register"]
     #[allow(non_camel_case_types)]
@@ -999,6 +3055,13 @@ pub mod snvs_hp {
         #[allow(unused_unsafe)]
         pub fn write(&self, bits: u32) {
             unsafe { ((BASE_ADDRESS + Self::OFFSET) as *mut u32).write_volatile(bits) }
+        }
+        #[doc = r" Performs a read-modify-write on the memory-mapped register"]
+        #[doc = r""]
+        #[doc = r" This is a short-hand for `self.write(f(self.read()))`"]
+        #[allow(unused_unsafe)]
+        pub fn rmw(&self, f: impl FnOnce(u32) -> u32) {
+            self.write(f(self.read()))
         }
     }
     #[doc = "SNVS_HP Time Alarm MSB Register"]
@@ -1019,6 +3082,13 @@ pub mod snvs_hp {
         pub fn write(&self, bits: u32) {
             unsafe { ((BASE_ADDRESS + Self::OFFSET) as *mut u32).write_volatile(bits) }
         }
+        #[doc = r" Performs a read-modify-write on the memory-mapped register"]
+        #[doc = r""]
+        #[doc = r" This is a short-hand for `self.write(f(self.read()))`"]
+        #[allow(unused_unsafe)]
+        pub fn rmw(&self, f: impl FnOnce(u32) -> u32) {
+            self.write(f(self.read()))
+        }
     }
     #[doc = "SNVS_HP Time Alarm LSB Register"]
     #[allow(non_camel_case_types)]
@@ -1037,6 +3107,13 @@ pub mod snvs_hp {
         #[allow(unused_unsafe)]
         pub fn write(&self, bits: u32) {
             unsafe { ((BASE_ADDRESS + Self::OFFSET) as *mut u32).write_volatile(bits) }
+        }
+        #[doc = r" Performs a read-modify-write on the memory-mapped register"]
+        #[doc = r""]
+        #[doc = r" This is a short-hand for `self.write(f(self.read()))`"]
+        #[allow(unused_unsafe)]
+        pub fn rmw(&self, f: impl FnOnce(u32) -> u32) {
+            self.write(f(self.read()))
         }
     }
     #[doc = "SNVS_HP Version ID Register 1"]
@@ -1286,6 +3363,13 @@ pub mod uart {
         pub fn write(&self, bits: u32) {
             unsafe { ((P::BASE_ADDRESS + Self::OFFSET) as *mut u32).write_volatile(bits) }
         }
+        #[doc = r" Performs a read-modify-write on the memory-mapped register"]
+        #[doc = r""]
+        #[doc = r" This is a short-hand for `self.write(f(self.read()))`"]
+        #[allow(unused_unsafe)]
+        pub fn rmw(&self, f: impl FnOnce(u32) -> u32) {
+            self.write(f(self.read()))
+        }
     }
     #[doc = "UART Control Register 2"]
     #[allow(non_camel_case_types)]
@@ -1311,6 +3395,13 @@ pub mod uart {
         #[allow(unused_unsafe)]
         pub fn write(&self, bits: u32) {
             unsafe { ((P::BASE_ADDRESS + Self::OFFSET) as *mut u32).write_volatile(bits) }
+        }
+        #[doc = r" Performs a read-modify-write on the memory-mapped register"]
+        #[doc = r""]
+        #[doc = r" This is a short-hand for `self.write(f(self.read()))`"]
+        #[allow(unused_unsafe)]
+        pub fn rmw(&self, f: impl FnOnce(u32) -> u32) {
+            self.write(f(self.read()))
         }
     }
     #[doc = "UART Control Register 3"]
@@ -1338,6 +3429,13 @@ pub mod uart {
         pub fn write(&self, bits: u32) {
             unsafe { ((P::BASE_ADDRESS + Self::OFFSET) as *mut u32).write_volatile(bits) }
         }
+        #[doc = r" Performs a read-modify-write on the memory-mapped register"]
+        #[doc = r""]
+        #[doc = r" This is a short-hand for `self.write(f(self.read()))`"]
+        #[allow(unused_unsafe)]
+        pub fn rmw(&self, f: impl FnOnce(u32) -> u32) {
+            self.write(f(self.read()))
+        }
     }
     #[doc = "UART Control Register 4"]
     #[allow(non_camel_case_types)]
@@ -1363,6 +3461,13 @@ pub mod uart {
         #[allow(unused_unsafe)]
         pub fn write(&self, bits: u32) {
             unsafe { ((P::BASE_ADDRESS + Self::OFFSET) as *mut u32).write_volatile(bits) }
+        }
+        #[doc = r" Performs a read-modify-write on the memory-mapped register"]
+        #[doc = r""]
+        #[doc = r" This is a short-hand for `self.write(f(self.read()))`"]
+        #[allow(unused_unsafe)]
+        pub fn rmw(&self, f: impl FnOnce(u32) -> u32) {
+            self.write(f(self.read()))
         }
     }
     #[doc = "UART FIFO Control Register"]
@@ -1390,6 +3495,13 @@ pub mod uart {
         pub fn write(&self, bits: u32) {
             unsafe { ((P::BASE_ADDRESS + Self::OFFSET) as *mut u32).write_volatile(bits) }
         }
+        #[doc = r" Performs a read-modify-write on the memory-mapped register"]
+        #[doc = r""]
+        #[doc = r" This is a short-hand for `self.write(f(self.read()))`"]
+        #[allow(unused_unsafe)]
+        pub fn rmw(&self, f: impl FnOnce(u32) -> u32) {
+            self.write(f(self.read()))
+        }
     }
     #[doc = "UART Status Register 1"]
     #[allow(non_camel_case_types)]
@@ -1415,6 +3527,13 @@ pub mod uart {
         #[allow(unused_unsafe)]
         pub fn write(&self, bits: u32) {
             unsafe { ((P::BASE_ADDRESS + Self::OFFSET) as *mut u32).write_volatile(bits) }
+        }
+        #[doc = r" Performs a read-modify-write on the memory-mapped register"]
+        #[doc = r""]
+        #[doc = r" This is a short-hand for `self.write(f(self.read()))`"]
+        #[allow(unused_unsafe)]
+        pub fn rmw(&self, f: impl FnOnce(u32) -> u32) {
+            self.write(f(self.read()))
         }
     }
     #[doc = "UART Status Register 2"]
@@ -1442,6 +3561,13 @@ pub mod uart {
         pub fn write(&self, bits: u32) {
             unsafe { ((P::BASE_ADDRESS + Self::OFFSET) as *mut u32).write_volatile(bits) }
         }
+        #[doc = r" Performs a read-modify-write on the memory-mapped register"]
+        #[doc = r""]
+        #[doc = r" This is a short-hand for `self.write(f(self.read()))`"]
+        #[allow(unused_unsafe)]
+        pub fn rmw(&self, f: impl FnOnce(u32) -> u32) {
+            self.write(f(self.read()))
+        }
     }
     #[doc = "UART Escape Character Register"]
     #[allow(non_camel_case_types)]
@@ -1467,6 +3593,13 @@ pub mod uart {
         #[allow(unused_unsafe)]
         pub fn write(&self, bits: u32) {
             unsafe { ((P::BASE_ADDRESS + Self::OFFSET) as *mut u32).write_volatile(bits) }
+        }
+        #[doc = r" Performs a read-modify-write on the memory-mapped register"]
+        #[doc = r""]
+        #[doc = r" This is a short-hand for `self.write(f(self.read()))`"]
+        #[allow(unused_unsafe)]
+        pub fn rmw(&self, f: impl FnOnce(u32) -> u32) {
+            self.write(f(self.read()))
         }
     }
     #[doc = "UART Escape Timer Register"]
@@ -1494,6 +3627,13 @@ pub mod uart {
         pub fn write(&self, bits: u32) {
             unsafe { ((P::BASE_ADDRESS + Self::OFFSET) as *mut u32).write_volatile(bits) }
         }
+        #[doc = r" Performs a read-modify-write on the memory-mapped register"]
+        #[doc = r""]
+        #[doc = r" This is a short-hand for `self.write(f(self.read()))`"]
+        #[allow(unused_unsafe)]
+        pub fn rmw(&self, f: impl FnOnce(u32) -> u32) {
+            self.write(f(self.read()))
+        }
     }
     #[doc = "UART BRM Incremental Register"]
     #[allow(non_camel_case_types)]
@@ -1520,6 +3660,13 @@ pub mod uart {
         pub fn write(&self, bits: u32) {
             unsafe { ((P::BASE_ADDRESS + Self::OFFSET) as *mut u32).write_volatile(bits) }
         }
+        #[doc = r" Performs a read-modify-write on the memory-mapped register"]
+        #[doc = r""]
+        #[doc = r" This is a short-hand for `self.write(f(self.read()))`"]
+        #[allow(unused_unsafe)]
+        pub fn rmw(&self, f: impl FnOnce(u32) -> u32) {
+            self.write(f(self.read()))
+        }
     }
     #[doc = "UART BRM Modulator Register"]
     #[allow(non_camel_case_types)]
@@ -1545,6 +3692,13 @@ pub mod uart {
         #[allow(unused_unsafe)]
         pub fn write(&self, bits: u32) {
             unsafe { ((P::BASE_ADDRESS + Self::OFFSET) as *mut u32).write_volatile(bits) }
+        }
+        #[doc = r" Performs a read-modify-write on the memory-mapped register"]
+        #[doc = r""]
+        #[doc = r" This is a short-hand for `self.write(f(self.read()))`"]
+        #[allow(unused_unsafe)]
+        pub fn rmw(&self, f: impl FnOnce(u32) -> u32) {
+            self.write(f(self.read()))
         }
     }
     #[doc = "UART Baud Rate Count Register"]
@@ -1593,6 +3747,13 @@ pub mod uart {
         pub fn write(&self, bits: u32) {
             unsafe { ((P::BASE_ADDRESS + Self::OFFSET) as *mut u32).write_volatile(bits) }
         }
+        #[doc = r" Performs a read-modify-write on the memory-mapped register"]
+        #[doc = r""]
+        #[doc = r" This is a short-hand for `self.write(f(self.read()))`"]
+        #[allow(unused_unsafe)]
+        pub fn rmw(&self, f: impl FnOnce(u32) -> u32) {
+            self.write(f(self.read()))
+        }
     }
     #[doc = "UART Test Register"]
     #[allow(non_camel_case_types)]
@@ -1619,6 +3780,13 @@ pub mod uart {
         pub fn write(&self, bits: u32) {
             unsafe { ((P::BASE_ADDRESS + Self::OFFSET) as *mut u32).write_volatile(bits) }
         }
+        #[doc = r" Performs a read-modify-write on the memory-mapped register"]
+        #[doc = r""]
+        #[doc = r" This is a short-hand for `self.write(f(self.read()))`"]
+        #[allow(unused_unsafe)]
+        pub fn rmw(&self, f: impl FnOnce(u32) -> u32) {
+            self.write(f(self.read()))
+        }
     }
     #[doc = "UART RS-485 Mode Control Register"]
     #[allow(non_camel_case_types)]
@@ -1644,6 +3812,13 @@ pub mod uart {
         #[allow(unused_unsafe)]
         pub fn write(&self, bits: u32) {
             unsafe { ((P::BASE_ADDRESS + Self::OFFSET) as *mut u32).write_volatile(bits) }
+        }
+        #[doc = r" Performs a read-modify-write on the memory-mapped register"]
+        #[doc = r""]
+        #[doc = r" This is a short-hand for `self.write(f(self.read()))`"]
+        #[allow(unused_unsafe)]
+        pub fn rmw(&self, f: impl FnOnce(u32) -> u32) {
+            self.write(f(self.read()))
         }
     }
     impl<P> Registers<P>
@@ -1971,6 +4146,985 @@ pub mod uart {
     }
 }
 #[allow(non_snake_case)]
+#[doc = "USB_ANALOG"]
+pub mod usb_analog {
+    use core::{
+        marker::PhantomData,
+        sync::atomic::{AtomicBool, Ordering},
+    };
+    const BASE_ADDRESS: usize = 0x020c_81a0;
+    #[doc = r" The registers that make up the peripheral"]
+    #[allow(non_snake_case)]
+    pub struct Registers {
+        _not_sync: PhantomData<*mut ()>,
+        #[doc = "USB VBUS Detect Register"]
+        pub USB1_VBUS_DETECT: USB1_VBUS_DETECT,
+        #[doc = "USB VBUS Detect Register"]
+        pub USB1_VBUS_DETECT_SET: USB1_VBUS_DETECT_SET,
+        #[doc = "USB VBUS Detect Register"]
+        pub USB1_VBUS_DETECT_CLR: USB1_VBUS_DETECT_CLR,
+        #[doc = "USB VBUS Detect Register"]
+        pub USB1_VBUS_DETECT_TOG: USB1_VBUS_DETECT_TOG,
+        #[doc = "USB Charger Detect Register"]
+        pub USB1_CHRG_DETECT: USB1_CHRG_DETECT,
+        #[doc = "USB Charger Detect Register"]
+        pub USB1_CHRG_DETECT_SET: USB1_CHRG_DETECT_SET,
+        #[doc = "USB Charger Detect Register"]
+        pub USB1_CHRG_DETECT_CLR: USB1_CHRG_DETECT_CLR,
+        #[doc = "USB Charger Detect Register"]
+        pub USB1_CHRG_DETECT_TOG: USB1_CHRG_DETECT_TOG,
+        #[doc = "USB VBUS Detect Status Register"]
+        pub USB1_VBUS_DETECT_STAT: USB1_VBUS_DETECT_STAT,
+        #[doc = "USB Charger Detect Status Register"]
+        pub USB1_CHRG_DETECT_STAT: USB1_CHRG_DETECT_STAT,
+        #[doc = "USB Misc Register"]
+        pub USB1_MISC: USB1_MISC,
+        #[doc = "USB Misc Register"]
+        pub USB1_MISC_SET: USB1_MISC_SET,
+        #[doc = "USB Misc Register"]
+        pub USB1_MISC_CLR: USB1_MISC_CLR,
+        #[doc = "USB Misc Register"]
+        pub USB1_MISC_TOG: USB1_MISC_TOG,
+        #[doc = "USB VBUS Detect Register"]
+        pub USB2_VBUS_DETECT: USB2_VBUS_DETECT,
+        #[doc = "USB VBUS Detect Register"]
+        pub USB2_VBUS_DETECT_SET: USB2_VBUS_DETECT_SET,
+        #[doc = "USB VBUS Detect Register"]
+        pub USB2_VBUS_DETECT_CLR: USB2_VBUS_DETECT_CLR,
+        #[doc = "USB VBUS Detect Register"]
+        pub USB2_VBUS_DETECT_TOG: USB2_VBUS_DETECT_TOG,
+        #[doc = "USB Charger Detect Register"]
+        pub USB2_CHRG_DETECT: USB2_CHRG_DETECT,
+        #[doc = "USB Charger Detect Register"]
+        pub USB2_CHRG_DETECT_SET: USB2_CHRG_DETECT_SET,
+        #[doc = "USB Charger Detect Register"]
+        pub USB2_CHRG_DETECT_CLR: USB2_CHRG_DETECT_CLR,
+        #[doc = "USB Charger Detect Register"]
+        pub USB2_CHRG_DETECT_TOG: USB2_CHRG_DETECT_TOG,
+        #[doc = "USB VBUS Detect Status Register"]
+        pub USB2_VBUS_DETECT_STAT: USB2_VBUS_DETECT_STAT,
+        #[doc = "USB Charger Detect Status Register"]
+        pub USB2_CHRG_DETECT_STAT: USB2_CHRG_DETECT_STAT,
+        #[doc = "USB Misc Register"]
+        pub USB2_MISC: USB2_MISC,
+        #[doc = "USB Misc Register"]
+        pub USB2_MISC_SET: USB2_MISC_SET,
+        #[doc = "USB Misc Register"]
+        pub USB2_MISC_CLR: USB2_MISC_CLR,
+        #[doc = "USB Misc Register"]
+        pub USB2_MISC_TOG: USB2_MISC_TOG,
+        #[doc = "Chip Silicon Version"]
+        pub DIGPROG: DIGPROG,
+    }
+    unsafe impl Send for Registers {}
+    #[doc = "USB VBUS Detect Register"]
+    #[allow(non_camel_case_types)]
+    pub struct USB1_VBUS_DETECT {
+        _not_send_or_sync: PhantomData<*mut ()>,
+    }
+    impl USB1_VBUS_DETECT {
+        const OFFSET: usize = 0x00;
+        #[doc = r" Reset value"]
+        pub const RESET_VALUE: u32 = 0x0010_0004;
+        #[doc = r" Performs a single load operation on the memory-mapped register"]
+        pub fn read(&self) -> u32 {
+            unsafe { ((BASE_ADDRESS + Self::OFFSET) as *const u32).read_volatile() }
+        }
+        #[doc = r" Performs a single store operation on the memory-mapped register"]
+        #[allow(unused_unsafe)]
+        pub fn write(&self, bits: u32) {
+            unsafe { ((BASE_ADDRESS + Self::OFFSET) as *mut u32).write_volatile(bits) }
+        }
+        #[doc = r" Performs a read-modify-write on the memory-mapped register"]
+        #[doc = r""]
+        #[doc = r" This is a short-hand for `self.write(f(self.read()))`"]
+        #[allow(unused_unsafe)]
+        pub fn rmw(&self, f: impl FnOnce(u32) -> u32) {
+            self.write(f(self.read()))
+        }
+    }
+    #[doc = "USB VBUS Detect Register"]
+    #[allow(non_camel_case_types)]
+    pub struct USB1_VBUS_DETECT_SET {
+        _not_send_or_sync: PhantomData<*mut ()>,
+    }
+    impl USB1_VBUS_DETECT_SET {
+        const OFFSET: usize = 0x04;
+        #[doc = r" Reset value"]
+        pub const RESET_VALUE: u32 = 0x0010_0004;
+        #[doc = r" Performs a single load operation on the memory-mapped register"]
+        pub fn read(&self) -> u32 {
+            unsafe { ((BASE_ADDRESS + Self::OFFSET) as *const u32).read_volatile() }
+        }
+        #[doc = r" Performs a single store operation on the memory-mapped register"]
+        #[allow(unused_unsafe)]
+        pub fn write(&self, bits: u32) {
+            unsafe { ((BASE_ADDRESS + Self::OFFSET) as *mut u32).write_volatile(bits) }
+        }
+        #[doc = r" Performs a read-modify-write on the memory-mapped register"]
+        #[doc = r""]
+        #[doc = r" This is a short-hand for `self.write(f(self.read()))`"]
+        #[allow(unused_unsafe)]
+        pub fn rmw(&self, f: impl FnOnce(u32) -> u32) {
+            self.write(f(self.read()))
+        }
+    }
+    #[doc = "USB VBUS Detect Register"]
+    #[allow(non_camel_case_types)]
+    pub struct USB1_VBUS_DETECT_CLR {
+        _not_send_or_sync: PhantomData<*mut ()>,
+    }
+    impl USB1_VBUS_DETECT_CLR {
+        const OFFSET: usize = 0x08;
+        #[doc = r" Reset value"]
+        pub const RESET_VALUE: u32 = 0x0010_0004;
+        #[doc = r" Performs a single load operation on the memory-mapped register"]
+        pub fn read(&self) -> u32 {
+            unsafe { ((BASE_ADDRESS + Self::OFFSET) as *const u32).read_volatile() }
+        }
+        #[doc = r" Performs a single store operation on the memory-mapped register"]
+        #[allow(unused_unsafe)]
+        pub fn write(&self, bits: u32) {
+            unsafe { ((BASE_ADDRESS + Self::OFFSET) as *mut u32).write_volatile(bits) }
+        }
+        #[doc = r" Performs a read-modify-write on the memory-mapped register"]
+        #[doc = r""]
+        #[doc = r" This is a short-hand for `self.write(f(self.read()))`"]
+        #[allow(unused_unsafe)]
+        pub fn rmw(&self, f: impl FnOnce(u32) -> u32) {
+            self.write(f(self.read()))
+        }
+    }
+    #[doc = "USB VBUS Detect Register"]
+    #[allow(non_camel_case_types)]
+    pub struct USB1_VBUS_DETECT_TOG {
+        _not_send_or_sync: PhantomData<*mut ()>,
+    }
+    impl USB1_VBUS_DETECT_TOG {
+        const OFFSET: usize = 0x0c;
+        #[doc = r" Reset value"]
+        pub const RESET_VALUE: u32 = 0x0010_0004;
+        #[doc = r" Performs a single load operation on the memory-mapped register"]
+        pub fn read(&self) -> u32 {
+            unsafe { ((BASE_ADDRESS + Self::OFFSET) as *const u32).read_volatile() }
+        }
+        #[doc = r" Performs a single store operation on the memory-mapped register"]
+        #[allow(unused_unsafe)]
+        pub fn write(&self, bits: u32) {
+            unsafe { ((BASE_ADDRESS + Self::OFFSET) as *mut u32).write_volatile(bits) }
+        }
+        #[doc = r" Performs a read-modify-write on the memory-mapped register"]
+        #[doc = r""]
+        #[doc = r" This is a short-hand for `self.write(f(self.read()))`"]
+        #[allow(unused_unsafe)]
+        pub fn rmw(&self, f: impl FnOnce(u32) -> u32) {
+            self.write(f(self.read()))
+        }
+    }
+    #[doc = "USB Charger Detect Register"]
+    #[allow(non_camel_case_types)]
+    pub struct USB1_CHRG_DETECT {
+        _not_send_or_sync: PhantomData<*mut ()>,
+    }
+    impl USB1_CHRG_DETECT {
+        const OFFSET: usize = 0x10;
+        #[doc = r" Reset value"]
+        pub const RESET_VALUE: u32 = 0x0000_0000;
+        #[doc = r" Performs a single load operation on the memory-mapped register"]
+        pub fn read(&self) -> u32 {
+            unsafe { ((BASE_ADDRESS + Self::OFFSET) as *const u32).read_volatile() }
+        }
+        #[doc = r" Performs a single store operation on the memory-mapped register"]
+        #[allow(unused_unsafe)]
+        pub fn write(&self, bits: u32) {
+            unsafe { ((BASE_ADDRESS + Self::OFFSET) as *mut u32).write_volatile(bits) }
+        }
+        #[doc = r" Performs a read-modify-write on the memory-mapped register"]
+        #[doc = r""]
+        #[doc = r" This is a short-hand for `self.write(f(self.read()))`"]
+        #[allow(unused_unsafe)]
+        pub fn rmw(&self, f: impl FnOnce(u32) -> u32) {
+            self.write(f(self.read()))
+        }
+    }
+    #[doc = "USB Charger Detect Register"]
+    #[allow(non_camel_case_types)]
+    pub struct USB1_CHRG_DETECT_SET {
+        _not_send_or_sync: PhantomData<*mut ()>,
+    }
+    impl USB1_CHRG_DETECT_SET {
+        const OFFSET: usize = 0x14;
+        #[doc = r" Reset value"]
+        pub const RESET_VALUE: u32 = 0x0000_0000;
+        #[doc = r" Performs a single load operation on the memory-mapped register"]
+        pub fn read(&self) -> u32 {
+            unsafe { ((BASE_ADDRESS + Self::OFFSET) as *const u32).read_volatile() }
+        }
+        #[doc = r" Performs a single store operation on the memory-mapped register"]
+        #[allow(unused_unsafe)]
+        pub fn write(&self, bits: u32) {
+            unsafe { ((BASE_ADDRESS + Self::OFFSET) as *mut u32).write_volatile(bits) }
+        }
+        #[doc = r" Performs a read-modify-write on the memory-mapped register"]
+        #[doc = r""]
+        #[doc = r" This is a short-hand for `self.write(f(self.read()))`"]
+        #[allow(unused_unsafe)]
+        pub fn rmw(&self, f: impl FnOnce(u32) -> u32) {
+            self.write(f(self.read()))
+        }
+    }
+    #[doc = "USB Charger Detect Register"]
+    #[allow(non_camel_case_types)]
+    pub struct USB1_CHRG_DETECT_CLR {
+        _not_send_or_sync: PhantomData<*mut ()>,
+    }
+    impl USB1_CHRG_DETECT_CLR {
+        const OFFSET: usize = 0x18;
+        #[doc = r" Reset value"]
+        pub const RESET_VALUE: u32 = 0x0000_0000;
+        #[doc = r" Performs a single load operation on the memory-mapped register"]
+        pub fn read(&self) -> u32 {
+            unsafe { ((BASE_ADDRESS + Self::OFFSET) as *const u32).read_volatile() }
+        }
+        #[doc = r" Performs a single store operation on the memory-mapped register"]
+        #[allow(unused_unsafe)]
+        pub fn write(&self, bits: u32) {
+            unsafe { ((BASE_ADDRESS + Self::OFFSET) as *mut u32).write_volatile(bits) }
+        }
+        #[doc = r" Performs a read-modify-write on the memory-mapped register"]
+        #[doc = r""]
+        #[doc = r" This is a short-hand for `self.write(f(self.read()))`"]
+        #[allow(unused_unsafe)]
+        pub fn rmw(&self, f: impl FnOnce(u32) -> u32) {
+            self.write(f(self.read()))
+        }
+    }
+    #[doc = "USB Charger Detect Register"]
+    #[allow(non_camel_case_types)]
+    pub struct USB1_CHRG_DETECT_TOG {
+        _not_send_or_sync: PhantomData<*mut ()>,
+    }
+    impl USB1_CHRG_DETECT_TOG {
+        const OFFSET: usize = 0x1c;
+        #[doc = r" Reset value"]
+        pub const RESET_VALUE: u32 = 0x0000_0000;
+        #[doc = r" Performs a single load operation on the memory-mapped register"]
+        pub fn read(&self) -> u32 {
+            unsafe { ((BASE_ADDRESS + Self::OFFSET) as *const u32).read_volatile() }
+        }
+        #[doc = r" Performs a single store operation on the memory-mapped register"]
+        #[allow(unused_unsafe)]
+        pub fn write(&self, bits: u32) {
+            unsafe { ((BASE_ADDRESS + Self::OFFSET) as *mut u32).write_volatile(bits) }
+        }
+        #[doc = r" Performs a read-modify-write on the memory-mapped register"]
+        #[doc = r""]
+        #[doc = r" This is a short-hand for `self.write(f(self.read()))`"]
+        #[allow(unused_unsafe)]
+        pub fn rmw(&self, f: impl FnOnce(u32) -> u32) {
+            self.write(f(self.read()))
+        }
+    }
+    #[doc = "USB VBUS Detect Status Register"]
+    #[allow(non_camel_case_types)]
+    pub struct USB1_VBUS_DETECT_STAT {
+        _not_send_or_sync: PhantomData<*mut ()>,
+    }
+    impl USB1_VBUS_DETECT_STAT {
+        const OFFSET: usize = 0x20;
+        #[doc = r" Reset value"]
+        pub const RESET_VALUE: u32 = 0x0000_0000;
+        #[doc = r" Performs a single load operation on the memory-mapped register"]
+        pub fn read(&self) -> u32 {
+            unsafe { ((BASE_ADDRESS + Self::OFFSET) as *const u32).read_volatile() }
+        }
+    }
+    #[doc = "USB Charger Detect Status Register"]
+    #[allow(non_camel_case_types)]
+    pub struct USB1_CHRG_DETECT_STAT {
+        _not_send_or_sync: PhantomData<*mut ()>,
+    }
+    impl USB1_CHRG_DETECT_STAT {
+        const OFFSET: usize = 0x30;
+        #[doc = r" Reset value"]
+        pub const RESET_VALUE: u32 = 0x0000_0000;
+        #[doc = r" Performs a single load operation on the memory-mapped register"]
+        pub fn read(&self) -> u32 {
+            unsafe { ((BASE_ADDRESS + Self::OFFSET) as *const u32).read_volatile() }
+        }
+    }
+    #[doc = "USB Misc Register"]
+    #[allow(non_camel_case_types)]
+    pub struct USB1_MISC {
+        _not_send_or_sync: PhantomData<*mut ()>,
+    }
+    impl USB1_MISC {
+        const OFFSET: usize = 0x50;
+        #[doc = r" Reset value"]
+        pub const RESET_VALUE: u32 = 0x0000_0002;
+        #[doc = r" Performs a single load operation on the memory-mapped register"]
+        pub fn read(&self) -> u32 {
+            unsafe { ((BASE_ADDRESS + Self::OFFSET) as *const u32).read_volatile() }
+        }
+        #[doc = r" Performs a single store operation on the memory-mapped register"]
+        #[allow(unused_unsafe)]
+        pub fn write(&self, bits: u32) {
+            unsafe { ((BASE_ADDRESS + Self::OFFSET) as *mut u32).write_volatile(bits) }
+        }
+        #[doc = r" Performs a read-modify-write on the memory-mapped register"]
+        #[doc = r""]
+        #[doc = r" This is a short-hand for `self.write(f(self.read()))`"]
+        #[allow(unused_unsafe)]
+        pub fn rmw(&self, f: impl FnOnce(u32) -> u32) {
+            self.write(f(self.read()))
+        }
+    }
+    #[doc = "USB Misc Register"]
+    #[allow(non_camel_case_types)]
+    pub struct USB1_MISC_SET {
+        _not_send_or_sync: PhantomData<*mut ()>,
+    }
+    impl USB1_MISC_SET {
+        const OFFSET: usize = 0x54;
+        #[doc = r" Reset value"]
+        pub const RESET_VALUE: u32 = 0x0000_0002;
+        #[doc = r" Performs a single load operation on the memory-mapped register"]
+        pub fn read(&self) -> u32 {
+            unsafe { ((BASE_ADDRESS + Self::OFFSET) as *const u32).read_volatile() }
+        }
+        #[doc = r" Performs a single store operation on the memory-mapped register"]
+        #[allow(unused_unsafe)]
+        pub fn write(&self, bits: u32) {
+            unsafe { ((BASE_ADDRESS + Self::OFFSET) as *mut u32).write_volatile(bits) }
+        }
+        #[doc = r" Performs a read-modify-write on the memory-mapped register"]
+        #[doc = r""]
+        #[doc = r" This is a short-hand for `self.write(f(self.read()))`"]
+        #[allow(unused_unsafe)]
+        pub fn rmw(&self, f: impl FnOnce(u32) -> u32) {
+            self.write(f(self.read()))
+        }
+    }
+    #[doc = "USB Misc Register"]
+    #[allow(non_camel_case_types)]
+    pub struct USB1_MISC_CLR {
+        _not_send_or_sync: PhantomData<*mut ()>,
+    }
+    impl USB1_MISC_CLR {
+        const OFFSET: usize = 0x58;
+        #[doc = r" Reset value"]
+        pub const RESET_VALUE: u32 = 0x0000_0002;
+        #[doc = r" Performs a single load operation on the memory-mapped register"]
+        pub fn read(&self) -> u32 {
+            unsafe { ((BASE_ADDRESS + Self::OFFSET) as *const u32).read_volatile() }
+        }
+        #[doc = r" Performs a single store operation on the memory-mapped register"]
+        #[allow(unused_unsafe)]
+        pub fn write(&self, bits: u32) {
+            unsafe { ((BASE_ADDRESS + Self::OFFSET) as *mut u32).write_volatile(bits) }
+        }
+        #[doc = r" Performs a read-modify-write on the memory-mapped register"]
+        #[doc = r""]
+        #[doc = r" This is a short-hand for `self.write(f(self.read()))`"]
+        #[allow(unused_unsafe)]
+        pub fn rmw(&self, f: impl FnOnce(u32) -> u32) {
+            self.write(f(self.read()))
+        }
+    }
+    #[doc = "USB Misc Register"]
+    #[allow(non_camel_case_types)]
+    pub struct USB1_MISC_TOG {
+        _not_send_or_sync: PhantomData<*mut ()>,
+    }
+    impl USB1_MISC_TOG {
+        const OFFSET: usize = 0x5c;
+        #[doc = r" Reset value"]
+        pub const RESET_VALUE: u32 = 0x0000_0002;
+        #[doc = r" Performs a single load operation on the memory-mapped register"]
+        pub fn read(&self) -> u32 {
+            unsafe { ((BASE_ADDRESS + Self::OFFSET) as *const u32).read_volatile() }
+        }
+        #[doc = r" Performs a single store operation on the memory-mapped register"]
+        #[allow(unused_unsafe)]
+        pub fn write(&self, bits: u32) {
+            unsafe { ((BASE_ADDRESS + Self::OFFSET) as *mut u32).write_volatile(bits) }
+        }
+        #[doc = r" Performs a read-modify-write on the memory-mapped register"]
+        #[doc = r""]
+        #[doc = r" This is a short-hand for `self.write(f(self.read()))`"]
+        #[allow(unused_unsafe)]
+        pub fn rmw(&self, f: impl FnOnce(u32) -> u32) {
+            self.write(f(self.read()))
+        }
+    }
+    #[doc = "USB VBUS Detect Register"]
+    #[allow(non_camel_case_types)]
+    pub struct USB2_VBUS_DETECT {
+        _not_send_or_sync: PhantomData<*mut ()>,
+    }
+    impl USB2_VBUS_DETECT {
+        const OFFSET: usize = 0x60;
+        #[doc = r" Reset value"]
+        pub const RESET_VALUE: u32 = 0x0010_0004;
+        #[doc = r" Performs a single load operation on the memory-mapped register"]
+        pub fn read(&self) -> u32 {
+            unsafe { ((BASE_ADDRESS + Self::OFFSET) as *const u32).read_volatile() }
+        }
+        #[doc = r" Performs a single store operation on the memory-mapped register"]
+        #[allow(unused_unsafe)]
+        pub fn write(&self, bits: u32) {
+            unsafe { ((BASE_ADDRESS + Self::OFFSET) as *mut u32).write_volatile(bits) }
+        }
+        #[doc = r" Performs a read-modify-write on the memory-mapped register"]
+        #[doc = r""]
+        #[doc = r" This is a short-hand for `self.write(f(self.read()))`"]
+        #[allow(unused_unsafe)]
+        pub fn rmw(&self, f: impl FnOnce(u32) -> u32) {
+            self.write(f(self.read()))
+        }
+    }
+    #[doc = "USB VBUS Detect Register"]
+    #[allow(non_camel_case_types)]
+    pub struct USB2_VBUS_DETECT_SET {
+        _not_send_or_sync: PhantomData<*mut ()>,
+    }
+    impl USB2_VBUS_DETECT_SET {
+        const OFFSET: usize = 0x64;
+        #[doc = r" Reset value"]
+        pub const RESET_VALUE: u32 = 0x0010_0004;
+        #[doc = r" Performs a single load operation on the memory-mapped register"]
+        pub fn read(&self) -> u32 {
+            unsafe { ((BASE_ADDRESS + Self::OFFSET) as *const u32).read_volatile() }
+        }
+        #[doc = r" Performs a single store operation on the memory-mapped register"]
+        #[allow(unused_unsafe)]
+        pub fn write(&self, bits: u32) {
+            unsafe { ((BASE_ADDRESS + Self::OFFSET) as *mut u32).write_volatile(bits) }
+        }
+        #[doc = r" Performs a read-modify-write on the memory-mapped register"]
+        #[doc = r""]
+        #[doc = r" This is a short-hand for `self.write(f(self.read()))`"]
+        #[allow(unused_unsafe)]
+        pub fn rmw(&self, f: impl FnOnce(u32) -> u32) {
+            self.write(f(self.read()))
+        }
+    }
+    #[doc = "USB VBUS Detect Register"]
+    #[allow(non_camel_case_types)]
+    pub struct USB2_VBUS_DETECT_CLR {
+        _not_send_or_sync: PhantomData<*mut ()>,
+    }
+    impl USB2_VBUS_DETECT_CLR {
+        const OFFSET: usize = 0x68;
+        #[doc = r" Reset value"]
+        pub const RESET_VALUE: u32 = 0x0010_0004;
+        #[doc = r" Performs a single load operation on the memory-mapped register"]
+        pub fn read(&self) -> u32 {
+            unsafe { ((BASE_ADDRESS + Self::OFFSET) as *const u32).read_volatile() }
+        }
+        #[doc = r" Performs a single store operation on the memory-mapped register"]
+        #[allow(unused_unsafe)]
+        pub fn write(&self, bits: u32) {
+            unsafe { ((BASE_ADDRESS + Self::OFFSET) as *mut u32).write_volatile(bits) }
+        }
+        #[doc = r" Performs a read-modify-write on the memory-mapped register"]
+        #[doc = r""]
+        #[doc = r" This is a short-hand for `self.write(f(self.read()))`"]
+        #[allow(unused_unsafe)]
+        pub fn rmw(&self, f: impl FnOnce(u32) -> u32) {
+            self.write(f(self.read()))
+        }
+    }
+    #[doc = "USB VBUS Detect Register"]
+    #[allow(non_camel_case_types)]
+    pub struct USB2_VBUS_DETECT_TOG {
+        _not_send_or_sync: PhantomData<*mut ()>,
+    }
+    impl USB2_VBUS_DETECT_TOG {
+        const OFFSET: usize = 0x6c;
+        #[doc = r" Reset value"]
+        pub const RESET_VALUE: u32 = 0x0010_0004;
+        #[doc = r" Performs a single load operation on the memory-mapped register"]
+        pub fn read(&self) -> u32 {
+            unsafe { ((BASE_ADDRESS + Self::OFFSET) as *const u32).read_volatile() }
+        }
+        #[doc = r" Performs a single store operation on the memory-mapped register"]
+        #[allow(unused_unsafe)]
+        pub fn write(&self, bits: u32) {
+            unsafe { ((BASE_ADDRESS + Self::OFFSET) as *mut u32).write_volatile(bits) }
+        }
+        #[doc = r" Performs a read-modify-write on the memory-mapped register"]
+        #[doc = r""]
+        #[doc = r" This is a short-hand for `self.write(f(self.read()))`"]
+        #[allow(unused_unsafe)]
+        pub fn rmw(&self, f: impl FnOnce(u32) -> u32) {
+            self.write(f(self.read()))
+        }
+    }
+    #[doc = "USB Charger Detect Register"]
+    #[allow(non_camel_case_types)]
+    pub struct USB2_CHRG_DETECT {
+        _not_send_or_sync: PhantomData<*mut ()>,
+    }
+    impl USB2_CHRG_DETECT {
+        const OFFSET: usize = 0x70;
+        #[doc = r" Reset value"]
+        pub const RESET_VALUE: u32 = 0x0000_0000;
+        #[doc = r" Performs a single load operation on the memory-mapped register"]
+        pub fn read(&self) -> u32 {
+            unsafe { ((BASE_ADDRESS + Self::OFFSET) as *const u32).read_volatile() }
+        }
+        #[doc = r" Performs a single store operation on the memory-mapped register"]
+        #[allow(unused_unsafe)]
+        pub fn write(&self, bits: u32) {
+            unsafe { ((BASE_ADDRESS + Self::OFFSET) as *mut u32).write_volatile(bits) }
+        }
+        #[doc = r" Performs a read-modify-write on the memory-mapped register"]
+        #[doc = r""]
+        #[doc = r" This is a short-hand for `self.write(f(self.read()))`"]
+        #[allow(unused_unsafe)]
+        pub fn rmw(&self, f: impl FnOnce(u32) -> u32) {
+            self.write(f(self.read()))
+        }
+    }
+    #[doc = "USB Charger Detect Register"]
+    #[allow(non_camel_case_types)]
+    pub struct USB2_CHRG_DETECT_SET {
+        _not_send_or_sync: PhantomData<*mut ()>,
+    }
+    impl USB2_CHRG_DETECT_SET {
+        const OFFSET: usize = 0x74;
+        #[doc = r" Reset value"]
+        pub const RESET_VALUE: u32 = 0x0000_0000;
+        #[doc = r" Performs a single load operation on the memory-mapped register"]
+        pub fn read(&self) -> u32 {
+            unsafe { ((BASE_ADDRESS + Self::OFFSET) as *const u32).read_volatile() }
+        }
+        #[doc = r" Performs a single store operation on the memory-mapped register"]
+        #[allow(unused_unsafe)]
+        pub fn write(&self, bits: u32) {
+            unsafe { ((BASE_ADDRESS + Self::OFFSET) as *mut u32).write_volatile(bits) }
+        }
+        #[doc = r" Performs a read-modify-write on the memory-mapped register"]
+        #[doc = r""]
+        #[doc = r" This is a short-hand for `self.write(f(self.read()))`"]
+        #[allow(unused_unsafe)]
+        pub fn rmw(&self, f: impl FnOnce(u32) -> u32) {
+            self.write(f(self.read()))
+        }
+    }
+    #[doc = "USB Charger Detect Register"]
+    #[allow(non_camel_case_types)]
+    pub struct USB2_CHRG_DETECT_CLR {
+        _not_send_or_sync: PhantomData<*mut ()>,
+    }
+    impl USB2_CHRG_DETECT_CLR {
+        const OFFSET: usize = 0x78;
+        #[doc = r" Reset value"]
+        pub const RESET_VALUE: u32 = 0x0000_0000;
+        #[doc = r" Performs a single load operation on the memory-mapped register"]
+        pub fn read(&self) -> u32 {
+            unsafe { ((BASE_ADDRESS + Self::OFFSET) as *const u32).read_volatile() }
+        }
+        #[doc = r" Performs a single store operation on the memory-mapped register"]
+        #[allow(unused_unsafe)]
+        pub fn write(&self, bits: u32) {
+            unsafe { ((BASE_ADDRESS + Self::OFFSET) as *mut u32).write_volatile(bits) }
+        }
+        #[doc = r" Performs a read-modify-write on the memory-mapped register"]
+        #[doc = r""]
+        #[doc = r" This is a short-hand for `self.write(f(self.read()))`"]
+        #[allow(unused_unsafe)]
+        pub fn rmw(&self, f: impl FnOnce(u32) -> u32) {
+            self.write(f(self.read()))
+        }
+    }
+    #[doc = "USB Charger Detect Register"]
+    #[allow(non_camel_case_types)]
+    pub struct USB2_CHRG_DETECT_TOG {
+        _not_send_or_sync: PhantomData<*mut ()>,
+    }
+    impl USB2_CHRG_DETECT_TOG {
+        const OFFSET: usize = 0x7c;
+        #[doc = r" Reset value"]
+        pub const RESET_VALUE: u32 = 0x0000_0000;
+        #[doc = r" Performs a single load operation on the memory-mapped register"]
+        pub fn read(&self) -> u32 {
+            unsafe { ((BASE_ADDRESS + Self::OFFSET) as *const u32).read_volatile() }
+        }
+        #[doc = r" Performs a single store operation on the memory-mapped register"]
+        #[allow(unused_unsafe)]
+        pub fn write(&self, bits: u32) {
+            unsafe { ((BASE_ADDRESS + Self::OFFSET) as *mut u32).write_volatile(bits) }
+        }
+        #[doc = r" Performs a read-modify-write on the memory-mapped register"]
+        #[doc = r""]
+        #[doc = r" This is a short-hand for `self.write(f(self.read()))`"]
+        #[allow(unused_unsafe)]
+        pub fn rmw(&self, f: impl FnOnce(u32) -> u32) {
+            self.write(f(self.read()))
+        }
+    }
+    #[doc = "USB VBUS Detect Status Register"]
+    #[allow(non_camel_case_types)]
+    pub struct USB2_VBUS_DETECT_STAT {
+        _not_send_or_sync: PhantomData<*mut ()>,
+    }
+    impl USB2_VBUS_DETECT_STAT {
+        const OFFSET: usize = 0x80;
+        #[doc = r" Reset value"]
+        pub const RESET_VALUE: u32 = 0x0000_0000;
+        #[doc = r" Performs a single load operation on the memory-mapped register"]
+        pub fn read(&self) -> u32 {
+            unsafe { ((BASE_ADDRESS + Self::OFFSET) as *const u32).read_volatile() }
+        }
+    }
+    #[doc = "USB Charger Detect Status Register"]
+    #[allow(non_camel_case_types)]
+    pub struct USB2_CHRG_DETECT_STAT {
+        _not_send_or_sync: PhantomData<*mut ()>,
+    }
+    impl USB2_CHRG_DETECT_STAT {
+        const OFFSET: usize = 0x90;
+        #[doc = r" Reset value"]
+        pub const RESET_VALUE: u32 = 0x0000_0000;
+        #[doc = r" Performs a single load operation on the memory-mapped register"]
+        pub fn read(&self) -> u32 {
+            unsafe { ((BASE_ADDRESS + Self::OFFSET) as *const u32).read_volatile() }
+        }
+    }
+    #[doc = "USB Misc Register"]
+    #[allow(non_camel_case_types)]
+    pub struct USB2_MISC {
+        _not_send_or_sync: PhantomData<*mut ()>,
+    }
+    impl USB2_MISC {
+        const OFFSET: usize = 0xb0;
+        #[doc = r" Reset value"]
+        pub const RESET_VALUE: u32 = 0x0000_0002;
+        #[doc = r" Performs a single load operation on the memory-mapped register"]
+        pub fn read(&self) -> u32 {
+            unsafe { ((BASE_ADDRESS + Self::OFFSET) as *const u32).read_volatile() }
+        }
+        #[doc = r" Performs a single store operation on the memory-mapped register"]
+        #[allow(unused_unsafe)]
+        pub fn write(&self, bits: u32) {
+            unsafe { ((BASE_ADDRESS + Self::OFFSET) as *mut u32).write_volatile(bits) }
+        }
+        #[doc = r" Performs a read-modify-write on the memory-mapped register"]
+        #[doc = r""]
+        #[doc = r" This is a short-hand for `self.write(f(self.read()))`"]
+        #[allow(unused_unsafe)]
+        pub fn rmw(&self, f: impl FnOnce(u32) -> u32) {
+            self.write(f(self.read()))
+        }
+    }
+    #[doc = "USB Misc Register"]
+    #[allow(non_camel_case_types)]
+    pub struct USB2_MISC_SET {
+        _not_send_or_sync: PhantomData<*mut ()>,
+    }
+    impl USB2_MISC_SET {
+        const OFFSET: usize = 0xb4;
+        #[doc = r" Reset value"]
+        pub const RESET_VALUE: u32 = 0x0000_0002;
+        #[doc = r" Performs a single load operation on the memory-mapped register"]
+        pub fn read(&self) -> u32 {
+            unsafe { ((BASE_ADDRESS + Self::OFFSET) as *const u32).read_volatile() }
+        }
+        #[doc = r" Performs a single store operation on the memory-mapped register"]
+        #[allow(unused_unsafe)]
+        pub fn write(&self, bits: u32) {
+            unsafe { ((BASE_ADDRESS + Self::OFFSET) as *mut u32).write_volatile(bits) }
+        }
+        #[doc = r" Performs a read-modify-write on the memory-mapped register"]
+        #[doc = r""]
+        #[doc = r" This is a short-hand for `self.write(f(self.read()))`"]
+        #[allow(unused_unsafe)]
+        pub fn rmw(&self, f: impl FnOnce(u32) -> u32) {
+            self.write(f(self.read()))
+        }
+    }
+    #[doc = "USB Misc Register"]
+    #[allow(non_camel_case_types)]
+    pub struct USB2_MISC_CLR {
+        _not_send_or_sync: PhantomData<*mut ()>,
+    }
+    impl USB2_MISC_CLR {
+        const OFFSET: usize = 0xb8;
+        #[doc = r" Reset value"]
+        pub const RESET_VALUE: u32 = 0x0000_0002;
+        #[doc = r" Performs a single load operation on the memory-mapped register"]
+        pub fn read(&self) -> u32 {
+            unsafe { ((BASE_ADDRESS + Self::OFFSET) as *const u32).read_volatile() }
+        }
+        #[doc = r" Performs a single store operation on the memory-mapped register"]
+        #[allow(unused_unsafe)]
+        pub fn write(&self, bits: u32) {
+            unsafe { ((BASE_ADDRESS + Self::OFFSET) as *mut u32).write_volatile(bits) }
+        }
+        #[doc = r" Performs a read-modify-write on the memory-mapped register"]
+        #[doc = r""]
+        #[doc = r" This is a short-hand for `self.write(f(self.read()))`"]
+        #[allow(unused_unsafe)]
+        pub fn rmw(&self, f: impl FnOnce(u32) -> u32) {
+            self.write(f(self.read()))
+        }
+    }
+    #[doc = "USB Misc Register"]
+    #[allow(non_camel_case_types)]
+    pub struct USB2_MISC_TOG {
+        _not_send_or_sync: PhantomData<*mut ()>,
+    }
+    impl USB2_MISC_TOG {
+        const OFFSET: usize = 0xbc;
+        #[doc = r" Reset value"]
+        pub const RESET_VALUE: u32 = 0x0000_0002;
+        #[doc = r" Performs a single load operation on the memory-mapped register"]
+        pub fn read(&self) -> u32 {
+            unsafe { ((BASE_ADDRESS + Self::OFFSET) as *const u32).read_volatile() }
+        }
+        #[doc = r" Performs a single store operation on the memory-mapped register"]
+        #[allow(unused_unsafe)]
+        pub fn write(&self, bits: u32) {
+            unsafe { ((BASE_ADDRESS + Self::OFFSET) as *mut u32).write_volatile(bits) }
+        }
+        #[doc = r" Performs a read-modify-write on the memory-mapped register"]
+        #[doc = r""]
+        #[doc = r" This is a short-hand for `self.write(f(self.read()))`"]
+        #[allow(unused_unsafe)]
+        pub fn rmw(&self, f: impl FnOnce(u32) -> u32) {
+            self.write(f(self.read()))
+        }
+    }
+    #[doc = "Chip Silicon Version"]
+    #[allow(non_camel_case_types)]
+    pub struct DIGPROG {
+        _not_send_or_sync: PhantomData<*mut ()>,
+    }
+    impl DIGPROG {
+        const OFFSET: usize = 0xc0;
+        #[doc = r" Reset value"]
+        pub const RESET_VALUE: u32 = 0x0064_0000;
+        #[doc = r" Performs a single load operation on the memory-mapped register"]
+        pub fn read(&self) -> u32 {
+            unsafe { ((BASE_ADDRESS + Self::OFFSET) as *const u32).read_volatile() }
+        }
+    }
+    impl Registers {
+        #[doc = r" # Safety"]
+        #[doc = r""]
+        #[doc = r" Creates a singleton from thin air; make sure we"]
+        #[doc = r" never hand out two instances of it"]
+        unsafe fn new() -> Self {
+            Self {
+                _not_sync: PhantomData,
+                USB1_VBUS_DETECT: USB1_VBUS_DETECT {
+                    _not_send_or_sync: PhantomData,
+                },
+                USB1_VBUS_DETECT_SET: USB1_VBUS_DETECT_SET {
+                    _not_send_or_sync: PhantomData,
+                },
+                USB1_VBUS_DETECT_CLR: USB1_VBUS_DETECT_CLR {
+                    _not_send_or_sync: PhantomData,
+                },
+                USB1_VBUS_DETECT_TOG: USB1_VBUS_DETECT_TOG {
+                    _not_send_or_sync: PhantomData,
+                },
+                USB1_CHRG_DETECT: USB1_CHRG_DETECT {
+                    _not_send_or_sync: PhantomData,
+                },
+                USB1_CHRG_DETECT_SET: USB1_CHRG_DETECT_SET {
+                    _not_send_or_sync: PhantomData,
+                },
+                USB1_CHRG_DETECT_CLR: USB1_CHRG_DETECT_CLR {
+                    _not_send_or_sync: PhantomData,
+                },
+                USB1_CHRG_DETECT_TOG: USB1_CHRG_DETECT_TOG {
+                    _not_send_or_sync: PhantomData,
+                },
+                USB1_VBUS_DETECT_STAT: USB1_VBUS_DETECT_STAT {
+                    _not_send_or_sync: PhantomData,
+                },
+                USB1_CHRG_DETECT_STAT: USB1_CHRG_DETECT_STAT {
+                    _not_send_or_sync: PhantomData,
+                },
+                USB1_MISC: USB1_MISC {
+                    _not_send_or_sync: PhantomData,
+                },
+                USB1_MISC_SET: USB1_MISC_SET {
+                    _not_send_or_sync: PhantomData,
+                },
+                USB1_MISC_CLR: USB1_MISC_CLR {
+                    _not_send_or_sync: PhantomData,
+                },
+                USB1_MISC_TOG: USB1_MISC_TOG {
+                    _not_send_or_sync: PhantomData,
+                },
+                USB2_VBUS_DETECT: USB2_VBUS_DETECT {
+                    _not_send_or_sync: PhantomData,
+                },
+                USB2_VBUS_DETECT_SET: USB2_VBUS_DETECT_SET {
+                    _not_send_or_sync: PhantomData,
+                },
+                USB2_VBUS_DETECT_CLR: USB2_VBUS_DETECT_CLR {
+                    _not_send_or_sync: PhantomData,
+                },
+                USB2_VBUS_DETECT_TOG: USB2_VBUS_DETECT_TOG {
+                    _not_send_or_sync: PhantomData,
+                },
+                USB2_CHRG_DETECT: USB2_CHRG_DETECT {
+                    _not_send_or_sync: PhantomData,
+                },
+                USB2_CHRG_DETECT_SET: USB2_CHRG_DETECT_SET {
+                    _not_send_or_sync: PhantomData,
+                },
+                USB2_CHRG_DETECT_CLR: USB2_CHRG_DETECT_CLR {
+                    _not_send_or_sync: PhantomData,
+                },
+                USB2_CHRG_DETECT_TOG: USB2_CHRG_DETECT_TOG {
+                    _not_send_or_sync: PhantomData,
+                },
+                USB2_VBUS_DETECT_STAT: USB2_VBUS_DETECT_STAT {
+                    _not_send_or_sync: PhantomData,
+                },
+                USB2_CHRG_DETECT_STAT: USB2_CHRG_DETECT_STAT {
+                    _not_send_or_sync: PhantomData,
+                },
+                USB2_MISC: USB2_MISC {
+                    _not_send_or_sync: PhantomData,
+                },
+                USB2_MISC_SET: USB2_MISC_SET {
+                    _not_send_or_sync: PhantomData,
+                },
+                USB2_MISC_CLR: USB2_MISC_CLR {
+                    _not_send_or_sync: PhantomData,
+                },
+                USB2_MISC_TOG: USB2_MISC_TOG {
+                    _not_send_or_sync: PhantomData,
+                },
+                DIGPROG: DIGPROG {
+                    _not_send_or_sync: PhantomData,
+                },
+            }
+        }
+    }
+    #[allow(non_camel_case_types)]
+    #[doc = "USB_ANALOG"]
+    pub type USB_ANALOG = Registers;
+    impl USB_ANALOG {
+        #[doc = r" Takes the singleton that represents this peripheral instance"]
+        pub fn take() -> Option<Self> {
+            static TAKEN: AtomicBool = AtomicBool::new(false);
+            if TAKEN
+                .compare_exchange(false, true, Ordering::AcqRel, Ordering::Acquire)
+                .is_ok()
+            {
+                Some(unsafe { Registers::new() })
+            } else {
+                None
+            }
+        }
+        #[doc = r" Borrows the singleton without checking if it's"]
+        #[doc = r" currently being held by a context"]
+        #[doc = r""]
+        #[doc = r" **WARNING** this can break Read-Modify-Write"]
+        #[doc = r" operations being performed in other contexts."]
+        pub fn borrow_unchecked<T>(f: impl FnOnce(&Self) -> T) -> T {
+            f(&Registers {
+                _not_sync: PhantomData,
+                USB1_VBUS_DETECT: USB1_VBUS_DETECT {
+                    _not_send_or_sync: PhantomData,
+                },
+                USB1_VBUS_DETECT_SET: USB1_VBUS_DETECT_SET {
+                    _not_send_or_sync: PhantomData,
+                },
+                USB1_VBUS_DETECT_CLR: USB1_VBUS_DETECT_CLR {
+                    _not_send_or_sync: PhantomData,
+                },
+                USB1_VBUS_DETECT_TOG: USB1_VBUS_DETECT_TOG {
+                    _not_send_or_sync: PhantomData,
+                },
+                USB1_CHRG_DETECT: USB1_CHRG_DETECT {
+                    _not_send_or_sync: PhantomData,
+                },
+                USB1_CHRG_DETECT_SET: USB1_CHRG_DETECT_SET {
+                    _not_send_or_sync: PhantomData,
+                },
+                USB1_CHRG_DETECT_CLR: USB1_CHRG_DETECT_CLR {
+                    _not_send_or_sync: PhantomData,
+                },
+                USB1_CHRG_DETECT_TOG: USB1_CHRG_DETECT_TOG {
+                    _not_send_or_sync: PhantomData,
+                },
+                USB1_VBUS_DETECT_STAT: USB1_VBUS_DETECT_STAT {
+                    _not_send_or_sync: PhantomData,
+                },
+                USB1_CHRG_DETECT_STAT: USB1_CHRG_DETECT_STAT {
+                    _not_send_or_sync: PhantomData,
+                },
+                USB1_MISC: USB1_MISC {
+                    _not_send_or_sync: PhantomData,
+                },
+                USB1_MISC_SET: USB1_MISC_SET {
+                    _not_send_or_sync: PhantomData,
+                },
+                USB1_MISC_CLR: USB1_MISC_CLR {
+                    _not_send_or_sync: PhantomData,
+                },
+                USB1_MISC_TOG: USB1_MISC_TOG {
+                    _not_send_or_sync: PhantomData,
+                },
+                USB2_VBUS_DETECT: USB2_VBUS_DETECT {
+                    _not_send_or_sync: PhantomData,
+                },
+                USB2_VBUS_DETECT_SET: USB2_VBUS_DETECT_SET {
+                    _not_send_or_sync: PhantomData,
+                },
+                USB2_VBUS_DETECT_CLR: USB2_VBUS_DETECT_CLR {
+                    _not_send_or_sync: PhantomData,
+                },
+                USB2_VBUS_DETECT_TOG: USB2_VBUS_DETECT_TOG {
+                    _not_send_or_sync: PhantomData,
+                },
+                USB2_CHRG_DETECT: USB2_CHRG_DETECT {
+                    _not_send_or_sync: PhantomData,
+                },
+                USB2_CHRG_DETECT_SET: USB2_CHRG_DETECT_SET {
+                    _not_send_or_sync: PhantomData,
+                },
+                USB2_CHRG_DETECT_CLR: USB2_CHRG_DETECT_CLR {
+                    _not_send_or_sync: PhantomData,
+                },
+                USB2_CHRG_DETECT_TOG: USB2_CHRG_DETECT_TOG {
+                    _not_send_or_sync: PhantomData,
+                },
+                USB2_VBUS_DETECT_STAT: USB2_VBUS_DETECT_STAT {
+                    _not_send_or_sync: PhantomData,
+                },
+                USB2_CHRG_DETECT_STAT: USB2_CHRG_DETECT_STAT {
+                    _not_send_or_sync: PhantomData,
+                },
+                USB2_MISC: USB2_MISC {
+                    _not_send_or_sync: PhantomData,
+                },
+                USB2_MISC_SET: USB2_MISC_SET {
+                    _not_send_or_sync: PhantomData,
+                },
+                USB2_MISC_CLR: USB2_MISC_CLR {
+                    _not_send_or_sync: PhantomData,
+                },
+                USB2_MISC_TOG: USB2_MISC_TOG {
+                    _not_send_or_sync: PhantomData,
+                },
+                DIGPROG: DIGPROG {
+                    _not_send_or_sync: PhantomData,
+                },
+            })
+        }
+    }
+}
+#[allow(non_snake_case)]
 #[doc = "USBNC_USB"]
 pub mod usbnc_usb {
     use core::{
@@ -2010,6 +5164,13 @@ pub mod usbnc_usb {
         pub fn write(&self, bits: u32) {
             unsafe { ((BASE_ADDRESS + Self::OFFSET) as *mut u32).write_volatile(bits) }
         }
+        #[doc = r" Performs a read-modify-write on the memory-mapped register"]
+        #[doc = r""]
+        #[doc = r" This is a short-hand for `self.write(f(self.read()))`"]
+        #[allow(unused_unsafe)]
+        pub fn rmw(&self, f: impl FnOnce(u32) -> u32) {
+            self.write(f(self.read()))
+        }
     }
     #[doc = "USB OTG2 Control Register"]
     #[allow(non_camel_case_types)]
@@ -2028,6 +5189,13 @@ pub mod usbnc_usb {
         #[allow(unused_unsafe)]
         pub fn write(&self, bits: u32) {
             unsafe { ((BASE_ADDRESS + Self::OFFSET) as *mut u32).write_volatile(bits) }
+        }
+        #[doc = r" Performs a read-modify-write on the memory-mapped register"]
+        #[doc = r""]
+        #[doc = r" This is a short-hand for `self.write(f(self.read()))`"]
+        #[allow(unused_unsafe)]
+        pub fn rmw(&self, f: impl FnOnce(u32) -> u32) {
+            self.write(f(self.read()))
         }
     }
     #[doc = "OTG1 UTMI PHY Control 0 Register"]
@@ -2048,6 +5216,13 @@ pub mod usbnc_usb {
         pub fn write(&self, bits: u32) {
             unsafe { ((BASE_ADDRESS + Self::OFFSET) as *mut u32).write_volatile(bits) }
         }
+        #[doc = r" Performs a read-modify-write on the memory-mapped register"]
+        #[doc = r""]
+        #[doc = r" This is a short-hand for `self.write(f(self.read()))`"]
+        #[allow(unused_unsafe)]
+        pub fn rmw(&self, f: impl FnOnce(u32) -> u32) {
+            self.write(f(self.read()))
+        }
     }
     #[doc = "OTG2 UTMI PHY Control 0 Register"]
     #[allow(non_camel_case_types)]
@@ -2066,6 +5241,13 @@ pub mod usbnc_usb {
         #[allow(unused_unsafe)]
         pub fn write(&self, bits: u32) {
             unsafe { ((BASE_ADDRESS + Self::OFFSET) as *mut u32).write_volatile(bits) }
+        }
+        #[doc = r" Performs a read-modify-write on the memory-mapped register"]
+        #[doc = r""]
+        #[doc = r" This is a short-hand for `self.write(f(self.read()))`"]
+        #[allow(unused_unsafe)]
+        pub fn rmw(&self, f: impl FnOnce(u32) -> u32) {
+            self.write(f(self.read()))
         }
     }
     impl Registers {
@@ -2128,6 +5310,1129 @@ pub mod usbnc_usb {
                     _not_send_or_sync: PhantomData,
                 },
             })
+        }
+    }
+}
+#[allow(non_snake_case)]
+#[doc = "USBPHY"]
+pub mod usbphy {
+    use crate::Peripheral;
+    use core::{
+        marker::PhantomData,
+        sync::atomic::{AtomicBool, Ordering},
+    };
+    #[doc = r" The registers that make up the peripheral"]
+    #[allow(non_snake_case)]
+    pub struct Registers<P>
+    where
+        P: Peripheral,
+    {
+        _p: PhantomData<P>,
+        _not_sync: PhantomData<*mut ()>,
+        #[doc = "USB PHY Power-Down Register"]
+        pub PWD: PWD<P>,
+        #[doc = "USB PHY Power-Down Register"]
+        pub PWD_SET: PWD_SET<P>,
+        #[doc = "USB PHY Power-Down Register"]
+        pub PWD_CLR: PWD_CLR<P>,
+        #[doc = "USB PHY Power-Down Register"]
+        pub PWD_TOG: PWD_TOG<P>,
+        #[doc = "USB PHY Transmitter Control Register"]
+        pub TX: TX<P>,
+        #[doc = "USB PHY Transmitter Control Register"]
+        pub TX_SET: TX_SET<P>,
+        #[doc = "USB PHY Transmitter Control Register"]
+        pub TX_CLR: TX_CLR<P>,
+        #[doc = "USB PHY Transmitter Control Register"]
+        pub TX_TOG: TX_TOG<P>,
+        #[doc = "USB PHY Receiver Control Register"]
+        pub RX: RX<P>,
+        #[doc = "USB PHY Receiver Control Register"]
+        pub RX_SET: RX_SET<P>,
+        #[doc = "USB PHY Receiver Control Register"]
+        pub RX_CLR: RX_CLR<P>,
+        #[doc = "USB PHY Receiver Control Register"]
+        pub RX_TOG: RX_TOG<P>,
+        #[doc = "USB PHY General Control Register"]
+        pub CTRL: CTRL<P>,
+        #[doc = "USB PHY General Control Register"]
+        pub CTRL_SET: CTRL_SET<P>,
+        #[doc = "USB PHY General Control Register"]
+        pub CTRL_CLR: CTRL_CLR<P>,
+        #[doc = "USB PHY General Control Register"]
+        pub CTRL_TOG: CTRL_TOG<P>,
+        #[doc = "USB PHY Status Register"]
+        pub STATUS: STATUS<P>,
+        #[doc = "USB PHY Debug Register"]
+        pub DEBUG: DEBUG<P>,
+        #[doc = "USB PHY Debug Register"]
+        pub DEBUG_SET: DEBUG_SET<P>,
+        #[doc = "USB PHY Debug Register"]
+        pub DEBUG_CLR: DEBUG_CLR<P>,
+        #[doc = "USB PHY Debug Register"]
+        pub DEBUG_TOG: DEBUG_TOG<P>,
+        #[doc = "UTMI Debug Status Register 0"]
+        pub DEBUG0_STATUS: DEBUG0_STATUS<P>,
+        #[doc = "UTMI Debug Status Register 1"]
+        pub DEBUG1: DEBUG1<P>,
+        #[doc = "UTMI Debug Status Register 1"]
+        pub DEBUG1_SET: DEBUG1_SET<P>,
+        #[doc = "UTMI Debug Status Register 1"]
+        pub DEBUG1_CLR: DEBUG1_CLR<P>,
+        #[doc = "UTMI Debug Status Register 1"]
+        pub DEBUG1_TOG: DEBUG1_TOG<P>,
+        #[doc = "UTMI RTL Version"]
+        pub VERSION: VERSION<P>,
+    }
+    unsafe impl<P> Send for Registers<P> where P: Peripheral {}
+    #[doc = "USB PHY Power-Down Register"]
+    #[allow(non_camel_case_types)]
+    pub struct PWD<P>
+    where
+        P: Peripheral,
+    {
+        _p: PhantomData<P>,
+        _not_send_or_sync: PhantomData<*mut ()>,
+    }
+    impl<P> PWD<P>
+    where
+        P: Peripheral,
+    {
+        const OFFSET: usize = 0x00;
+        #[doc = r" Reset value"]
+        pub const RESET_VALUE: u32 = 0x001e_1c00;
+        #[doc = r" Performs a single load operation on the memory-mapped register"]
+        pub fn read(&self) -> u32 {
+            unsafe { ((P::BASE_ADDRESS + Self::OFFSET) as *const u32).read_volatile() }
+        }
+        #[doc = r" Performs a single store operation on the memory-mapped register"]
+        #[allow(unused_unsafe)]
+        pub fn write(&self, bits: u32) {
+            unsafe { ((P::BASE_ADDRESS + Self::OFFSET) as *mut u32).write_volatile(bits) }
+        }
+        #[doc = r" Performs a read-modify-write on the memory-mapped register"]
+        #[doc = r""]
+        #[doc = r" This is a short-hand for `self.write(f(self.read()))`"]
+        #[allow(unused_unsafe)]
+        pub fn rmw(&self, f: impl FnOnce(u32) -> u32) {
+            self.write(f(self.read()))
+        }
+    }
+    #[doc = "USB PHY Power-Down Register"]
+    #[allow(non_camel_case_types)]
+    pub struct PWD_SET<P>
+    where
+        P: Peripheral,
+    {
+        _p: PhantomData<P>,
+        _not_send_or_sync: PhantomData<*mut ()>,
+    }
+    impl<P> PWD_SET<P>
+    where
+        P: Peripheral,
+    {
+        const OFFSET: usize = 0x04;
+        #[doc = r" Reset value"]
+        pub const RESET_VALUE: u32 = 0x001e_1c00;
+        #[doc = r" Performs a single load operation on the memory-mapped register"]
+        pub fn read(&self) -> u32 {
+            unsafe { ((P::BASE_ADDRESS + Self::OFFSET) as *const u32).read_volatile() }
+        }
+        #[doc = r" Performs a single store operation on the memory-mapped register"]
+        #[allow(unused_unsafe)]
+        pub fn write(&self, bits: u32) {
+            unsafe { ((P::BASE_ADDRESS + Self::OFFSET) as *mut u32).write_volatile(bits) }
+        }
+        #[doc = r" Performs a read-modify-write on the memory-mapped register"]
+        #[doc = r""]
+        #[doc = r" This is a short-hand for `self.write(f(self.read()))`"]
+        #[allow(unused_unsafe)]
+        pub fn rmw(&self, f: impl FnOnce(u32) -> u32) {
+            self.write(f(self.read()))
+        }
+    }
+    #[doc = "USB PHY Power-Down Register"]
+    #[allow(non_camel_case_types)]
+    pub struct PWD_CLR<P>
+    where
+        P: Peripheral,
+    {
+        _p: PhantomData<P>,
+        _not_send_or_sync: PhantomData<*mut ()>,
+    }
+    impl<P> PWD_CLR<P>
+    where
+        P: Peripheral,
+    {
+        const OFFSET: usize = 0x08;
+        #[doc = r" Reset value"]
+        pub const RESET_VALUE: u32 = 0x001e_1c00;
+        #[doc = r" Performs a single load operation on the memory-mapped register"]
+        pub fn read(&self) -> u32 {
+            unsafe { ((P::BASE_ADDRESS + Self::OFFSET) as *const u32).read_volatile() }
+        }
+        #[doc = r" Performs a single store operation on the memory-mapped register"]
+        #[allow(unused_unsafe)]
+        pub fn write(&self, bits: u32) {
+            unsafe { ((P::BASE_ADDRESS + Self::OFFSET) as *mut u32).write_volatile(bits) }
+        }
+        #[doc = r" Performs a read-modify-write on the memory-mapped register"]
+        #[doc = r""]
+        #[doc = r" This is a short-hand for `self.write(f(self.read()))`"]
+        #[allow(unused_unsafe)]
+        pub fn rmw(&self, f: impl FnOnce(u32) -> u32) {
+            self.write(f(self.read()))
+        }
+    }
+    #[doc = "USB PHY Power-Down Register"]
+    #[allow(non_camel_case_types)]
+    pub struct PWD_TOG<P>
+    where
+        P: Peripheral,
+    {
+        _p: PhantomData<P>,
+        _not_send_or_sync: PhantomData<*mut ()>,
+    }
+    impl<P> PWD_TOG<P>
+    where
+        P: Peripheral,
+    {
+        const OFFSET: usize = 0x0c;
+        #[doc = r" Reset value"]
+        pub const RESET_VALUE: u32 = 0x001e_1c00;
+        #[doc = r" Performs a single load operation on the memory-mapped register"]
+        pub fn read(&self) -> u32 {
+            unsafe { ((P::BASE_ADDRESS + Self::OFFSET) as *const u32).read_volatile() }
+        }
+        #[doc = r" Performs a single store operation on the memory-mapped register"]
+        #[allow(unused_unsafe)]
+        pub fn write(&self, bits: u32) {
+            unsafe { ((P::BASE_ADDRESS + Self::OFFSET) as *mut u32).write_volatile(bits) }
+        }
+        #[doc = r" Performs a read-modify-write on the memory-mapped register"]
+        #[doc = r""]
+        #[doc = r" This is a short-hand for `self.write(f(self.read()))`"]
+        #[allow(unused_unsafe)]
+        pub fn rmw(&self, f: impl FnOnce(u32) -> u32) {
+            self.write(f(self.read()))
+        }
+    }
+    #[doc = "USB PHY Transmitter Control Register"]
+    #[allow(non_camel_case_types)]
+    pub struct TX<P>
+    where
+        P: Peripheral,
+    {
+        _p: PhantomData<P>,
+        _not_send_or_sync: PhantomData<*mut ()>,
+    }
+    impl<P> TX<P>
+    where
+        P: Peripheral,
+    {
+        const OFFSET: usize = 0x10;
+        #[doc = r" Reset value"]
+        pub const RESET_VALUE: u32 = 0x1006_0607;
+        #[doc = r" Performs a single load operation on the memory-mapped register"]
+        pub fn read(&self) -> u32 {
+            unsafe { ((P::BASE_ADDRESS + Self::OFFSET) as *const u32).read_volatile() }
+        }
+        #[doc = r" Performs a single store operation on the memory-mapped register"]
+        #[allow(unused_unsafe)]
+        pub fn write(&self, bits: u32) {
+            unsafe { ((P::BASE_ADDRESS + Self::OFFSET) as *mut u32).write_volatile(bits) }
+        }
+        #[doc = r" Performs a read-modify-write on the memory-mapped register"]
+        #[doc = r""]
+        #[doc = r" This is a short-hand for `self.write(f(self.read()))`"]
+        #[allow(unused_unsafe)]
+        pub fn rmw(&self, f: impl FnOnce(u32) -> u32) {
+            self.write(f(self.read()))
+        }
+    }
+    #[doc = "USB PHY Transmitter Control Register"]
+    #[allow(non_camel_case_types)]
+    pub struct TX_SET<P>
+    where
+        P: Peripheral,
+    {
+        _p: PhantomData<P>,
+        _not_send_or_sync: PhantomData<*mut ()>,
+    }
+    impl<P> TX_SET<P>
+    where
+        P: Peripheral,
+    {
+        const OFFSET: usize = 0x14;
+        #[doc = r" Reset value"]
+        pub const RESET_VALUE: u32 = 0x1006_0607;
+        #[doc = r" Performs a single load operation on the memory-mapped register"]
+        pub fn read(&self) -> u32 {
+            unsafe { ((P::BASE_ADDRESS + Self::OFFSET) as *const u32).read_volatile() }
+        }
+        #[doc = r" Performs a single store operation on the memory-mapped register"]
+        #[allow(unused_unsafe)]
+        pub fn write(&self, bits: u32) {
+            unsafe { ((P::BASE_ADDRESS + Self::OFFSET) as *mut u32).write_volatile(bits) }
+        }
+        #[doc = r" Performs a read-modify-write on the memory-mapped register"]
+        #[doc = r""]
+        #[doc = r" This is a short-hand for `self.write(f(self.read()))`"]
+        #[allow(unused_unsafe)]
+        pub fn rmw(&self, f: impl FnOnce(u32) -> u32) {
+            self.write(f(self.read()))
+        }
+    }
+    #[doc = "USB PHY Transmitter Control Register"]
+    #[allow(non_camel_case_types)]
+    pub struct TX_CLR<P>
+    where
+        P: Peripheral,
+    {
+        _p: PhantomData<P>,
+        _not_send_or_sync: PhantomData<*mut ()>,
+    }
+    impl<P> TX_CLR<P>
+    where
+        P: Peripheral,
+    {
+        const OFFSET: usize = 0x18;
+        #[doc = r" Reset value"]
+        pub const RESET_VALUE: u32 = 0x1006_0607;
+        #[doc = r" Performs a single load operation on the memory-mapped register"]
+        pub fn read(&self) -> u32 {
+            unsafe { ((P::BASE_ADDRESS + Self::OFFSET) as *const u32).read_volatile() }
+        }
+        #[doc = r" Performs a single store operation on the memory-mapped register"]
+        #[allow(unused_unsafe)]
+        pub fn write(&self, bits: u32) {
+            unsafe { ((P::BASE_ADDRESS + Self::OFFSET) as *mut u32).write_volatile(bits) }
+        }
+        #[doc = r" Performs a read-modify-write on the memory-mapped register"]
+        #[doc = r""]
+        #[doc = r" This is a short-hand for `self.write(f(self.read()))`"]
+        #[allow(unused_unsafe)]
+        pub fn rmw(&self, f: impl FnOnce(u32) -> u32) {
+            self.write(f(self.read()))
+        }
+    }
+    #[doc = "USB PHY Transmitter Control Register"]
+    #[allow(non_camel_case_types)]
+    pub struct TX_TOG<P>
+    where
+        P: Peripheral,
+    {
+        _p: PhantomData<P>,
+        _not_send_or_sync: PhantomData<*mut ()>,
+    }
+    impl<P> TX_TOG<P>
+    where
+        P: Peripheral,
+    {
+        const OFFSET: usize = 0x1c;
+        #[doc = r" Reset value"]
+        pub const RESET_VALUE: u32 = 0x1006_0607;
+        #[doc = r" Performs a single load operation on the memory-mapped register"]
+        pub fn read(&self) -> u32 {
+            unsafe { ((P::BASE_ADDRESS + Self::OFFSET) as *const u32).read_volatile() }
+        }
+        #[doc = r" Performs a single store operation on the memory-mapped register"]
+        #[allow(unused_unsafe)]
+        pub fn write(&self, bits: u32) {
+            unsafe { ((P::BASE_ADDRESS + Self::OFFSET) as *mut u32).write_volatile(bits) }
+        }
+        #[doc = r" Performs a read-modify-write on the memory-mapped register"]
+        #[doc = r""]
+        #[doc = r" This is a short-hand for `self.write(f(self.read()))`"]
+        #[allow(unused_unsafe)]
+        pub fn rmw(&self, f: impl FnOnce(u32) -> u32) {
+            self.write(f(self.read()))
+        }
+    }
+    #[doc = "USB PHY Receiver Control Register"]
+    #[allow(non_camel_case_types)]
+    pub struct RX<P>
+    where
+        P: Peripheral,
+    {
+        _p: PhantomData<P>,
+        _not_send_or_sync: PhantomData<*mut ()>,
+    }
+    impl<P> RX<P>
+    where
+        P: Peripheral,
+    {
+        const OFFSET: usize = 0x20;
+        #[doc = r" Reset value"]
+        pub const RESET_VALUE: u32 = 0x0000_0000;
+        #[doc = r" Performs a single load operation on the memory-mapped register"]
+        pub fn read(&self) -> u32 {
+            unsafe { ((P::BASE_ADDRESS + Self::OFFSET) as *const u32).read_volatile() }
+        }
+        #[doc = r" Performs a single store operation on the memory-mapped register"]
+        #[allow(unused_unsafe)]
+        pub fn write(&self, bits: u32) {
+            unsafe { ((P::BASE_ADDRESS + Self::OFFSET) as *mut u32).write_volatile(bits) }
+        }
+        #[doc = r" Performs a read-modify-write on the memory-mapped register"]
+        #[doc = r""]
+        #[doc = r" This is a short-hand for `self.write(f(self.read()))`"]
+        #[allow(unused_unsafe)]
+        pub fn rmw(&self, f: impl FnOnce(u32) -> u32) {
+            self.write(f(self.read()))
+        }
+    }
+    #[doc = "USB PHY Receiver Control Register"]
+    #[allow(non_camel_case_types)]
+    pub struct RX_SET<P>
+    where
+        P: Peripheral,
+    {
+        _p: PhantomData<P>,
+        _not_send_or_sync: PhantomData<*mut ()>,
+    }
+    impl<P> RX_SET<P>
+    where
+        P: Peripheral,
+    {
+        const OFFSET: usize = 0x24;
+        #[doc = r" Reset value"]
+        pub const RESET_VALUE: u32 = 0x0000_0000;
+        #[doc = r" Performs a single load operation on the memory-mapped register"]
+        pub fn read(&self) -> u32 {
+            unsafe { ((P::BASE_ADDRESS + Self::OFFSET) as *const u32).read_volatile() }
+        }
+        #[doc = r" Performs a single store operation on the memory-mapped register"]
+        #[allow(unused_unsafe)]
+        pub fn write(&self, bits: u32) {
+            unsafe { ((P::BASE_ADDRESS + Self::OFFSET) as *mut u32).write_volatile(bits) }
+        }
+        #[doc = r" Performs a read-modify-write on the memory-mapped register"]
+        #[doc = r""]
+        #[doc = r" This is a short-hand for `self.write(f(self.read()))`"]
+        #[allow(unused_unsafe)]
+        pub fn rmw(&self, f: impl FnOnce(u32) -> u32) {
+            self.write(f(self.read()))
+        }
+    }
+    #[doc = "USB PHY Receiver Control Register"]
+    #[allow(non_camel_case_types)]
+    pub struct RX_CLR<P>
+    where
+        P: Peripheral,
+    {
+        _p: PhantomData<P>,
+        _not_send_or_sync: PhantomData<*mut ()>,
+    }
+    impl<P> RX_CLR<P>
+    where
+        P: Peripheral,
+    {
+        const OFFSET: usize = 0x28;
+        #[doc = r" Reset value"]
+        pub const RESET_VALUE: u32 = 0x0000_0000;
+        #[doc = r" Performs a single load operation on the memory-mapped register"]
+        pub fn read(&self) -> u32 {
+            unsafe { ((P::BASE_ADDRESS + Self::OFFSET) as *const u32).read_volatile() }
+        }
+        #[doc = r" Performs a single store operation on the memory-mapped register"]
+        #[allow(unused_unsafe)]
+        pub fn write(&self, bits: u32) {
+            unsafe { ((P::BASE_ADDRESS + Self::OFFSET) as *mut u32).write_volatile(bits) }
+        }
+        #[doc = r" Performs a read-modify-write on the memory-mapped register"]
+        #[doc = r""]
+        #[doc = r" This is a short-hand for `self.write(f(self.read()))`"]
+        #[allow(unused_unsafe)]
+        pub fn rmw(&self, f: impl FnOnce(u32) -> u32) {
+            self.write(f(self.read()))
+        }
+    }
+    #[doc = "USB PHY Receiver Control Register"]
+    #[allow(non_camel_case_types)]
+    pub struct RX_TOG<P>
+    where
+        P: Peripheral,
+    {
+        _p: PhantomData<P>,
+        _not_send_or_sync: PhantomData<*mut ()>,
+    }
+    impl<P> RX_TOG<P>
+    where
+        P: Peripheral,
+    {
+        const OFFSET: usize = 0x2c;
+        #[doc = r" Reset value"]
+        pub const RESET_VALUE: u32 = 0x0000_0000;
+        #[doc = r" Performs a single load operation on the memory-mapped register"]
+        pub fn read(&self) -> u32 {
+            unsafe { ((P::BASE_ADDRESS + Self::OFFSET) as *const u32).read_volatile() }
+        }
+        #[doc = r" Performs a single store operation on the memory-mapped register"]
+        #[allow(unused_unsafe)]
+        pub fn write(&self, bits: u32) {
+            unsafe { ((P::BASE_ADDRESS + Self::OFFSET) as *mut u32).write_volatile(bits) }
+        }
+        #[doc = r" Performs a read-modify-write on the memory-mapped register"]
+        #[doc = r""]
+        #[doc = r" This is a short-hand for `self.write(f(self.read()))`"]
+        #[allow(unused_unsafe)]
+        pub fn rmw(&self, f: impl FnOnce(u32) -> u32) {
+            self.write(f(self.read()))
+        }
+    }
+    #[doc = "USB PHY General Control Register"]
+    #[allow(non_camel_case_types)]
+    pub struct CTRL<P>
+    where
+        P: Peripheral,
+    {
+        _p: PhantomData<P>,
+        _not_send_or_sync: PhantomData<*mut ()>,
+    }
+    impl<P> CTRL<P>
+    where
+        P: Peripheral,
+    {
+        const OFFSET: usize = 0x30;
+        #[doc = r" Reset value"]
+        pub const RESET_VALUE: u32 = 0xc020_0000;
+        #[doc = r" Performs a single load operation on the memory-mapped register"]
+        pub fn read(&self) -> u32 {
+            unsafe { ((P::BASE_ADDRESS + Self::OFFSET) as *const u32).read_volatile() }
+        }
+        #[doc = r" Performs a single store operation on the memory-mapped register"]
+        #[allow(unused_unsafe)]
+        pub fn write(&self, bits: u32) {
+            unsafe { ((P::BASE_ADDRESS + Self::OFFSET) as *mut u32).write_volatile(bits) }
+        }
+        #[doc = r" Performs a read-modify-write on the memory-mapped register"]
+        #[doc = r""]
+        #[doc = r" This is a short-hand for `self.write(f(self.read()))`"]
+        #[allow(unused_unsafe)]
+        pub fn rmw(&self, f: impl FnOnce(u32) -> u32) {
+            self.write(f(self.read()))
+        }
+    }
+    #[doc = "USB PHY General Control Register"]
+    #[allow(non_camel_case_types)]
+    pub struct CTRL_SET<P>
+    where
+        P: Peripheral,
+    {
+        _p: PhantomData<P>,
+        _not_send_or_sync: PhantomData<*mut ()>,
+    }
+    impl<P> CTRL_SET<P>
+    where
+        P: Peripheral,
+    {
+        const OFFSET: usize = 0x34;
+        #[doc = r" Reset value"]
+        pub const RESET_VALUE: u32 = 0xc020_0000;
+        #[doc = r" Performs a single load operation on the memory-mapped register"]
+        pub fn read(&self) -> u32 {
+            unsafe { ((P::BASE_ADDRESS + Self::OFFSET) as *const u32).read_volatile() }
+        }
+        #[doc = r" Performs a single store operation on the memory-mapped register"]
+        #[allow(unused_unsafe)]
+        pub fn write(&self, bits: u32) {
+            unsafe { ((P::BASE_ADDRESS + Self::OFFSET) as *mut u32).write_volatile(bits) }
+        }
+        #[doc = r" Performs a read-modify-write on the memory-mapped register"]
+        #[doc = r""]
+        #[doc = r" This is a short-hand for `self.write(f(self.read()))`"]
+        #[allow(unused_unsafe)]
+        pub fn rmw(&self, f: impl FnOnce(u32) -> u32) {
+            self.write(f(self.read()))
+        }
+    }
+    #[doc = "USB PHY General Control Register"]
+    #[allow(non_camel_case_types)]
+    pub struct CTRL_CLR<P>
+    where
+        P: Peripheral,
+    {
+        _p: PhantomData<P>,
+        _not_send_or_sync: PhantomData<*mut ()>,
+    }
+    impl<P> CTRL_CLR<P>
+    where
+        P: Peripheral,
+    {
+        const OFFSET: usize = 0x38;
+        #[doc = r" Reset value"]
+        pub const RESET_VALUE: u32 = 0xc020_0000;
+        #[doc = r" Performs a single load operation on the memory-mapped register"]
+        pub fn read(&self) -> u32 {
+            unsafe { ((P::BASE_ADDRESS + Self::OFFSET) as *const u32).read_volatile() }
+        }
+        #[doc = r" Performs a single store operation on the memory-mapped register"]
+        #[allow(unused_unsafe)]
+        pub fn write(&self, bits: u32) {
+            unsafe { ((P::BASE_ADDRESS + Self::OFFSET) as *mut u32).write_volatile(bits) }
+        }
+        #[doc = r" Performs a read-modify-write on the memory-mapped register"]
+        #[doc = r""]
+        #[doc = r" This is a short-hand for `self.write(f(self.read()))`"]
+        #[allow(unused_unsafe)]
+        pub fn rmw(&self, f: impl FnOnce(u32) -> u32) {
+            self.write(f(self.read()))
+        }
+    }
+    #[doc = "USB PHY General Control Register"]
+    #[allow(non_camel_case_types)]
+    pub struct CTRL_TOG<P>
+    where
+        P: Peripheral,
+    {
+        _p: PhantomData<P>,
+        _not_send_or_sync: PhantomData<*mut ()>,
+    }
+    impl<P> CTRL_TOG<P>
+    where
+        P: Peripheral,
+    {
+        const OFFSET: usize = 0x3c;
+        #[doc = r" Reset value"]
+        pub const RESET_VALUE: u32 = 0xc020_0000;
+        #[doc = r" Performs a single load operation on the memory-mapped register"]
+        pub fn read(&self) -> u32 {
+            unsafe { ((P::BASE_ADDRESS + Self::OFFSET) as *const u32).read_volatile() }
+        }
+        #[doc = r" Performs a single store operation on the memory-mapped register"]
+        #[allow(unused_unsafe)]
+        pub fn write(&self, bits: u32) {
+            unsafe { ((P::BASE_ADDRESS + Self::OFFSET) as *mut u32).write_volatile(bits) }
+        }
+        #[doc = r" Performs a read-modify-write on the memory-mapped register"]
+        #[doc = r""]
+        #[doc = r" This is a short-hand for `self.write(f(self.read()))`"]
+        #[allow(unused_unsafe)]
+        pub fn rmw(&self, f: impl FnOnce(u32) -> u32) {
+            self.write(f(self.read()))
+        }
+    }
+    #[doc = "USB PHY Status Register"]
+    #[allow(non_camel_case_types)]
+    pub struct STATUS<P>
+    where
+        P: Peripheral,
+    {
+        _p: PhantomData<P>,
+        _not_send_or_sync: PhantomData<*mut ()>,
+    }
+    impl<P> STATUS<P>
+    where
+        P: Peripheral,
+    {
+        const OFFSET: usize = 0x40;
+        #[doc = r" Reset value"]
+        pub const RESET_VALUE: u32 = 0x0000_0000;
+        #[doc = r" Performs a single load operation on the memory-mapped register"]
+        pub fn read(&self) -> u32 {
+            unsafe { ((P::BASE_ADDRESS + Self::OFFSET) as *const u32).read_volatile() }
+        }
+        #[doc = r" Performs a single store operation on the memory-mapped register"]
+        #[allow(unused_unsafe)]
+        pub fn write(&self, bits: u32) {
+            unsafe { ((P::BASE_ADDRESS + Self::OFFSET) as *mut u32).write_volatile(bits) }
+        }
+        #[doc = r" Performs a read-modify-write on the memory-mapped register"]
+        #[doc = r""]
+        #[doc = r" This is a short-hand for `self.write(f(self.read()))`"]
+        #[allow(unused_unsafe)]
+        pub fn rmw(&self, f: impl FnOnce(u32) -> u32) {
+            self.write(f(self.read()))
+        }
+    }
+    #[doc = "USB PHY Debug Register"]
+    #[allow(non_camel_case_types)]
+    pub struct DEBUG<P>
+    where
+        P: Peripheral,
+    {
+        _p: PhantomData<P>,
+        _not_send_or_sync: PhantomData<*mut ()>,
+    }
+    impl<P> DEBUG<P>
+    where
+        P: Peripheral,
+    {
+        const OFFSET: usize = 0x50;
+        #[doc = r" Reset value"]
+        pub const RESET_VALUE: u32 = 0x7f18_0000;
+        #[doc = r" Performs a single load operation on the memory-mapped register"]
+        pub fn read(&self) -> u32 {
+            unsafe { ((P::BASE_ADDRESS + Self::OFFSET) as *const u32).read_volatile() }
+        }
+        #[doc = r" Performs a single store operation on the memory-mapped register"]
+        #[allow(unused_unsafe)]
+        pub fn write(&self, bits: u32) {
+            unsafe { ((P::BASE_ADDRESS + Self::OFFSET) as *mut u32).write_volatile(bits) }
+        }
+        #[doc = r" Performs a read-modify-write on the memory-mapped register"]
+        #[doc = r""]
+        #[doc = r" This is a short-hand for `self.write(f(self.read()))`"]
+        #[allow(unused_unsafe)]
+        pub fn rmw(&self, f: impl FnOnce(u32) -> u32) {
+            self.write(f(self.read()))
+        }
+    }
+    #[doc = "USB PHY Debug Register"]
+    #[allow(non_camel_case_types)]
+    pub struct DEBUG_SET<P>
+    where
+        P: Peripheral,
+    {
+        _p: PhantomData<P>,
+        _not_send_or_sync: PhantomData<*mut ()>,
+    }
+    impl<P> DEBUG_SET<P>
+    where
+        P: Peripheral,
+    {
+        const OFFSET: usize = 0x54;
+        #[doc = r" Reset value"]
+        pub const RESET_VALUE: u32 = 0x7f18_0000;
+        #[doc = r" Performs a single load operation on the memory-mapped register"]
+        pub fn read(&self) -> u32 {
+            unsafe { ((P::BASE_ADDRESS + Self::OFFSET) as *const u32).read_volatile() }
+        }
+        #[doc = r" Performs a single store operation on the memory-mapped register"]
+        #[allow(unused_unsafe)]
+        pub fn write(&self, bits: u32) {
+            unsafe { ((P::BASE_ADDRESS + Self::OFFSET) as *mut u32).write_volatile(bits) }
+        }
+        #[doc = r" Performs a read-modify-write on the memory-mapped register"]
+        #[doc = r""]
+        #[doc = r" This is a short-hand for `self.write(f(self.read()))`"]
+        #[allow(unused_unsafe)]
+        pub fn rmw(&self, f: impl FnOnce(u32) -> u32) {
+            self.write(f(self.read()))
+        }
+    }
+    #[doc = "USB PHY Debug Register"]
+    #[allow(non_camel_case_types)]
+    pub struct DEBUG_CLR<P>
+    where
+        P: Peripheral,
+    {
+        _p: PhantomData<P>,
+        _not_send_or_sync: PhantomData<*mut ()>,
+    }
+    impl<P> DEBUG_CLR<P>
+    where
+        P: Peripheral,
+    {
+        const OFFSET: usize = 0x58;
+        #[doc = r" Reset value"]
+        pub const RESET_VALUE: u32 = 0x7f18_0000;
+        #[doc = r" Performs a single load operation on the memory-mapped register"]
+        pub fn read(&self) -> u32 {
+            unsafe { ((P::BASE_ADDRESS + Self::OFFSET) as *const u32).read_volatile() }
+        }
+        #[doc = r" Performs a single store operation on the memory-mapped register"]
+        #[allow(unused_unsafe)]
+        pub fn write(&self, bits: u32) {
+            unsafe { ((P::BASE_ADDRESS + Self::OFFSET) as *mut u32).write_volatile(bits) }
+        }
+        #[doc = r" Performs a read-modify-write on the memory-mapped register"]
+        #[doc = r""]
+        #[doc = r" This is a short-hand for `self.write(f(self.read()))`"]
+        #[allow(unused_unsafe)]
+        pub fn rmw(&self, f: impl FnOnce(u32) -> u32) {
+            self.write(f(self.read()))
+        }
+    }
+    #[doc = "USB PHY Debug Register"]
+    #[allow(non_camel_case_types)]
+    pub struct DEBUG_TOG<P>
+    where
+        P: Peripheral,
+    {
+        _p: PhantomData<P>,
+        _not_send_or_sync: PhantomData<*mut ()>,
+    }
+    impl<P> DEBUG_TOG<P>
+    where
+        P: Peripheral,
+    {
+        const OFFSET: usize = 0x5c;
+        #[doc = r" Reset value"]
+        pub const RESET_VALUE: u32 = 0x7f18_0000;
+        #[doc = r" Performs a single load operation on the memory-mapped register"]
+        pub fn read(&self) -> u32 {
+            unsafe { ((P::BASE_ADDRESS + Self::OFFSET) as *const u32).read_volatile() }
+        }
+        #[doc = r" Performs a single store operation on the memory-mapped register"]
+        #[allow(unused_unsafe)]
+        pub fn write(&self, bits: u32) {
+            unsafe { ((P::BASE_ADDRESS + Self::OFFSET) as *mut u32).write_volatile(bits) }
+        }
+        #[doc = r" Performs a read-modify-write on the memory-mapped register"]
+        #[doc = r""]
+        #[doc = r" This is a short-hand for `self.write(f(self.read()))`"]
+        #[allow(unused_unsafe)]
+        pub fn rmw(&self, f: impl FnOnce(u32) -> u32) {
+            self.write(f(self.read()))
+        }
+    }
+    #[doc = "UTMI Debug Status Register 0"]
+    #[allow(non_camel_case_types)]
+    pub struct DEBUG0_STATUS<P>
+    where
+        P: Peripheral,
+    {
+        _p: PhantomData<P>,
+        _not_send_or_sync: PhantomData<*mut ()>,
+    }
+    impl<P> DEBUG0_STATUS<P>
+    where
+        P: Peripheral,
+    {
+        const OFFSET: usize = 0x60;
+        #[doc = r" Reset value"]
+        pub const RESET_VALUE: u32 = 0x0000_0000;
+        #[doc = r" Performs a single load operation on the memory-mapped register"]
+        pub fn read(&self) -> u32 {
+            unsafe { ((P::BASE_ADDRESS + Self::OFFSET) as *const u32).read_volatile() }
+        }
+    }
+    #[doc = "UTMI Debug Status Register 1"]
+    #[allow(non_camel_case_types)]
+    pub struct DEBUG1<P>
+    where
+        P: Peripheral,
+    {
+        _p: PhantomData<P>,
+        _not_send_or_sync: PhantomData<*mut ()>,
+    }
+    impl<P> DEBUG1<P>
+    where
+        P: Peripheral,
+    {
+        const OFFSET: usize = 0x70;
+        #[doc = r" Reset value"]
+        pub const RESET_VALUE: u32 = 0x0000_1000;
+        #[doc = r" Performs a single load operation on the memory-mapped register"]
+        pub fn read(&self) -> u32 {
+            unsafe { ((P::BASE_ADDRESS + Self::OFFSET) as *const u32).read_volatile() }
+        }
+        #[doc = r" Performs a single store operation on the memory-mapped register"]
+        #[allow(unused_unsafe)]
+        pub fn write(&self, bits: u32) {
+            unsafe { ((P::BASE_ADDRESS + Self::OFFSET) as *mut u32).write_volatile(bits) }
+        }
+        #[doc = r" Performs a read-modify-write on the memory-mapped register"]
+        #[doc = r""]
+        #[doc = r" This is a short-hand for `self.write(f(self.read()))`"]
+        #[allow(unused_unsafe)]
+        pub fn rmw(&self, f: impl FnOnce(u32) -> u32) {
+            self.write(f(self.read()))
+        }
+    }
+    #[doc = "UTMI Debug Status Register 1"]
+    #[allow(non_camel_case_types)]
+    pub struct DEBUG1_SET<P>
+    where
+        P: Peripheral,
+    {
+        _p: PhantomData<P>,
+        _not_send_or_sync: PhantomData<*mut ()>,
+    }
+    impl<P> DEBUG1_SET<P>
+    where
+        P: Peripheral,
+    {
+        const OFFSET: usize = 0x74;
+        #[doc = r" Reset value"]
+        pub const RESET_VALUE: u32 = 0x0000_1000;
+        #[doc = r" Performs a single load operation on the memory-mapped register"]
+        pub fn read(&self) -> u32 {
+            unsafe { ((P::BASE_ADDRESS + Self::OFFSET) as *const u32).read_volatile() }
+        }
+        #[doc = r" Performs a single store operation on the memory-mapped register"]
+        #[allow(unused_unsafe)]
+        pub fn write(&self, bits: u32) {
+            unsafe { ((P::BASE_ADDRESS + Self::OFFSET) as *mut u32).write_volatile(bits) }
+        }
+        #[doc = r" Performs a read-modify-write on the memory-mapped register"]
+        #[doc = r""]
+        #[doc = r" This is a short-hand for `self.write(f(self.read()))`"]
+        #[allow(unused_unsafe)]
+        pub fn rmw(&self, f: impl FnOnce(u32) -> u32) {
+            self.write(f(self.read()))
+        }
+    }
+    #[doc = "UTMI Debug Status Register 1"]
+    #[allow(non_camel_case_types)]
+    pub struct DEBUG1_CLR<P>
+    where
+        P: Peripheral,
+    {
+        _p: PhantomData<P>,
+        _not_send_or_sync: PhantomData<*mut ()>,
+    }
+    impl<P> DEBUG1_CLR<P>
+    where
+        P: Peripheral,
+    {
+        const OFFSET: usize = 0x78;
+        #[doc = r" Reset value"]
+        pub const RESET_VALUE: u32 = 0x0000_1000;
+        #[doc = r" Performs a single load operation on the memory-mapped register"]
+        pub fn read(&self) -> u32 {
+            unsafe { ((P::BASE_ADDRESS + Self::OFFSET) as *const u32).read_volatile() }
+        }
+        #[doc = r" Performs a single store operation on the memory-mapped register"]
+        #[allow(unused_unsafe)]
+        pub fn write(&self, bits: u32) {
+            unsafe { ((P::BASE_ADDRESS + Self::OFFSET) as *mut u32).write_volatile(bits) }
+        }
+        #[doc = r" Performs a read-modify-write on the memory-mapped register"]
+        #[doc = r""]
+        #[doc = r" This is a short-hand for `self.write(f(self.read()))`"]
+        #[allow(unused_unsafe)]
+        pub fn rmw(&self, f: impl FnOnce(u32) -> u32) {
+            self.write(f(self.read()))
+        }
+    }
+    #[doc = "UTMI Debug Status Register 1"]
+    #[allow(non_camel_case_types)]
+    pub struct DEBUG1_TOG<P>
+    where
+        P: Peripheral,
+    {
+        _p: PhantomData<P>,
+        _not_send_or_sync: PhantomData<*mut ()>,
+    }
+    impl<P> DEBUG1_TOG<P>
+    where
+        P: Peripheral,
+    {
+        const OFFSET: usize = 0x7c;
+        #[doc = r" Reset value"]
+        pub const RESET_VALUE: u32 = 0x0000_1000;
+        #[doc = r" Performs a single load operation on the memory-mapped register"]
+        pub fn read(&self) -> u32 {
+            unsafe { ((P::BASE_ADDRESS + Self::OFFSET) as *const u32).read_volatile() }
+        }
+        #[doc = r" Performs a single store operation on the memory-mapped register"]
+        #[allow(unused_unsafe)]
+        pub fn write(&self, bits: u32) {
+            unsafe { ((P::BASE_ADDRESS + Self::OFFSET) as *mut u32).write_volatile(bits) }
+        }
+        #[doc = r" Performs a read-modify-write on the memory-mapped register"]
+        #[doc = r""]
+        #[doc = r" This is a short-hand for `self.write(f(self.read()))`"]
+        #[allow(unused_unsafe)]
+        pub fn rmw(&self, f: impl FnOnce(u32) -> u32) {
+            self.write(f(self.read()))
+        }
+    }
+    #[doc = "UTMI RTL Version"]
+    #[allow(non_camel_case_types)]
+    pub struct VERSION<P>
+    where
+        P: Peripheral,
+    {
+        _p: PhantomData<P>,
+        _not_send_or_sync: PhantomData<*mut ()>,
+    }
+    impl<P> VERSION<P>
+    where
+        P: Peripheral,
+    {
+        const OFFSET: usize = 0x80;
+        #[doc = r" Reset value"]
+        pub const RESET_VALUE: u32 = 0x0402_0000;
+        #[doc = r" Performs a single load operation on the memory-mapped register"]
+        pub fn read(&self) -> u32 {
+            unsafe { ((P::BASE_ADDRESS + Self::OFFSET) as *const u32).read_volatile() }
+        }
+    }
+    impl<P> Registers<P>
+    where
+        P: Peripheral,
+    {
+        #[doc = r" # Safety"]
+        #[doc = r""]
+        #[doc = r" Creates a singleton from thin air; make sure we"]
+        #[doc = r" never hand out two instances of it"]
+        unsafe fn new() -> Self {
+            Self {
+                _p: PhantomData,
+                _not_sync: PhantomData,
+                PWD: PWD {
+                    _p: PhantomData,
+                    _not_send_or_sync: PhantomData,
+                },
+                PWD_SET: PWD_SET {
+                    _p: PhantomData,
+                    _not_send_or_sync: PhantomData,
+                },
+                PWD_CLR: PWD_CLR {
+                    _p: PhantomData,
+                    _not_send_or_sync: PhantomData,
+                },
+                PWD_TOG: PWD_TOG {
+                    _p: PhantomData,
+                    _not_send_or_sync: PhantomData,
+                },
+                TX: TX {
+                    _p: PhantomData,
+                    _not_send_or_sync: PhantomData,
+                },
+                TX_SET: TX_SET {
+                    _p: PhantomData,
+                    _not_send_or_sync: PhantomData,
+                },
+                TX_CLR: TX_CLR {
+                    _p: PhantomData,
+                    _not_send_or_sync: PhantomData,
+                },
+                TX_TOG: TX_TOG {
+                    _p: PhantomData,
+                    _not_send_or_sync: PhantomData,
+                },
+                RX: RX {
+                    _p: PhantomData,
+                    _not_send_or_sync: PhantomData,
+                },
+                RX_SET: RX_SET {
+                    _p: PhantomData,
+                    _not_send_or_sync: PhantomData,
+                },
+                RX_CLR: RX_CLR {
+                    _p: PhantomData,
+                    _not_send_or_sync: PhantomData,
+                },
+                RX_TOG: RX_TOG {
+                    _p: PhantomData,
+                    _not_send_or_sync: PhantomData,
+                },
+                CTRL: CTRL {
+                    _p: PhantomData,
+                    _not_send_or_sync: PhantomData,
+                },
+                CTRL_SET: CTRL_SET {
+                    _p: PhantomData,
+                    _not_send_or_sync: PhantomData,
+                },
+                CTRL_CLR: CTRL_CLR {
+                    _p: PhantomData,
+                    _not_send_or_sync: PhantomData,
+                },
+                CTRL_TOG: CTRL_TOG {
+                    _p: PhantomData,
+                    _not_send_or_sync: PhantomData,
+                },
+                STATUS: STATUS {
+                    _p: PhantomData,
+                    _not_send_or_sync: PhantomData,
+                },
+                DEBUG: DEBUG {
+                    _p: PhantomData,
+                    _not_send_or_sync: PhantomData,
+                },
+                DEBUG_SET: DEBUG_SET {
+                    _p: PhantomData,
+                    _not_send_or_sync: PhantomData,
+                },
+                DEBUG_CLR: DEBUG_CLR {
+                    _p: PhantomData,
+                    _not_send_or_sync: PhantomData,
+                },
+                DEBUG_TOG: DEBUG_TOG {
+                    _p: PhantomData,
+                    _not_send_or_sync: PhantomData,
+                },
+                DEBUG0_STATUS: DEBUG0_STATUS {
+                    _p: PhantomData,
+                    _not_send_or_sync: PhantomData,
+                },
+                DEBUG1: DEBUG1 {
+                    _p: PhantomData,
+                    _not_send_or_sync: PhantomData,
+                },
+                DEBUG1_SET: DEBUG1_SET {
+                    _p: PhantomData,
+                    _not_send_or_sync: PhantomData,
+                },
+                DEBUG1_CLR: DEBUG1_CLR {
+                    _p: PhantomData,
+                    _not_send_or_sync: PhantomData,
+                },
+                DEBUG1_TOG: DEBUG1_TOG {
+                    _p: PhantomData,
+                    _not_send_or_sync: PhantomData,
+                },
+                VERSION: VERSION {
+                    _p: PhantomData,
+                    _not_send_or_sync: PhantomData,
+                },
+            }
+        }
+    }
+    #[doc = "USBPHY1"]
+    pub struct _1;
+    impl Peripheral for _1 {
+        const BASE_ADDRESS: usize = 0x020c_9000;
+    }
+    #[allow(non_camel_case_types)]
+    #[doc = "USBPHY1"]
+    pub type USBPHY1 = Registers<_1>;
+    impl USBPHY1 {
+        #[doc = r" Takes the singleton that represents this peripheral instance"]
+        pub fn take() -> Option<Self> {
+            static TAKEN: AtomicBool = AtomicBool::new(false);
+            if TAKEN
+                .compare_exchange(false, true, Ordering::AcqRel, Ordering::Acquire)
+                .is_ok()
+            {
+                Some(unsafe { Registers::new() })
+            } else {
+                None
+            }
+        }
+        #[doc = r" Borrows the singleton without checking if it's"]
+        #[doc = r" currently being held by a context"]
+        #[doc = r""]
+        #[doc = r" **WARNING** this can break Read-Modify-Write"]
+        #[doc = r" operations being performed in other contexts."]
+        pub fn borrow_unchecked<T>(f: impl FnOnce(&Self) -> T) -> T {
+            f(unsafe { &Registers::new() })
+        }
+    }
+    #[doc = "USBPHY2"]
+    pub struct _2;
+    impl Peripheral for _2 {
+        const BASE_ADDRESS: usize = 0x020c_a000;
+    }
+    #[allow(non_camel_case_types)]
+    #[doc = "USBPHY2"]
+    pub type USBPHY2 = Registers<_2>;
+    impl USBPHY2 {
+        #[doc = r" Takes the singleton that represents this peripheral instance"]
+        pub fn take() -> Option<Self> {
+            static TAKEN: AtomicBool = AtomicBool::new(false);
+            if TAKEN
+                .compare_exchange(false, true, Ordering::AcqRel, Ordering::Acquire)
+                .is_ok()
+            {
+                Some(unsafe { Registers::new() })
+            } else {
+                None
+            }
+        }
+        #[doc = r" Borrows the singleton without checking if it's"]
+        #[doc = r" currently being held by a context"]
+        #[doc = r""]
+        #[doc = r" **WARNING** this can break Read-Modify-Write"]
+        #[doc = r" operations being performed in other contexts."]
+        pub fn borrow_unchecked<T>(f: impl FnOnce(&Self) -> T) -> T {
+            f(unsafe { &Registers::new() })
         }
     }
 }
@@ -2392,6 +6697,13 @@ pub mod usb_uog {
         pub fn write(&self, bits: u32) {
             unsafe { ((P::BASE_ADDRESS + Self::OFFSET) as *mut u32).write_volatile(bits) }
         }
+        #[doc = r" Performs a read-modify-write on the memory-mapped register"]
+        #[doc = r""]
+        #[doc = r" This is a short-hand for `self.write(f(self.read()))`"]
+        #[allow(unused_unsafe)]
+        pub fn rmw(&self, f: impl FnOnce(u32) -> u32) {
+            self.write(f(self.read()))
+        }
     }
     #[doc = "General Purpose Timer #0 Controller"]
     #[allow(non_camel_case_types)]
@@ -2417,6 +6729,13 @@ pub mod usb_uog {
         #[allow(unused_unsafe)]
         pub fn write(&self, bits: u32) {
             unsafe { ((P::BASE_ADDRESS + Self::OFFSET) as *mut u32).write_volatile(bits) }
+        }
+        #[doc = r" Performs a read-modify-write on the memory-mapped register"]
+        #[doc = r""]
+        #[doc = r" This is a short-hand for `self.write(f(self.read()))`"]
+        #[allow(unused_unsafe)]
+        pub fn rmw(&self, f: impl FnOnce(u32) -> u32) {
+            self.write(f(self.read()))
         }
     }
     #[doc = "General Purpose Timer #1 Load"]
@@ -2444,6 +6763,13 @@ pub mod usb_uog {
         pub fn write(&self, bits: u32) {
             unsafe { ((P::BASE_ADDRESS + Self::OFFSET) as *mut u32).write_volatile(bits) }
         }
+        #[doc = r" Performs a read-modify-write on the memory-mapped register"]
+        #[doc = r""]
+        #[doc = r" This is a short-hand for `self.write(f(self.read()))`"]
+        #[allow(unused_unsafe)]
+        pub fn rmw(&self, f: impl FnOnce(u32) -> u32) {
+            self.write(f(self.read()))
+        }
     }
     #[doc = "General Purpose Timer #1 Controller"]
     #[allow(non_camel_case_types)]
@@ -2470,6 +6796,13 @@ pub mod usb_uog {
         pub fn write(&self, bits: u32) {
             unsafe { ((P::BASE_ADDRESS + Self::OFFSET) as *mut u32).write_volatile(bits) }
         }
+        #[doc = r" Performs a read-modify-write on the memory-mapped register"]
+        #[doc = r""]
+        #[doc = r" This is a short-hand for `self.write(f(self.read()))`"]
+        #[allow(unused_unsafe)]
+        pub fn rmw(&self, f: impl FnOnce(u32) -> u32) {
+            self.write(f(self.read()))
+        }
     }
     #[doc = "System Bus Config"]
     #[allow(non_camel_case_types)]
@@ -2495,6 +6828,13 @@ pub mod usb_uog {
         #[allow(unused_unsafe)]
         pub fn write(&self, bits: u32) {
             unsafe { ((P::BASE_ADDRESS + Self::OFFSET) as *mut u32).write_volatile(bits) }
+        }
+        #[doc = r" Performs a read-modify-write on the memory-mapped register"]
+        #[doc = r""]
+        #[doc = r" This is a short-hand for `self.write(f(self.read()))`"]
+        #[allow(unused_unsafe)]
+        pub fn rmw(&self, f: impl FnOnce(u32) -> u32) {
+            self.write(f(self.read()))
         }
     }
     #[doc = "Capability Registers Length"]
@@ -2648,6 +6988,13 @@ pub mod usb_uog {
         pub fn write(&self, bits: u32) {
             unsafe { ((P::BASE_ADDRESS + Self::OFFSET) as *mut u32).write_volatile(bits) }
         }
+        #[doc = r" Performs a read-modify-write on the memory-mapped register"]
+        #[doc = r""]
+        #[doc = r" This is a short-hand for `self.write(f(self.read()))`"]
+        #[allow(unused_unsafe)]
+        pub fn rmw(&self, f: impl FnOnce(u32) -> u32) {
+            self.write(f(self.read()))
+        }
     }
     #[doc = "USB Status Register"]
     #[allow(non_camel_case_types)]
@@ -2673,6 +7020,13 @@ pub mod usb_uog {
         #[allow(unused_unsafe)]
         pub fn write(&self, bits: u32) {
             unsafe { ((P::BASE_ADDRESS + Self::OFFSET) as *mut u32).write_volatile(bits) }
+        }
+        #[doc = r" Performs a read-modify-write on the memory-mapped register"]
+        #[doc = r""]
+        #[doc = r" This is a short-hand for `self.write(f(self.read()))`"]
+        #[allow(unused_unsafe)]
+        pub fn rmw(&self, f: impl FnOnce(u32) -> u32) {
+            self.write(f(self.read()))
         }
     }
     #[doc = "Interrupt Enable Register"]
@@ -2700,6 +7054,13 @@ pub mod usb_uog {
         pub fn write(&self, bits: u32) {
             unsafe { ((P::BASE_ADDRESS + Self::OFFSET) as *mut u32).write_volatile(bits) }
         }
+        #[doc = r" Performs a read-modify-write on the memory-mapped register"]
+        #[doc = r""]
+        #[doc = r" This is a short-hand for `self.write(f(self.read()))`"]
+        #[allow(unused_unsafe)]
+        pub fn rmw(&self, f: impl FnOnce(u32) -> u32) {
+            self.write(f(self.read()))
+        }
     }
     #[doc = "USB Frame Index"]
     #[allow(non_camel_case_types)]
@@ -2725,6 +7086,13 @@ pub mod usb_uog {
         #[allow(unused_unsafe)]
         pub fn write(&self, bits: u32) {
             unsafe { ((P::BASE_ADDRESS + Self::OFFSET) as *mut u32).write_volatile(bits) }
+        }
+        #[doc = r" Performs a read-modify-write on the memory-mapped register"]
+        #[doc = r""]
+        #[doc = r" This is a short-hand for `self.write(f(self.read()))`"]
+        #[allow(unused_unsafe)]
+        pub fn rmw(&self, f: impl FnOnce(u32) -> u32) {
+            self.write(f(self.read()))
         }
     }
     #[doc = "Frame List Base Address"]
@@ -2752,6 +7120,13 @@ pub mod usb_uog {
         pub fn write(&self, bits: u32) {
             unsafe { ((P::BASE_ADDRESS + Self::OFFSET) as *mut u32).write_volatile(bits) }
         }
+        #[doc = r" Performs a read-modify-write on the memory-mapped register"]
+        #[doc = r""]
+        #[doc = r" This is a short-hand for `self.write(f(self.read()))`"]
+        #[allow(unused_unsafe)]
+        pub fn rmw(&self, f: impl FnOnce(u32) -> u32) {
+            self.write(f(self.read()))
+        }
     }
     #[doc = "Device Address"]
     #[allow(non_camel_case_types)]
@@ -2777,6 +7152,13 @@ pub mod usb_uog {
         #[allow(unused_unsafe)]
         pub fn write(&self, bits: u32) {
             unsafe { ((P::BASE_ADDRESS + Self::OFFSET) as *mut u32).write_volatile(bits) }
+        }
+        #[doc = r" Performs a read-modify-write on the memory-mapped register"]
+        #[doc = r""]
+        #[doc = r" This is a short-hand for `self.write(f(self.read()))`"]
+        #[allow(unused_unsafe)]
+        pub fn rmw(&self, f: impl FnOnce(u32) -> u32) {
+            self.write(f(self.read()))
         }
     }
     #[doc = "Next Asynch. Address"]
@@ -2804,6 +7186,13 @@ pub mod usb_uog {
         pub fn write(&self, bits: u32) {
             unsafe { ((P::BASE_ADDRESS + Self::OFFSET) as *mut u32).write_volatile(bits) }
         }
+        #[doc = r" Performs a read-modify-write on the memory-mapped register"]
+        #[doc = r""]
+        #[doc = r" This is a short-hand for `self.write(f(self.read()))`"]
+        #[allow(unused_unsafe)]
+        pub fn rmw(&self, f: impl FnOnce(u32) -> u32) {
+            self.write(f(self.read()))
+        }
     }
     #[doc = "Endpoint List Address"]
     #[allow(non_camel_case_types)]
@@ -2829,6 +7218,13 @@ pub mod usb_uog {
         #[allow(unused_unsafe)]
         pub fn write(&self, bits: u32) {
             unsafe { ((P::BASE_ADDRESS + Self::OFFSET) as *mut u32).write_volatile(bits) }
+        }
+        #[doc = r" Performs a read-modify-write on the memory-mapped register"]
+        #[doc = r""]
+        #[doc = r" This is a short-hand for `self.write(f(self.read()))`"]
+        #[allow(unused_unsafe)]
+        pub fn rmw(&self, f: impl FnOnce(u32) -> u32) {
+            self.write(f(self.read()))
         }
     }
     #[doc = "Programmable Burst Size"]
@@ -2856,6 +7252,13 @@ pub mod usb_uog {
         pub fn write(&self, bits: u32) {
             unsafe { ((P::BASE_ADDRESS + Self::OFFSET) as *mut u32).write_volatile(bits) }
         }
+        #[doc = r" Performs a read-modify-write on the memory-mapped register"]
+        #[doc = r""]
+        #[doc = r" This is a short-hand for `self.write(f(self.read()))`"]
+        #[allow(unused_unsafe)]
+        pub fn rmw(&self, f: impl FnOnce(u32) -> u32) {
+            self.write(f(self.read()))
+        }
     }
     #[doc = "TX FIFO Fill Tuning"]
     #[allow(non_camel_case_types)]
@@ -2881,6 +7284,13 @@ pub mod usb_uog {
         #[allow(unused_unsafe)]
         pub fn write(&self, bits: u32) {
             unsafe { ((P::BASE_ADDRESS + Self::OFFSET) as *mut u32).write_volatile(bits) }
+        }
+        #[doc = r" Performs a read-modify-write on the memory-mapped register"]
+        #[doc = r""]
+        #[doc = r" This is a short-hand for `self.write(f(self.read()))`"]
+        #[allow(unused_unsafe)]
+        pub fn rmw(&self, f: impl FnOnce(u32) -> u32) {
+            self.write(f(self.read()))
         }
     }
     #[doc = "Endpoint NAK"]
@@ -2908,6 +7318,13 @@ pub mod usb_uog {
         pub fn write(&self, bits: u32) {
             unsafe { ((P::BASE_ADDRESS + Self::OFFSET) as *mut u32).write_volatile(bits) }
         }
+        #[doc = r" Performs a read-modify-write on the memory-mapped register"]
+        #[doc = r""]
+        #[doc = r" This is a short-hand for `self.write(f(self.read()))`"]
+        #[allow(unused_unsafe)]
+        pub fn rmw(&self, f: impl FnOnce(u32) -> u32) {
+            self.write(f(self.read()))
+        }
     }
     #[doc = "Endpoint NAK Enable"]
     #[allow(non_camel_case_types)]
@@ -2933,6 +7350,13 @@ pub mod usb_uog {
         #[allow(unused_unsafe)]
         pub fn write(&self, bits: u32) {
             unsafe { ((P::BASE_ADDRESS + Self::OFFSET) as *mut u32).write_volatile(bits) }
+        }
+        #[doc = r" Performs a read-modify-write on the memory-mapped register"]
+        #[doc = r""]
+        #[doc = r" This is a short-hand for `self.write(f(self.read()))`"]
+        #[allow(unused_unsafe)]
+        pub fn rmw(&self, f: impl FnOnce(u32) -> u32) {
+            self.write(f(self.read()))
         }
     }
     #[doc = "Configure Flag Register"]
@@ -2960,6 +7384,13 @@ pub mod usb_uog {
         pub fn write(&self, bits: u32) {
             unsafe { ((P::BASE_ADDRESS + Self::OFFSET) as *mut u32).write_volatile(bits) }
         }
+        #[doc = r" Performs a read-modify-write on the memory-mapped register"]
+        #[doc = r""]
+        #[doc = r" This is a short-hand for `self.write(f(self.read()))`"]
+        #[allow(unused_unsafe)]
+        pub fn rmw(&self, f: impl FnOnce(u32) -> u32) {
+            self.write(f(self.read()))
+        }
     }
     #[doc = "Port Status & Control"]
     #[allow(non_camel_case_types)]
@@ -2985,6 +7416,13 @@ pub mod usb_uog {
         #[allow(unused_unsafe)]
         pub fn write(&self, bits: u32) {
             unsafe { ((P::BASE_ADDRESS + Self::OFFSET) as *mut u32).write_volatile(bits) }
+        }
+        #[doc = r" Performs a read-modify-write on the memory-mapped register"]
+        #[doc = r""]
+        #[doc = r" This is a short-hand for `self.write(f(self.read()))`"]
+        #[allow(unused_unsafe)]
+        pub fn rmw(&self, f: impl FnOnce(u32) -> u32) {
+            self.write(f(self.read()))
         }
     }
     #[doc = "On-The-Go Status & control"]
@@ -3012,6 +7450,13 @@ pub mod usb_uog {
         pub fn write(&self, bits: u32) {
             unsafe { ((P::BASE_ADDRESS + Self::OFFSET) as *mut u32).write_volatile(bits) }
         }
+        #[doc = r" Performs a read-modify-write on the memory-mapped register"]
+        #[doc = r""]
+        #[doc = r" This is a short-hand for `self.write(f(self.read()))`"]
+        #[allow(unused_unsafe)]
+        pub fn rmw(&self, f: impl FnOnce(u32) -> u32) {
+            self.write(f(self.read()))
+        }
     }
     #[doc = "USB Device Mode"]
     #[allow(non_camel_case_types)]
@@ -3037,6 +7482,13 @@ pub mod usb_uog {
         #[allow(unused_unsafe)]
         pub fn write(&self, bits: u32) {
             unsafe { ((P::BASE_ADDRESS + Self::OFFSET) as *mut u32).write_volatile(bits) }
+        }
+        #[doc = r" Performs a read-modify-write on the memory-mapped register"]
+        #[doc = r""]
+        #[doc = r" This is a short-hand for `self.write(f(self.read()))`"]
+        #[allow(unused_unsafe)]
+        pub fn rmw(&self, f: impl FnOnce(u32) -> u32) {
+            self.write(f(self.read()))
         }
     }
     #[doc = "Endpoint Setup Status"]
@@ -3064,6 +7516,13 @@ pub mod usb_uog {
         pub fn write(&self, bits: u32) {
             unsafe { ((P::BASE_ADDRESS + Self::OFFSET) as *mut u32).write_volatile(bits) }
         }
+        #[doc = r" Performs a read-modify-write on the memory-mapped register"]
+        #[doc = r""]
+        #[doc = r" This is a short-hand for `self.write(f(self.read()))`"]
+        #[allow(unused_unsafe)]
+        pub fn rmw(&self, f: impl FnOnce(u32) -> u32) {
+            self.write(f(self.read()))
+        }
     }
     #[doc = "Endpoint Prime"]
     #[allow(non_camel_case_types)]
@@ -3090,6 +7549,13 @@ pub mod usb_uog {
         pub fn write(&self, bits: u32) {
             unsafe { ((P::BASE_ADDRESS + Self::OFFSET) as *mut u32).write_volatile(bits) }
         }
+        #[doc = r" Performs a read-modify-write on the memory-mapped register"]
+        #[doc = r""]
+        #[doc = r" This is a short-hand for `self.write(f(self.read()))`"]
+        #[allow(unused_unsafe)]
+        pub fn rmw(&self, f: impl FnOnce(u32) -> u32) {
+            self.write(f(self.read()))
+        }
     }
     #[doc = "Endpoint Flush"]
     #[allow(non_camel_case_types)]
@@ -3115,6 +7581,13 @@ pub mod usb_uog {
         #[allow(unused_unsafe)]
         pub fn write(&self, bits: u32) {
             unsafe { ((P::BASE_ADDRESS + Self::OFFSET) as *mut u32).write_volatile(bits) }
+        }
+        #[doc = r" Performs a read-modify-write on the memory-mapped register"]
+        #[doc = r""]
+        #[doc = r" This is a short-hand for `self.write(f(self.read()))`"]
+        #[allow(unused_unsafe)]
+        pub fn rmw(&self, f: impl FnOnce(u32) -> u32) {
+            self.write(f(self.read()))
         }
     }
     #[doc = "Endpoint Status"]
@@ -3163,6 +7636,13 @@ pub mod usb_uog {
         pub fn write(&self, bits: u32) {
             unsafe { ((P::BASE_ADDRESS + Self::OFFSET) as *mut u32).write_volatile(bits) }
         }
+        #[doc = r" Performs a read-modify-write on the memory-mapped register"]
+        #[doc = r""]
+        #[doc = r" This is a short-hand for `self.write(f(self.read()))`"]
+        #[allow(unused_unsafe)]
+        pub fn rmw(&self, f: impl FnOnce(u32) -> u32) {
+            self.write(f(self.read()))
+        }
     }
     #[doc = "Endpoint Control0"]
     #[allow(non_camel_case_types)]
@@ -3188,6 +7668,13 @@ pub mod usb_uog {
         #[allow(unused_unsafe)]
         pub fn write(&self, bits: u32) {
             unsafe { ((P::BASE_ADDRESS + Self::OFFSET) as *mut u32).write_volatile(bits) }
+        }
+        #[doc = r" Performs a read-modify-write on the memory-mapped register"]
+        #[doc = r""]
+        #[doc = r" This is a short-hand for `self.write(f(self.read()))`"]
+        #[allow(unused_unsafe)]
+        pub fn rmw(&self, f: impl FnOnce(u32) -> u32) {
+            self.write(f(self.read()))
         }
     }
     #[doc = "Endpoint Control 1"]
@@ -3215,6 +7702,13 @@ pub mod usb_uog {
         pub fn write(&self, bits: u32) {
             unsafe { ((P::BASE_ADDRESS + Self::OFFSET) as *mut u32).write_volatile(bits) }
         }
+        #[doc = r" Performs a read-modify-write on the memory-mapped register"]
+        #[doc = r""]
+        #[doc = r" This is a short-hand for `self.write(f(self.read()))`"]
+        #[allow(unused_unsafe)]
+        pub fn rmw(&self, f: impl FnOnce(u32) -> u32) {
+            self.write(f(self.read()))
+        }
     }
     #[doc = "Endpoint Control 2"]
     #[allow(non_camel_case_types)]
@@ -3240,6 +7734,13 @@ pub mod usb_uog {
         #[allow(unused_unsafe)]
         pub fn write(&self, bits: u32) {
             unsafe { ((P::BASE_ADDRESS + Self::OFFSET) as *mut u32).write_volatile(bits) }
+        }
+        #[doc = r" Performs a read-modify-write on the memory-mapped register"]
+        #[doc = r""]
+        #[doc = r" This is a short-hand for `self.write(f(self.read()))`"]
+        #[allow(unused_unsafe)]
+        pub fn rmw(&self, f: impl FnOnce(u32) -> u32) {
+            self.write(f(self.read()))
         }
     }
     #[doc = "Endpoint Control 3"]
@@ -3267,6 +7768,13 @@ pub mod usb_uog {
         pub fn write(&self, bits: u32) {
             unsafe { ((P::BASE_ADDRESS + Self::OFFSET) as *mut u32).write_volatile(bits) }
         }
+        #[doc = r" Performs a read-modify-write on the memory-mapped register"]
+        #[doc = r""]
+        #[doc = r" This is a short-hand for `self.write(f(self.read()))`"]
+        #[allow(unused_unsafe)]
+        pub fn rmw(&self, f: impl FnOnce(u32) -> u32) {
+            self.write(f(self.read()))
+        }
     }
     #[doc = "Endpoint Control 4"]
     #[allow(non_camel_case_types)]
@@ -3292,6 +7800,13 @@ pub mod usb_uog {
         #[allow(unused_unsafe)]
         pub fn write(&self, bits: u32) {
             unsafe { ((P::BASE_ADDRESS + Self::OFFSET) as *mut u32).write_volatile(bits) }
+        }
+        #[doc = r" Performs a read-modify-write on the memory-mapped register"]
+        #[doc = r""]
+        #[doc = r" This is a short-hand for `self.write(f(self.read()))`"]
+        #[allow(unused_unsafe)]
+        pub fn rmw(&self, f: impl FnOnce(u32) -> u32) {
+            self.write(f(self.read()))
         }
     }
     #[doc = "Endpoint Control 5"]
@@ -3319,6 +7834,13 @@ pub mod usb_uog {
         pub fn write(&self, bits: u32) {
             unsafe { ((P::BASE_ADDRESS + Self::OFFSET) as *mut u32).write_volatile(bits) }
         }
+        #[doc = r" Performs a read-modify-write on the memory-mapped register"]
+        #[doc = r""]
+        #[doc = r" This is a short-hand for `self.write(f(self.read()))`"]
+        #[allow(unused_unsafe)]
+        pub fn rmw(&self, f: impl FnOnce(u32) -> u32) {
+            self.write(f(self.read()))
+        }
     }
     #[doc = "Endpoint Control 6"]
     #[allow(non_camel_case_types)]
@@ -3345,6 +7867,13 @@ pub mod usb_uog {
         pub fn write(&self, bits: u32) {
             unsafe { ((P::BASE_ADDRESS + Self::OFFSET) as *mut u32).write_volatile(bits) }
         }
+        #[doc = r" Performs a read-modify-write on the memory-mapped register"]
+        #[doc = r""]
+        #[doc = r" This is a short-hand for `self.write(f(self.read()))`"]
+        #[allow(unused_unsafe)]
+        pub fn rmw(&self, f: impl FnOnce(u32) -> u32) {
+            self.write(f(self.read()))
+        }
     }
     #[doc = "Endpoint Control 7"]
     #[allow(non_camel_case_types)]
@@ -3370,6 +7899,13 @@ pub mod usb_uog {
         #[allow(unused_unsafe)]
         pub fn write(&self, bits: u32) {
             unsafe { ((P::BASE_ADDRESS + Self::OFFSET) as *mut u32).write_volatile(bits) }
+        }
+        #[doc = r" Performs a read-modify-write on the memory-mapped register"]
+        #[doc = r""]
+        #[doc = r" This is a short-hand for `self.write(f(self.read()))`"]
+        #[allow(unused_unsafe)]
+        pub fn rmw(&self, f: impl FnOnce(u32) -> u32) {
+            self.write(f(self.read()))
         }
     }
     impl<P> Registers<P>
@@ -3685,6 +8221,13 @@ pub mod wdog {
         pub fn write(&self, bits: u16) {
             unsafe { ((P::BASE_ADDRESS + Self::OFFSET) as *mut u16).write_volatile(bits) }
         }
+        #[doc = r" Performs a read-modify-write on the memory-mapped register"]
+        #[doc = r""]
+        #[doc = r" This is a short-hand for `self.write(f(self.read()))`"]
+        #[allow(unused_unsafe)]
+        pub fn rmw(&self, f: impl FnOnce(u16) -> u16) {
+            self.write(f(self.read()))
+        }
     }
     #[doc = "Watchdog Service Register"]
     #[allow(non_camel_case_types)]
@@ -3710,6 +8253,13 @@ pub mod wdog {
         #[allow(unused_unsafe)]
         pub fn write(&self, bits: u16) {
             unsafe { ((P::BASE_ADDRESS + Self::OFFSET) as *mut u16).write_volatile(bits) }
+        }
+        #[doc = r" Performs a read-modify-write on the memory-mapped register"]
+        #[doc = r""]
+        #[doc = r" This is a short-hand for `self.write(f(self.read()))`"]
+        #[allow(unused_unsafe)]
+        pub fn rmw(&self, f: impl FnOnce(u16) -> u16) {
+            self.write(f(self.read()))
         }
     }
     #[doc = "Watchdog Reset Status Register"]
@@ -3758,6 +8308,13 @@ pub mod wdog {
         pub fn write(&self, bits: u16) {
             unsafe { ((P::BASE_ADDRESS + Self::OFFSET) as *mut u16).write_volatile(bits) }
         }
+        #[doc = r" Performs a read-modify-write on the memory-mapped register"]
+        #[doc = r""]
+        #[doc = r" This is a short-hand for `self.write(f(self.read()))`"]
+        #[allow(unused_unsafe)]
+        pub fn rmw(&self, f: impl FnOnce(u16) -> u16) {
+            self.write(f(self.read()))
+        }
     }
     #[doc = "Watchdog Miscellaneous Control Register"]
     #[allow(non_camel_case_types)]
@@ -3783,6 +8340,13 @@ pub mod wdog {
         #[allow(unused_unsafe)]
         pub fn write(&self, bits: u16) {
             unsafe { ((P::BASE_ADDRESS + Self::OFFSET) as *mut u16).write_volatile(bits) }
+        }
+        #[doc = r" Performs a read-modify-write on the memory-mapped register"]
+        #[doc = r""]
+        #[doc = r" This is a short-hand for `self.write(f(self.read()))`"]
+        #[allow(unused_unsafe)]
+        pub fn rmw(&self, f: impl FnOnce(u16) -> u16) {
+            self.write(f(self.read()))
         }
     }
     impl<P> Registers<P>
@@ -3953,6 +8517,13 @@ pub mod gicc {
         pub fn write(&self, bits: u32) {
             unsafe { ((BASE_ADDRESS + Self::OFFSET) as *mut u32).write_volatile(bits) }
         }
+        #[doc = r" Performs a read-modify-write on the memory-mapped register"]
+        #[doc = r""]
+        #[doc = r" This is a short-hand for `self.write(f(self.read()))`"]
+        #[allow(unused_unsafe)]
+        pub fn rmw(&self, f: impl FnOnce(u32) -> u32) {
+            self.write(f(self.read()))
+        }
     }
     #[doc = "Interrupt Priority Mask Register"]
     #[allow(non_camel_case_types)]
@@ -3971,6 +8542,13 @@ pub mod gicc {
         #[allow(unused_unsafe)]
         pub unsafe fn write(&self, bits: u32) {
             unsafe { ((BASE_ADDRESS + Self::OFFSET) as *mut u32).write_volatile(bits) }
+        }
+        #[doc = r" Performs a read-modify-write on the memory-mapped register"]
+        #[doc = r""]
+        #[doc = r" This is a short-hand for `self.write(f(self.read()))`"]
+        #[allow(unused_unsafe)]
+        pub unsafe fn rmw(&self, f: impl FnOnce(u32) -> u32) {
+            self.write(f(self.read()))
         }
     }
     #[doc = "Interrupt Acknowledge Register"]
@@ -4123,6 +8701,13 @@ pub mod gicd {
         pub fn write(&self, bits: u32) {
             unsafe { ((BASE_ADDRESS + Self::OFFSET) as *mut u32).write_volatile(bits) }
         }
+        #[doc = r" Performs a read-modify-write on the memory-mapped register"]
+        #[doc = r""]
+        #[doc = r" This is a short-hand for `self.write(f(self.read()))`"]
+        #[allow(unused_unsafe)]
+        pub fn rmw(&self, f: impl FnOnce(u32) -> u32) {
+            self.write(f(self.read()))
+        }
     }
     #[doc = "Interrupt Set-Enable Registers (4 instances)"]
     #[allow(non_camel_case_types)]
@@ -4150,6 +8735,13 @@ pub mod gicd {
                     .write_volatile(bits)
             }
         }
+        #[doc = r" Performs a read-modify-write on the memory-mapped register"]
+        #[doc = r""]
+        #[doc = r" This is a short-hand for `self.write(f(self.read()))`"]
+        #[allow(unused_unsafe)]
+        pub unsafe fn rmw(&self, idx: u8, f: impl FnOnce(u32) -> u32) {
+            self.write(idx, f(self.read(idx)))
+        }
     }
     #[doc = "Interrupt Priority Registers (128 instances)"]
     #[allow(non_camel_case_types)]
@@ -4176,6 +8768,13 @@ pub mod gicd {
                     .add(usize::from(idx))
                     .write_volatile(bits)
             }
+        }
+        #[doc = r" Performs a read-modify-write on the memory-mapped register"]
+        #[doc = r""]
+        #[doc = r" This is a short-hand for `self.write(f(self.read()))`"]
+        #[allow(unused_unsafe)]
+        pub unsafe fn rmw(&self, idx: u8, f: impl FnOnce(u8) -> u8) {
+            self.write(idx, f(self.read(idx)))
         }
     }
     #[doc = "Software Generated Interrupt Register"]

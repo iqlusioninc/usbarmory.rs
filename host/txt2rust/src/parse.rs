@@ -63,8 +63,12 @@ fn line<'a>(line: &'a str, prev: Option<&'a str>, next: Option<&'a str>) -> Opti
             .trim();
         let next = next.expect("found split row; next line is required").trim();
 
-        let (description, name) = if next.starts_with('(') {
-            let next = next.trim_start_matches('(');
+        let (description, name) = if next.contains('(') && next.contains(')') {
+            let mut next_parts = next.splitn(2, '(');
+            let more_description = next_parts.next().expect("UNREACHABLE").trim();
+
+            let mut parts = next_parts.next().expect("UNREACHABLE").splitn(2, ')');
+            let name = parts.next().expect("UNREACHABLE");
 
             let mut parts = prev.rsplitn(2, ' ');
             let last = parts.next().unwrap_or("");
@@ -75,12 +79,15 @@ fn line<'a>(line: &'a str, prev: Option<&'a str>, next: Option<&'a str>) -> Opti
                 prev
             };
 
-            let mut parts = next.splitn(2, ')');
-            let name = parts.next().expect("UNREACHABLE");
+            let description = if more_description.is_empty() {
+                Cow::Borrowed(description)
+            } else {
+                Cow::Owned(format!("{} {}", description, more_description))
+            };
 
-            (Cow::Borrowed(description), name)
+            (description, name)
         } else {
-            unimplemented!()
+            unimplemented!("\n{}\n{}\n{}", prev, line, next)
         };
 
         (description, name, width, parts.next()?.trim())
