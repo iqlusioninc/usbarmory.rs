@@ -6,4 +6,5 @@ name = "panic-serial"
 version = "0.0.0"
 
 [dependencies]
+cortex-a = { path = "../cortex-a" }
 usbarmory = { path = "../usbarmory" }

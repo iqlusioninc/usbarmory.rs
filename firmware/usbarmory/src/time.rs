@@ -45,7 +45,7 @@ impl Instant {
     /// Returns the amount of time elapsed from another instant to this one.
     pub fn duration_since(self, earlier: Instant) -> Duration {
         assert!(
-            self.value <= earlier.value,
+            earlier.value <= self.value,
             "supplied instant is later than self"
         );
 
@@ -74,4 +74,9 @@ impl ops::Sub for Instant {
     fn sub(self, rhs: Instant) -> Duration {
         self.duration_since(rhs)
     }
+}
+
+/// Returns the time elapsed since the system last (re)booted
+pub fn uptime() -> Duration {
+    Instant::now() - Instant { value: 0 }
 }

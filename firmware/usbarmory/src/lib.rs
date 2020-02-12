@@ -24,6 +24,7 @@ mod macros;
 pub mod rng;
 pub mod serial;
 pub mod time;
+pub mod usbd;
 
 /// Default CPU frequency
 ///

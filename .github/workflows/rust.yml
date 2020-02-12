@@ -187,6 +187,7 @@ jobs:
         working-directory: ./firmware
         run: |
           cargo build --examples --release
+          cargo build --bins --release
 
   fmt:
     name: Rustfmt

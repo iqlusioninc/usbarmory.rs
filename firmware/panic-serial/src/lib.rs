@@ -6,13 +6,16 @@ use usbarmory::serial::Serial;
 
 #[panic_handler]
 fn panic(info: &PanicInfo) -> ! {
+    cortex_a::disable_irq();
+    cortex_a::disable_fiq();
+
     Serial::borrow_unchecked(|mut serial| {
         // NOTE the leading newline is to *not* append the panic message to some
         // other message (in the case we preempted a `write!` operation or a
         // `write!` operation panicked midway)
-        writeln!(serial, "\n{}", info).ok();
+        writeln!(serial, "\n----\n{}\n----", info).ok();
         Serial::flush();
     });
 
-    usbarmory::reset();
+    usbarmory::memlog_flush_and_reset!();
 }

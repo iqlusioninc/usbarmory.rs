@@ -1,0 +1,6 @@
+[package]
+authors = ["iqlusion"]
+edition = "2018"
+license = "Apache-2.0 OR MIT"
+name    = "consts"
+version = "0.0.0"
