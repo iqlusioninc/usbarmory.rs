@@ -176,7 +176,7 @@ jobs:
       # TODO cache in dev-dependencies.txt when available on crates.io
       - name: Install flip-lld
         run: |
-          cargo install --git https://github.com/japaric/flip-lld
+          cargo install --git https://github.com/japaric/flip-lld --rev 3130901af4ecc9cf7b2c4c8fc8c1090b70fa0cf1
 
       - name: Build examples using the dev profile
         working-directory: ./firmware
