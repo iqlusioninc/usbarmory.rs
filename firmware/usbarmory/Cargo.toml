@@ -12,11 +12,16 @@ categories  = ["embedded", "hardware-support", "no-std"]
 keywords    = ["arm", "cortex-a"]
 
 [dependencies]
+consts = { path = "../../common/consts" }
 cortex-a = { path = "../cortex-a" }
+heapless = "0.5.3"
+memlog = { path = "../memlog" }
 pac = { package = "imx6ul-pac", path = "../imx6ul-pac" }
 rand_core = "0.5.1"
+spin = "0.5.2"
+typenum = "1.11.2"
+usb-device = "0.2.5"
 usbarmory-rt = { path = "../usbarmory-rt" }
-memlog = { path = "../memlog" }
 
 [dev-dependencies]
 cortex-a-rtfm = { path = "../cortex-a-rtfm" }
