@@ -48,6 +48,12 @@ $ # on this directory
 $ cargo build --example $example_name
 ```
 
+Note that some examples *must* be compiled using the `release` profile (with
+optimizations) because when unoptimized they are too big to fit in (OC)RAM (128
+KB). These examples are "hidden" behind a Cargo feature named `big`. `cargo
+build --examples` will not build the `big` examples. To build a `big` example,
+like the `usb` ones, use `cargo build --features big --example usb`.
+
 ## Running on QEMU
 
 The examples whose name is prefixed with `qemu-` are meant to be run on QEMU and
