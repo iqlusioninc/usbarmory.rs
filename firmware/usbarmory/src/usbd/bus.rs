@@ -346,7 +346,7 @@ impl Inner {
             None
         };
 
-        let dqh = self.get_dqh(ep_addr).expect("UNREACHABLE");
+        let dqh = self.get_dqh(ep_addr).ok_or(UsbError::InvalidEndpoint)?;
         let ep_mask = util::epaddr2endptmask(ep_addr);
         if let Some(setupstat) = setupstat {
             // SETUP packets need special handling because no dTD is used
@@ -483,6 +483,10 @@ impl Inner {
 
             Ok(n)
         } else {
+            if self.usb.ENDPTCOMPLETE.read() & ep_mask == 0 {
+                return Err(UsbError::WouldBlock);
+            }
+
             // copy out the data and re-prime buffer
             let dtd = unsafe { dqh.get_current_dtd().expect("UNREACHABLE") };
 
@@ -545,7 +549,7 @@ impl Inner {
         );
         crate::memlog_try_flush();
 
-        let dqh = self.get_dqh(ep_addr).expect("UNREACHABLE");
+        let dqh = self.get_dqh(ep_addr).ok_or(UsbError::InvalidEndpoint)?;
 
         // "Executing a transfer descriptor", section 54.4.6.6.3
         // the dTD should already be installed in `next_dtd`
