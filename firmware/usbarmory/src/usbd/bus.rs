@@ -1,6 +1,9 @@
 //! `UsbBus` implementation
 
-use core::sync::atomic::{self, Ordering};
+use core::{
+    slice,
+    sync::atomic::{self, Ordering},
+};
 
 use usb_device::{
     bus::{PollResult, UsbBus},
@@ -11,7 +14,7 @@ use usb_device::{
 use super::{
     dqh::dQH,
     token::{Status, Token},
-    util::{self, Data, Hex, Ref},
+    util::{self, Data, OneIndices, Ref},
     Inner, Usbd, ENDPOINTS,
 };
 use crate::{memlog, memlog_flush_and_reset, time};
@@ -66,7 +69,7 @@ impl UsbBus for Usbd {
     }
 
     fn resume(&self) {
-        // TODO
+        // TODO do something in the `resume` callback
     }
 
     fn set_stalled(&self, _: EndpointAddress, stalled: bool) {
@@ -77,20 +80,14 @@ impl UsbBus for Usbd {
     }
 
     fn suspend(&self) {
-        // TODO
+        // TODO do something in the `suspend` callback
     }
 
     fn set_device_address(&self, addr: u8) {
-        memlog!("set_device_address({})", addr);
-        crate::memlog_try_flush();
-
-        // "instantaneous" udpate
         self.inner
             .try_lock()
             .expect("UNREACHABLE")
-            .usb
-            .DEVICEADDR
-            .write((addr as u32) << 25);
+            .set_device_address(addr);
     }
 
     fn write(&self, ep_addr: EndpointAddress, bytes: &[u8]) -> Result<usize, UsbError> {
@@ -106,6 +103,18 @@ const USBSTS_URI: u32 = 1 << 6;
 
 /// Port Change Detect
 const USBSTS_PCI: u32 = 1 << 2;
+
+/// TX Endpoint Enable
+const ENDPTCTRL_TXE: u32 = 1 << 23;
+
+/// TX Data Toggle Reset
+const ENDPTCTRL_TXR: u32 = 1 << 22;
+
+/// RX Endpoint Enable
+const ENDPTCTRL_RXE: u32 = 1 << 7;
+
+/// RX Data Toggle Reset
+const ENDPTCTRL_RXR: u32 = 1 << 6;
 
 impl Inner {
     // # UsbBus methods
@@ -126,6 +135,7 @@ impl Inner {
             interval,
             time::uptime(),
         );
+        assert_ne!(ep_type, EndpointType::Isochronous, "not supported");
 
         let (ep_addr, dqh) = if let Some(ep_addr) = ep_addr {
             let dqh = self.get_dqh(ep_addr).ok_or(UsbError::EndpointOverflow)?;
@@ -152,45 +162,34 @@ impl Inner {
             }
         };
 
-        // XXX You are supposed to write USB wMaxPacketSize in this field but
-        // for unknown reasons if you write *exactly* that value then only the
-        // *first* transfer (in either direction) through this endpoint will
-        // work. Attempting to do a second transfer will result in the DMA
-        // stalling with no error or status flag being raised. Writing a
-        // slightly higher value than wMaxPacketSize appears to work around the
-        // problem ...
-        const MAX_PACKET_SIZE_HACK: u16 = 8;
-        // NOTE(unsafe) dQH cannot access this field yet
+        // NOTE(unsafe) hardware cannot yet access the dQH and dTD
         unsafe {
-            dqh.set_max_packet_size(max_packet_size + MAX_PACKET_SIZE_HACK);
-        }
+            dqh.set_max_packet_size(max_packet_size);
 
-        // TODO install a dTD for other endpoints
-        if ep_addr.index() == 0 {
-            unsafe {
-                let dtd = Ref::new(self.dtds.pop().expect("exhausted the dTD pool"));
+            // install a dTD for the endpoint
+            let dtd = Ref::new(self.dtds.pop().expect("exhausted the dTD pool"));
 
-                // "Set the terminate bit to 1"
-                dtd.set_next_dtd(None);
+            if ep_addr.is_out() && ep_addr.index() != 0 {
+                // install buffer in the dTD
+                let addr = if max_packet_size == 512 {
+                    let b = self
+                        .b512s
+                        .pop()
+                        .expect("OOM during 512-byte buffer request");
+                    b.as_mut_ptr()
+                } else {
+                    unimplemented!("buffers of {}-bytes are not available", max_packet_size)
+                };
 
-                // "Fill in total bytes with transfer size"
-                // "Set the interrupt on complete if desired"
-                // "Initialize the status field with the active bit set to 1 and
-                // all remaining status bits set to 0"
                 let mut token = Token::empty();
-                if ep_addr.is_out() {
-                    // XXX it may not make sense to do this here
-                    token.set_total_bytes(usize::from(max_packet_size));
-                    token.set_status(Status::active());
-                }
+                token.set_total_bytes(max_packet_size.into());
+                token.set_status(Status::active());
                 dtd.set_token(token);
-
-                // "Fill in buffer pointer 0 and the current offset to point to
-                // the start of the data buffer" -- this and the following steps
-                // will be done in `read`
-
-                dqh.set_next_dtd(Some(dtd));
+                dtd.set_pages(addr);
+                dqh.set_address(addr);
             }
+
+            dqh.set_next_dtd(Some(dtd));
         }
 
         // NOTE no memory barrier here because we are not going to hand this to
@@ -199,6 +198,12 @@ impl Inner {
 
         // mark this endpoint as used
         self.mark_ep_as_used(ep_addr);
+        // NOTE we should do endpoint configuration after the device has
+        // transitioned from the 'Address' state to the 'Configured' state but
+        // `usb_device` provides no hook to do that so we just do it here.
+        if ep_addr.index() != 0 {
+            self.configure_ep(ep_addr, ep_type);
+        }
 
         Ok(ep_addr)
     }
@@ -253,6 +258,8 @@ impl Inner {
     }
 
     fn poll(&mut self) -> PollResult {
+        // TODO report `Suspend` and `Resume` events
+
         /// When a controller enters a suspend state from an active state
         const USBSTS_SLI: u32 = 1 << 8;
         /// System error
@@ -261,11 +268,6 @@ impl Inner {
         let sts = self.usb.USBSTS.read();
         let setupstat = self.usb.ENDPTSETUPSTAT.read() as u16;
         let complete = self.usb.ENDPTCOMPLETE.read();
-
-        if complete != 0 {
-            memlog!("ENDPTCOMPLETE: {:?}", &Hex(complete));
-            memlog_flush_and_reset!();
-        }
 
         if sts & USBSTS_PCI != 0 {
             self.port_change();
@@ -276,7 +278,8 @@ impl Inner {
             self.setupstat = Some(setupstat);
         }
 
-        if setupstat != 0 || self.ep_in_complete.is_some() || self.needs_status_out {
+        if setupstat != 0 || self.ep_in_complete.is_some() || self.needs_status_out || complete != 0
+        {
             let ep_setup = setupstat;
             let ep_in_complete = self.ep_in_complete.take().unwrap_or(0);
             // STATUS out needs to be reported after the IN data phase
@@ -297,20 +300,23 @@ impl Inner {
                 ep_out,
             };
 
-            memlog!("poll() -> {:?}", data);
+            memlog!("poll() -> {:?} @ {:?}", data, time::uptime());
             crate::memlog_try_flush();
 
+            self.last_poll_was_none = false;
             return data.into();
         }
 
         if sts & USBSTS_URI != 0 {
-            self.last_poll_was_none = false;
             memlog!("poll() -> Reset @ {:?}", time::uptime());
+            crate::memlog_try_flush();
+
+            self.last_poll_was_none = false;
             PollResult::Reset
         } else {
             if !self.last_poll_was_none {
                 self.last_poll_was_none = true;
-                memlog!("poll() -> None (USBSTS = {:#010x})", sts);
+                memlog!("poll() -> None");
             }
             crate::memlog_try_flush();
 
@@ -328,8 +334,6 @@ impl Inner {
         );
         crate::memlog_try_flush();
 
-        assert_eq!(ep_addr.index(), 0, "not yet implemented");
-
         let setupstat = if let Some(setupstat) = self.setupstat.as_mut() {
             let mask = 1 << ep_addr.index();
             if *setupstat & mask != 0 {
@@ -343,6 +347,7 @@ impl Inner {
         };
 
         let dqh = self.get_dqh(ep_addr).expect("UNREACHABLE");
+        let ep_mask = util::epaddr2endptmask(ep_addr);
         if let Some(setupstat) = setupstat {
             // SETUP packets need special handling because no dTD is used
             // see section 54.4.6.4.2.1 of the ULRM
@@ -375,15 +380,21 @@ impl Inner {
             // 5. "Write 0 to clear Setup Tripwire (SUTW) in USBCMD"
             self.usb.USBCMD.rmw(|cmd| cmd & !CMD_SUTW);
 
-            // FIXME is this needed?
-
             // repeat some of `usb_device` logic here because `usb_device` won't
-            // trigger the STATUS out phase
+            // trigger the STATUS out phase nor does it have hook for
+            // SET_CONFIGURATION
             match &buf[..4] {
                 // SET_ADDRESS -- no data phase
                 [0, 5, _, _] => {}
                 // SET_CONFIGURATION
-                [0, 9, _, _] => {}
+                [0, 9, _, _] => {
+                    // FIXME (a) we should only reset the endpoints when the
+                    // configuration changed. (b) we should only reset the
+                    // endpoints that are part of the new configuration
+                    for ep_addr in self.allocated_eps() {
+                        self.reset_ep(ep_addr)
+                    }
+                }
                 // SET_INTERFACE
                 [1, 11, _, _] => {}
 
@@ -401,8 +412,11 @@ impl Inner {
             crate::memlog_try_flush();
 
             Ok(n)
-        } else {
+        } else if ep_addr.index() == 0 {
+            // FIXME can we set up the buffer and prime the endpoint earlier?
+
             // the dTD should already be installed in `next_dtd`
+            // TODO turn into debug_assertions
             unsafe {
                 assert!(dqh.get_current_dtd().is_none());
                 assert!(dqh.get_next_dtd().is_some());
@@ -417,16 +431,17 @@ impl Inner {
                 token.set_total_bytes(cap);
                 token.set_status(Status::active());
                 dtd.set_token(token);
-                dtd.set_pages(buf.as_ptr());
+                let addr = buf.as_ptr();
+                dtd.set_pages(addr);
+                dqh.set_address(addr);
             }
 
             // force all previous memory operations to complete before
             // priming
             atomic::fence(Ordering::Release);
 
-            // "Prime endpoint by writing 1 to correct bit position in ENDPTPRIME"
-            let mask = util::epaddr2endptmask(ep_addr);
-            self.usb.ENDPTPRIME.rmw(|prime| prime | mask);
+            // prime the endpoint
+            self.usb.ENDPTPRIME.rmw(|prime| prime | ep_mask);
 
             // now the hardware can modify dQH and dTD
             memlog!("OUT{} primed @ {:?}", ep_addr.index(), time::uptime());
@@ -434,7 +449,7 @@ impl Inner {
             // FIXME return WouldBlock instead of busy waiting
             // wait for completion
             if util::wait(
-                || self.usb.ENDPTCOMPLETE.read() & mask != 0,
+                || self.usb.ENDPTCOMPLETE.read() & ep_mask != 0,
                 2 * consts::microframe(),
             )
             .is_err()
@@ -447,7 +462,7 @@ impl Inner {
             atomic::fence(Ordering::Acquire);
 
             // clear complete bit
-            self.usb.ENDPTCOMPLETE.write(mask);
+            self.usb.ENDPTCOMPLETE.write(ep_mask);
             let token = unsafe { dtd.get_token() };
             let status = token.get_status();
 
@@ -467,6 +482,57 @@ impl Inner {
             }
 
             Ok(n)
+        } else {
+            // copy out the data and re-prime buffer
+            let dtd = unsafe { dqh.get_current_dtd().expect("UNREACHABLE") };
+
+            // clear complete bit
+            self.usb.ENDPTCOMPLETE.write(ep_mask);
+
+            // synchronize with DMA operations before reading dQH or dTD
+            atomic::fence(Ordering::Acquire);
+
+            let token = unsafe { dtd.get_token() };
+            let status = token.get_status();
+
+            if status.is_active() || status.has_errors() || status.is_halted() {
+                memlog!("read: DMA transfer failed");
+                memlog_flush_and_reset!();
+            }
+
+            let left = unsafe { dqh.get_token().get_total_bytes() };
+            let max_packet_size = dqh.get_max_packet_size();
+            let n = max_packet_size - left;
+            let addr = dqh.get_address();
+
+            unsafe {
+                buf[..n.into()].copy_from_slice(slice::from_raw_parts(addr, usize::from(n)));
+            }
+
+            memlog!("read: {} bytes @ {:?}", n, time::uptime());
+
+            unsafe {
+                let mut token = Token::empty();
+                token.set_total_bytes(max_packet_size.into());
+                token.set_status(Status::active());
+                dtd.set_token(token);
+                dtd.set_pages(addr);
+
+                // leave the dTD in place for the next transfer
+                dqh.clear_current_dtd();
+                dqh.set_next_dtd(Some(dtd));
+            }
+
+            // force all previous memory operations to complete before
+            // priming
+            atomic::fence(Ordering::Release);
+
+            // prime the endpoint
+            self.usb.ENDPTPRIME.rmw(|prime| prime | ep_mask);
+
+            memlog!("OUT{} primed @ {:?}", ep_addr.index(), time::uptime());
+
+            Ok(n.into())
         }
     }
 
@@ -478,8 +544,6 @@ impl Inner {
             time::uptime()
         );
         crate::memlog_try_flush();
-
-        assert_eq!(ep_addr.index(), 0, "not yet implemented");
 
         let dqh = self.get_dqh(ep_addr).expect("UNREACHABLE");
 
@@ -499,7 +563,9 @@ impl Inner {
             token.set_total_bytes(n);
             token.set_status(Status::active());
             dtd.set_token(token);
-            dtd.set_pages(bytes.as_ptr());
+            let addr = bytes.as_ptr();
+            dtd.set_pages(addr);
+            dqh.set_address(addr);
         }
 
         // force all previous memory operations to complete before
@@ -551,6 +617,21 @@ impl Inner {
         Ok(n)
     }
 
+    fn set_device_address(&mut self, addr: u8) {
+        memlog!("set_device_address({})", addr);
+        crate::memlog_try_flush();
+
+        // "instantaneous" address update
+        self.usb.DEVICEADDR.write((addr as u32) << 25);
+
+        // FIXME enabling an endpoint should be doing after receiving a
+        // SET_CONFIGURATION control packet -- `usb_device` provides no hook for
+        // that but we could do this in `read`
+        for ep_addr in self.allocated_eps() {
+            self.enable_ep(ep_addr)
+        }
+    }
+
     // # Helper functions
     fn port_change(&mut self) {
         memlog!("port_change @ {:?}", time::uptime());
@@ -558,9 +639,6 @@ impl Inner {
 
         // clear the 'Port Change Detect' bit
         self.usb.USBSTS.write(USBSTS_PCI);
-
-        // TODO do endpoint setup here?
-        // TODO set up transfer descriptors
     }
 
     fn get_dqh(&self, ep_addr: EndpointAddress) -> Option<Ref<dQH>> {
@@ -578,12 +656,116 @@ impl Inner {
 
     fn is_ep_being_used(&self, ep_addr: EndpointAddress) -> bool {
         let mask = 1 << util::epaddr2dqhidx(ep_addr);
-        self.used_dqh & mask != 0
+        self.used_dqhs & mask != 0
     }
 
     fn mark_ep_as_used(&mut self, ep_addr: EndpointAddress) {
         let mask = 1 << util::epaddr2dqhidx(ep_addr);
-        self.used_dqh |= mask;
+        self.used_dqhs |= mask;
+    }
+
+    /// Returns an iterator over all the allocated endpoints
+    fn allocated_eps(&self) -> impl Iterator<Item = EndpointAddress> {
+        OneIndices::of(u32::from(self.used_dqhs)).map(|idx| util::dqhidx2epaddr(usize::from(idx)))
+    }
+
+    fn configure_ep(&mut self, ep_addr: EndpointAddress, ep_type: EndpointType) {
+        assert_ne!(
+            ep_addr.index(),
+            0,
+            "endpoint 0 is always the control endpoint"
+        );
+
+        let idx = ep_addr.index();
+        assert_eq!(
+            idx, 1,
+            "configuring endpoint {} is not supported at the moment",
+            idx
+        );
+
+        const ENDPTCTRL_TXT_OFFSET: u8 = 18;
+        const ENDPTCTRL_TXT_MASK: u32 = 0b11;
+
+        const ENDPTCTRL_RXT_OFFSET: u8 = 2;
+        const ENDPTCTRL_RXT_MASK: u32 = 0b00;
+
+        const BULKT: u32 = 0b10;
+        let ty = match ep_type {
+            EndpointType::Control => 0b00,
+            EndpointType::Isochronous => 0b01,
+            EndpointType::Bulk => BULKT,
+            EndpointType::Interrupt => 0b11,
+        };
+
+        // "If one endpoint direction is enabled and the paired endpoint
+        // ofopposite direction is disabled then the unused direction
+        // typemust be changed from the default control-type to any other
+        // type (that is Bulk-type). leaving an unconfigured endpoint
+        // controlcauses undefined behavior for the data pid tracking on
+        // the active endpoint/direction." -- section 56.6.40 of ULLRM
+        if ep_addr.is_out() {
+            self.usb.ENDPTCTRL1.rmw(|ctrl| {
+                (ctrl & !(ENDPTCTRL_RXT_MASK << ENDPTCTRL_RXT_OFFSET))
+                    | (ty << ENDPTCTRL_RXT_OFFSET)
+            });
+
+            if self.usb.ENDPTCTRL1.read() & ENDPTCTRL_TXE == 0 {
+                self.usb.ENDPTCTRL1.rmw(|ctrl| {
+                    (ctrl & !(ENDPTCTRL_TXT_MASK << ENDPTCTRL_TXT_OFFSET))
+                        | (BULKT << ENDPTCTRL_TXT_OFFSET)
+                });
+            }
+        } else {
+            self.usb.ENDPTCTRL1.rmw(|ctrl| {
+                (ctrl & !(ENDPTCTRL_TXT_MASK << ENDPTCTRL_TXT_OFFSET))
+                    | (ty << ENDPTCTRL_TXT_OFFSET)
+            });
+
+            if self.usb.ENDPTCTRL1.read() & ENDPTCTRL_RXE == 0 {
+                self.usb.ENDPTCTRL1.rmw(|ctrl| {
+                    (ctrl & !(ENDPTCTRL_RXT_MASK << ENDPTCTRL_RXT_OFFSET))
+                        | (BULKT << ENDPTCTRL_RXT_OFFSET)
+                });
+            }
+        }
+    }
+
+    fn enable_ep(&mut self, ep_addr: EndpointAddress) {
+        // TODO generalize beyond endpoint 1
+        if ep_addr.is_out() {
+            let idx = ep_addr.index();
+            if idx != 0 {
+                // prime the endpoint
+                let mask = util::epaddr2endptmask(ep_addr);
+                self.usb.ENDPTPRIME.rmw(|prime| prime | mask);
+
+                memlog!("primed OUT{} @ {:?}", idx, time::uptime());
+            }
+
+            self.usb.ENDPTCTRL1.rmw(|ctrl| ctrl | ENDPTCTRL_RXE);
+        } else {
+            self.usb.ENDPTCTRL1.rmw(|ctrl| ctrl | ENDPTCTRL_TXE);
+        }
+    }
+
+    /// Resets the endpoint PID sequence
+    fn reset_ep(&mut self, ep_addr: EndpointAddress) {
+        // TODO generalize beyond endpoint 1
+        if ep_addr.is_out() {
+            // TODO turn into a debug assertion
+            assert_ne!(
+                self.usb.ENDPTCTRL1.read() & ENDPTCTRL_RXE,
+                0,
+                "endpoint not enabled"
+            );
+
+            self.usb.ENDPTCTRL1.rmw(|ctrl| ctrl | ENDPTCTRL_RXR);
+        } else {
+            // TODO turn into a debug assertion
+            assert_ne!(self.usb.ENDPTCTRL1.read() & ENDPTCTRL_TXE, 0);
+
+            self.usb.ENDPTCTRL1.rmw(|ctrl| ctrl | ENDPTCTRL_TXR);
+        }
     }
 
     fn set_ep_in_complete(&mut self, index: usize) {

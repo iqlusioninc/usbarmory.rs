@@ -1,0 +1,12 @@
+[package]
+authors = ["iqlusion"]
+edition = "2018"
+license = "Apache-2.0 OR MIT"
+name    = "usbc"
+publish = false
+version = "0.0.0"
+
+[dependencies]
+anyhow = "1.0.26"
+consts = { path = "../../common/consts" }
+rusb = "0.5.5"

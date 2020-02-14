@@ -31,6 +31,8 @@ const ENDPOINTS: usize = 4;
 
 // Maximum number of dTD that can be used
 type NDTDS = heapless::consts::U4;
+// Numbers of buffers managed by `Usbd`
+type NBUFS = heapless::consts::U1;
 
 impl Usbd {
     /// Gets a handle to the USB device
@@ -46,7 +48,7 @@ impl Usbd {
         ) {
             // # initialize some data structures
 
-            // NOTE this code runs in a critical sections
+            // NOTE this code runs in a critical section and runs only once
             static mut DQHS: Align2K<[dQH; ENDPOINTS]> = Align2K {
                 inner: [dQH::new(), dQH::new(), dQH::new(), dQH::new()],
             };
@@ -57,6 +59,15 @@ impl Usbd {
             unsafe {
                 for dtd in DTDS.iter_mut() {
                     dtds.push(dtd).ok().expect("UNREACHABLE");
+                }
+            }
+
+            static mut B512S: [[u8; 512]; NBUFS::USIZE] = [[0; 512]; 1];
+
+            let mut b512s = Vec::new();
+            unsafe {
+                for b512 in B512S.iter_mut() {
+                    b512s.push(b512).ok().expect("UNREACHABLE");
                 }
             }
 
@@ -227,7 +238,8 @@ impl Usbd {
                 inner: Mutex::new(Inner {
                     usb,
                     dtds,
-                    used_dqh: 0,
+                    b512s,
+                    used_dqhs: 0,
                     setupstat: None,
                     ep_in_complete: None,
                     last_poll_was_none: false,
@@ -242,10 +254,13 @@ impl Usbd {
 
 struct Inner {
     usb: USB_UOG1,
+
+    // memory management
     dtds: Vec<&'static mut dTD, NDTDS>,
+    b512s: Vec<&'static mut [u8; 512], NBUFS>,
 
     // bitmask that indicates which endpoints are currently in use
-    used_dqh: u8, // NOTE must be updated if `ENDPOINTS` changes
+    used_dqhs: u8, // NOTE must be updated if `ENDPOINTS` changes
 
     setupstat: Option<u16>,
     ep_in_complete: Option<u16>,

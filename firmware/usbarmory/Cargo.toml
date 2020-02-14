@@ -12,6 +12,10 @@ categories  = ["embedded", "hardware-support", "no-std"]
 keywords    = ["arm", "cortex-a"]
 
 [[example]]
+name = "usb-enumerate"
+required-features = ["big"]
+
+[[example]]
 name = "usb"
 required-features = ["big"]
 

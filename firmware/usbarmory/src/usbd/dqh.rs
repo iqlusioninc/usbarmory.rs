@@ -35,8 +35,10 @@ pub struct dQH {
     reserved: UnsafeCell<Reserved>,
     // SETUP packets (see USB control transfers) are written to this filed
     setup: [UnsafeCell<u8>; SETUP_BYTES],
+
     // XXX I think we are allowed to use the 16 bytes that follow and are used
     // for padding (the hardware requires that dQHs are laid down in an array)
+    addr: Cell<usize>,
 }
 
 impl dQH {
@@ -66,6 +68,7 @@ impl dQH {
                 UnsafeCell::new(0),
                 UnsafeCell::new(0),
             ],
+            addr: Cell::new(0),
         }
     }
 
@@ -81,6 +84,7 @@ impl dQH {
         self.current_dtd.get().write(1);
     }
 
+    // # Getters / Setters
     /// # Safety
     ///
     /// Must be called only when the hardware is not operating on the dQH. Must
@@ -88,6 +92,18 @@ impl dQH {
     /// this field
     pub unsafe fn set_max_packet_size(&self, max_packet_size: u16) {
         self.caps.set(Caps::new(max_packet_size));
+    }
+
+    pub fn get_max_packet_size(&self) -> u16 {
+        self.caps.get().max_packet_size()
+    }
+
+    pub fn get_address(&self) -> *const u8 {
+        self.addr.get() as *const u8
+    }
+
+    pub fn set_address(&self, addr: *const u8) {
+        self.addr.set(addr as usize)
     }
 
     /// # Safety
@@ -141,6 +157,7 @@ impl dQH {
             .write(dtd.map(|dtd| dtd.as_ptr() as usize).unwrap_or(NO_NEXT_DTD));
     }
 
+    // # Higher level operations
     /// NOTE the hardware may change the setup bytes while this operation is in
     /// progress. Check USBCMD.SUTW to see if that race occurred or not
     pub fn copy_setup_bytes(&self, buf: &mut [u8]) {
