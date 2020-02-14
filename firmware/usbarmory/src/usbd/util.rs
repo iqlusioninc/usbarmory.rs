@@ -1,6 +1,6 @@
 use core::{fmt, ops, ptr::NonNull, time::Duration};
 
-use usb_device::{bus::PollResult, endpoint::EndpointAddress};
+use usb_device::{bus::PollResult, endpoint::EndpointAddress, UsbDirection};
 
 use crate::time::Instant;
 
@@ -86,6 +86,15 @@ pub fn epaddr2dqhidx(ep_addr: EndpointAddress) -> usize {
     2 * ep_addr.index() + if ep_addr.is_out() { 0 } else { 1 }
 }
 
+pub fn dqhidx2epaddr(idx: usize) -> EndpointAddress {
+    let dir = if idx % 2 == 0 {
+        UsbDirection::Out
+    } else {
+        UsbDirection::In
+    };
+    EndpointAddress::from_parts(idx / 2, dir)
+}
+
 pub fn epaddr2endptmask(ep_addr: EndpointAddress) -> u32 {
     if ep_addr.is_out() {
         1 << ep_addr.index()
@@ -147,6 +156,31 @@ impl fmt::Debug for Hex<u32> {
             write!(f, "{:#06x}", self.0)
         } else {
             write!(f, "{:#06x}_{:04x}", self.0 >> 16, self.0 & 0xffff)
+        }
+    }
+}
+
+/// Iterates over the indices of the bits of a word that are set to 1
+impl OneIndices {
+    pub fn of(word: u32) -> Self {
+        Self { inner: word }
+    }
+}
+
+pub struct OneIndices {
+    inner: u32,
+}
+
+impl Iterator for OneIndices {
+    type Item = u8;
+
+    fn next(&mut self) -> Option<u8> {
+        if self.inner == 0 {
+            None
+        } else {
+            let i = self.inner.trailing_zeros();
+            self.inner &= !(1 << i);
+            Some(i as u8)
         }
     }
 }

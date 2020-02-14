@@ -31,6 +31,8 @@ const ENDPOINTS: usize = 4;
 
 // Maximum number of dTD that can be used
 type NDTDS = heapless::consts::U4;
+// Numbers of buffers managed by `Usbd`
+type NBUFS = heapless::consts::U1;
 
 impl Usbd {
     /// Gets a handle to the USB device
@@ -46,7 +48,7 @@ impl Usbd {
         ) {
             // # initialize some data structures
 
-            // NOTE this code runs in a critical sections
+            // NOTE this code runs in a critical section and runs only once
             static mut DQHS: Align2K<[dQH; ENDPOINTS]> = Align2K {
                 inner: [dQH::new(), dQH::new(), dQH::new(), dQH::new()],
             };
@@ -60,11 +62,22 @@ impl Usbd {
                 }
             }
 
+            static mut B512S: [[u8; 512]; NBUFS::USIZE] = [[0; 512]; 1];
+
+            let mut b512s = Vec::new();
+            unsafe {
+                for b512 in B512S.iter_mut() {
+                    b512s.push(b512).ok().expect("UNREACHABLE");
+                }
+            }
+
             // NOTE(unsafe) this code runs exactly once; this is an owning
             // pointer (it won't be aliased)
             let endptlistaddr = unsafe { DQHS.inner.as_ptr() };
 
             // # Configure the USB clock
+            // NOTE based on tamago's [1] USB code: USBx.Init @ imx6/usb/bus.go
+            // [1]: https://github.com/f-secure-foundry/tamago @ 4195e27d20950715dbf11c3b9dbf77a5a4431910
 
             /// Powers up the PLL
             const CCM_ANALOG_PLL_USB1_POWER: u32 = 1 << 12;
@@ -227,7 +240,8 @@ impl Usbd {
                 inner: Mutex::new(Inner {
                     usb,
                     dtds,
-                    used_dqh: 0,
+                    b512s,
+                    used_dqhs: 0,
                     setupstat: None,
                     ep_in_complete: None,
                     last_poll_was_none: false,
@@ -242,10 +256,13 @@ impl Usbd {
 
 struct Inner {
     usb: USB_UOG1,
+
+    // memory management
     dtds: Vec<&'static mut dTD, NDTDS>,
+    b512s: Vec<&'static mut [u8; 512], NBUFS>,
 
     // bitmask that indicates which endpoints are currently in use
-    used_dqh: u8, // NOTE must be updated if `ENDPOINTS` changes
+    used_dqhs: u8, // NOTE must be updated if `ENDPOINTS` changes
 
     setupstat: Option<u16>,
     ep_in_complete: Option<u16>,

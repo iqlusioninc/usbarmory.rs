@@ -13,7 +13,7 @@ fn panic(info: &PanicInfo) -> ! {
         // NOTE the leading newline is to *not* append the panic message to some
         // other message (in the case we preempted a `write!` operation or a
         // `write!` operation panicked midway)
-        writeln!(serial, "\n----\n{}\n----", info).ok();
+        write!(serial, "\n\r----\n\r{}\n\r----\n\r", info).ok();
         Serial::flush();
     });
 
