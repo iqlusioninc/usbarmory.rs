@@ -76,6 +76,8 @@ impl Usbd {
             let endptlistaddr = unsafe { DQHS.inner.as_ptr() };
 
             // # Configure the USB clock
+            // NOTE based on tamago's [1] USB code: USBx.Init @ imx6/usb/bus.go
+            // [1]: https://github.com/f-secure-foundry/tamago @ 4195e27d20950715dbf11c3b9dbf77a5a4431910
 
             /// Powers up the PLL
             const CCM_ANALOG_PLL_USB1_POWER: u32 = 1 << 12;
