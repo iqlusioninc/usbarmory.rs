@@ -1,6 +1,6 @@
 //! Sample USB client
 //!
-//! `usbc some message` will send the command line arguments to the device using 
+//! `usbc some message` will send the command line arguments to the device using
 //! bulk transfers. The program will then block wait for response bulk
 //! transfers (one for each transfer sent) and then prints their contents to the
 //! console, one line per response transfer.
@@ -11,34 +11,18 @@ use std::{env, str};
 use anyhow::bail;
 use rusb::{DeviceHandle, Direction, GlobalContext, TransferType};
 
-#[derive(Clone, Copy, Debug)]
-struct Endpoint {
-    address: u8,
-    config: u8,
-    iface: u8,
-    setting: u8,
-}
-
-// NOTE assuming a High-Speed USB device
-const MAX_PACKET_SIZE: usize = 512;
-
 fn main() -> Result<(), anyhow::Error> {
-    let mut bulk = BulkPair::open(consts::VID, consts::PID)?;
-
     let args = env::args().skip(1).collect::<Vec<_>>();
 
     if args.is_empty() {
         bail!("expected at least one argument")
     }
 
-    for msg in args {
-        assert!(
-            msg.len() < MAX_PACKET_SIZE,
-            "messages longer than the maximum packet size are currently not supported"
-        );
+    let mut bulk = BulkPair::open(consts::VID, consts::PID)?;
 
+    for msg in args {
         bulk.write(msg.as_bytes())?;
-        let mut buf = [0; MAX_PACKET_SIZE];
+        let mut buf = vec![0; bulk.in_max_packet_size().into()];
         let resp = bulk.read(&mut buf)?;
 
         if let Ok(s) = str::from_utf8(resp) {
@@ -52,18 +36,24 @@ fn main() -> Result<(), anyhow::Error> {
 }
 
 fn default_timeout() -> Duration {
-    Duration::from_millis(100)
+    2 * consts::frame()
 }
 
 /// IN/OUT bulk endpoint pair
 struct BulkPair {
-    ep_addr_in: u8,
-    ep_addr_out: u8,
+    in_ep_addr: u8,
+    in_max_packet_size: u16,
+
+    out_ep_addr: u8,
+    out_max_packet_size: u16,
+
     handle: DeviceHandle<GlobalContext>,
     timeout: Duration,
 }
 
 impl BulkPair {
+    /// Opens the USB device identified with `vid` and `pid` and claims the
+    /// interface that has exactly one IN/OUT bulk endpoint pair
     pub fn open(vid: u16, pid: u16) -> Result<Self, anyhow::Error> {
         for dev in rusb::devices()?.iter() {
             let desc = dev.device_descriptor()?;
@@ -74,23 +64,27 @@ impl BulkPair {
 
                     for iface in config_desc.interfaces() {
                         'iface: for iface_desc in iface.descriptors() {
-                            let mut ep_addr_in = None;
-                            let mut ep_addr_out = None;
+                            let mut in_ep = None;
+                            let mut out_ep = None;
                             let mut seen = 0;
 
                             for ep_desc in iface_desc.endpoint_descriptors() {
                                 if ep_desc.transfer_type() == TransferType::Bulk {
                                     seen += 1;
                                     let addr = ep_desc.address();
+                                    let max_packet_size = ep_desc.max_packet_size();
                                     if ep_desc.direction() == Direction::In {
-                                        ep_addr_in = Some(addr);
+                                        in_ep = Some((addr, max_packet_size));
                                     } else {
-                                        ep_addr_out = Some(addr);
+                                        out_ep = Some((addr, max_packet_size));
                                     };
                                 }
                             }
 
-                            if let (Some(ep_addr_in), Some(ep_addr_out)) = (ep_addr_in, ep_addr_out)
+                            if let (
+                                Some((in_ep_addr, in_max_packet_size)),
+                                Some((out_ep_addr, out_max_packet_size)),
+                            ) = (in_ep, out_ep)
                             {
                                 if seen != 2 {
                                     // more than one IN/OUT endpoint pair; try the next interface
@@ -120,8 +114,10 @@ impl BulkPair {
 
                                 return Ok(BulkPair {
                                     handle,
-                                    ep_addr_in,
-                                    ep_addr_out,
+                                    in_ep_addr,
+                                    in_max_packet_size,
+                                    out_ep_addr,
+                                    out_max_packet_size,
                                     timeout: default_timeout(),
                                 });
                             }
@@ -138,14 +134,31 @@ impl BulkPair {
 
     /// Reads data from the IN endpoint
     pub fn read<'b>(&mut self, buf: &'b mut [u8]) -> Result<&'b [u8], anyhow::Error> {
-        let n = self.handle.read_bulk(self.ep_addr_in, buf, self.timeout)?;
+        let n = self.handle.read_bulk(self.in_ep_addr, buf, self.timeout)?;
         Ok(&buf[..n])
     }
 
+    /// Returns the max packet size of the IN endpoint
+    #[allow(dead_code)]
+    pub fn in_max_packet_size(&self) -> u16 {
+        self.in_max_packet_size
+    }
+
     /// Writes data into the OUT endpoint
+    ///
+    /// *NOTE* The length of the `bytes` argument cannot exceed the endpoint
+    /// maximum packet size
     pub fn write(&mut self, bytes: &[u8]) -> Result<(), anyhow::Error> {
+        // XXX alternatively we could split `bytes` in `out_max_packet_size`
+        // chunks
+        assert!(
+            bytes.len() < self.out_max_packet_size.into(),
+            "the length of `write` argument cannot exceed the max_packet_size ({} bytes) ",
+            self.out_max_packet_size
+        );
+
         self.handle
-            .write_bulk(self.ep_addr_out, bytes, self.timeout)?;
+            .write_bulk(self.out_ep_addr, bytes, self.timeout)?;
         Ok(())
     }
 
