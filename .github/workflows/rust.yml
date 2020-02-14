@@ -184,7 +184,7 @@ jobs:
           cargo build --examples
 
       - name: Build examples using the release profile
-        working-directory: ./firmware
+        working-directory: ./firmware/usbarmory
         run: |
           cargo build --examples --features big --release
 
