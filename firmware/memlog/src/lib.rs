@@ -9,8 +9,12 @@
 //! context. This is what this in-memory logger lets you do.
 //!
 //! You should only use the `memlog!` macro defined here. To transmit the data
-//! use the `nb_memlog_flush` and `memlog_flush_to_end` API provided in the
+//! use the `try_memlog_flush` and `memlog_flush_and_reset` API provided in the
 //! `usbarmory` crate.
+//!
+//! Note that `memlog!` works in thread mode (AKA `main`) and interrupt context
+//! but should *not* be used from interrupts that run at different priority.
+//! This will result in data loss.
 
 #![no_std]
 
