@@ -63,8 +63,8 @@ pub fn memlog_flush_and_reset(file: &str, line: u32) -> ! {
     cortex_a::disable_fiq();
 
     // called twice to handle the wrap-around case
-    for _ in 0..2 {
-        memlog::peek(|s| {
+    for _ in 0..4 {
+        memlog::peek(true, |s| {
             // NOTE(borrow_unchecked) this runs with interrupts disabled (critical
             // section)
             Serial::borrow_unchecked(|serial| serial.write_all(s));
@@ -85,5 +85,7 @@ pub fn memlog_flush_and_reset(file: &str, line: u32) -> ! {
 /// [Non-blocking] Transmits some of the contents of the in-memory logger over
 /// the serial interface
 pub fn memlog_try_flush() {
-    memlog::peek(|s| Serial::borrow_unchecked(|serial| serial.try_write_all(s)))
+    memlog::peek(false, |s| {
+        Serial::borrow_unchecked(|serial| serial.try_write_all(s))
+    })
 }

@@ -6,4 +6,5 @@ name    = "memlog"
 version = "0.0.0"
 
 [dependencies]
+generic-array = "0.13.2"
 pac = { package = "imx6ul-pac", path = "../imx6ul-pac" }

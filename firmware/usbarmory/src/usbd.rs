@@ -8,9 +8,11 @@ mod dtd;
 mod token;
 mod util;
 
+use core::cell::RefCell;
+
+use cortex_a::register::cpsr;
 use heapless::Vec;
 use pac::{ccm_analog::CCM_ANALOG, usb_analog::USB_ANALOG, usb_uog::USB_UOG1, usbphy::USBPHY1};
-use spin::Mutex;
 use typenum::marker_traits::Unsigned;
 
 use crate::{memlog, memlog_flush_and_reset};
@@ -20,8 +22,6 @@ use util::Align2K;
 
 /// USB device
 pub struct Usbd {
-    // NOTE for now the Mutex is used just to satisfy the undocumented `Sync`
-    // bound required by the `UsbBus` trait
     inner: Mutex<Inner>,
 }
 
@@ -32,7 +32,7 @@ const ENDPOINTS: usize = 4;
 // Maximum number of dTD that can be used
 type NDTDS = heapless::consts::U4;
 // Numbers of buffers managed by `Usbd`
-type NBUFS = heapless::consts::U1;
+type NBUFS = heapless::consts::U2;
 
 impl Usbd {
     /// Gets a handle to the USB device
@@ -62,7 +62,16 @@ impl Usbd {
                 }
             }
 
-            static mut B512S: [[u8; 512]; NBUFS::USIZE] = [[0; 512]; 1];
+            static mut B64S: [[u8; 64]; NBUFS::USIZE] = [[0; 64]; NBUFS::USIZE];
+
+            let mut b64s = Vec::new();
+            unsafe {
+                for b64 in B64S.iter_mut() {
+                    b64s.push(b64).ok().expect("UNREACHABLE");
+                }
+            }
+
+            static mut B512S: [[u8; 512]; NBUFS::USIZE] = [[0; 512]; NBUFS::USIZE];
 
             let mut b512s = Vec::new();
             unsafe {
@@ -236,21 +245,54 @@ impl Usbd {
 
             usb.OTGSC.rmw(|otgsc| otgsc | USB_OTG_OTGSC_OT);
 
+            // enable interrupts
+            /// USB Interrupt enable
+            const USB_OTG_USBINTR_UE: u32 = 1;
+            /// Port Change Detect Interrupt
+            const USB_OTG_USBINTR_PCE: u32 = 1 << 2;
+            /// System Error Interrupt Enable
+            const USB_OTG_USBINTR_SEE: u32 = 1 << 4;
+            /// USB Reset Interrupt Enable
+            const USB_OTG_USBINTR_URE: u32 = 1 << 5;
+            /// SOF Receive Interrupt Enable
+            const USB_OTG_USBINTR_SRE: u32 = 1 << 7;
+
+            usb.USBINTR.rmw(|usbintr| {
+                usbintr
+                    | USB_OTG_USBINTR_UE
+                    | USB_OTG_USBINTR_PCE
+                    | USB_OTG_USBINTR_SEE
+                    | USB_OTG_USBINTR_URE
+                    | USB_OTG_USBINTR_SRE
+            });
+
             Some(Self {
                 inner: Mutex::new(Inner {
                     usb,
                     dtds,
+                    b64s,
                     b512s,
                     used_dqhs: 0,
                     setupstat: None,
                     ep_in_complete: None,
                     last_poll_was_none: false,
-                    needs_status_out: false,
+                    pre_status_out: 0,
+                    status_out: 0,
                 }),
             })
         } else {
             None
         }
+    }
+
+    /// Returns `true` if any interrupt is pending
+    pub fn interrupts_pending() -> bool {
+        USB_UOG1::borrow_unchecked(|uog| uog.USBSTS.read() & 1 != 0)
+    }
+
+    /// Returns `true` if any interrupt is pending
+    pub fn clear_start_of_frame_interrupt() {
+        USB_UOG1::borrow_unchecked(|uog| uog.USBSTS.write(1 << 7))
     }
 }
 
@@ -259,6 +301,7 @@ struct Inner {
 
     // memory management
     dtds: Vec<&'static mut dTD, NDTDS>,
+    b64s: Vec<&'static mut [u8; 64], NBUFS>,
     b512s: Vec<&'static mut [u8; 512], NBUFS>,
 
     // bitmask that indicates which endpoints are currently in use
@@ -267,5 +310,42 @@ struct Inner {
     setupstat: Option<u16>,
     ep_in_complete: Option<u16>,
     last_poll_was_none: bool,
-    needs_status_out: bool,
+    // control endpoints that require a STATUS OUT
+    pre_status_out: u16,
+    status_out: u16,
+}
+
+// like `cortex_m::Mutex<RefCell<T>>`
+struct Mutex<T> {
+    data: RefCell<T>,
+}
+
+impl<T> Mutex<T> {
+    fn new(data: T) -> Self {
+        Mutex {
+            data: RefCell::new(data),
+        }
+    }
+}
+
+unsafe impl<T> Sync for Mutex<T> where T: Send {}
+
+// NOTE this is safe as long as FIQs are not used (they are not implemented)
+impl<T> Mutex<T> {
+    fn lock<R>(&self, f: impl FnOnce(&mut T) -> R) -> R {
+        unsafe {
+            const IRQ_MASK: u32 = 1 << 7;
+            let cpsr = cpsr::read();
+
+            if cpsr & IRQ_MASK == 0 {
+                // IRQs not masked
+                cortex_a::disable_irq();
+                let r = f(&mut self.data.borrow_mut());
+                cortex_a::enable_irq();
+                r
+            } else {
+                f(&mut self.data.borrow_mut())
+            }
+        }
+    }
 }
