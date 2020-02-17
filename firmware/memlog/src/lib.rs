@@ -16,18 +16,102 @@
 
 use core::{
     cell::UnsafeCell,
-    cmp, fmt, ptr, slice,
+    cmp, fmt,
+    mem::MaybeUninit,
+    ptr, slice,
     sync::atomic::{AtomicUsize, Ordering},
 };
 
+use generic_array::{typenum::consts, ArrayLength, GenericArray};
 use pac::gicc::GICC;
 
-/// Hard-coded buffer capacity
-const N: usize = 8 * 1024;
+// End users must only ever modify the `consts` type parameter of `B0` and `B1`
 
-static mut BUFFER: UnsafeCell<[u8; N]> = UnsafeCell::new([0; N]);
-static READ: AtomicUsize = AtomicUsize::new(0);
-static WRITE: AtomicUsize = AtomicUsize::new(0);
+/// Circular buffer @ priority 0
+static mut B0: Buffer<BigArray<consts::U1>> = Buffer::new();
+//                                     ^^
+
+/// Circular buffer @ priority !0
+static mut B1: Buffer<BigArray<consts::U8>> = Buffer::new();
+//                                     ^^
+
+/// Hard-coded buffer capacity
+const M: usize = 1024;
+
+struct Buffer<A> {
+    read: AtomicUsize,
+    write: AtomicUsize,
+    buffer: UnsafeCell<MaybeUninit<A>>,
+}
+
+impl<A> Buffer<A> {
+    const fn new() -> Self {
+        Self {
+            read: AtomicUsize::new(0),
+            write: AtomicUsize::new(0),
+            buffer: UnsafeCell::new(MaybeUninit::uninit()),
+        }
+    }
+}
+
+type BigArray<N> = GenericArray<[u8; 1024], N>;
+
+impl<N> Buffer<BigArray<N>>
+where
+    N: ArrayLength<[u8; 1024]>,
+{
+    fn push(&self, bytes: &[u8]) {
+        let bufferp = self.buffer.get() as *mut u8;
+        let write = self.write.load(Ordering::Acquire);
+        let cap = M * N::USIZE;
+
+        let read = self.read.load(Ordering::Relaxed);
+        let n = bytes.len();
+        assert!(
+            n <= read.wrapping_add(cap).wrapping_sub(write),
+            "memlog is full; maybe try a bigger buffer? see memlog/src/lib.rs"
+        );
+
+        let cursor = write % cap;
+        unsafe {
+            if cursor + n > cap {
+                // wrap-around: do a split memcpy
+                let pivot = cursor + n - cap;
+
+                // until the end of `BUFFER`
+                ptr::copy_nonoverlapping(bytes.as_ptr(), bufferp.add(cursor), pivot);
+
+                // from the start of `BUFFER`
+                ptr::copy_nonoverlapping(bytes.as_ptr().add(pivot), bufferp, n - pivot);
+            } else {
+                // single memcpy
+                ptr::copy_nonoverlapping(bytes.as_ptr(), bufferp.add(cursor), n);
+            }
+        }
+
+        self.write.store(write + n, Ordering::Release);
+    }
+
+    fn peek(&self, f: &mut Option<impl FnOnce(&[u8]) -> usize>) {
+        let bufferp = self.buffer.get() as *const u8;
+        let read = self.read.load(Ordering::Acquire);
+        let write = self.write.load(Ordering::Relaxed);
+        let cap = M * N::USIZE;
+
+        // NOTE(cmp::min) avoid exceeding the boundary of the buffer
+        let n = cmp::min(write.wrapping_sub(read), cap - (read % cap));
+        let cursor = read % cap;
+        if n != 0 {
+            let f = if let Some(f) = f.take() { f } else { return };
+            let bytes_read = unsafe { f(slice::from_raw_parts(bufferp.add(cursor), n)) };
+
+            // NOTE(cmp::min) guard against the closure reported more bytes read than
+            // the amount that it was shown
+            self.read
+                .store(read + cmp::min(bytes_read, n), Ordering::Release);
+        }
+    }
+}
 
 /// Implementation detail
 #[doc(hidden)]
@@ -43,35 +127,13 @@ impl fmt::Write for Logger {
 /// Implementation details
 #[doc(hidden)]
 pub fn log(s: &str) {
-    if !in_main() {
-        return;
-    }
-
-    let write = WRITE.load(Ordering::Acquire);
-
-    let bufferp = unsafe { BUFFER.get() as *mut u8 };
-    let read = READ.load(Ordering::Relaxed);
     let bytes = s.as_bytes();
-    let n = bytes.len();
     unsafe {
-        assert!(n <= read.wrapping_add(N).wrapping_sub(write));
-
-        let cursor = write % N;
-        if cursor + n > N {
-            // wrap-around: do a split memcpy
-            let pivot = cursor + n - N;
-
-            // until the end of `BUFFER`
-            ptr::copy_nonoverlapping(bytes.as_ptr(), bufferp.add(cursor), pivot);
-
-            // from the start of `BUFFER`
-            ptr::copy_nonoverlapping(bytes.as_ptr().add(pivot), bufferp, n - pivot);
+        if in_main() {
+            B0.push(bytes);
         } else {
-            // single memcpy
-            ptr::copy_nonoverlapping(bytes.as_ptr(), bufferp.add(cursor), n);
+            B1.push(bytes);
         }
-
-        WRITE.store(write + n, Ordering::Release);
     }
 }
 
@@ -80,22 +142,15 @@ pub fn log(s: &str) {
 /// The buffer will be advanced by the amount of read bytes reported by the
 /// closure `f`
 ///
-/// This will panic if it's called in interrupt context
-pub fn peek(f: impl FnOnce(&[u8]) -> usize) {
-    assert!(in_main());
-
-    let read = READ.load(Ordering::Acquire);
-
-    let bufferp = unsafe { &BUFFER as *const _ as *const u8 };
-    let write = WRITE.load(Ordering::Relaxed);
-    // NOTE(cmp::min) avoid exceeding the boundary of the buffer
-    let n = cmp::min(write.wrapping_sub(read), N - (read % N));
-    let cursor = read % N;
-    let bytes_read = f(unsafe { slice::from_raw_parts(bufferp.add(cursor), n) });
-
-    // NOTE(cmp::min) guard against the closure reported more bytes read than
-    // the amount that it was shown
-    READ.store(read + cmp::min(bytes_read, n), Ordering::Release);
+/// This will do nothing if called from interrupt context
+pub fn peek(all: bool, f: impl FnOnce(&[u8]) -> usize) {
+    unsafe {
+        if all || in_main() {
+            let mut f = Some(f);
+            B1.peek(&mut f);
+            B0.peek(&mut f);
+        }
+    }
 }
 
 // Or "not in interrupt context"
@@ -105,8 +160,6 @@ fn in_main() -> bool {
 }
 
 /// Logs the formatted string into the device memory
-///
-/// NOTE this is a no-op in interrupt context
 #[macro_export]
 macro_rules! memlog {
     ($s:expr) => {

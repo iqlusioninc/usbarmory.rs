@@ -103,6 +103,9 @@ impl UsbBus for Usbd {
 /// USB Reset Received
 const USBSTS_URI: u32 = 1 << 6;
 
+/// Start of Frame (SoF) received interrupt
+const USBSTS_SRE: u32 = 1 << 7;
+
 /// Port Change Detect
 const USBSTS_PCI: u32 = 1 << 2;
 
@@ -129,9 +132,9 @@ impl Inner {
         interval: u8,
     ) -> Result<EndpointAddress, UsbError> {
         memlog!(
-            "alloc_ep(ep_dir={:?}, ep_addr={:?}, ep_type={:?}, max_packet_size={}, interval={}) @ {:?}",
+            "alloc_ep(ep_dir={:?}, ep={:?}, ep_type={:?}, max_packet_size={}, interval={}) @ {:?}",
             ep_dir,
-            ep_addr,
+            ep_addr.map(|ep| ep.index()),
             ep_type,
             max_packet_size,
             interval,
@@ -166,7 +169,7 @@ impl Inner {
 
         // NOTE(unsafe) hardware cannot yet access the dQH and dTD
         unsafe {
-            dqh.set_max_packet_size(max_packet_size);
+            dqh.set_max_packet_size(max_packet_size, true);
 
             // install a dTD for the endpoint
             let dtd = Ref::new(self.dtds.pop().expect("exhausted the dTD pool"));
@@ -190,6 +193,7 @@ impl Inner {
                 let mut token = Token::empty();
                 token.set_total_bytes(max_packet_size.into());
                 token.set_status(Status::active());
+                token.set_ioc();
                 dtd.set_token(token);
                 dtd.set_pages(addr);
                 dqh.set_address(addr);
@@ -271,7 +275,21 @@ impl Inner {
         /// System error
         const USBSTS_SEI: u32 = 1 << 4;
 
+        // The Start of Frame (SoF) event will trigger the interrupt handler
+        // roughly every 125 us. The SoF is synchronized to USB events. The
+        // interrupt flag must be cleared to avoid missing the next SoF event
+        self.usb.USBSTS.write(USBSTS_SRE);
+
         let sts = self.usb.USBSTS.read();
+
+        if sts & USBSTS_URI != 0 {
+            memlog!("poll() -> Reset @ {:?}", time::uptime());
+            crate::memlog_try_flush();
+
+            self.last_poll_was_none = false;
+            return PollResult::Reset;
+        }
+
         let setupstat = self.usb.ENDPTSETUPSTAT.read() as u16;
         let mut complete = self.usb.ENDPTCOMPLETE.read();
 
@@ -318,30 +336,19 @@ impl Inner {
             return data.into();
         }
 
-        if sts & USBSTS_URI != 0 {
-            memlog!("poll() -> Reset @ {:?}", time::uptime());
-            crate::memlog_try_flush();
-
-            self.last_poll_was_none = false;
-            PollResult::Reset
-        } else {
-            if !self.last_poll_was_none {
-                self.last_poll_was_none = true;
-                memlog!(
-                    "poll() -> None (ENDPTCTRL1={:#010x})",
-                    self.usb.ENDPTCTRL1.read()
-                );
-            }
-            crate::memlog_try_flush();
-
-            PollResult::None
+        if !self.last_poll_was_none {
+            self.last_poll_was_none = true;
+            memlog!("poll() -> None");
         }
+        crate::memlog_try_flush();
+
+        PollResult::None
     }
 
     fn read(&mut self, ep_addr: EndpointAddress, buf: &mut [u8]) -> Result<usize, UsbError> {
         memlog!(
-            "read(ep_addr={:?}, buf_len={}, self.setupstat={:?}) ... @ {:?}",
-            ep_addr,
+            "read(ep={}, cap={}, self.setupstat={:?}) ... @ {:?}",
+            ep_addr.index(),
             buf.len(),
             self.setupstat,
             time::uptime()
@@ -359,6 +366,10 @@ impl Inner {
         } else {
             None
         };
+
+        if self.setupstat == Some(0) {
+            self.setupstat = None;
+        }
 
         let dqh = self.get_dqh(ep_addr).ok_or(UsbError::InvalidEndpoint)?;
         let ep_mask = util::epaddr2endptmask(ep_addr);
@@ -393,6 +404,7 @@ impl Inner {
 
             // 5. "Write 0 to clear Setup Tripwire (SUTW) in USBCMD"
             self.usb.USBCMD.rmw(|cmd| cmd & !CMD_SUTW);
+            self.clear_interrupt();
 
             // repeat some of `usb_device` logic here because `usb_device` won't
             // trigger the STATUS out phase nor does it have hook for
@@ -444,6 +456,7 @@ impl Inner {
                 let mut token = Token::empty();
                 token.set_total_bytes(cap);
                 token.set_status(Status::active());
+                token.set_ioc();
                 dtd.set_token(token);
                 let addr = NonNull::new_unchecked(buf.as_ptr() as *mut u8);
                 dtd.set_pages(addr);
@@ -477,6 +490,7 @@ impl Inner {
 
             // clear complete bit
             self.usb.ENDPTCOMPLETE.write(ep_mask);
+            self.clear_interrupt();
             let token = unsafe { dtd.get_token() };
             let status = token.get_status();
 
@@ -506,6 +520,7 @@ impl Inner {
 
             // clear complete bit
             self.usb.ENDPTCOMPLETE.write(ep_mask);
+            self.clear_interrupt();
 
             // synchronize with DMA operations before reading dQH or dTD
             atomic::fence(Ordering::Acquire);
@@ -535,6 +550,7 @@ impl Inner {
                 let mut token = Token::empty();
                 token.set_total_bytes(max_packet_size.into());
                 token.set_status(Status::active());
+                token.set_ioc();
                 dtd.set_token(token);
                 dtd.set_pages(addr);
 
@@ -558,8 +574,8 @@ impl Inner {
 
     fn start_write(&mut self, ep_addr: EndpointAddress, bytes: &[u8]) -> Result<usize, UsbError> {
         memlog!(
-            "start_write(ep_addr={:?}, bytes_len={}) ... @ {:?}",
-            ep_addr,
+            "start_write(ep={}, bytes_len={}) ... @ {:?}",
+            ep_addr.index(),
             bytes.len(),
             time::uptime()
         );
@@ -608,6 +624,7 @@ impl Inner {
             let mut token = Token::empty();
             token.set_total_bytes(n);
             token.set_status(Status::active());
+            token.set_ioc();
             dtd.set_token(token);
             // copy data into static buffer
             ptr::copy_nonoverlapping(bytes.as_ptr(), addr.as_ptr(), n);
@@ -640,6 +657,7 @@ impl Inner {
 
         // clear complete bit
         self.usb.ENDPTCOMPLETE.write(mask);
+        self.clear_interrupt();
         let token = unsafe { dtd.get_token() };
         let status = token.get_status();
 
@@ -656,7 +674,7 @@ impl Inner {
             self.pre_status_out &= !mask;
         }
 
-        memlog!("end_write(ep_addr={:?}) @ {:?}", ep_addr, time::uptime());
+        memlog!("end_write(ep={}) @ {:?}", ep_addr.index(), time::uptime());
 
         // leave the dTD in place for the next transfer
         unsafe {
@@ -681,6 +699,14 @@ impl Inner {
     }
 
     // # Helper functions
+    /// Clears the USBSTS_UI bit
+    fn clear_interrupt(&mut self) {
+        /// USB Interrupt
+        const USBSTS_UI: u32 = 1;
+
+        self.usb.USBSTS.write(USBSTS_UI);
+    }
+
     fn port_change(&mut self) {
         memlog!("port_change @ {:?}", time::uptime());
         crate::memlog_try_flush();

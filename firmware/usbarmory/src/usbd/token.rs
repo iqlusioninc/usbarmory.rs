@@ -23,6 +23,12 @@ impl Token {
         (self.inner >> 16) as u16
     }
 
+    /// Enables interrupts on complete
+    pub fn set_ioc(&mut self) {
+        const IOC: u32 = 1 << 15;
+        self.inner |= IOC;
+    }
+
     pub fn get_status(self) -> Status {
         Status {
             inner: self.inner as u8,

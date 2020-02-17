@@ -245,6 +245,27 @@ impl Usbd {
 
             usb.OTGSC.rmw(|otgsc| otgsc | USB_OTG_OTGSC_OT);
 
+            // enable interrupts
+            /// USB Interrupt enable
+            const USB_OTG_USBINTR_UE: u32 = 1;
+            /// Port Change Detect Interrupt
+            const USB_OTG_USBINTR_PCE: u32 = 1 << 2;
+            /// System Error Interrupt Enable
+            const USB_OTG_USBINTR_SEE: u32 = 1 << 4;
+            /// USB Reset Interrupt Enable
+            const USB_OTG_USBINTR_URE: u32 = 1 << 5;
+            /// SOF Receive Interrupt Enable
+            const USB_OTG_USBINTR_SRE: u32 = 1 << 7;
+
+            usb.USBINTR.rmw(|usbintr| {
+                usbintr
+                    | USB_OTG_USBINTR_UE
+                    | USB_OTG_USBINTR_PCE
+                    | USB_OTG_USBINTR_SEE
+                    | USB_OTG_USBINTR_URE
+                    | USB_OTG_USBINTR_SRE
+            });
+
             Some(Self {
                 inner: Mutex::new(Inner {
                     usb,
@@ -262,6 +283,16 @@ impl Usbd {
         } else {
             None
         }
+    }
+
+    /// Returns `true` if any interrupt is pending
+    pub fn interrupts_pending() -> bool {
+        USB_UOG1::borrow_unchecked(|uog| uog.USBSTS.read() & 1 != 0)
+    }
+
+    /// Returns `true` if any interrupt is pending
+    pub fn clear_start_of_frame_interrupt() {
+        USB_UOG1::borrow_unchecked(|uog| uog.USBSTS.write(1 << 7))
     }
 }
 

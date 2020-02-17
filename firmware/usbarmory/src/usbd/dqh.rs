@@ -91,8 +91,12 @@ impl dQH {
     /// Must be called only when the hardware is not operating on the dQH. Must
     /// be synchronized with a memory barrier before letting the hardware read
     /// this field
-    pub unsafe fn set_max_packet_size(&self, max_packet_size: u16) {
-        self.caps.set(Caps::new(max_packet_size));
+    pub unsafe fn set_max_packet_size(&self, max_packet_size: u16, ios: bool) {
+        let mut caps = Caps::new(max_packet_size);
+        if ios {
+            caps.set_ios();
+        }
+        self.caps.set(caps);
     }
 
     pub fn get_max_packet_size(&self) -> u16 {
@@ -200,6 +204,14 @@ impl Caps {
 
     pub fn max_packet_size(self) -> u16 {
         (self.inner >> 16) as u16
+    }
+
+    /// Enables interrupts on setup packets
+    pub fn set_ios(&mut self) {
+        /// Interrupt on Setup
+        const IOS: u32 = 1 << 15;
+
+        self.inner |= IOS;
     }
 }
 
