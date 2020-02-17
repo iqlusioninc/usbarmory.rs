@@ -19,6 +19,10 @@ required-features = ["big"]
 name = "usb"
 required-features = ["big"]
 
+[[example]]
+name = "rtfm-8-usb"
+required-features = ["big"]
+
 [dependencies]
 consts = { path = "../../common/consts" }
 cortex-a = { path = "../cortex-a" }
