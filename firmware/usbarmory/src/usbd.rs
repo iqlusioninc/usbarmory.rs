@@ -8,9 +8,11 @@ mod dtd;
 mod token;
 mod util;
 
+use core::cell::RefCell;
+
+use cortex_a::register::cpsr;
 use heapless::Vec;
 use pac::{ccm_analog::CCM_ANALOG, usb_analog::USB_ANALOG, usb_uog::USB_UOG1, usbphy::USBPHY1};
-use spin::Mutex;
 use typenum::marker_traits::Unsigned;
 
 use crate::{memlog, memlog_flush_and_reset};
@@ -20,8 +22,6 @@ use util::Align2K;
 
 /// USB device
 pub struct Usbd {
-    // NOTE for now the Mutex is used just to satisfy the undocumented `Sync`
-    // bound required by the `UsbBus` trait
     inner: Mutex<Inner>,
 }
 
@@ -313,4 +313,39 @@ struct Inner {
     // control endpoints that require a STATUS OUT
     pre_status_out: u16,
     status_out: u16,
+}
+
+// like `cortex_m::Mutex<RefCell<T>>`
+struct Mutex<T> {
+    data: RefCell<T>,
+}
+
+impl<T> Mutex<T> {
+    fn new(data: T) -> Self {
+        Mutex {
+            data: RefCell::new(data),
+        }
+    }
+}
+
+unsafe impl<T> Sync for Mutex<T> where T: Send {}
+
+// NOTE this is safe as long as FIQs are not used (they are not implemented)
+impl<T> Mutex<T> {
+    fn lock<R>(&self, f: impl FnOnce(&mut T) -> R) -> R {
+        unsafe {
+            const IRQ_MASK: u32 = 1 << 7;
+            let cpsr = cpsr::read();
+
+            if cpsr & IRQ_MASK == 0 {
+                // IRQs not masked
+                cortex_a::disable_irq();
+                let r = f(&mut self.data.borrow_mut());
+                cortex_a::enable_irq();
+                r
+            } else {
+                f(&mut self.data.borrow_mut())
+            }
+        }
+    }
 }

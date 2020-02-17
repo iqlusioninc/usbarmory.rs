@@ -77,3 +77,9 @@ __wfi:
   .section .text.__udf
 __udf:
   udf
+
+  .global __cpsr_r
+  .section .text.__cpsr_r
+__cpsr_r:
+  mrs r0, cpsr
+  bx lr

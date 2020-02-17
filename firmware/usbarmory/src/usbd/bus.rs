@@ -32,17 +32,12 @@ impl UsbBus for Usbd {
     ) -> Result<EndpointAddress, UsbError> {
         // NOTE we are using this in single-threaded context so deadlocks are
         // impossible
-        self.inner.try_lock().expect("UNREACHABLE").alloc_ep(
-            ep_dir,
-            ep_addr,
-            ep_type,
-            max_packet_size,
-            interval,
-        )
+        self.inner
+            .lock(|inner| inner.alloc_ep(ep_dir, ep_addr, ep_type, max_packet_size, interval))
     }
 
     fn enable(&mut self) {
-        self.inner.try_lock().expect("UNREACHABLE").enable();
+        self.inner.lock(|inner| inner.enable());
     }
 
     fn is_stalled(&self, _: EndpointAddress) -> bool {
@@ -50,24 +45,15 @@ impl UsbBus for Usbd {
     }
 
     fn poll(&self) -> PollResult {
-        // NOTE we are using this in single-threaded context so deadlocks are
-        // impossible
-        self.inner.try_lock().expect("UNREACHABLE").poll()
+        self.inner.lock(|inner| inner.poll())
     }
 
     fn read(&self, ep_addr: EndpointAddress, buf: &mut [u8]) -> Result<usize, UsbError> {
-        // NOTE we are using this in single-threaded context so deadlocks are
-        // impossible
-        self.inner
-            .try_lock()
-            .expect("UNREACHABLE")
-            .read(ep_addr, buf)
+        self.inner.lock(|inner| inner.read(ep_addr, buf))
     }
 
     fn reset(&self) {
-        // NOTE we are using this in single-threaded context so deadlocks are
-        // impossible
-        self.inner.try_lock().expect("UNREACHABLE").reset();
+        self.inner.lock(|inner| inner.reset());
     }
 
     fn resume(&self) {
@@ -86,17 +72,11 @@ impl UsbBus for Usbd {
     }
 
     fn set_device_address(&self, addr: u8) {
-        self.inner
-            .try_lock()
-            .expect("UNREACHABLE")
-            .set_device_address(addr);
+        self.inner.lock(|inner| inner.set_device_address(addr));
     }
 
     fn write(&self, ep_addr: EndpointAddress, bytes: &[u8]) -> Result<usize, UsbError> {
-        self.inner
-            .try_lock()
-            .expect("UNREACHABLE")
-            .start_write(ep_addr, bytes)
+        self.inner.lock(|inner| inner.start_write(ep_addr, bytes))
     }
 }
 
