@@ -1,6 +1,7 @@
 use core::{
     cell::{Cell, UnsafeCell},
-    fmt, ptr,
+    fmt,
+    ptr::{self, NonNull},
     sync::atomic::{self, Ordering},
 };
 
@@ -36,9 +37,9 @@ pub struct dQH {
     // SETUP packets (see USB control transfers) are written to this filed
     setup: [UnsafeCell<u8>; SETUP_BYTES],
 
-    // XXX I think we are allowed to use the 16 bytes that follow and are used
-    // for padding (the hardware requires that dQHs are laid down in an array)
-    addr: Cell<usize>,
+    // We are allowed to use the 16 bytes that follow; they are used for padding
+    // so the hardware won't touch them
+    addr: Cell<Option<NonNull<u8>>>,
 }
 
 impl dQH {
@@ -68,7 +69,7 @@ impl dQH {
                 UnsafeCell::new(0),
                 UnsafeCell::new(0),
             ],
-            addr: Cell::new(0),
+            addr: Cell::new(None),
         }
     }
 
@@ -98,12 +99,12 @@ impl dQH {
         self.caps.get().max_packet_size()
     }
 
-    pub fn get_address(&self) -> *const u8 {
-        self.addr.get() as *const u8
+    pub fn get_address(&self) -> Option<NonNull<u8>> {
+        self.addr.get()
     }
 
-    pub fn set_address(&self, addr: *const u8) {
-        self.addr.set(addr as usize)
+    pub fn set_address(&self, addr: NonNull<u8>) {
+        self.addr.set(Some(addr))
     }
 
     /// # Safety

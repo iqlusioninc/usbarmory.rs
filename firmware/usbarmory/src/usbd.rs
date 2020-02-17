@@ -32,7 +32,7 @@ const ENDPOINTS: usize = 4;
 // Maximum number of dTD that can be used
 type NDTDS = heapless::consts::U4;
 // Numbers of buffers managed by `Usbd`
-type NBUFS = heapless::consts::U1;
+type NBUFS = heapless::consts::U2;
 
 impl Usbd {
     /// Gets a handle to the USB device
@@ -62,7 +62,16 @@ impl Usbd {
                 }
             }
 
-            static mut B512S: [[u8; 512]; NBUFS::USIZE] = [[0; 512]; 1];
+            static mut B64S: [[u8; 64]; NBUFS::USIZE] = [[0; 64]; NBUFS::USIZE];
+
+            let mut b64s = Vec::new();
+            unsafe {
+                for b64 in B64S.iter_mut() {
+                    b64s.push(b64).ok().expect("UNREACHABLE");
+                }
+            }
+
+            static mut B512S: [[u8; 512]; NBUFS::USIZE] = [[0; 512]; NBUFS::USIZE];
 
             let mut b512s = Vec::new();
             unsafe {
@@ -240,12 +249,14 @@ impl Usbd {
                 inner: Mutex::new(Inner {
                     usb,
                     dtds,
+                    b64s,
                     b512s,
                     used_dqhs: 0,
                     setupstat: None,
                     ep_in_complete: None,
                     last_poll_was_none: false,
-                    needs_status_out: false,
+                    pre_status_out: 0,
+                    status_out: 0,
                 }),
             })
         } else {
@@ -259,6 +270,7 @@ struct Inner {
 
     // memory management
     dtds: Vec<&'static mut dTD, NDTDS>,
+    b64s: Vec<&'static mut [u8; 64], NBUFS>,
     b512s: Vec<&'static mut [u8; 512], NBUFS>,
 
     // bitmask that indicates which endpoints are currently in use
@@ -267,5 +279,7 @@ struct Inner {
     setupstat: Option<u16>,
     ep_in_complete: Option<u16>,
     last_poll_was_none: bool,
-    needs_status_out: bool,
+    // control endpoints that require a STATUS OUT
+    pre_status_out: u16,
+    status_out: u16,
 }

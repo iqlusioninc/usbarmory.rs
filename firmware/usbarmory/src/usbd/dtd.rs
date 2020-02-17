@@ -3,6 +3,7 @@
 use core::{
     cell::{Cell, UnsafeCell},
     fmt,
+    ptr::NonNull,
 };
 
 use super::{token::Token, util::Ref};
@@ -45,8 +46,8 @@ impl dTD {
     /// - The hardware reads this field so it should not be modified while the
     ///   hardware is allowed to read it
     /// - the validity and lifetime of `ptr` must be verified by the caller
-    pub unsafe fn set_pages(&self, ptr: *const u8) {
-        let mut addr = ptr as usize;
+    pub unsafe fn set_pages(&self, ptr: NonNull<u8>) {
+        let mut addr = ptr.as_ptr() as usize;
         self.page0.get().write(addr);
         addr &= !0xfff;
         addr += 0x1000;

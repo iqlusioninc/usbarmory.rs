@@ -1,6 +1,8 @@
 //! `UsbBus` implementation
 
 use core::{
+    mem,
+    ptr::{self, NonNull},
     slice,
     sync::atomic::{self, Ordering},
 };
@@ -94,7 +96,7 @@ impl UsbBus for Usbd {
         self.inner
             .try_lock()
             .expect("UNREACHABLE")
-            .write(ep_addr, bytes)
+            .start_write(ep_addr, bytes)
     }
 }
 
@@ -171,15 +173,19 @@ impl Inner {
 
             if ep_addr.is_out() && ep_addr.index() != 0 {
                 // install buffer in the dTD
-                let addr = if max_packet_size == 512 {
-                    let b = self
-                        .b512s
+                let addr = NonNull::new_unchecked(if max_packet_size <= 64 {
+                    self.b64s
                         .pop()
-                        .expect("OOM during 512-byte buffer request");
-                    b.as_mut_ptr()
+                        .expect("OOM during 64-byte buffer request")
+                        .as_mut_ptr()
+                } else if max_packet_size <= 512 {
+                    self.b512s
+                        .pop()
+                        .expect("OOM during 64-byte buffer request")
+                        .as_mut_ptr()
                 } else {
                     unimplemented!("buffers of {}-bytes are not available", max_packet_size)
-                };
+                });
 
                 let mut token = Token::empty();
                 token.set_total_bytes(max_packet_size.into());
@@ -267,7 +273,7 @@ impl Inner {
 
         let sts = self.usb.USBSTS.read();
         let setupstat = self.usb.ENDPTSETUPSTAT.read() as u16;
-        let complete = self.usb.ENDPTCOMPLETE.read();
+        let mut complete = self.usb.ENDPTCOMPLETE.read();
 
         if sts & USBSTS_PCI != 0 {
             self.port_change();
@@ -278,19 +284,24 @@ impl Inner {
             self.setupstat = Some(setupstat);
         }
 
-        if setupstat != 0 || self.ep_in_complete.is_some() || self.needs_status_out || complete != 0
+        let txcomplete = complete >> 16;
+        if txcomplete != 0 {
+            for bit in OneIndices::of(txcomplete) {
+                self.end_write(bit);
+            }
+
+            complete &= 0xffff;
+        }
+
+        if setupstat != 0 || self.ep_in_complete.is_some() || self.status_out != 0 || complete != 0
         {
             let ep_setup = setupstat;
             let ep_in_complete = self.ep_in_complete.take().unwrap_or(0);
             // STATUS out needs to be reported after the IN data phase
-            let ep_out = if self.needs_status_out && ep_in_complete == 0 {
-                // TODO generalize to control endpoints other than 0
-                self.needs_status_out = false;
-                1
+            let ep_out = if self.status_out != 0 && ep_in_complete == 0 {
+                mem::replace(&mut self.status_out, 0)
             } else {
-                // the TX bits in complete shouldn't be reported
-                assert!(complete < (1 << 16));
-
+                // the higher bits were cleared in the previous `if` block
                 complete as u16
             };
 
@@ -316,7 +327,10 @@ impl Inner {
         } else {
             if !self.last_poll_was_none {
                 self.last_poll_was_none = true;
-                memlog!("poll() -> None");
+                memlog!(
+                    "poll() -> None (ENDPTCTRL1={:#010x})",
+                    self.usb.ENDPTCTRL1.read()
+                );
             }
             crate::memlog_try_flush();
 
@@ -387,7 +401,9 @@ impl Inner {
                 // SET_ADDRESS -- no data phase
                 [0, 5, _, _] => {}
                 // SET_CONFIGURATION
-                [0, 9, _, _] => {
+                [0, 9, _, _] |
+                // SET_INTERFACE
+                [1, 11, _, _] => {
                     // FIXME (a) we should only reset the endpoints when the
                     // configuration changed. (b) we should only reset the
                     // endpoints that are part of the new configuration
@@ -395,12 +411,10 @@ impl Inner {
                         self.reset_ep(ep_addr)
                     }
                 }
-                // SET_INTERFACE
-                [1, 11, _, _] => {}
 
                 // GET_DESCRIPTOR
                 [128, 6, _, _] => {
-                    self.needs_status_out = true;
+                    self.pre_status_out = 1;
                 }
                 _ => {
                     memlog!("unexpected SETUP packet: {:?}", &buf[..n]);
@@ -431,7 +445,7 @@ impl Inner {
                 token.set_total_bytes(cap);
                 token.set_status(Status::active());
                 dtd.set_token(token);
-                let addr = buf.as_ptr();
+                let addr = NonNull::new_unchecked(buf.as_ptr() as *mut u8);
                 dtd.set_pages(addr);
                 dqh.set_address(addr);
             }
@@ -507,10 +521,12 @@ impl Inner {
             let left = unsafe { dqh.get_token().get_total_bytes() };
             let max_packet_size = dqh.get_max_packet_size();
             let n = max_packet_size - left;
-            let addr = dqh.get_address();
+            // NOTE OUT endpoints are given a buffer during `alloc_ep`
+            let addr = dqh.get_address().expect("UNREACHABLE");
 
             unsafe {
-                buf[..n.into()].copy_from_slice(slice::from_raw_parts(addr, usize::from(n)));
+                buf[..n.into()]
+                    .copy_from_slice(slice::from_raw_parts(addr.as_ptr(), usize::from(n)));
             }
 
             memlog!("read: {} bytes @ {:?}", n, time::uptime());
@@ -540,9 +556,9 @@ impl Inner {
         }
     }
 
-    fn write(&mut self, ep_addr: EndpointAddress, bytes: &[u8]) -> Result<usize, UsbError> {
+    fn start_write(&mut self, ep_addr: EndpointAddress, bytes: &[u8]) -> Result<usize, UsbError> {
         memlog!(
-            "write(ep_addr={:?}, bytes_len={}) ... @ {:?}",
+            "start_write(ep_addr={:?}, bytes_len={}) ... @ {:?}",
             ep_addr,
             bytes.len(),
             time::uptime()
@@ -550,24 +566,51 @@ impl Inner {
         crate::memlog_try_flush();
 
         let dqh = self.get_dqh(ep_addr).ok_or(UsbError::InvalidEndpoint)?;
+        let max_packet_size = dqh.get_max_packet_size();
+        let n = bytes.len();
+
+        if n > usize::from(max_packet_size) {
+            return Err(UsbError::EndpointMemoryOverflow);
+        }
 
         // "Executing a transfer descriptor", section 54.4.6.6.3
         // the dTD should already be installed in `next_dtd`
         unsafe {
-            assert!(dqh.get_current_dtd().is_none());
-            assert!(dqh.get_next_dtd().is_some());
+            if dqh.get_current_dtd().is_some() {
+                // transfer in progress
+                return Err(UsbError::WouldBlock);
+            } else {
+                assert!(dqh.get_next_dtd().is_some());
+            }
         }
 
         // this is the first time this endpoint is being used
         let dtd = unsafe { dqh.get_next_dtd().expect("UNREACHABLE") };
-        let n = bytes.len();
+
+        let addr = if let Some(addr) = dqh.get_address() {
+            addr
+        } else {
+            let addr = unsafe {
+                NonNull::new_unchecked(if max_packet_size <= 64 {
+                    self.b64s.pop().expect("OOM").as_mut_ptr()
+                } else if max_packet_size <= 512 {
+                    self.b512s.pop().expect("OOM").as_mut_ptr()
+                } else {
+                    unimplemented!()
+                })
+            };
+
+            dqh.set_address(addr);
+            addr
+        };
 
         unsafe {
             let mut token = Token::empty();
             token.set_total_bytes(n);
             token.set_status(Status::active());
             dtd.set_token(token);
-            let addr = bytes.as_ptr();
+            // copy data into static buffer
+            ptr::copy_nonoverlapping(bytes.as_ptr(), addr.as_ptr(), n);
             dtd.set_pages(addr);
             dqh.set_address(addr);
         }
@@ -583,17 +626,14 @@ impl Inner {
         // now the hardware can modify dQH and dTD
         memlog!("IN{} primed @ {:?}", ep_addr.index(), time::uptime());
 
-        // FIXME return WouldBlock instead of busy waiting
-        // wait for completion
-        if util::wait(
-            || self.usb.ENDPTCOMPLETE.read() & mask != 0,
-            2 * consts::microframe(),
-        )
-        .is_err()
-        {
-            memlog!("write: ENDPTCOMPLETE timeout");
-            memlog_flush_and_reset!();
-        }
+        Ok(n)
+    }
+
+    fn end_write(&mut self, idx: u8) {
+        let ep_addr = EndpointAddress::from_parts(usize::from(idx), UsbDirection::In);
+        let mask = util::epaddr2endptmask(ep_addr);
+        let dqh = self.get_dqh(ep_addr).expect("UNREACHABLE");
+        let dtd = unsafe { dqh.get_current_dtd().expect("UNREACHABLE") };
 
         // synchronize with DMA operations before reading dQH or dTD
         atomic::fence(Ordering::Acquire);
@@ -610,15 +650,19 @@ impl Inner {
 
         self.set_ep_in_complete(ep_addr.index());
 
-        memlog!("... wrote {} bytes @ {:?}", bytes.len(), time::uptime());
+        let mask = (mask >> 16) as u16;
+        if self.pre_status_out & mask != 0 {
+            self.status_out |= mask;
+            self.pre_status_out &= !mask;
+        }
+
+        memlog!("end_write(ep_addr={:?}) @ {:?}", ep_addr, time::uptime());
 
         // leave the dTD in place for the next transfer
         unsafe {
             dqh.clear_current_dtd();
             dqh.set_next_dtd(Some(dtd));
         }
-
-        Ok(n)
     }
 
     fn set_device_address(&mut self, addr: u8) {
