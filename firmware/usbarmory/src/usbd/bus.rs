@@ -468,6 +468,8 @@ impl Inner {
             // synchronize with DMA operations before reading dQH or dTD
             atomic::fence(Ordering::Acquire);
 
+            // TODO invalidate the data cache before reading `dtd`
+
             // clear complete bit
             self.usb.ENDPTCOMPLETE.write(ep_mask);
             self.clear_interrupt();
@@ -505,6 +507,8 @@ impl Inner {
             // synchronize with DMA operations before reading dQH or dTD
             atomic::fence(Ordering::Acquire);
 
+            // TODO invalidate the data cache before reading `dtd`
+
             let token = unsafe { dtd.get_token() };
             let status = token.get_status();
 
@@ -513,6 +517,7 @@ impl Inner {
                 memlog_flush_and_reset!();
             }
 
+            // TODO get `total_bytes` from `dtd` after invalidating the cache
             let left = unsafe { dqh.get_token().get_total_bytes() };
             let max_packet_size = dqh.get_max_packet_size();
             let n = max_packet_size - left;
@@ -634,6 +639,8 @@ impl Inner {
 
         // synchronize with DMA operations before reading dQH or dTD
         atomic::fence(Ordering::Acquire);
+
+        // TODO invalidate the cache before reading `dtd`
 
         // clear complete bit
         self.usb.ENDPTCOMPLETE.write(mask);
