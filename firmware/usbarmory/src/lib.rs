@@ -19,12 +19,14 @@ use usbarmory_rt as _;
 
 use crate::serial::Serial;
 
+pub mod emmc;
 pub mod led;
 mod macros;
 pub mod rng;
 pub mod serial;
 pub mod time;
 pub mod usbd;
+mod util;
 
 /// Default CPU frequency
 ///

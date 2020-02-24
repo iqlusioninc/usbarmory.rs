@@ -201,7 +201,7 @@ impl Usbd {
             const USB_OTG_USBCMD_RST: u32 = 1 << 1;
 
             usb.USBCMD.rmw(|usbmode| usbmode | USB_OTG_USBCMD_RST);
-            if util::wait(
+            if util::wait_for_or_timeout(
                 || usb.USBCMD.read() & USB_OTG_USBCMD_RST == 0,
                 2 * consts::frame(),
             )
@@ -225,7 +225,7 @@ impl Usbd {
 
             usb.USBMODE.rmw(|usbmode| usbmode & !USB_OTG_USBMODE_SDIS);
 
-            if util::wait(
+            if util::wait_for_or_timeout(
                 || usb.USBMODE.read() & USB_OTG_USBMODE_CM_MASK == USB_OTG_USBMODE_CM_DEVICE,
                 2 * consts::frame(),
             )

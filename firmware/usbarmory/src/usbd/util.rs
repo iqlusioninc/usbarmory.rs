@@ -1,8 +1,8 @@
-use core::{fmt, ops, ptr::NonNull, time::Duration};
+use core::{fmt, ops, ptr::NonNull};
 
 use usb_device::{bus::PollResult, endpoint::EndpointAddress, UsbDirection};
 
-use crate::time::Instant;
+pub use crate::util::wait_for_or_timeout;
 
 /// Aligns the inner value to a 2KB boundary
 #[repr(align(2048))]
@@ -64,22 +64,6 @@ impl<T> ops::Deref for Ref<T> {
     fn deref(&self) -> &T {
         unsafe { self.inner.as_ref() }
     }
-}
-
-/// Waits until `cond` returns true
-///
-/// Returns `Err` if the operation timed out
-pub fn wait(mut cond: impl FnMut() -> bool, timeout: Duration) -> Result<(), ()> {
-    let start = Instant::now();
-    while !cond() {
-        // instead of busy waiting flush the in-memory logger
-        crate::memlog_try_flush();
-
-        if start.elapsed() > timeout {
-            return Err(());
-        }
-    }
-    Ok(())
 }
 
 pub fn epaddr2dqhidx(ep_addr: EndpointAddress) -> usize {
