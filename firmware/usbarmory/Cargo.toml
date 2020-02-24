@@ -11,18 +11,6 @@ readme      = "README.md"
 categories  = ["embedded", "hardware-support", "no-std"]
 keywords    = ["arm", "cortex-a"]
 
-[[example]]
-name = "usb-enumerate"
-required-features = ["big"]
-
-[[example]]
-name = "usb"
-required-features = ["big"]
-
-[[example]]
-name = "rtfm-8-usb"
-required-features = ["big"]
-
 [dependencies]
 consts = { path = "../../common/consts" }
 cortex-a = { path = "../cortex-a" }
@@ -41,8 +29,3 @@ cortex-m-semihosting = { git = "https://github.com/japaric/cortex-m-semihosting"
 exception-reset = { path = "../exception-reset" }
 heapless = "0.5.3"
 panic-serial = { path = "../panic-serial" }
-
-[features]
-# CI workaround to *not* builds some examples using the dev profile because
-# some examples are too big to fit in OCRAM when un-optimized
-big = []
