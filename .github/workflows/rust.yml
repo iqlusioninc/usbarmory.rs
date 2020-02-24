@@ -186,7 +186,7 @@ jobs:
       - name: Build examples using the release profile
         working-directory: ./firmware/usbarmory
         run: |
-          cargo build --examples --features big --release
+          cargo build --examples --release
 
   fmt:
     name: Rustfmt

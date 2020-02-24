@@ -221,7 +221,9 @@ impl Inner {
 
         // "Cancel all primed status by waiting until all bits in the ENDPTPRIME
         // are 0 and then writing `!0` to ENDPTFLUSH"
-        if util::wait(|| self.usb.ENDPTPRIME.read() == 0, 2 * consts::frame()).is_err() {
+        if util::wait_for_or_timeout(|| self.usb.ENDPTPRIME.read() == 0, 2 * consts::frame())
+            .is_err()
+        {
             memlog!("reset: ENDPTPRIME timeout");
             memlog_flush_and_reset!()
         }
@@ -455,7 +457,7 @@ impl Inner {
 
             // FIXME return WouldBlock instead of busy waiting
             // wait for completion
-            if util::wait(
+            if util::wait_for_or_timeout(
                 || self.usb.ENDPTCOMPLETE.read() & ep_mask != 0,
                 2 * consts::microframe(),
             )
