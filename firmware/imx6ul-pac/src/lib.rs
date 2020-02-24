@@ -8169,6 +8169,1038 @@ pub mod usb_uog {
     }
 }
 #[allow(non_snake_case)]
+#[doc = "uSDHC"]
+pub mod usdhc {
+    use crate::Peripheral;
+    use core::{
+        marker::PhantomData,
+        sync::atomic::{AtomicBool, Ordering},
+    };
+    #[doc = r" The registers that make up the peripheral"]
+    #[allow(non_snake_case)]
+    pub struct Registers<P>
+    where
+        P: Peripheral,
+    {
+        _p: PhantomData<P>,
+        _not_sync: PhantomData<*mut ()>,
+        #[doc = "DMA System Address"]
+        pub DS_ADDR: DS_ADDR<P>,
+        #[doc = "Block Attributes"]
+        pub BLK_ATT: BLK_ATT<P>,
+        #[doc = "Command Argument"]
+        pub CMD_ARG: CMD_ARG<P>,
+        #[doc = "Command Transfer Type"]
+        pub CMD_XFR_TYP: CMD_XFR_TYP<P>,
+        #[doc = "Command Response0"]
+        pub CMD_RSP0: CMD_RSP0<P>,
+        #[doc = "Command Response1"]
+        pub CMD_RSP1: CMD_RSP1<P>,
+        #[doc = "Command Response2"]
+        pub CMD_RSP2: CMD_RSP2<P>,
+        #[doc = "Command Response3"]
+        pub CMD_RSP3: CMD_RSP3<P>,
+        #[doc = "Data Buffer Access Port"]
+        pub DATA_BUFF_ACC_PORT: DATA_BUFF_ACC_PORT<P>,
+        #[doc = "Present State"]
+        pub PRES_STATE: PRES_STATE<P>,
+        #[doc = "Protocol Control"]
+        pub PROT_CTRL: PROT_CTRL<P>,
+        #[doc = "System Control"]
+        pub SYS_CTRL: SYS_CTRL<P>,
+        #[doc = "Interrupt Status"]
+        pub INT_STATUS: INT_STATUS<P>,
+        #[doc = "Interrupt Status Enable"]
+        pub INT_STATUS_EN: INT_STATUS_EN<P>,
+        #[doc = "Interrupt Signal Enable"]
+        pub INT_SIGNAL_EN: INT_SIGNAL_EN<P>,
+        #[doc = "Auto CMD12 Error Status"]
+        pub AUTOCMD12_ERR_STATUS: AUTOCMD12_ERR_STATUS<P>,
+        #[doc = "Host Controller Capabilities"]
+        pub HOST_CTRL_CAP: HOST_CTRL_CAP<P>,
+        #[doc = "Watermark Level"]
+        pub WTMK_LVL: WTMK_LVL<P>,
+        #[doc = "Mixer Control"]
+        pub MIX_CTRL: MIX_CTRL<P>,
+        #[doc = "ADMA Error Status Register"]
+        pub ADMA_ERR_STATUS: ADMA_ERR_STATUS<P>,
+        #[doc = "ADMA System Address"]
+        pub ADMA_SYS_ADDR: ADMA_SYS_ADDR<P>,
+        #[doc = "DLL Status"]
+        pub DLL_STATUS: DLL_STATUS<P>,
+        #[doc = "CLK Tuning Control and Status"]
+        pub CLK_TUNE_CTRL_STATUS: CLK_TUNE_CTRL_STATUS<P>,
+        #[doc = "Vendor Specific Register"]
+        pub VEND_SPEC: VEND_SPEC<P>,
+        #[doc = "MMC Boot Register"]
+        pub MMC_BOOT: MMC_BOOT<P>,
+        #[doc = "Vendor Specific 2 Register"]
+        pub VEND_SPEC2: VEND_SPEC2<P>,
+        #[doc = "Tuning Control Register"]
+        pub TUNING_CTRL: TUNING_CTRL<P>,
+    }
+    unsafe impl<P> Send for Registers<P> where P: Peripheral {}
+    #[doc = "DMA System Address"]
+    #[allow(non_camel_case_types)]
+    pub struct DS_ADDR<P>
+    where
+        P: Peripheral,
+    {
+        _p: PhantomData<P>,
+        _not_send_or_sync: PhantomData<*mut ()>,
+    }
+    impl<P> DS_ADDR<P>
+    where
+        P: Peripheral,
+    {
+        const OFFSET: usize = 0x00;
+        #[doc = r" Reset value"]
+        pub const RESET_VALUE: u32 = 0x0000_0000;
+        #[doc = r" Performs a single load operation on the memory-mapped register"]
+        pub fn read(&self) -> u32 {
+            unsafe { ((P::BASE_ADDRESS + Self::OFFSET) as *const u32).read_volatile() }
+        }
+        #[doc = r" Performs a single store operation on the memory-mapped register"]
+        #[allow(unused_unsafe)]
+        pub fn write(&self, bits: u32) {
+            unsafe { ((P::BASE_ADDRESS + Self::OFFSET) as *mut u32).write_volatile(bits) }
+        }
+        #[doc = r" Performs a read-modify-write on the memory-mapped register"]
+        #[doc = r""]
+        #[doc = r" This is a short-hand for `self.write(f(self.read()))`"]
+        #[allow(unused_unsafe)]
+        pub fn rmw(&self, f: impl FnOnce(u32) -> u32) {
+            self.write(f(self.read()))
+        }
+    }
+    #[doc = "Block Attributes"]
+    #[allow(non_camel_case_types)]
+    pub struct BLK_ATT<P>
+    where
+        P: Peripheral,
+    {
+        _p: PhantomData<P>,
+        _not_send_or_sync: PhantomData<*mut ()>,
+    }
+    impl<P> BLK_ATT<P>
+    where
+        P: Peripheral,
+    {
+        const OFFSET: usize = 0x04;
+        #[doc = r" Reset value"]
+        pub const RESET_VALUE: u32 = 0x0000_0000;
+        #[doc = r" Performs a single load operation on the memory-mapped register"]
+        pub fn read(&self) -> u32 {
+            unsafe { ((P::BASE_ADDRESS + Self::OFFSET) as *const u32).read_volatile() }
+        }
+        #[doc = r" Performs a single store operation on the memory-mapped register"]
+        #[allow(unused_unsafe)]
+        pub fn write(&self, bits: u32) {
+            unsafe { ((P::BASE_ADDRESS + Self::OFFSET) as *mut u32).write_volatile(bits) }
+        }
+        #[doc = r" Performs a read-modify-write on the memory-mapped register"]
+        #[doc = r""]
+        #[doc = r" This is a short-hand for `self.write(f(self.read()))`"]
+        #[allow(unused_unsafe)]
+        pub fn rmw(&self, f: impl FnOnce(u32) -> u32) {
+            self.write(f(self.read()))
+        }
+    }
+    #[doc = "Command Argument"]
+    #[allow(non_camel_case_types)]
+    pub struct CMD_ARG<P>
+    where
+        P: Peripheral,
+    {
+        _p: PhantomData<P>,
+        _not_send_or_sync: PhantomData<*mut ()>,
+    }
+    impl<P> CMD_ARG<P>
+    where
+        P: Peripheral,
+    {
+        const OFFSET: usize = 0x08;
+        #[doc = r" Reset value"]
+        pub const RESET_VALUE: u32 = 0x0000_0000;
+        #[doc = r" Performs a single load operation on the memory-mapped register"]
+        pub fn read(&self) -> u32 {
+            unsafe { ((P::BASE_ADDRESS + Self::OFFSET) as *const u32).read_volatile() }
+        }
+        #[doc = r" Performs a single store operation on the memory-mapped register"]
+        #[allow(unused_unsafe)]
+        pub fn write(&self, bits: u32) {
+            unsafe { ((P::BASE_ADDRESS + Self::OFFSET) as *mut u32).write_volatile(bits) }
+        }
+        #[doc = r" Performs a read-modify-write on the memory-mapped register"]
+        #[doc = r""]
+        #[doc = r" This is a short-hand for `self.write(f(self.read()))`"]
+        #[allow(unused_unsafe)]
+        pub fn rmw(&self, f: impl FnOnce(u32) -> u32) {
+            self.write(f(self.read()))
+        }
+    }
+    #[doc = "Command Transfer Type"]
+    #[allow(non_camel_case_types)]
+    pub struct CMD_XFR_TYP<P>
+    where
+        P: Peripheral,
+    {
+        _p: PhantomData<P>,
+        _not_send_or_sync: PhantomData<*mut ()>,
+    }
+    impl<P> CMD_XFR_TYP<P>
+    where
+        P: Peripheral,
+    {
+        const OFFSET: usize = 0x0c;
+        #[doc = r" Reset value"]
+        pub const RESET_VALUE: u32 = 0x0000_0000;
+        #[doc = r" Performs a single load operation on the memory-mapped register"]
+        pub fn read(&self) -> u32 {
+            unsafe { ((P::BASE_ADDRESS + Self::OFFSET) as *const u32).read_volatile() }
+        }
+        #[doc = r" Performs a single store operation on the memory-mapped register"]
+        #[allow(unused_unsafe)]
+        pub fn write(&self, bits: u32) {
+            unsafe { ((P::BASE_ADDRESS + Self::OFFSET) as *mut u32).write_volatile(bits) }
+        }
+        #[doc = r" Performs a read-modify-write on the memory-mapped register"]
+        #[doc = r""]
+        #[doc = r" This is a short-hand for `self.write(f(self.read()))`"]
+        #[allow(unused_unsafe)]
+        pub fn rmw(&self, f: impl FnOnce(u32) -> u32) {
+            self.write(f(self.read()))
+        }
+    }
+    #[doc = "Command Response0"]
+    #[allow(non_camel_case_types)]
+    pub struct CMD_RSP0<P>
+    where
+        P: Peripheral,
+    {
+        _p: PhantomData<P>,
+        _not_send_or_sync: PhantomData<*mut ()>,
+    }
+    impl<P> CMD_RSP0<P>
+    where
+        P: Peripheral,
+    {
+        const OFFSET: usize = 0x10;
+        #[doc = r" Reset value"]
+        pub const RESET_VALUE: u32 = 0x0000_0000;
+        #[doc = r" Performs a single load operation on the memory-mapped register"]
+        pub fn read(&self) -> u32 {
+            unsafe { ((P::BASE_ADDRESS + Self::OFFSET) as *const u32).read_volatile() }
+        }
+    }
+    #[doc = "Command Response1"]
+    #[allow(non_camel_case_types)]
+    pub struct CMD_RSP1<P>
+    where
+        P: Peripheral,
+    {
+        _p: PhantomData<P>,
+        _not_send_or_sync: PhantomData<*mut ()>,
+    }
+    impl<P> CMD_RSP1<P>
+    where
+        P: Peripheral,
+    {
+        const OFFSET: usize = 0x14;
+        #[doc = r" Reset value"]
+        pub const RESET_VALUE: u32 = 0x0000_0000;
+        #[doc = r" Performs a single load operation on the memory-mapped register"]
+        pub fn read(&self) -> u32 {
+            unsafe { ((P::BASE_ADDRESS + Self::OFFSET) as *const u32).read_volatile() }
+        }
+    }
+    #[doc = "Command Response2"]
+    #[allow(non_camel_case_types)]
+    pub struct CMD_RSP2<P>
+    where
+        P: Peripheral,
+    {
+        _p: PhantomData<P>,
+        _not_send_or_sync: PhantomData<*mut ()>,
+    }
+    impl<P> CMD_RSP2<P>
+    where
+        P: Peripheral,
+    {
+        const OFFSET: usize = 0x18;
+        #[doc = r" Reset value"]
+        pub const RESET_VALUE: u32 = 0x0000_0000;
+        #[doc = r" Performs a single load operation on the memory-mapped register"]
+        pub fn read(&self) -> u32 {
+            unsafe { ((P::BASE_ADDRESS + Self::OFFSET) as *const u32).read_volatile() }
+        }
+    }
+    #[doc = "Command Response3"]
+    #[allow(non_camel_case_types)]
+    pub struct CMD_RSP3<P>
+    where
+        P: Peripheral,
+    {
+        _p: PhantomData<P>,
+        _not_send_or_sync: PhantomData<*mut ()>,
+    }
+    impl<P> CMD_RSP3<P>
+    where
+        P: Peripheral,
+    {
+        const OFFSET: usize = 0x1c;
+        #[doc = r" Reset value"]
+        pub const RESET_VALUE: u32 = 0x0000_0000;
+        #[doc = r" Performs a single load operation on the memory-mapped register"]
+        pub fn read(&self) -> u32 {
+            unsafe { ((P::BASE_ADDRESS + Self::OFFSET) as *const u32).read_volatile() }
+        }
+    }
+    #[doc = "Data Buffer Access Port"]
+    #[allow(non_camel_case_types)]
+    pub struct DATA_BUFF_ACC_PORT<P>
+    where
+        P: Peripheral,
+    {
+        _p: PhantomData<P>,
+        _not_send_or_sync: PhantomData<*mut ()>,
+    }
+    impl<P> DATA_BUFF_ACC_PORT<P>
+    where
+        P: Peripheral,
+    {
+        const OFFSET: usize = 0x20;
+        #[doc = r" Reset value"]
+        pub const RESET_VALUE: u32 = 0x0000_0000;
+        #[doc = r" Performs a single load operation on the memory-mapped register"]
+        pub fn read(&self) -> u32 {
+            unsafe { ((P::BASE_ADDRESS + Self::OFFSET) as *const u32).read_volatile() }
+        }
+        #[doc = r" Performs a single store operation on the memory-mapped register"]
+        #[allow(unused_unsafe)]
+        pub fn write(&self, bits: u32) {
+            unsafe { ((P::BASE_ADDRESS + Self::OFFSET) as *mut u32).write_volatile(bits) }
+        }
+        #[doc = r" Performs a read-modify-write on the memory-mapped register"]
+        #[doc = r""]
+        #[doc = r" This is a short-hand for `self.write(f(self.read()))`"]
+        #[allow(unused_unsafe)]
+        pub fn rmw(&self, f: impl FnOnce(u32) -> u32) {
+            self.write(f(self.read()))
+        }
+    }
+    #[doc = "Present State"]
+    #[allow(non_camel_case_types)]
+    pub struct PRES_STATE<P>
+    where
+        P: Peripheral,
+    {
+        _p: PhantomData<P>,
+        _not_send_or_sync: PhantomData<*mut ()>,
+    }
+    impl<P> PRES_STATE<P>
+    where
+        P: Peripheral,
+    {
+        const OFFSET: usize = 0x24;
+        #[doc = r" Reset value"]
+        pub const RESET_VALUE: u32 = 0x0000_8080;
+        #[doc = r" Performs a single load operation on the memory-mapped register"]
+        pub fn read(&self) -> u32 {
+            unsafe { ((P::BASE_ADDRESS + Self::OFFSET) as *const u32).read_volatile() }
+        }
+    }
+    #[doc = "Protocol Control"]
+    #[allow(non_camel_case_types)]
+    pub struct PROT_CTRL<P>
+    where
+        P: Peripheral,
+    {
+        _p: PhantomData<P>,
+        _not_send_or_sync: PhantomData<*mut ()>,
+    }
+    impl<P> PROT_CTRL<P>
+    where
+        P: Peripheral,
+    {
+        const OFFSET: usize = 0x28;
+        #[doc = r" Reset value"]
+        pub const RESET_VALUE: u32 = 0x0880_0020;
+        #[doc = r" Performs a single load operation on the memory-mapped register"]
+        pub fn read(&self) -> u32 {
+            unsafe { ((P::BASE_ADDRESS + Self::OFFSET) as *const u32).read_volatile() }
+        }
+        #[doc = r" Performs a single store operation on the memory-mapped register"]
+        #[allow(unused_unsafe)]
+        pub fn write(&self, bits: u32) {
+            unsafe { ((P::BASE_ADDRESS + Self::OFFSET) as *mut u32).write_volatile(bits) }
+        }
+        #[doc = r" Performs a read-modify-write on the memory-mapped register"]
+        #[doc = r""]
+        #[doc = r" This is a short-hand for `self.write(f(self.read()))`"]
+        #[allow(unused_unsafe)]
+        pub fn rmw(&self, f: impl FnOnce(u32) -> u32) {
+            self.write(f(self.read()))
+        }
+    }
+    #[doc = "System Control"]
+    #[allow(non_camel_case_types)]
+    pub struct SYS_CTRL<P>
+    where
+        P: Peripheral,
+    {
+        _p: PhantomData<P>,
+        _not_send_or_sync: PhantomData<*mut ()>,
+    }
+    impl<P> SYS_CTRL<P>
+    where
+        P: Peripheral,
+    {
+        const OFFSET: usize = 0x2c;
+        #[doc = r" Reset value"]
+        pub const RESET_VALUE: u32 = 0x8080_800f;
+        #[doc = r" Performs a single load operation on the memory-mapped register"]
+        pub fn read(&self) -> u32 {
+            unsafe { ((P::BASE_ADDRESS + Self::OFFSET) as *const u32).read_volatile() }
+        }
+        #[doc = r" Performs a single store operation on the memory-mapped register"]
+        #[allow(unused_unsafe)]
+        pub fn write(&self, bits: u32) {
+            unsafe { ((P::BASE_ADDRESS + Self::OFFSET) as *mut u32).write_volatile(bits) }
+        }
+        #[doc = r" Performs a read-modify-write on the memory-mapped register"]
+        #[doc = r""]
+        #[doc = r" This is a short-hand for `self.write(f(self.read()))`"]
+        #[allow(unused_unsafe)]
+        pub fn rmw(&self, f: impl FnOnce(u32) -> u32) {
+            self.write(f(self.read()))
+        }
+    }
+    #[doc = "Interrupt Status"]
+    #[allow(non_camel_case_types)]
+    pub struct INT_STATUS<P>
+    where
+        P: Peripheral,
+    {
+        _p: PhantomData<P>,
+        _not_send_or_sync: PhantomData<*mut ()>,
+    }
+    impl<P> INT_STATUS<P>
+    where
+        P: Peripheral,
+    {
+        const OFFSET: usize = 0x30;
+        #[doc = r" Reset value"]
+        pub const RESET_VALUE: u32 = 0x0000_0000;
+        #[doc = r" Performs a single load operation on the memory-mapped register"]
+        pub fn read(&self) -> u32 {
+            unsafe { ((P::BASE_ADDRESS + Self::OFFSET) as *const u32).read_volatile() }
+        }
+        #[doc = r" Performs a single store operation on the memory-mapped register"]
+        #[allow(unused_unsafe)]
+        pub fn clear(&self, mask: u32) {
+            unsafe { ((P::BASE_ADDRESS + Self::OFFSET) as *mut u32).write_volatile(mask) }
+        }
+    }
+    #[doc = "Interrupt Status Enable"]
+    #[allow(non_camel_case_types)]
+    pub struct INT_STATUS_EN<P>
+    where
+        P: Peripheral,
+    {
+        _p: PhantomData<P>,
+        _not_send_or_sync: PhantomData<*mut ()>,
+    }
+    impl<P> INT_STATUS_EN<P>
+    where
+        P: Peripheral,
+    {
+        const OFFSET: usize = 0x34;
+        #[doc = r" Reset value"]
+        pub const RESET_VALUE: u32 = 0x0000_0000;
+        #[doc = r" Performs a single load operation on the memory-mapped register"]
+        pub fn read(&self) -> u32 {
+            unsafe { ((P::BASE_ADDRESS + Self::OFFSET) as *const u32).read_volatile() }
+        }
+        #[doc = r" Performs a single store operation on the memory-mapped register"]
+        #[allow(unused_unsafe)]
+        pub fn write(&self, bits: u32) {
+            unsafe { ((P::BASE_ADDRESS + Self::OFFSET) as *mut u32).write_volatile(bits) }
+        }
+        #[doc = r" Performs a read-modify-write on the memory-mapped register"]
+        #[doc = r""]
+        #[doc = r" This is a short-hand for `self.write(f(self.read()))`"]
+        #[allow(unused_unsafe)]
+        pub fn rmw(&self, f: impl FnOnce(u32) -> u32) {
+            self.write(f(self.read()))
+        }
+    }
+    #[doc = "Interrupt Signal Enable"]
+    #[allow(non_camel_case_types)]
+    pub struct INT_SIGNAL_EN<P>
+    where
+        P: Peripheral,
+    {
+        _p: PhantomData<P>,
+        _not_send_or_sync: PhantomData<*mut ()>,
+    }
+    impl<P> INT_SIGNAL_EN<P>
+    where
+        P: Peripheral,
+    {
+        const OFFSET: usize = 0x38;
+        #[doc = r" Reset value"]
+        pub const RESET_VALUE: u32 = 0x0000_0000;
+        #[doc = r" Performs a single load operation on the memory-mapped register"]
+        pub fn read(&self) -> u32 {
+            unsafe { ((P::BASE_ADDRESS + Self::OFFSET) as *const u32).read_volatile() }
+        }
+        #[doc = r" Performs a single store operation on the memory-mapped register"]
+        #[allow(unused_unsafe)]
+        pub fn write(&self, bits: u32) {
+            unsafe { ((P::BASE_ADDRESS + Self::OFFSET) as *mut u32).write_volatile(bits) }
+        }
+        #[doc = r" Performs a read-modify-write on the memory-mapped register"]
+        #[doc = r""]
+        #[doc = r" This is a short-hand for `self.write(f(self.read()))`"]
+        #[allow(unused_unsafe)]
+        pub fn rmw(&self, f: impl FnOnce(u32) -> u32) {
+            self.write(f(self.read()))
+        }
+    }
+    #[doc = "Auto CMD12 Error Status"]
+    #[allow(non_camel_case_types)]
+    pub struct AUTOCMD12_ERR_STATUS<P>
+    where
+        P: Peripheral,
+    {
+        _p: PhantomData<P>,
+        _not_send_or_sync: PhantomData<*mut ()>,
+    }
+    impl<P> AUTOCMD12_ERR_STATUS<P>
+    where
+        P: Peripheral,
+    {
+        const OFFSET: usize = 0x3c;
+        #[doc = r" Reset value"]
+        pub const RESET_VALUE: u32 = 0x0000_0000;
+        #[doc = r" Performs a single load operation on the memory-mapped register"]
+        pub fn read(&self) -> u32 {
+            unsafe { ((P::BASE_ADDRESS + Self::OFFSET) as *const u32).read_volatile() }
+        }
+    }
+    #[doc = "Host Controller Capabilities"]
+    #[allow(non_camel_case_types)]
+    pub struct HOST_CTRL_CAP<P>
+    where
+        P: Peripheral,
+    {
+        _p: PhantomData<P>,
+        _not_send_or_sync: PhantomData<*mut ()>,
+    }
+    impl<P> HOST_CTRL_CAP<P>
+    where
+        P: Peripheral,
+    {
+        const OFFSET: usize = 0x40;
+        #[doc = r" Reset value"]
+        pub const RESET_VALUE: u32 = 0x07f3_b407;
+        #[doc = r" Performs a single load operation on the memory-mapped register"]
+        pub fn read(&self) -> u32 {
+            unsafe { ((P::BASE_ADDRESS + Self::OFFSET) as *const u32).read_volatile() }
+        }
+    }
+    #[doc = "Watermark Level"]
+    #[allow(non_camel_case_types)]
+    pub struct WTMK_LVL<P>
+    where
+        P: Peripheral,
+    {
+        _p: PhantomData<P>,
+        _not_send_or_sync: PhantomData<*mut ()>,
+    }
+    impl<P> WTMK_LVL<P>
+    where
+        P: Peripheral,
+    {
+        const OFFSET: usize = 0x44;
+        #[doc = r" Reset value"]
+        pub const RESET_VALUE: u32 = 0x0810_0810;
+        #[doc = r" Performs a single load operation on the memory-mapped register"]
+        pub fn read(&self) -> u32 {
+            unsafe { ((P::BASE_ADDRESS + Self::OFFSET) as *const u32).read_volatile() }
+        }
+        #[doc = r" Performs a single store operation on the memory-mapped register"]
+        #[allow(unused_unsafe)]
+        pub fn write(&self, bits: u32) {
+            unsafe { ((P::BASE_ADDRESS + Self::OFFSET) as *mut u32).write_volatile(bits) }
+        }
+        #[doc = r" Performs a read-modify-write on the memory-mapped register"]
+        #[doc = r""]
+        #[doc = r" This is a short-hand for `self.write(f(self.read()))`"]
+        #[allow(unused_unsafe)]
+        pub fn rmw(&self, f: impl FnOnce(u32) -> u32) {
+            self.write(f(self.read()))
+        }
+    }
+    #[doc = "Mixer Control"]
+    #[allow(non_camel_case_types)]
+    pub struct MIX_CTRL<P>
+    where
+        P: Peripheral,
+    {
+        _p: PhantomData<P>,
+        _not_send_or_sync: PhantomData<*mut ()>,
+    }
+    impl<P> MIX_CTRL<P>
+    where
+        P: Peripheral,
+    {
+        const OFFSET: usize = 0x48;
+        #[doc = r" Reset value"]
+        pub const RESET_VALUE: u32 = 0x8000_0000;
+        #[doc = r" Performs a single load operation on the memory-mapped register"]
+        pub fn read(&self) -> u32 {
+            unsafe { ((P::BASE_ADDRESS + Self::OFFSET) as *const u32).read_volatile() }
+        }
+        #[doc = r" Performs a single store operation on the memory-mapped register"]
+        #[allow(unused_unsafe)]
+        pub fn write(&self, bits: u32) {
+            unsafe { ((P::BASE_ADDRESS + Self::OFFSET) as *mut u32).write_volatile(bits) }
+        }
+        #[doc = r" Performs a read-modify-write on the memory-mapped register"]
+        #[doc = r""]
+        #[doc = r" This is a short-hand for `self.write(f(self.read()))`"]
+        #[allow(unused_unsafe)]
+        pub fn rmw(&self, f: impl FnOnce(u32) -> u32) {
+            self.write(f(self.read()))
+        }
+    }
+    #[doc = "ADMA Error Status Register"]
+    #[allow(non_camel_case_types)]
+    pub struct ADMA_ERR_STATUS<P>
+    where
+        P: Peripheral,
+    {
+        _p: PhantomData<P>,
+        _not_send_or_sync: PhantomData<*mut ()>,
+    }
+    impl<P> ADMA_ERR_STATUS<P>
+    where
+        P: Peripheral,
+    {
+        const OFFSET: usize = 0x54;
+        #[doc = r" Reset value"]
+        pub const RESET_VALUE: u32 = 0x0000_0000;
+        #[doc = r" Performs a single load operation on the memory-mapped register"]
+        pub fn read(&self) -> u32 {
+            unsafe { ((P::BASE_ADDRESS + Self::OFFSET) as *const u32).read_volatile() }
+        }
+    }
+    #[doc = "ADMA System Address"]
+    #[allow(non_camel_case_types)]
+    pub struct ADMA_SYS_ADDR<P>
+    where
+        P: Peripheral,
+    {
+        _p: PhantomData<P>,
+        _not_send_or_sync: PhantomData<*mut ()>,
+    }
+    impl<P> ADMA_SYS_ADDR<P>
+    where
+        P: Peripheral,
+    {
+        const OFFSET: usize = 0x58;
+        #[doc = r" Reset value"]
+        pub const RESET_VALUE: u32 = 0x0000_0000;
+        #[doc = r" Performs a single load operation on the memory-mapped register"]
+        pub fn read(&self) -> u32 {
+            unsafe { ((P::BASE_ADDRESS + Self::OFFSET) as *const u32).read_volatile() }
+        }
+        #[doc = r" Performs a single store operation on the memory-mapped register"]
+        #[allow(unused_unsafe)]
+        pub fn write(&self, bits: u32) {
+            unsafe { ((P::BASE_ADDRESS + Self::OFFSET) as *mut u32).write_volatile(bits) }
+        }
+        #[doc = r" Performs a read-modify-write on the memory-mapped register"]
+        #[doc = r""]
+        #[doc = r" This is a short-hand for `self.write(f(self.read()))`"]
+        #[allow(unused_unsafe)]
+        pub fn rmw(&self, f: impl FnOnce(u32) -> u32) {
+            self.write(f(self.read()))
+        }
+    }
+    #[doc = "DLL Status"]
+    #[allow(non_camel_case_types)]
+    pub struct DLL_STATUS<P>
+    where
+        P: Peripheral,
+    {
+        _p: PhantomData<P>,
+        _not_send_or_sync: PhantomData<*mut ()>,
+    }
+    impl<P> DLL_STATUS<P>
+    where
+        P: Peripheral,
+    {
+        const OFFSET: usize = 0x64;
+        #[doc = r" Reset value"]
+        pub const RESET_VALUE: u32 = 0x0000_0000;
+        #[doc = r" Performs a single load operation on the memory-mapped register"]
+        pub fn read(&self) -> u32 {
+            unsafe { ((P::BASE_ADDRESS + Self::OFFSET) as *const u32).read_volatile() }
+        }
+    }
+    #[doc = "CLK Tuning Control and Status"]
+    #[allow(non_camel_case_types)]
+    pub struct CLK_TUNE_CTRL_STATUS<P>
+    where
+        P: Peripheral,
+    {
+        _p: PhantomData<P>,
+        _not_send_or_sync: PhantomData<*mut ()>,
+    }
+    impl<P> CLK_TUNE_CTRL_STATUS<P>
+    where
+        P: Peripheral,
+    {
+        const OFFSET: usize = 0x68;
+        #[doc = r" Reset value"]
+        pub const RESET_VALUE: u32 = 0x0000_0000;
+        #[doc = r" Performs a single load operation on the memory-mapped register"]
+        pub fn read(&self) -> u32 {
+            unsafe { ((P::BASE_ADDRESS + Self::OFFSET) as *const u32).read_volatile() }
+        }
+        #[doc = r" Performs a single store operation on the memory-mapped register"]
+        #[allow(unused_unsafe)]
+        pub fn write(&self, bits: u32) {
+            unsafe { ((P::BASE_ADDRESS + Self::OFFSET) as *mut u32).write_volatile(bits) }
+        }
+        #[doc = r" Performs a read-modify-write on the memory-mapped register"]
+        #[doc = r""]
+        #[doc = r" This is a short-hand for `self.write(f(self.read()))`"]
+        #[allow(unused_unsafe)]
+        pub fn rmw(&self, f: impl FnOnce(u32) -> u32) {
+            self.write(f(self.read()))
+        }
+    }
+    #[doc = "Vendor Specific Register"]
+    #[allow(non_camel_case_types)]
+    pub struct VEND_SPEC<P>
+    where
+        P: Peripheral,
+    {
+        _p: PhantomData<P>,
+        _not_send_or_sync: PhantomData<*mut ()>,
+    }
+    impl<P> VEND_SPEC<P>
+    where
+        P: Peripheral,
+    {
+        const OFFSET: usize = 0xc0;
+        #[doc = r" Reset value"]
+        pub const RESET_VALUE: u32 = 0x2000_7809;
+        #[doc = r" Performs a single load operation on the memory-mapped register"]
+        pub fn read(&self) -> u32 {
+            unsafe { ((P::BASE_ADDRESS + Self::OFFSET) as *const u32).read_volatile() }
+        }
+        #[doc = r" Performs a single store operation on the memory-mapped register"]
+        #[allow(unused_unsafe)]
+        pub fn write(&self, bits: u32) {
+            unsafe { ((P::BASE_ADDRESS + Self::OFFSET) as *mut u32).write_volatile(bits) }
+        }
+        #[doc = r" Performs a read-modify-write on the memory-mapped register"]
+        #[doc = r""]
+        #[doc = r" This is a short-hand for `self.write(f(self.read()))`"]
+        #[allow(unused_unsafe)]
+        pub fn rmw(&self, f: impl FnOnce(u32) -> u32) {
+            self.write(f(self.read()))
+        }
+    }
+    #[doc = "MMC Boot Register"]
+    #[allow(non_camel_case_types)]
+    pub struct MMC_BOOT<P>
+    where
+        P: Peripheral,
+    {
+        _p: PhantomData<P>,
+        _not_send_or_sync: PhantomData<*mut ()>,
+    }
+    impl<P> MMC_BOOT<P>
+    where
+        P: Peripheral,
+    {
+        const OFFSET: usize = 0xc4;
+        #[doc = r" Reset value"]
+        pub const RESET_VALUE: u32 = 0x0000_0000;
+        #[doc = r" Performs a single load operation on the memory-mapped register"]
+        pub fn read(&self) -> u32 {
+            unsafe { ((P::BASE_ADDRESS + Self::OFFSET) as *const u32).read_volatile() }
+        }
+        #[doc = r" Performs a single store operation on the memory-mapped register"]
+        #[allow(unused_unsafe)]
+        pub fn write(&self, bits: u32) {
+            unsafe { ((P::BASE_ADDRESS + Self::OFFSET) as *mut u32).write_volatile(bits) }
+        }
+        #[doc = r" Performs a read-modify-write on the memory-mapped register"]
+        #[doc = r""]
+        #[doc = r" This is a short-hand for `self.write(f(self.read()))`"]
+        #[allow(unused_unsafe)]
+        pub fn rmw(&self, f: impl FnOnce(u32) -> u32) {
+            self.write(f(self.read()))
+        }
+    }
+    #[doc = "Vendor Specific 2 Register"]
+    #[allow(non_camel_case_types)]
+    pub struct VEND_SPEC2<P>
+    where
+        P: Peripheral,
+    {
+        _p: PhantomData<P>,
+        _not_send_or_sync: PhantomData<*mut ()>,
+    }
+    impl<P> VEND_SPEC2<P>
+    where
+        P: Peripheral,
+    {
+        const OFFSET: usize = 0xc8;
+        #[doc = r" Reset value"]
+        pub const RESET_VALUE: u32 = 0x0000_0006;
+        #[doc = r" Performs a single load operation on the memory-mapped register"]
+        pub fn read(&self) -> u32 {
+            unsafe { ((P::BASE_ADDRESS + Self::OFFSET) as *const u32).read_volatile() }
+        }
+        #[doc = r" Performs a single store operation on the memory-mapped register"]
+        #[allow(unused_unsafe)]
+        pub fn write(&self, bits: u32) {
+            unsafe { ((P::BASE_ADDRESS + Self::OFFSET) as *mut u32).write_volatile(bits) }
+        }
+        #[doc = r" Performs a read-modify-write on the memory-mapped register"]
+        #[doc = r""]
+        #[doc = r" This is a short-hand for `self.write(f(self.read()))`"]
+        #[allow(unused_unsafe)]
+        pub fn rmw(&self, f: impl FnOnce(u32) -> u32) {
+            self.write(f(self.read()))
+        }
+    }
+    #[doc = "Tuning Control Register"]
+    #[allow(non_camel_case_types)]
+    pub struct TUNING_CTRL<P>
+    where
+        P: Peripheral,
+    {
+        _p: PhantomData<P>,
+        _not_send_or_sync: PhantomData<*mut ()>,
+    }
+    impl<P> TUNING_CTRL<P>
+    where
+        P: Peripheral,
+    {
+        const OFFSET: usize = 0xcc;
+        #[doc = r" Reset value"]
+        pub const RESET_VALUE: u32 = 0x0021_2800;
+        #[doc = r" Performs a single load operation on the memory-mapped register"]
+        pub fn read(&self) -> u32 {
+            unsafe { ((P::BASE_ADDRESS + Self::OFFSET) as *const u32).read_volatile() }
+        }
+        #[doc = r" Performs a single store operation on the memory-mapped register"]
+        #[allow(unused_unsafe)]
+        pub fn write(&self, bits: u32) {
+            unsafe { ((P::BASE_ADDRESS + Self::OFFSET) as *mut u32).write_volatile(bits) }
+        }
+        #[doc = r" Performs a read-modify-write on the memory-mapped register"]
+        #[doc = r""]
+        #[doc = r" This is a short-hand for `self.write(f(self.read()))`"]
+        #[allow(unused_unsafe)]
+        pub fn rmw(&self, f: impl FnOnce(u32) -> u32) {
+            self.write(f(self.read()))
+        }
+    }
+    impl<P> Registers<P>
+    where
+        P: Peripheral,
+    {
+        #[doc = r" # Safety"]
+        #[doc = r""]
+        #[doc = r" Creates a singleton from thin air; make sure we"]
+        #[doc = r" never hand out two instances of it"]
+        unsafe fn new() -> Self {
+            Self {
+                _p: PhantomData,
+                _not_sync: PhantomData,
+                DS_ADDR: DS_ADDR {
+                    _p: PhantomData,
+                    _not_send_or_sync: PhantomData,
+                },
+                BLK_ATT: BLK_ATT {
+                    _p: PhantomData,
+                    _not_send_or_sync: PhantomData,
+                },
+                CMD_ARG: CMD_ARG {
+                    _p: PhantomData,
+                    _not_send_or_sync: PhantomData,
+                },
+                CMD_XFR_TYP: CMD_XFR_TYP {
+                    _p: PhantomData,
+                    _not_send_or_sync: PhantomData,
+                },
+                CMD_RSP0: CMD_RSP0 {
+                    _p: PhantomData,
+                    _not_send_or_sync: PhantomData,
+                },
+                CMD_RSP1: CMD_RSP1 {
+                    _p: PhantomData,
+                    _not_send_or_sync: PhantomData,
+                },
+                CMD_RSP2: CMD_RSP2 {
+                    _p: PhantomData,
+                    _not_send_or_sync: PhantomData,
+                },
+                CMD_RSP3: CMD_RSP3 {
+                    _p: PhantomData,
+                    _not_send_or_sync: PhantomData,
+                },
+                DATA_BUFF_ACC_PORT: DATA_BUFF_ACC_PORT {
+                    _p: PhantomData,
+                    _not_send_or_sync: PhantomData,
+                },
+                PRES_STATE: PRES_STATE {
+                    _p: PhantomData,
+                    _not_send_or_sync: PhantomData,
+                },
+                PROT_CTRL: PROT_CTRL {
+                    _p: PhantomData,
+                    _not_send_or_sync: PhantomData,
+                },
+                SYS_CTRL: SYS_CTRL {
+                    _p: PhantomData,
+                    _not_send_or_sync: PhantomData,
+                },
+                INT_STATUS: INT_STATUS {
+                    _p: PhantomData,
+                    _not_send_or_sync: PhantomData,
+                },
+                INT_STATUS_EN: INT_STATUS_EN {
+                    _p: PhantomData,
+                    _not_send_or_sync: PhantomData,
+                },
+                INT_SIGNAL_EN: INT_SIGNAL_EN {
+                    _p: PhantomData,
+                    _not_send_or_sync: PhantomData,
+                },
+                AUTOCMD12_ERR_STATUS: AUTOCMD12_ERR_STATUS {
+                    _p: PhantomData,
+                    _not_send_or_sync: PhantomData,
+                },
+                HOST_CTRL_CAP: HOST_CTRL_CAP {
+                    _p: PhantomData,
+                    _not_send_or_sync: PhantomData,
+                },
+                WTMK_LVL: WTMK_LVL {
+                    _p: PhantomData,
+                    _not_send_or_sync: PhantomData,
+                },
+                MIX_CTRL: MIX_CTRL {
+                    _p: PhantomData,
+                    _not_send_or_sync: PhantomData,
+                },
+                ADMA_ERR_STATUS: ADMA_ERR_STATUS {
+                    _p: PhantomData,
+                    _not_send_or_sync: PhantomData,
+                },
+                ADMA_SYS_ADDR: ADMA_SYS_ADDR {
+                    _p: PhantomData,
+                    _not_send_or_sync: PhantomData,
+                },
+                DLL_STATUS: DLL_STATUS {
+                    _p: PhantomData,
+                    _not_send_or_sync: PhantomData,
+                },
+                CLK_TUNE_CTRL_STATUS: CLK_TUNE_CTRL_STATUS {
+                    _p: PhantomData,
+                    _not_send_or_sync: PhantomData,
+                },
+                VEND_SPEC: VEND_SPEC {
+                    _p: PhantomData,
+                    _not_send_or_sync: PhantomData,
+                },
+                MMC_BOOT: MMC_BOOT {
+                    _p: PhantomData,
+                    _not_send_or_sync: PhantomData,
+                },
+                VEND_SPEC2: VEND_SPEC2 {
+                    _p: PhantomData,
+                    _not_send_or_sync: PhantomData,
+                },
+                TUNING_CTRL: TUNING_CTRL {
+                    _p: PhantomData,
+                    _not_send_or_sync: PhantomData,
+                },
+            }
+        }
+    }
+    #[doc = "uSDHC1"]
+    pub struct _1;
+    impl Peripheral for _1 {
+        const BASE_ADDRESS: usize = 0x0219_0000;
+    }
+    #[allow(non_camel_case_types)]
+    #[doc = "uSDHC1"]
+    pub type uSDHC1 = Registers<_1>;
+    impl uSDHC1 {
+        #[doc = r" Takes the singleton that represents this peripheral instance"]
+        pub fn take() -> Option<Self> {
+            static TAKEN: AtomicBool = AtomicBool::new(false);
+            if TAKEN
+                .compare_exchange(false, true, Ordering::AcqRel, Ordering::Acquire)
+                .is_ok()
+            {
+                Some(unsafe { Registers::new() })
+            } else {
+                None
+            }
+        }
+        #[doc = r" Borrows the singleton without checking if it's"]
+        #[doc = r" currently being held by a context"]
+        #[doc = r""]
+        #[doc = r" **WARNING** this can break Read-Modify-Write"]
+        #[doc = r" operations being performed in other contexts."]
+        pub fn borrow_unchecked<T>(f: impl FnOnce(&Self) -> T) -> T {
+            f(unsafe { &Registers::new() })
+        }
+    }
+    #[doc = "uSDHC2"]
+    pub struct _2;
+    impl Peripheral for _2 {
+        const BASE_ADDRESS: usize = 0x0219_4000;
+    }
+    #[allow(non_camel_case_types)]
+    #[doc = "uSDHC2"]
+    pub type uSDHC2 = Registers<_2>;
+    impl uSDHC2 {
+        #[doc = r" Takes the singleton that represents this peripheral instance"]
+        pub fn take() -> Option<Self> {
+            static TAKEN: AtomicBool = AtomicBool::new(false);
+            if TAKEN
+                .compare_exchange(false, true, Ordering::AcqRel, Ordering::Acquire)
+                .is_ok()
+            {
+                Some(unsafe { Registers::new() })
+            } else {
+                None
+            }
+        }
+        #[doc = r" Borrows the singleton without checking if it's"]
+        #[doc = r" currently being held by a context"]
+        #[doc = r""]
+        #[doc = r" **WARNING** this can break Read-Modify-Write"]
+        #[doc = r" operations being performed in other contexts."]
+        pub fn borrow_unchecked<T>(f: impl FnOnce(&Self) -> T) -> T {
+            f(unsafe { &Registers::new() })
+        }
+    }
+}
+#[allow(non_snake_case)]
 #[doc = "WDOG"]
 pub mod wdog {
     use crate::Peripheral;

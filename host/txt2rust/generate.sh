@@ -25,6 +25,7 @@ main() {
     pdftotext -layout -f 3315 -l 3319 $1 usb.txt
     pdftotext -layout -f 3403 -l 3405 $1 usb-phy.txt
     pdftotext -layout -f 3420 -l 3421 $1 usb-analog.txt
+    pdftotext -layout -f 3504 -l 3506 $1 usdhc.txt
     pdftotext -layout -f 3584 -l 3584 $1 wdog.txt
     pdftotext -layout -f 693 -l 696 $1 ccm-analog.txt
     cargo run -- *.txt
