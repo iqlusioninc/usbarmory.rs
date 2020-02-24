@@ -1,0 +1,6 @@
+[alias]
+bb = "build --bin"
+be = "build --example"
+br = "build --release"
+brb = "build --release --bin"
+bre = "build --release --example"
