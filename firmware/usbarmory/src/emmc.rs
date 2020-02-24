@@ -35,19 +35,19 @@ pub struct eMMC {
 type Rca = NonZeroU16;
 
 /// Command complete
-const INT_STATUS_CC: u32 = 1 << 0;
+const INT_STATUS_CC: u32 = 1; // bit 0
 
 /// Command Inhibit (DATA)
 const PRES_STATE_CDIHB: u32 = 1 << 1;
 /// Command Inhibit
-const PRES_STATE_CIHB: u32 = 1 << 0;
+const PRES_STATE_CIHB: u32 = 1; // bit 0
 
 /// Bits that must always be ones
 const MIX_CTRL_RESERVED: u32 = 1 << 31;
 /// Single block
 const MIX_CTRL_MBSEL_SINGLE: u32 = 0 << 5;
 /// Enable the DMA
-const MIX_CTRL_DMAEN_ENABLE: u32 = 1 << 0;
+const MIX_CTRL_DMAEN_ENABLE: u32 = 1; // bit 0
 
 /// DMA error
 const INT_STATUS_DMAE: u32 = 1 << 28;
@@ -555,15 +555,11 @@ impl eMMC {
 
         let any_error = CTOE | CCE | CEBE | CIE;
         let mut int_status = 0;
-        if util::wait_for_or_timeout(
-            || {
-                int_status = self.usdhc.INT_STATUS.read();
-                int_status & (any_error | INT_STATUS_CC) != 0
-            },
-            default_timeout(),
-        )
-        .is_err()
-        {
+        let has_command_completed = || {
+            int_status = self.usdhc.INT_STATUS.read();
+            int_status & (any_error | INT_STATUS_CC) != 0
+        };
+        if util::wait_for_or_timeout(has_command_completed, default_timeout()).is_err() {
             memlog!("INT_STATUS.CC timeout");
             memlog_flush_and_reset!();
         }
@@ -603,5 +599,11 @@ impl Block {
         Self {
             bytes: [0; BLOCK_SIZE as usize],
         }
+    }
+}
+
+impl Default for Block {
+    fn default() -> Self {
+        Self::new()
     }
 }
