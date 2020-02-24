@@ -32,7 +32,7 @@ use pac::gicc::GICC;
 // End users must only ever modify the `consts` type parameter of `B0` and `B1`
 
 /// Circular buffer @ priority 0
-static mut B0: Buffer<BigArray<consts::U1>> = Buffer::new();
+static mut B0: Buffer<BigArray<consts::U2>> = Buffer::new();
 //                                     ^^
 
 /// Circular buffer @ priority !0
