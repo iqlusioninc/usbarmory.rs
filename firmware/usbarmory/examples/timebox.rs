@@ -16,7 +16,6 @@
 //! The answer was 42
 //! ```
 
-
 #![no_main]
 #![no_std]
 
