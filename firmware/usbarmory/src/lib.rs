@@ -12,7 +12,7 @@
 )]
 #![warn(missing_docs, rust_2018_idioms, unused_qualifications)]
 
-pub use cortex_a::delay;
+pub use cortex_a::{delay, no_interrupts};
 pub use memlog::memlog;
 use pac::wdog::WDOG1;
 use usbarmory_rt as _;

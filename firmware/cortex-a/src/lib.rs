@@ -97,3 +97,20 @@ pub fn udf() -> ! {
 
     unsafe { __udf() }
 }
+
+/// Runs the given closure in a critical section
+///
+/// The closure code won't be preempted by interrupts
+pub fn no_interrupts<T>(f: impl FnOnce() -> T) -> T {
+    // IRQ mask bit
+    const I: u32 = 1 << 7;
+
+    let cpsr = register::cpsr::read();
+    disable_irq();
+    let r = f();
+    if cpsr & I == 0 {
+        // re-enable interrupts
+        unsafe { enable_irq() }
+    }
+    r
+}
