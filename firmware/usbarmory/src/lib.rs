@@ -41,7 +41,6 @@ pub fn reset() -> ! {
     /// Software Reset Signal
     pub const WDOG_WCR_SRS: u16 = 1 << 4;
 
-    cortex_a::disable_fiq();
     cortex_a::disable_irq();
 
     // NOTE(borrow_unchecked) interrupts have been disabled; we are now in a
@@ -62,7 +61,6 @@ pub fn reset() -> ! {
 /// Implementation detail
 pub fn memlog_flush_and_reset(file: &str, line: u32) -> ! {
     cortex_a::disable_irq();
-    cortex_a::disable_fiq();
 
     // called twice to handle the wrap-around case
     for _ in 0..4 {

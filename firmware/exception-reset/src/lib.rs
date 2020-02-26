@@ -9,7 +9,6 @@ use usbarmory::serial::Serial;
 #[no_mangle]
 unsafe fn DefaultHandler() -> ! {
     Serial::borrow_unchecked(|serial| {
-        cortex_a::disable_fiq();
         cortex_a::disable_irq();
 
         // NOTE the leading newline is to *not* append the panic message to some
