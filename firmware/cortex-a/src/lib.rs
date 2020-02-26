@@ -29,28 +29,6 @@ pub fn delay(n: u32) {
     unsafe { __delay(n) }
 }
 
-/// Enables FIQ interrupts
-///
-/// # Safety
-///
-/// This operation can break critical sections based on masking FIQ
-pub unsafe fn enable_fiq() {
-    extern "C" {
-        fn __enable_fiq();
-    }
-
-    __enable_fiq()
-}
-
-/// Disable FIQ interrupts
-pub fn disable_fiq() {
-    extern "C" {
-        fn __disable_fiq();
-    }
-
-    unsafe { __disable_fiq() }
-}
-
 /// Enables IRQ interrupts
 ///
 /// # Safety
@@ -118,4 +96,21 @@ pub fn udf() -> ! {
     }
 
     unsafe { __udf() }
+}
+
+/// Runs the given closure in a critical section
+///
+/// The closure code won't be preempted by interrupts
+pub fn no_interrupts<T>(f: impl FnOnce() -> T) -> T {
+    // IRQ mask bit
+    const I: u32 = 1 << 7;
+
+    let cpsr = register::cpsr::read();
+    disable_irq();
+    let r = f();
+    if cpsr & I == 0 {
+        // re-enable interrupts
+        unsafe { enable_irq() }
+    }
+    r
 }

@@ -12,7 +12,7 @@
 )]
 #![warn(missing_docs, rust_2018_idioms, unused_qualifications)]
 
-pub use cortex_a::delay;
+pub use cortex_a::{delay, no_interrupts};
 pub use memlog::memlog;
 use pac::wdog::WDOG1;
 use usbarmory_rt as _;
@@ -41,7 +41,6 @@ pub fn reset() -> ! {
     /// Software Reset Signal
     pub const WDOG_WCR_SRS: u16 = 1 << 4;
 
-    cortex_a::disable_fiq();
     cortex_a::disable_irq();
 
     // NOTE(borrow_unchecked) interrupts have been disabled; we are now in a
@@ -62,7 +61,6 @@ pub fn reset() -> ! {
 /// Implementation detail
 pub fn memlog_flush_and_reset(file: &str, line: u32) -> ! {
     cortex_a::disable_irq();
-    cortex_a::disable_fiq();
 
     // called twice to handle the wrap-around case
     for _ in 0..4 {
@@ -90,4 +88,35 @@ pub fn memlog_try_flush() {
     memlog::peek(false, |s| {
         Serial::borrow_unchecked(|serial| serial.try_write_all(s))
     })
+}
+
+/// Runs the given closure and panics if it didn't complete within `timeout`
+///
+/// NOTE this function will only panic if `debug_assertions` are enabled
+pub fn debug_timebox<T>(timeout: core::time::Duration, f: impl FnOnce() -> T) -> T {
+    #[cfg(not(debug_assertions))]
+    drop(timeout);
+
+    #[cfg(debug_assertions)]
+    let start = crate::time::Instant::now();
+    #[cfg(debug_assertions)]
+    core::sync::atomic::compiler_fence(core::sync::atomic::Ordering::SeqCst);
+
+    // the compiler fences are used to prevent the compiler from reordering the
+    // memory operations performed in the closure to either before `let start`
+    // or after `let end`
+    let r = f();
+
+    #[cfg(debug_assertions)]
+    core::sync::atomic::compiler_fence(core::sync::atomic::Ordering::SeqCst);
+    #[cfg(debug_assertions)]
+    let end = crate::time::Instant::now();
+
+    #[cfg(debug_assertions)]
+    assert!(
+        end - start < timeout,
+        "work was not completed within {:?}",
+        timeout
+    );
+    r
 }

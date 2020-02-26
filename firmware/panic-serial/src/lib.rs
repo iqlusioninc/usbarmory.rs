@@ -7,7 +7,6 @@ use usbarmory::serial::Serial;
 #[panic_handler]
 fn panic(info: &PanicInfo) -> ! {
     cortex_a::disable_irq();
-    cortex_a::disable_fiq();
 
     Serial::borrow_unchecked(|mut serial| {
         // NOTE the leading newline is to *not* append the panic message to some
