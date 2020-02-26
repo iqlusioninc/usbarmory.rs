@@ -89,3 +89,34 @@ pub fn memlog_try_flush() {
         Serial::borrow_unchecked(|serial| serial.try_write_all(s))
     })
 }
+
+/// Runs the given closure and panics if it didn't complete within `timeout`
+///
+/// NOTE this function will only panic if `debug_assertions` are enabled
+pub fn debug_timebox<T>(timeout: core::time::Duration, f: impl FnOnce() -> T) -> T {
+    #[cfg(not(debug_assertions))]
+    drop(timeout);
+
+    #[cfg(debug_assertions)]
+    let start = crate::time::Instant::now();
+    #[cfg(debug_assertions)]
+    core::sync::atomic::compiler_fence(core::sync::atomic::Ordering::SeqCst);
+
+    // the compiler fences are used to prevent the compiler from reordering the
+    // memory operations performed in the closure to either before `let start`
+    // or after `let end`
+    let r = f();
+
+    #[cfg(debug_assertions)]
+    core::sync::atomic::compiler_fence(core::sync::atomic::Ordering::SeqCst);
+    #[cfg(debug_assertions)]
+    let end = crate::time::Instant::now();
+
+    #[cfg(debug_assertions)]
+    assert!(
+        end - start < timeout,
+        "work was not completed within {:?}",
+        timeout
+    );
+    r
+}
