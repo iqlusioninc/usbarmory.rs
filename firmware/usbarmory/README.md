@@ -490,7 +490,7 @@ the external SD card.
 
 #### Building U-Boot
 
-Clons U-Boot from `https://gitlab.denx.de/u-boot/u-boot.git` and check out the
+Clone U-Boot from `https://gitlab.denx.de/u-boot/u-boot.git` and check out the
 [`v2019.07`] tag, and obtain the following patches to add support for the USB
 Armory Mk II:
 
