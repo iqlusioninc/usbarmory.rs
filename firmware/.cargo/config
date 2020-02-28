@@ -1,5 +1,14 @@
 [target.armv7a-none-eabi]
-runner = "qemu-system-arm -cpu cortex-a7 -machine mcimx6ul-evk -nographic -semihosting-config enable=on,target=native -kernel"
+
+# Some examples can be run in QEMU when no real hardware is available.
+#runner = "qemu-system-arm -cpu cortex-a7 -machine mcimx6ul-evk -nographic -semihosting-config enable=on,target=native -kernel"
+
+# For running on real hardware, the easiest way is to use the `runner` utility
+# like shown here.
+# Yes, this uses Cargo as the runner invoked by Cargo. It looks a bit funny but
+# does seem to work. It might break when using `cargo +version run` though.
+runner = "cargo run --target x86_64-unknown-linux-gnu --manifest-path ../../host/runner/Cargo.toml --"
+
 rustflags = [
   "-C", "linker=flip-lld",
   "-C", "link-arg=-Tlink.x",
