@@ -1,0 +1,11 @@
+[package]
+authors = ["iqlusion"]
+edition = "2018"
+license = "Apache-2.0 OR MIT"
+name    = "runner"
+publish = false
+version = "0.0.0"
+
+[dependencies]
+serialport = "3.3.0"
+xmodem = "0.1.3"

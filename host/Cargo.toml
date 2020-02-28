@@ -1,5 +1,10 @@
 [workspace]
 members = [
+  "runner",
   "txt2rust",
   "usbc",
 ]
+
+[profile.dev]
+# Work around linker errors seen when building libudev-sys with nightly rustc.
+codegen-units = 1
