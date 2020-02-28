@@ -7,5 +7,5 @@ publish = false
 version = "0.0.0"
 
 [dependencies]
-serialport = "3.3.0"
+serialport = { version = "3.3.0", default-features = false }
 xmodem = "0.1.3"
