@@ -1,9 +1,4 @@
-# usbarmory.rs <a href="https://www.iqlusion.io"><img src="https://storage.googleapis.com/iqlusion-production-web/img/logo/iqlusion-rings-sm.png" alt="iqlusion" width="24" height="24"></a>
-
-[![Build Status][build-image]][build-link]
-![Apache 2.0 + MIT Licensed][license-image]
-![MSRV][msrv-image]
-[![Gitter Chat][gitter-image]][gitter-link]
+# usbarmory.rs <a href="https://www.iqlusion.io"><img src="https://storage.googleapis.com/iqlusion-production-web/img/logo/iqlusion-rings-sm.png" alt="iqlusion" width="24" height="24"></a> [![Build Status][build-image]][build-link] ![Apache 2.0 + MIT Licensed][license-image] ![MSRV][msrv-image] [![Gitter Chat][gitter-image]][gitter-link]
 
 <img src="https://storage.googleapis.com/iqlusion-production-web/github/usbarmory/usbarmory-ferris.png" alt="USB armory mkII" width="384" height="384">
 
