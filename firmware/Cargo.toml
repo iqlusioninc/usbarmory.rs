@@ -46,3 +46,6 @@ debug-assertions = false
 incremental = true
 opt-level = 0
 overflow-checks = false
+
+[patch.crates-io]
+cc = { git = "https://github.com/jonas-schievink/cc-rs.git", branch = "armv7a" }
