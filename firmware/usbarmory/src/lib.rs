@@ -22,6 +22,7 @@ use crate::serial::Serial;
 
 pub mod dcp;
 pub mod emmc;
+pub mod fs;
 pub mod led;
 mod macros;
 pub mod rng;

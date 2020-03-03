@@ -832,7 +832,9 @@ impl ManagedBlockDevice for eMMC {
     type Error = Error;
 
     fn total_blocks(&self) -> u64 {
-        self.blocks.into()
+        // FIXME: Implement proper capacity readout for eMMC.
+        // For now, this is hardcoded to 16 GB.
+        16_000_000_000 / 512
     }
 
     fn read(&self, block: &mut Block, lba: u64) -> Result<(), Self::Error> {

@@ -23,6 +23,7 @@ rand_core = "0.5.1"
 typenum = "1.11.2"
 usb-device = "0.2.5"
 zerocopy = "0.3.0"
+littlefs2 = "0.1.0-alpha.0"
 
 [dependencies.pac]
 features = ["ccm_analog", "hw_dcp", "rng", "src", "uart", "usb_analog", "usb_uog", "usbphy", "usdhc", "wdog"]
