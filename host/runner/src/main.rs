@@ -75,9 +75,10 @@ fn main() -> Result<()> {
         .map_err(|e| format!("transfer error: {:?}", e))?;
     println!();
 
-    port.set_timeout(Duration::from_secs(1))?;
-
     writeln!(port, "bootelf")?;
+
+    // Effective disables the timeout as we're about to turn into a serial monitor.
+    port.set_timeout(Duration::from_secs(100000))?;
 
     // Now we turn into a serial monitor, which is handy since the examples use that for logging.
     // We try to detect reboots by looking for a line with the U-Boot version (which is the first
