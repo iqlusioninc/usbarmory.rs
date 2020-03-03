@@ -21,6 +21,7 @@ rand_core = "0.5.1"
 typenum = "1.11.2"
 usb-device = "0.2.5"
 usbarmory-rt = { path = "../usbarmory-rt" }
+zerocopy = "0.3.0"
 
 [dev-dependencies]
 as-slice = "0.1.3"

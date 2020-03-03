@@ -1,9 +1,4 @@
-//! Basic persistent storage using the eMMC
-//!
-//! Reads the first (512B) memory block on the eMMC, increases the value of the
-//! first byte of the sector and then writes the updated sector back into the
-//! card. The byte stored in non-volatile memory keeps a count of how many times
-//! this program has run.
+//! Prints partition sizes of the MBR-formatted eMMC.
 
 #![no_main]
 #![no_std]
@@ -12,8 +7,8 @@ use exception_reset as _; // default exception handler
 use panic_serial as _; // panic handler
 use usbarmory::{
     emmc::eMMC,
-    storage::Block,
     memlog, memlog_flush_and_reset,
+    storage::{ManagedBlockDevice, MbrDevice, BLOCK_SIZE},
 };
 
 // NOTE binary interfaces, using `no_mangle` and `extern`, are extremely unsafe
@@ -22,15 +17,14 @@ use usbarmory::{
 #[no_mangle]
 fn main() -> ! {
     let emmc = eMMC::take().expect("eMMC");
+    let mut mbr = MbrDevice::open(emmc).unwrap();
 
-    let mut block = Block::zeroed();
-    emmc.read(0, &mut block);
-
-    memlog!("first byte of the first block: {}", block.bytes[0]);
-    block.bytes[0] += 1;
-
-    emmc.write(0, &block);
-    emmc.flush();
+    for part_idx in 0..4 {
+        if let Ok(part) = mbr.partition(part_idx) {
+            let bytes = part.total_blocks() * u64::from(BLOCK_SIZE);
+            memlog!("Partition {} is {} MiB", part_idx, bytes / 1024 / 1024);
+        }
+    }
 
     // then reset the board to return to the u-boot console
     memlog_flush_and_reset!();
