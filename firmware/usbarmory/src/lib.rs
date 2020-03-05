@@ -4,6 +4,7 @@
 //!
 //! - 'ULRM': i.MX 6UltraLite Applications Processor Reference Manual (IMX6ULRM)
 //! - 'ULLRM': i.MX 6ULL Applications ProcessorReference Manual (IMX6ULLRM)
+//! - 'MX28RM' i.MX28 Applications Processor Reference Manual, Rev. 2, 08/2013 (MCIMX28RM)
 
 #![no_std]
 #![doc(
@@ -19,6 +20,7 @@ use usbarmory_rt as _;
 
 use crate::serial::Serial;
 
+pub mod dcp;
 pub mod emmc;
 pub mod led;
 mod macros;
