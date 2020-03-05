@@ -37,7 +37,9 @@ pub trait ManagedBlockDevice {
 impl<'a, D: ManagedBlockDevice> ManagedBlockDevice for &'a mut D {
     type Error = D::Error;
 
-    fn total_blocks(&self) -> u64 { (**self).total_blocks() }
+    fn total_blocks(&self) -> u64 {
+        (**self).total_blocks()
+    }
 
     fn read(&self, block: &mut Block, lba: u64) -> Result<(), Self::Error> {
         (**self).read(block, lba)
@@ -137,7 +139,10 @@ impl<D: ManagedBlockDevice> MbrDevice<D> {
     /// Obtains access to the partition at index `part` (0 ..= 3).
     ///
     /// Returns a `NoPartition` error if `part` does not refer to an allocated partition.
-    pub fn partition<'a>(&'a mut self, part: u8) -> Result<MbrPartitionRef<'a, D>, MbrError<D::Error>> {
+    pub fn partition<'a>(
+        &'a mut self,
+        part: u8,
+    ) -> Result<MbrPartitionRef<'a, D>, MbrError<D::Error>> {
         let extent = self.part_extent(part)?;
 
         Ok(MbrPartitionRef {

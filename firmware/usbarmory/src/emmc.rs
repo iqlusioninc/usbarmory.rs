@@ -14,9 +14,9 @@ use core::{fmt, time::Duration};
 
 use crate::{
     memlog, memlog_flush_and_reset,
+    storage::{Block, ManagedBlockDevice, BLOCK_SIZE},
     time::{self, Instant},
     util,
-    storage::{Block, BLOCK_SIZE, ManagedBlockDevice},
 };
 use cmd::Command;
 
