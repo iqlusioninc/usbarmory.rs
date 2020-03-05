@@ -49,6 +49,19 @@ fn main() -> Result<(), anyhow::Error> {
             peripherals.extend(compress::registers(lp));
             peripherals.extend(compress::registers(hp));
         } else {
+            let mut registers = registers;
+
+            // ad-hoc: the base address of the DCP on the IMX6ULZ is not the same as on the IMX28
+            if registers[0].name.starts_with("HW_DCP_") {
+                const IMX28_BASE: u32 = 0x8002_8000;
+                const IMX6ULZ_BASE: u32 = 0x0228_0000;
+
+                for register in &mut registers {
+                    register.abs_addr -= IMX28_BASE;
+                    register.abs_addr += IMX6ULZ_BASE;
+                }
+            }
+
             peripherals.extend(compress::registers(registers));
         }
     }
