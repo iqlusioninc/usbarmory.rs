@@ -118,15 +118,11 @@ impl Aes128 {
 
             // check that the OTP is ready to use ("has been released")
             let mut stat = 0;
-            if util::wait_for_or_timeout(
-                || {
-                    stat = dcp.STAT.read();
-                    stat & STAT_OTP_KEY_READY != 0
-                },
-                default_timeout(),
-            )
-            .is_err()
-            {
+            let is_ready = || {
+                stat = dcp.STAT.read();
+                stat & STAT_OTP_KEY_READY != 0
+            };
+            if util::wait_for_or_timeout(is_ready, default_timeout()).is_err() {
                 memlog!("OTP key not released within timeout (STAT={:#010x})", stat);
                 memlog_flush_and_reset!()
             }
@@ -183,21 +179,17 @@ impl Aes128 {
             // to be blocking
             let mut stat = 0;
             let mut status = 0;
-            if util::wait_for_or_timeout(
-                || {
-                    // NOTE(read_volatile) we want this statement to always perform a load
-                    // instruction rather than read memory once and cache the value in a (CPU)
-                    // register
-                    status = unsafe { cmd.status.get().read_volatile() };
-                    stat = dcp.CH3STAT.read();
+            let is_done_or_error = || {
+                // NOTE(read_volatile) we want this statement to always perform a load
+                // instruction rather than read memory once and cache the value in a (CPU)
+                // register
+                status = unsafe { cmd.status.get().read_volatile() };
+                stat = dcp.CH3STAT.read();
 
-                    // done or error
-                    status & 1 != 0 || stat & STAT_ERROR_MASK != 0
-                },
-                default_timeout(),
-            )
-            .is_err()
-            {
+                // done or error
+                status & 1 != 0 || stat & STAT_ERROR_MASK != 0
+            };
+            if util::wait_for_or_timeout(is_done_or_error, default_timeout()).is_err() {
                 memlog!("encryption timeout (STAT={:#010x})", stat);
                 memlog_flush_and_reset!()
             }
