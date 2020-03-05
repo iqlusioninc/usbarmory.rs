@@ -1,13 +1,16 @@
 //! Sanity check the AES-128 API when paired with a user-provided RAM key
 //!
-//! The encryption is equivalent to the following Python code:
+//! Encryption has been checked against the following x86_64 Rust code
 //!
-//! ``` python
-//! >>> from Crypto.Cipher import AES # pycryptodome 3.9.7
-//! >>> key = bytearray([185, ... , 72])
-//! >>> cipher = AES.new(key, AES.MODE_ECB)
-//! >>> plaintext = bytearray([179, ... , 242])
-//! >>> ciphertext = list(cipher.encrypt(plaintext)) # block, after encrypt_block
+//! ``` rust
+//! use aesni::{block_cipher_trait::BlockCipher, Aes128}; // aesni = "0.6.0"
+//!
+//! let key = [185, /* .. */, 72];
+//! let plaintext = [179, /* .. */, 242];
+//! let mut block = plaintext.into();
+//! let aes = Aes128::new(&key.into());
+//! aes.encrypt_block(&mut block);
+//! let ciphertext = block;
 //! ```
 //!
 //! Expected output:
