@@ -1,6 +1,5 @@
 //! Sanity check the AES-128 API when paired with the unreadable OTP key
 
-#![allow(dead_code)]
 #![deny(unused_must_use)]
 #![no_main]
 #![no_std]

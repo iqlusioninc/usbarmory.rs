@@ -12,7 +12,6 @@
 //! decrypt: OK
 //! ```
 
-#![allow(dead_code)]
 #![deny(unused_must_use)]
 #![no_main]
 #![no_std]
