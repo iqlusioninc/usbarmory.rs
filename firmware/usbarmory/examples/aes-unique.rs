@@ -1,4 +1,16 @@
 //! Sanity check the AES-128 API when paired with the unreadable UNIQUE key
+//!
+//! The UNIQUE key is derived from the OTP key and a device unique 64-bit value. Below is a sample
+//! output when OTP is set to all zeros; under the same conditions (same OTP) you should get a
+//! different value for the ciphertext output:
+//!
+//! ```
+//! plaintext:  [179, 176, 19, 230, 198, 237, 169, 162, 83, 237, 103, 21, 175, 240, 64, 242]
+//! ciphertext: [161, 1, 103, 12, 135, 28, 248, 199, 55, 92, 243, 118, 23, 17, 157, 182]
+//! wrong:      [199, 166, 244, 229, 161, 134, 82, 116, 3, 104, 116, 10, 198, 165, 146, 116]
+//! encrypt: OK
+//! decrypt: OK
+//! ```
 
 #![allow(dead_code)]
 #![deny(unused_must_use)]

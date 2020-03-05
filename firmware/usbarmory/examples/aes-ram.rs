@@ -9,6 +9,17 @@
 //! >>> plaintext = bytearray([179, ... , 242])
 //! >>> ciphertext = list(cipher.encrypt(plaintext)) # block, after encrypt_block
 //! ```
+//!
+//! Expected output:
+//!
+//! ```
+//! key:        [185, 105, 131, 156, 95, 42, 127, 229, 107, 50, 14, 134, 232, 8, 250, 72]
+//! plaintext:  [179, 176, 19, 230, 198, 237, 169, 162, 83, 237, 103, 21, 175, 240, 64, 242]
+//! ciphertext: [142, 123, 9, 120, 18, 121, 255, 69, 96, 169, 228, 53, 204, 12, 64, 21]
+//! expected:   [142, 123, 9, 120, 18, 121, 255, 69, 96, 169, 228, 53, 204, 12, 64, 21]
+//! encrypt: OK
+//! decrypt: OK
+//! ```
 
 #![allow(dead_code)]
 #![deny(unused_must_use)]
