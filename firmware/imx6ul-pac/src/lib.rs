@@ -1949,6 +1949,10 @@ pub mod hw_dcp {
         pub STAT: STAT,
         #[doc = "DCP Channel Control Register"]
         pub CHANNELCTRL: CHANNELCTRL,
+        #[doc = "DCP Channel Control Register"]
+        pub CHANNELCTRL_SET: CHANNELCTRL_SET,
+        #[doc = "DCP Channel Control Register"]
+        pub CHANNELCTRL_CLR: CHANNELCTRL_CLR,
         #[doc = "DCP Capability 0 Register"]
         pub CAPABILITY0: CAPABILITY0,
         #[doc = "DCP Capability 1 Register"]
@@ -2091,6 +2095,36 @@ pub mod hw_dcp {
         #[allow(unused_unsafe)]
         pub fn rmw(&self, f: impl FnOnce(u32) -> u32) {
             self.write(f(self.read()))
+        }
+    }
+    #[doc = "DCP Channel Control Register"]
+    #[allow(non_camel_case_types)]
+    pub struct CHANNELCTRL_SET {
+        _not_send_or_sync: PhantomData<*mut ()>,
+    }
+    impl CHANNELCTRL_SET {
+        const OFFSET: usize = 0x24;
+        #[doc = r" Reset value"]
+        pub const RESET_VALUE: u32 = 0x0000_0000;
+        #[doc = r" Performs a single store operation on the memory-mapped register"]
+        #[allow(unused_unsafe)]
+        pub fn write(&self, bits: u32) {
+            unsafe { ((BASE_ADDRESS + Self::OFFSET) as *mut u32).write_volatile(bits) }
+        }
+    }
+    #[doc = "DCP Channel Control Register"]
+    #[allow(non_camel_case_types)]
+    pub struct CHANNELCTRL_CLR {
+        _not_send_or_sync: PhantomData<*mut ()>,
+    }
+    impl CHANNELCTRL_CLR {
+        const OFFSET: usize = 0x28;
+        #[doc = r" Reset value"]
+        pub const RESET_VALUE: u32 = 0x0000_0000;
+        #[doc = r" Performs a single store operation on the memory-mapped register"]
+        #[allow(unused_unsafe)]
+        pub fn write(&self, bits: u32) {
+            unsafe { ((BASE_ADDRESS + Self::OFFSET) as *mut u32).write_volatile(bits) }
         }
     }
     #[doc = "DCP Capability 0 Register"]
@@ -2942,6 +2976,12 @@ pub mod hw_dcp {
                 CHANNELCTRL: CHANNELCTRL {
                     _not_send_or_sync: PhantomData,
                 },
+                CHANNELCTRL_SET: CHANNELCTRL_SET {
+                    _not_send_or_sync: PhantomData,
+                },
+                CHANNELCTRL_CLR: CHANNELCTRL_CLR {
+                    _not_send_or_sync: PhantomData,
+                },
                 CAPABILITY0: CAPABILITY0 {
                     _not_send_or_sync: PhantomData,
                 },
@@ -3072,6 +3112,12 @@ pub mod hw_dcp {
                     _not_send_or_sync: PhantomData,
                 },
                 CHANNELCTRL: CHANNELCTRL {
+                    _not_send_or_sync: PhantomData,
+                },
+                CHANNELCTRL_SET: CHANNELCTRL_SET {
+                    _not_send_or_sync: PhantomData,
+                },
+                CHANNELCTRL_CLR: CHANNELCTRL_CLR {
                     _not_send_or_sync: PhantomData,
                 },
                 CAPABILITY0: CAPABILITY0 {

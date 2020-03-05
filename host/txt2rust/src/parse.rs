@@ -2,7 +2,7 @@ use std::borrow::Cow;
 
 use crate::{parse, Access};
 
-#[derive(Debug, PartialEq)]
+#[derive(Clone, Debug, PartialEq)]
 pub struct Register<'a> {
     /// Absolute address
     pub abs_addr: u32,
