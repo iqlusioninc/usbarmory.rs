@@ -15,7 +15,13 @@ fn main() -> Result<(), Box<dyn Error>> {
     txt2rust(&out_dir)?;
 
     // place the linker script somewhere the linker can find it
-    fs::write(out_dir.join("link.x"), fs::read("link.x")?)?;
+
+    let link_x = if env::var("CARGO_FEATURE_USE_DRAM").is_ok() {
+        fs::read("link-dram.x")?
+    } else {
+        fs::read("link-ocram.x")?
+    };
+    fs::write(out_dir.join("link.x"), link_x)?;
 
     // place the assembly part of the entry point somewhere the linker can find it
     fs::copy(
