@@ -1932,6 +1932,1295 @@ pub mod ccm_analog {
     }
 }
 #[allow(non_snake_case)]
+#[doc = "HW_DCP"]
+pub mod hw_dcp {
+    use core::{
+        marker::PhantomData,
+        sync::atomic::{AtomicBool, Ordering},
+    };
+    const BASE_ADDRESS: usize = 0x0228_0000;
+    #[doc = r" The registers that make up the peripheral"]
+    #[allow(non_snake_case)]
+    pub struct Registers {
+        _not_sync: PhantomData<*mut ()>,
+        #[doc = "DCP Control Register 0"]
+        pub CTRL: CTRL,
+        #[doc = "DCP Status Register"]
+        pub STAT: STAT,
+        #[doc = "DCP Channel Control Register"]
+        pub CHANNELCTRL: CHANNELCTRL,
+        #[doc = "DCP Channel Control Register"]
+        pub CHANNELCTRL_SET: CHANNELCTRL_SET,
+        #[doc = "DCP Channel Control Register"]
+        pub CHANNELCTRL_CLR: CHANNELCTRL_CLR,
+        #[doc = "DCP Capability 0 Register"]
+        pub CAPABILITY0: CAPABILITY0,
+        #[doc = "DCP Capability 1 Register"]
+        pub CAPABILITY1: CAPABILITY1,
+        #[doc = "DCP Context Buffer Pointer"]
+        pub CONTEXT: CONTEXT,
+        #[doc = "DCP Key Index"]
+        pub KEY: KEY,
+        #[doc = "DCP Key Data"]
+        pub KEYDATA: KEYDATA,
+        #[doc = "DCP Work Packet 0 Status Register"]
+        pub PACKET0: PACKET0,
+        #[doc = "DCP Work Packet 1 Status Register"]
+        pub PACKET1: PACKET1,
+        #[doc = "DCP Work Packet 2 Status Register"]
+        pub PACKET2: PACKET2,
+        #[doc = "DCP Work Packet 3 Status Register"]
+        pub PACKET3: PACKET3,
+        #[doc = "DCP Work Packet 4 Status Register"]
+        pub PACKET4: PACKET4,
+        #[doc = "DCP Work Packet 5 Status Register"]
+        pub PACKET5: PACKET5,
+        #[doc = "DCP Work Packet 6 Status Register"]
+        pub PACKET6: PACKET6,
+        #[doc = "DCP Channel 0 Command Pointer Address Register"]
+        pub CH0CMDPTR: CH0CMDPTR,
+        #[doc = "DCP Channel 0 Semaphore Register"]
+        pub CH0SEMA: CH0SEMA,
+        #[doc = "DCP Channel 0 Status Register"]
+        pub CH0STAT: CH0STAT,
+        #[doc = "DCP Channel 0 Options Register"]
+        pub CH0OPTS: CH0OPTS,
+        #[doc = "DCP Channel 1 Command Pointer Address Register"]
+        pub CH1CMDPTR: CH1CMDPTR,
+        #[doc = "DCP Channel 1 Semaphore Register"]
+        pub CH1SEMA: CH1SEMA,
+        #[doc = "DCP Channel 1 Status Register"]
+        pub CH1STAT: CH1STAT,
+        #[doc = "DCP Channel 1 Options Register"]
+        pub CH1OPTS: CH1OPTS,
+        #[doc = "DCP Channel 2 Command Pointer Address Register"]
+        pub CH2CMDPTR: CH2CMDPTR,
+        #[doc = "DCP Channel 2 Semaphore Register"]
+        pub CH2SEMA: CH2SEMA,
+        #[doc = "DCP Channel 2 Status Register"]
+        pub CH2STAT: CH2STAT,
+        #[doc = "DCP Channel 2 Options Register"]
+        pub CH2OPTS: CH2OPTS,
+        #[doc = "DCP Channel 3 Command Pointer Address Register"]
+        pub CH3CMDPTR: CH3CMDPTR,
+        #[doc = "DCP Channel 3 Semaphore Register"]
+        pub CH3SEMA: CH3SEMA,
+        #[doc = "DCP Channel 3 Status Register"]
+        pub CH3STAT: CH3STAT,
+        #[doc = "DCP Channel 3 Options Register"]
+        pub CH3OPTS: CH3OPTS,
+        #[doc = "DCP Debug Select Register"]
+        pub DBGSELECT: DBGSELECT,
+        #[doc = "DCP Debug Data Register"]
+        pub DBGDATA: DBGDATA,
+        #[doc = "DCP Page Table Register"]
+        pub PAGETABLE: PAGETABLE,
+        #[doc = "DCP Version Register"]
+        pub VERSION: VERSION,
+    }
+    unsafe impl Send for Registers {}
+    #[doc = "DCP Control Register 0"]
+    #[allow(non_camel_case_types)]
+    pub struct CTRL {
+        _not_send_or_sync: PhantomData<*mut ()>,
+    }
+    impl CTRL {
+        const OFFSET: usize = 0x00;
+        #[doc = r" Reset value"]
+        pub const RESET_VALUE: u32 = 0xf080_0000;
+        #[doc = r" Performs a single load operation on the memory-mapped register"]
+        pub fn read(&self) -> u32 {
+            unsafe { ((BASE_ADDRESS + Self::OFFSET) as *const u32).read_volatile() }
+        }
+        #[doc = r" Performs a single store operation on the memory-mapped register"]
+        #[allow(unused_unsafe)]
+        pub fn write(&self, bits: u32) {
+            unsafe { ((BASE_ADDRESS + Self::OFFSET) as *mut u32).write_volatile(bits) }
+        }
+        #[doc = r" Performs a read-modify-write on the memory-mapped register"]
+        #[doc = r""]
+        #[doc = r" This is a short-hand for `self.write(f(self.read()))`"]
+        #[allow(unused_unsafe)]
+        pub fn rmw(&self, f: impl FnOnce(u32) -> u32) {
+            self.write(f(self.read()))
+        }
+    }
+    #[doc = "DCP Status Register"]
+    #[allow(non_camel_case_types)]
+    pub struct STAT {
+        _not_send_or_sync: PhantomData<*mut ()>,
+    }
+    impl STAT {
+        const OFFSET: usize = 0x10;
+        #[doc = r" Reset value"]
+        pub const RESET_VALUE: u32 = 0x1000_0000;
+        #[doc = r" Performs a single load operation on the memory-mapped register"]
+        pub fn read(&self) -> u32 {
+            unsafe { ((BASE_ADDRESS + Self::OFFSET) as *const u32).read_volatile() }
+        }
+        #[doc = r" Performs a single store operation on the memory-mapped register"]
+        #[allow(unused_unsafe)]
+        pub fn write(&self, bits: u32) {
+            unsafe { ((BASE_ADDRESS + Self::OFFSET) as *mut u32).write_volatile(bits) }
+        }
+        #[doc = r" Performs a read-modify-write on the memory-mapped register"]
+        #[doc = r""]
+        #[doc = r" This is a short-hand for `self.write(f(self.read()))`"]
+        #[allow(unused_unsafe)]
+        pub fn rmw(&self, f: impl FnOnce(u32) -> u32) {
+            self.write(f(self.read()))
+        }
+    }
+    #[doc = "DCP Channel Control Register"]
+    #[allow(non_camel_case_types)]
+    pub struct CHANNELCTRL {
+        _not_send_or_sync: PhantomData<*mut ()>,
+    }
+    impl CHANNELCTRL {
+        const OFFSET: usize = 0x20;
+        #[doc = r" Reset value"]
+        pub const RESET_VALUE: u32 = 0x0000_0000;
+        #[doc = r" Performs a single load operation on the memory-mapped register"]
+        pub fn read(&self) -> u32 {
+            unsafe { ((BASE_ADDRESS + Self::OFFSET) as *const u32).read_volatile() }
+        }
+        #[doc = r" Performs a single store operation on the memory-mapped register"]
+        #[allow(unused_unsafe)]
+        pub fn write(&self, bits: u32) {
+            unsafe { ((BASE_ADDRESS + Self::OFFSET) as *mut u32).write_volatile(bits) }
+        }
+        #[doc = r" Performs a read-modify-write on the memory-mapped register"]
+        #[doc = r""]
+        #[doc = r" This is a short-hand for `self.write(f(self.read()))`"]
+        #[allow(unused_unsafe)]
+        pub fn rmw(&self, f: impl FnOnce(u32) -> u32) {
+            self.write(f(self.read()))
+        }
+    }
+    #[doc = "DCP Channel Control Register"]
+    #[allow(non_camel_case_types)]
+    pub struct CHANNELCTRL_SET {
+        _not_send_or_sync: PhantomData<*mut ()>,
+    }
+    impl CHANNELCTRL_SET {
+        const OFFSET: usize = 0x24;
+        #[doc = r" Reset value"]
+        pub const RESET_VALUE: u32 = 0x0000_0000;
+        #[doc = r" Performs a single store operation on the memory-mapped register"]
+        #[allow(unused_unsafe)]
+        pub fn write(&self, bits: u32) {
+            unsafe { ((BASE_ADDRESS + Self::OFFSET) as *mut u32).write_volatile(bits) }
+        }
+    }
+    #[doc = "DCP Channel Control Register"]
+    #[allow(non_camel_case_types)]
+    pub struct CHANNELCTRL_CLR {
+        _not_send_or_sync: PhantomData<*mut ()>,
+    }
+    impl CHANNELCTRL_CLR {
+        const OFFSET: usize = 0x28;
+        #[doc = r" Reset value"]
+        pub const RESET_VALUE: u32 = 0x0000_0000;
+        #[doc = r" Performs a single store operation on the memory-mapped register"]
+        #[allow(unused_unsafe)]
+        pub fn write(&self, bits: u32) {
+            unsafe { ((BASE_ADDRESS + Self::OFFSET) as *mut u32).write_volatile(bits) }
+        }
+    }
+    #[doc = "DCP Capability 0 Register"]
+    #[allow(non_camel_case_types)]
+    pub struct CAPABILITY0 {
+        _not_send_or_sync: PhantomData<*mut ()>,
+    }
+    impl CAPABILITY0 {
+        const OFFSET: usize = 0x30;
+        #[doc = r" Reset value"]
+        pub const RESET_VALUE: u32 = 0x0000_0404;
+        #[doc = r" Performs a single load operation on the memory-mapped register"]
+        pub fn read(&self) -> u32 {
+            unsafe { ((BASE_ADDRESS + Self::OFFSET) as *const u32).read_volatile() }
+        }
+        #[doc = r" Performs a single store operation on the memory-mapped register"]
+        #[allow(unused_unsafe)]
+        pub fn write(&self, bits: u32) {
+            unsafe { ((BASE_ADDRESS + Self::OFFSET) as *mut u32).write_volatile(bits) }
+        }
+        #[doc = r" Performs a read-modify-write on the memory-mapped register"]
+        #[doc = r""]
+        #[doc = r" This is a short-hand for `self.write(f(self.read()))`"]
+        #[allow(unused_unsafe)]
+        pub fn rmw(&self, f: impl FnOnce(u32) -> u32) {
+            self.write(f(self.read()))
+        }
+    }
+    #[doc = "DCP Capability 1 Register"]
+    #[allow(non_camel_case_types)]
+    pub struct CAPABILITY1 {
+        _not_send_or_sync: PhantomData<*mut ()>,
+    }
+    impl CAPABILITY1 {
+        const OFFSET: usize = 0x40;
+        #[doc = r" Reset value"]
+        pub const RESET_VALUE: u32 = 0x0007_0001;
+        #[doc = r" Performs a single load operation on the memory-mapped register"]
+        pub fn read(&self) -> u32 {
+            unsafe { ((BASE_ADDRESS + Self::OFFSET) as *const u32).read_volatile() }
+        }
+        #[doc = r" Performs a single store operation on the memory-mapped register"]
+        #[allow(unused_unsafe)]
+        pub fn write(&self, bits: u32) {
+            unsafe { ((BASE_ADDRESS + Self::OFFSET) as *mut u32).write_volatile(bits) }
+        }
+        #[doc = r" Performs a read-modify-write on the memory-mapped register"]
+        #[doc = r""]
+        #[doc = r" This is a short-hand for `self.write(f(self.read()))`"]
+        #[allow(unused_unsafe)]
+        pub fn rmw(&self, f: impl FnOnce(u32) -> u32) {
+            self.write(f(self.read()))
+        }
+    }
+    #[doc = "DCP Context Buffer Pointer"]
+    #[allow(non_camel_case_types)]
+    pub struct CONTEXT {
+        _not_send_or_sync: PhantomData<*mut ()>,
+    }
+    impl CONTEXT {
+        const OFFSET: usize = 0x50;
+        #[doc = r" Reset value"]
+        pub const RESET_VALUE: u32 = 0x0000_0000;
+        #[doc = r" Performs a single load operation on the memory-mapped register"]
+        pub fn read(&self) -> u32 {
+            unsafe { ((BASE_ADDRESS + Self::OFFSET) as *const u32).read_volatile() }
+        }
+        #[doc = r" Performs a single store operation on the memory-mapped register"]
+        #[allow(unused_unsafe)]
+        pub fn write(&self, bits: u32) {
+            unsafe { ((BASE_ADDRESS + Self::OFFSET) as *mut u32).write_volatile(bits) }
+        }
+        #[doc = r" Performs a read-modify-write on the memory-mapped register"]
+        #[doc = r""]
+        #[doc = r" This is a short-hand for `self.write(f(self.read()))`"]
+        #[allow(unused_unsafe)]
+        pub fn rmw(&self, f: impl FnOnce(u32) -> u32) {
+            self.write(f(self.read()))
+        }
+    }
+    #[doc = "DCP Key Index"]
+    #[allow(non_camel_case_types)]
+    pub struct KEY {
+        _not_send_or_sync: PhantomData<*mut ()>,
+    }
+    impl KEY {
+        const OFFSET: usize = 0x60;
+        #[doc = r" Reset value"]
+        pub const RESET_VALUE: u32 = 0x0000_0000;
+        #[doc = r" Performs a single load operation on the memory-mapped register"]
+        pub fn read(&self) -> u32 {
+            unsafe { ((BASE_ADDRESS + Self::OFFSET) as *const u32).read_volatile() }
+        }
+        #[doc = r" Performs a single store operation on the memory-mapped register"]
+        #[allow(unused_unsafe)]
+        pub fn write(&self, bits: u32) {
+            unsafe { ((BASE_ADDRESS + Self::OFFSET) as *mut u32).write_volatile(bits) }
+        }
+        #[doc = r" Performs a read-modify-write on the memory-mapped register"]
+        #[doc = r""]
+        #[doc = r" This is a short-hand for `self.write(f(self.read()))`"]
+        #[allow(unused_unsafe)]
+        pub fn rmw(&self, f: impl FnOnce(u32) -> u32) {
+            self.write(f(self.read()))
+        }
+    }
+    #[doc = "DCP Key Data"]
+    #[allow(non_camel_case_types)]
+    pub struct KEYDATA {
+        _not_send_or_sync: PhantomData<*mut ()>,
+    }
+    impl KEYDATA {
+        const OFFSET: usize = 0x70;
+        #[doc = r" Reset value"]
+        pub const RESET_VALUE: u32 = 0x0000_0000;
+        #[doc = r" Performs a single load operation on the memory-mapped register"]
+        pub fn read(&self) -> u32 {
+            unsafe { ((BASE_ADDRESS + Self::OFFSET) as *const u32).read_volatile() }
+        }
+        #[doc = r" Performs a single store operation on the memory-mapped register"]
+        #[allow(unused_unsafe)]
+        pub fn write(&self, bits: u32) {
+            unsafe { ((BASE_ADDRESS + Self::OFFSET) as *mut u32).write_volatile(bits) }
+        }
+        #[doc = r" Performs a read-modify-write on the memory-mapped register"]
+        #[doc = r""]
+        #[doc = r" This is a short-hand for `self.write(f(self.read()))`"]
+        #[allow(unused_unsafe)]
+        pub fn rmw(&self, f: impl FnOnce(u32) -> u32) {
+            self.write(f(self.read()))
+        }
+    }
+    #[doc = "DCP Work Packet 0 Status Register"]
+    #[allow(non_camel_case_types)]
+    pub struct PACKET0 {
+        _not_send_or_sync: PhantomData<*mut ()>,
+    }
+    impl PACKET0 {
+        const OFFSET: usize = 0x80;
+        #[doc = r" Reset value"]
+        pub const RESET_VALUE: u32 = 0x0000_0000;
+        #[doc = r" Performs a single load operation on the memory-mapped register"]
+        pub fn read(&self) -> u32 {
+            unsafe { ((BASE_ADDRESS + Self::OFFSET) as *const u32).read_volatile() }
+        }
+        #[doc = r" Performs a single store operation on the memory-mapped register"]
+        #[allow(unused_unsafe)]
+        pub fn write(&self, bits: u32) {
+            unsafe { ((BASE_ADDRESS + Self::OFFSET) as *mut u32).write_volatile(bits) }
+        }
+        #[doc = r" Performs a read-modify-write on the memory-mapped register"]
+        #[doc = r""]
+        #[doc = r" This is a short-hand for `self.write(f(self.read()))`"]
+        #[allow(unused_unsafe)]
+        pub fn rmw(&self, f: impl FnOnce(u32) -> u32) {
+            self.write(f(self.read()))
+        }
+    }
+    #[doc = "DCP Work Packet 1 Status Register"]
+    #[allow(non_camel_case_types)]
+    pub struct PACKET1 {
+        _not_send_or_sync: PhantomData<*mut ()>,
+    }
+    impl PACKET1 {
+        const OFFSET: usize = 0x90;
+        #[doc = r" Reset value"]
+        pub const RESET_VALUE: u32 = 0x0000_0000;
+        #[doc = r" Performs a single load operation on the memory-mapped register"]
+        pub fn read(&self) -> u32 {
+            unsafe { ((BASE_ADDRESS + Self::OFFSET) as *const u32).read_volatile() }
+        }
+        #[doc = r" Performs a single store operation on the memory-mapped register"]
+        #[allow(unused_unsafe)]
+        pub fn write(&self, bits: u32) {
+            unsafe { ((BASE_ADDRESS + Self::OFFSET) as *mut u32).write_volatile(bits) }
+        }
+        #[doc = r" Performs a read-modify-write on the memory-mapped register"]
+        #[doc = r""]
+        #[doc = r" This is a short-hand for `self.write(f(self.read()))`"]
+        #[allow(unused_unsafe)]
+        pub fn rmw(&self, f: impl FnOnce(u32) -> u32) {
+            self.write(f(self.read()))
+        }
+    }
+    #[doc = "DCP Work Packet 2 Status Register"]
+    #[allow(non_camel_case_types)]
+    pub struct PACKET2 {
+        _not_send_or_sync: PhantomData<*mut ()>,
+    }
+    impl PACKET2 {
+        const OFFSET: usize = 0xa0;
+        #[doc = r" Reset value"]
+        pub const RESET_VALUE: u32 = 0x0000_0000;
+        #[doc = r" Performs a single load operation on the memory-mapped register"]
+        pub fn read(&self) -> u32 {
+            unsafe { ((BASE_ADDRESS + Self::OFFSET) as *const u32).read_volatile() }
+        }
+        #[doc = r" Performs a single store operation on the memory-mapped register"]
+        #[allow(unused_unsafe)]
+        pub fn write(&self, bits: u32) {
+            unsafe { ((BASE_ADDRESS + Self::OFFSET) as *mut u32).write_volatile(bits) }
+        }
+        #[doc = r" Performs a read-modify-write on the memory-mapped register"]
+        #[doc = r""]
+        #[doc = r" This is a short-hand for `self.write(f(self.read()))`"]
+        #[allow(unused_unsafe)]
+        pub fn rmw(&self, f: impl FnOnce(u32) -> u32) {
+            self.write(f(self.read()))
+        }
+    }
+    #[doc = "DCP Work Packet 3 Status Register"]
+    #[allow(non_camel_case_types)]
+    pub struct PACKET3 {
+        _not_send_or_sync: PhantomData<*mut ()>,
+    }
+    impl PACKET3 {
+        const OFFSET: usize = 0xb0;
+        #[doc = r" Reset value"]
+        pub const RESET_VALUE: u32 = 0x0000_0000;
+        #[doc = r" Performs a single load operation on the memory-mapped register"]
+        pub fn read(&self) -> u32 {
+            unsafe { ((BASE_ADDRESS + Self::OFFSET) as *const u32).read_volatile() }
+        }
+        #[doc = r" Performs a single store operation on the memory-mapped register"]
+        #[allow(unused_unsafe)]
+        pub fn write(&self, bits: u32) {
+            unsafe { ((BASE_ADDRESS + Self::OFFSET) as *mut u32).write_volatile(bits) }
+        }
+        #[doc = r" Performs a read-modify-write on the memory-mapped register"]
+        #[doc = r""]
+        #[doc = r" This is a short-hand for `self.write(f(self.read()))`"]
+        #[allow(unused_unsafe)]
+        pub fn rmw(&self, f: impl FnOnce(u32) -> u32) {
+            self.write(f(self.read()))
+        }
+    }
+    #[doc = "DCP Work Packet 4 Status Register"]
+    #[allow(non_camel_case_types)]
+    pub struct PACKET4 {
+        _not_send_or_sync: PhantomData<*mut ()>,
+    }
+    impl PACKET4 {
+        const OFFSET: usize = 0xc0;
+        #[doc = r" Reset value"]
+        pub const RESET_VALUE: u32 = 0x0000_0000;
+        #[doc = r" Performs a single load operation on the memory-mapped register"]
+        pub fn read(&self) -> u32 {
+            unsafe { ((BASE_ADDRESS + Self::OFFSET) as *const u32).read_volatile() }
+        }
+        #[doc = r" Performs a single store operation on the memory-mapped register"]
+        #[allow(unused_unsafe)]
+        pub fn write(&self, bits: u32) {
+            unsafe { ((BASE_ADDRESS + Self::OFFSET) as *mut u32).write_volatile(bits) }
+        }
+        #[doc = r" Performs a read-modify-write on the memory-mapped register"]
+        #[doc = r""]
+        #[doc = r" This is a short-hand for `self.write(f(self.read()))`"]
+        #[allow(unused_unsafe)]
+        pub fn rmw(&self, f: impl FnOnce(u32) -> u32) {
+            self.write(f(self.read()))
+        }
+    }
+    #[doc = "DCP Work Packet 5 Status Register"]
+    #[allow(non_camel_case_types)]
+    pub struct PACKET5 {
+        _not_send_or_sync: PhantomData<*mut ()>,
+    }
+    impl PACKET5 {
+        const OFFSET: usize = 0xd0;
+        #[doc = r" Reset value"]
+        pub const RESET_VALUE: u32 = 0x0000_0000;
+        #[doc = r" Performs a single load operation on the memory-mapped register"]
+        pub fn read(&self) -> u32 {
+            unsafe { ((BASE_ADDRESS + Self::OFFSET) as *const u32).read_volatile() }
+        }
+        #[doc = r" Performs a single store operation on the memory-mapped register"]
+        #[allow(unused_unsafe)]
+        pub fn write(&self, bits: u32) {
+            unsafe { ((BASE_ADDRESS + Self::OFFSET) as *mut u32).write_volatile(bits) }
+        }
+        #[doc = r" Performs a read-modify-write on the memory-mapped register"]
+        #[doc = r""]
+        #[doc = r" This is a short-hand for `self.write(f(self.read()))`"]
+        #[allow(unused_unsafe)]
+        pub fn rmw(&self, f: impl FnOnce(u32) -> u32) {
+            self.write(f(self.read()))
+        }
+    }
+    #[doc = "DCP Work Packet 6 Status Register"]
+    #[allow(non_camel_case_types)]
+    pub struct PACKET6 {
+        _not_send_or_sync: PhantomData<*mut ()>,
+    }
+    impl PACKET6 {
+        const OFFSET: usize = 0xe0;
+        #[doc = r" Reset value"]
+        pub const RESET_VALUE: u32 = 0x0000_0000;
+        #[doc = r" Performs a single load operation on the memory-mapped register"]
+        pub fn read(&self) -> u32 {
+            unsafe { ((BASE_ADDRESS + Self::OFFSET) as *const u32).read_volatile() }
+        }
+        #[doc = r" Performs a single store operation on the memory-mapped register"]
+        #[allow(unused_unsafe)]
+        pub fn write(&self, bits: u32) {
+            unsafe { ((BASE_ADDRESS + Self::OFFSET) as *mut u32).write_volatile(bits) }
+        }
+        #[doc = r" Performs a read-modify-write on the memory-mapped register"]
+        #[doc = r""]
+        #[doc = r" This is a short-hand for `self.write(f(self.read()))`"]
+        #[allow(unused_unsafe)]
+        pub fn rmw(&self, f: impl FnOnce(u32) -> u32) {
+            self.write(f(self.read()))
+        }
+    }
+    #[doc = "DCP Channel 0 Command Pointer Address Register"]
+    #[allow(non_camel_case_types)]
+    pub struct CH0CMDPTR {
+        _not_send_or_sync: PhantomData<*mut ()>,
+    }
+    impl CH0CMDPTR {
+        const OFFSET: usize = 0x0100;
+        #[doc = r" Reset value"]
+        pub const RESET_VALUE: u32 = 0x0000_0000;
+        #[doc = r" Performs a single load operation on the memory-mapped register"]
+        pub fn read(&self) -> u32 {
+            unsafe { ((BASE_ADDRESS + Self::OFFSET) as *const u32).read_volatile() }
+        }
+        #[doc = r" Performs a single store operation on the memory-mapped register"]
+        #[allow(unused_unsafe)]
+        pub fn write(&self, bits: u32) {
+            unsafe { ((BASE_ADDRESS + Self::OFFSET) as *mut u32).write_volatile(bits) }
+        }
+        #[doc = r" Performs a read-modify-write on the memory-mapped register"]
+        #[doc = r""]
+        #[doc = r" This is a short-hand for `self.write(f(self.read()))`"]
+        #[allow(unused_unsafe)]
+        pub fn rmw(&self, f: impl FnOnce(u32) -> u32) {
+            self.write(f(self.read()))
+        }
+    }
+    #[doc = "DCP Channel 0 Semaphore Register"]
+    #[allow(non_camel_case_types)]
+    pub struct CH0SEMA {
+        _not_send_or_sync: PhantomData<*mut ()>,
+    }
+    impl CH0SEMA {
+        const OFFSET: usize = 0x0110;
+        #[doc = r" Reset value"]
+        pub const RESET_VALUE: u32 = 0x0000_0000;
+        #[doc = r" Performs a single load operation on the memory-mapped register"]
+        pub fn read(&self) -> u32 {
+            unsafe { ((BASE_ADDRESS + Self::OFFSET) as *const u32).read_volatile() }
+        }
+        #[doc = r" Performs a single store operation on the memory-mapped register"]
+        #[allow(unused_unsafe)]
+        pub fn write(&self, bits: u32) {
+            unsafe { ((BASE_ADDRESS + Self::OFFSET) as *mut u32).write_volatile(bits) }
+        }
+        #[doc = r" Performs a read-modify-write on the memory-mapped register"]
+        #[doc = r""]
+        #[doc = r" This is a short-hand for `self.write(f(self.read()))`"]
+        #[allow(unused_unsafe)]
+        pub fn rmw(&self, f: impl FnOnce(u32) -> u32) {
+            self.write(f(self.read()))
+        }
+    }
+    #[doc = "DCP Channel 0 Status Register"]
+    #[allow(non_camel_case_types)]
+    pub struct CH0STAT {
+        _not_send_or_sync: PhantomData<*mut ()>,
+    }
+    impl CH0STAT {
+        const OFFSET: usize = 0x0120;
+        #[doc = r" Reset value"]
+        pub const RESET_VALUE: u32 = 0x0000_0000;
+        #[doc = r" Performs a single load operation on the memory-mapped register"]
+        pub fn read(&self) -> u32 {
+            unsafe { ((BASE_ADDRESS + Self::OFFSET) as *const u32).read_volatile() }
+        }
+        #[doc = r" Performs a single store operation on the memory-mapped register"]
+        #[allow(unused_unsafe)]
+        pub fn write(&self, bits: u32) {
+            unsafe { ((BASE_ADDRESS + Self::OFFSET) as *mut u32).write_volatile(bits) }
+        }
+        #[doc = r" Performs a read-modify-write on the memory-mapped register"]
+        #[doc = r""]
+        #[doc = r" This is a short-hand for `self.write(f(self.read()))`"]
+        #[allow(unused_unsafe)]
+        pub fn rmw(&self, f: impl FnOnce(u32) -> u32) {
+            self.write(f(self.read()))
+        }
+    }
+    #[doc = "DCP Channel 0 Options Register"]
+    #[allow(non_camel_case_types)]
+    pub struct CH0OPTS {
+        _not_send_or_sync: PhantomData<*mut ()>,
+    }
+    impl CH0OPTS {
+        const OFFSET: usize = 0x0130;
+        #[doc = r" Reset value"]
+        pub const RESET_VALUE: u32 = 0x0000_0000;
+        #[doc = r" Performs a single load operation on the memory-mapped register"]
+        pub fn read(&self) -> u32 {
+            unsafe { ((BASE_ADDRESS + Self::OFFSET) as *const u32).read_volatile() }
+        }
+        #[doc = r" Performs a single store operation on the memory-mapped register"]
+        #[allow(unused_unsafe)]
+        pub fn write(&self, bits: u32) {
+            unsafe { ((BASE_ADDRESS + Self::OFFSET) as *mut u32).write_volatile(bits) }
+        }
+        #[doc = r" Performs a read-modify-write on the memory-mapped register"]
+        #[doc = r""]
+        #[doc = r" This is a short-hand for `self.write(f(self.read()))`"]
+        #[allow(unused_unsafe)]
+        pub fn rmw(&self, f: impl FnOnce(u32) -> u32) {
+            self.write(f(self.read()))
+        }
+    }
+    #[doc = "DCP Channel 1 Command Pointer Address Register"]
+    #[allow(non_camel_case_types)]
+    pub struct CH1CMDPTR {
+        _not_send_or_sync: PhantomData<*mut ()>,
+    }
+    impl CH1CMDPTR {
+        const OFFSET: usize = 0x0140;
+        #[doc = r" Reset value"]
+        pub const RESET_VALUE: u32 = 0x0000_0000;
+        #[doc = r" Performs a single load operation on the memory-mapped register"]
+        pub fn read(&self) -> u32 {
+            unsafe { ((BASE_ADDRESS + Self::OFFSET) as *const u32).read_volatile() }
+        }
+        #[doc = r" Performs a single store operation on the memory-mapped register"]
+        #[allow(unused_unsafe)]
+        pub fn write(&self, bits: u32) {
+            unsafe { ((BASE_ADDRESS + Self::OFFSET) as *mut u32).write_volatile(bits) }
+        }
+        #[doc = r" Performs a read-modify-write on the memory-mapped register"]
+        #[doc = r""]
+        #[doc = r" This is a short-hand for `self.write(f(self.read()))`"]
+        #[allow(unused_unsafe)]
+        pub fn rmw(&self, f: impl FnOnce(u32) -> u32) {
+            self.write(f(self.read()))
+        }
+    }
+    #[doc = "DCP Channel 1 Semaphore Register"]
+    #[allow(non_camel_case_types)]
+    pub struct CH1SEMA {
+        _not_send_or_sync: PhantomData<*mut ()>,
+    }
+    impl CH1SEMA {
+        const OFFSET: usize = 0x0150;
+        #[doc = r" Reset value"]
+        pub const RESET_VALUE: u32 = 0x0000_0000;
+        #[doc = r" Performs a single load operation on the memory-mapped register"]
+        pub fn read(&self) -> u32 {
+            unsafe { ((BASE_ADDRESS + Self::OFFSET) as *const u32).read_volatile() }
+        }
+        #[doc = r" Performs a single store operation on the memory-mapped register"]
+        #[allow(unused_unsafe)]
+        pub fn write(&self, bits: u32) {
+            unsafe { ((BASE_ADDRESS + Self::OFFSET) as *mut u32).write_volatile(bits) }
+        }
+        #[doc = r" Performs a read-modify-write on the memory-mapped register"]
+        #[doc = r""]
+        #[doc = r" This is a short-hand for `self.write(f(self.read()))`"]
+        #[allow(unused_unsafe)]
+        pub fn rmw(&self, f: impl FnOnce(u32) -> u32) {
+            self.write(f(self.read()))
+        }
+    }
+    #[doc = "DCP Channel 1 Status Register"]
+    #[allow(non_camel_case_types)]
+    pub struct CH1STAT {
+        _not_send_or_sync: PhantomData<*mut ()>,
+    }
+    impl CH1STAT {
+        const OFFSET: usize = 0x0160;
+        #[doc = r" Reset value"]
+        pub const RESET_VALUE: u32 = 0x0000_0000;
+        #[doc = r" Performs a single load operation on the memory-mapped register"]
+        pub fn read(&self) -> u32 {
+            unsafe { ((BASE_ADDRESS + Self::OFFSET) as *const u32).read_volatile() }
+        }
+        #[doc = r" Performs a single store operation on the memory-mapped register"]
+        #[allow(unused_unsafe)]
+        pub fn write(&self, bits: u32) {
+            unsafe { ((BASE_ADDRESS + Self::OFFSET) as *mut u32).write_volatile(bits) }
+        }
+        #[doc = r" Performs a read-modify-write on the memory-mapped register"]
+        #[doc = r""]
+        #[doc = r" This is a short-hand for `self.write(f(self.read()))`"]
+        #[allow(unused_unsafe)]
+        pub fn rmw(&self, f: impl FnOnce(u32) -> u32) {
+            self.write(f(self.read()))
+        }
+    }
+    #[doc = "DCP Channel 1 Options Register"]
+    #[allow(non_camel_case_types)]
+    pub struct CH1OPTS {
+        _not_send_or_sync: PhantomData<*mut ()>,
+    }
+    impl CH1OPTS {
+        const OFFSET: usize = 0x0170;
+        #[doc = r" Reset value"]
+        pub const RESET_VALUE: u32 = 0x0000_0000;
+        #[doc = r" Performs a single load operation on the memory-mapped register"]
+        pub fn read(&self) -> u32 {
+            unsafe { ((BASE_ADDRESS + Self::OFFSET) as *const u32).read_volatile() }
+        }
+        #[doc = r" Performs a single store operation on the memory-mapped register"]
+        #[allow(unused_unsafe)]
+        pub fn write(&self, bits: u32) {
+            unsafe { ((BASE_ADDRESS + Self::OFFSET) as *mut u32).write_volatile(bits) }
+        }
+        #[doc = r" Performs a read-modify-write on the memory-mapped register"]
+        #[doc = r""]
+        #[doc = r" This is a short-hand for `self.write(f(self.read()))`"]
+        #[allow(unused_unsafe)]
+        pub fn rmw(&self, f: impl FnOnce(u32) -> u32) {
+            self.write(f(self.read()))
+        }
+    }
+    #[doc = "DCP Channel 2 Command Pointer Address Register"]
+    #[allow(non_camel_case_types)]
+    pub struct CH2CMDPTR {
+        _not_send_or_sync: PhantomData<*mut ()>,
+    }
+    impl CH2CMDPTR {
+        const OFFSET: usize = 0x0180;
+        #[doc = r" Reset value"]
+        pub const RESET_VALUE: u32 = 0x0000_0000;
+        #[doc = r" Performs a single load operation on the memory-mapped register"]
+        pub fn read(&self) -> u32 {
+            unsafe { ((BASE_ADDRESS + Self::OFFSET) as *const u32).read_volatile() }
+        }
+        #[doc = r" Performs a single store operation on the memory-mapped register"]
+        #[allow(unused_unsafe)]
+        pub fn write(&self, bits: u32) {
+            unsafe { ((BASE_ADDRESS + Self::OFFSET) as *mut u32).write_volatile(bits) }
+        }
+        #[doc = r" Performs a read-modify-write on the memory-mapped register"]
+        #[doc = r""]
+        #[doc = r" This is a short-hand for `self.write(f(self.read()))`"]
+        #[allow(unused_unsafe)]
+        pub fn rmw(&self, f: impl FnOnce(u32) -> u32) {
+            self.write(f(self.read()))
+        }
+    }
+    #[doc = "DCP Channel 2 Semaphore Register"]
+    #[allow(non_camel_case_types)]
+    pub struct CH2SEMA {
+        _not_send_or_sync: PhantomData<*mut ()>,
+    }
+    impl CH2SEMA {
+        const OFFSET: usize = 0x0190;
+        #[doc = r" Reset value"]
+        pub const RESET_VALUE: u32 = 0x0000_0000;
+        #[doc = r" Performs a single load operation on the memory-mapped register"]
+        pub fn read(&self) -> u32 {
+            unsafe { ((BASE_ADDRESS + Self::OFFSET) as *const u32).read_volatile() }
+        }
+        #[doc = r" Performs a single store operation on the memory-mapped register"]
+        #[allow(unused_unsafe)]
+        pub fn write(&self, bits: u32) {
+            unsafe { ((BASE_ADDRESS + Self::OFFSET) as *mut u32).write_volatile(bits) }
+        }
+        #[doc = r" Performs a read-modify-write on the memory-mapped register"]
+        #[doc = r""]
+        #[doc = r" This is a short-hand for `self.write(f(self.read()))`"]
+        #[allow(unused_unsafe)]
+        pub fn rmw(&self, f: impl FnOnce(u32) -> u32) {
+            self.write(f(self.read()))
+        }
+    }
+    #[doc = "DCP Channel 2 Status Register"]
+    #[allow(non_camel_case_types)]
+    pub struct CH2STAT {
+        _not_send_or_sync: PhantomData<*mut ()>,
+    }
+    impl CH2STAT {
+        const OFFSET: usize = 0x01a0;
+        #[doc = r" Reset value"]
+        pub const RESET_VALUE: u32 = 0x0000_0000;
+        #[doc = r" Performs a single load operation on the memory-mapped register"]
+        pub fn read(&self) -> u32 {
+            unsafe { ((BASE_ADDRESS + Self::OFFSET) as *const u32).read_volatile() }
+        }
+        #[doc = r" Performs a single store operation on the memory-mapped register"]
+        #[allow(unused_unsafe)]
+        pub fn write(&self, bits: u32) {
+            unsafe { ((BASE_ADDRESS + Self::OFFSET) as *mut u32).write_volatile(bits) }
+        }
+        #[doc = r" Performs a read-modify-write on the memory-mapped register"]
+        #[doc = r""]
+        #[doc = r" This is a short-hand for `self.write(f(self.read()))`"]
+        #[allow(unused_unsafe)]
+        pub fn rmw(&self, f: impl FnOnce(u32) -> u32) {
+            self.write(f(self.read()))
+        }
+    }
+    #[doc = "DCP Channel 2 Options Register"]
+    #[allow(non_camel_case_types)]
+    pub struct CH2OPTS {
+        _not_send_or_sync: PhantomData<*mut ()>,
+    }
+    impl CH2OPTS {
+        const OFFSET: usize = 0x01b0;
+        #[doc = r" Reset value"]
+        pub const RESET_VALUE: u32 = 0x0000_0000;
+        #[doc = r" Performs a single load operation on the memory-mapped register"]
+        pub fn read(&self) -> u32 {
+            unsafe { ((BASE_ADDRESS + Self::OFFSET) as *const u32).read_volatile() }
+        }
+        #[doc = r" Performs a single store operation on the memory-mapped register"]
+        #[allow(unused_unsafe)]
+        pub fn write(&self, bits: u32) {
+            unsafe { ((BASE_ADDRESS + Self::OFFSET) as *mut u32).write_volatile(bits) }
+        }
+        #[doc = r" Performs a read-modify-write on the memory-mapped register"]
+        #[doc = r""]
+        #[doc = r" This is a short-hand for `self.write(f(self.read()))`"]
+        #[allow(unused_unsafe)]
+        pub fn rmw(&self, f: impl FnOnce(u32) -> u32) {
+            self.write(f(self.read()))
+        }
+    }
+    #[doc = "DCP Channel 3 Command Pointer Address Register"]
+    #[allow(non_camel_case_types)]
+    pub struct CH3CMDPTR {
+        _not_send_or_sync: PhantomData<*mut ()>,
+    }
+    impl CH3CMDPTR {
+        const OFFSET: usize = 0x01c0;
+        #[doc = r" Reset value"]
+        pub const RESET_VALUE: u32 = 0x0000_0000;
+        #[doc = r" Performs a single load operation on the memory-mapped register"]
+        pub fn read(&self) -> u32 {
+            unsafe { ((BASE_ADDRESS + Self::OFFSET) as *const u32).read_volatile() }
+        }
+        #[doc = r" Performs a single store operation on the memory-mapped register"]
+        #[allow(unused_unsafe)]
+        pub fn write(&self, bits: u32) {
+            unsafe { ((BASE_ADDRESS + Self::OFFSET) as *mut u32).write_volatile(bits) }
+        }
+        #[doc = r" Performs a read-modify-write on the memory-mapped register"]
+        #[doc = r""]
+        #[doc = r" This is a short-hand for `self.write(f(self.read()))`"]
+        #[allow(unused_unsafe)]
+        pub fn rmw(&self, f: impl FnOnce(u32) -> u32) {
+            self.write(f(self.read()))
+        }
+    }
+    #[doc = "DCP Channel 3 Semaphore Register"]
+    #[allow(non_camel_case_types)]
+    pub struct CH3SEMA {
+        _not_send_or_sync: PhantomData<*mut ()>,
+    }
+    impl CH3SEMA {
+        const OFFSET: usize = 0x01d0;
+        #[doc = r" Reset value"]
+        pub const RESET_VALUE: u32 = 0x0000_0000;
+        #[doc = r" Performs a single load operation on the memory-mapped register"]
+        pub fn read(&self) -> u32 {
+            unsafe { ((BASE_ADDRESS + Self::OFFSET) as *const u32).read_volatile() }
+        }
+        #[doc = r" Performs a single store operation on the memory-mapped register"]
+        #[allow(unused_unsafe)]
+        pub fn write(&self, bits: u32) {
+            unsafe { ((BASE_ADDRESS + Self::OFFSET) as *mut u32).write_volatile(bits) }
+        }
+        #[doc = r" Performs a read-modify-write on the memory-mapped register"]
+        #[doc = r""]
+        #[doc = r" This is a short-hand for `self.write(f(self.read()))`"]
+        #[allow(unused_unsafe)]
+        pub fn rmw(&self, f: impl FnOnce(u32) -> u32) {
+            self.write(f(self.read()))
+        }
+    }
+    #[doc = "DCP Channel 3 Status Register"]
+    #[allow(non_camel_case_types)]
+    pub struct CH3STAT {
+        _not_send_or_sync: PhantomData<*mut ()>,
+    }
+    impl CH3STAT {
+        const OFFSET: usize = 0x01e0;
+        #[doc = r" Reset value"]
+        pub const RESET_VALUE: u32 = 0x0000_0000;
+        #[doc = r" Performs a single load operation on the memory-mapped register"]
+        pub fn read(&self) -> u32 {
+            unsafe { ((BASE_ADDRESS + Self::OFFSET) as *const u32).read_volatile() }
+        }
+        #[doc = r" Performs a single store operation on the memory-mapped register"]
+        #[allow(unused_unsafe)]
+        pub fn write(&self, bits: u32) {
+            unsafe { ((BASE_ADDRESS + Self::OFFSET) as *mut u32).write_volatile(bits) }
+        }
+        #[doc = r" Performs a read-modify-write on the memory-mapped register"]
+        #[doc = r""]
+        #[doc = r" This is a short-hand for `self.write(f(self.read()))`"]
+        #[allow(unused_unsafe)]
+        pub fn rmw(&self, f: impl FnOnce(u32) -> u32) {
+            self.write(f(self.read()))
+        }
+    }
+    #[doc = "DCP Channel 3 Options Register"]
+    #[allow(non_camel_case_types)]
+    pub struct CH3OPTS {
+        _not_send_or_sync: PhantomData<*mut ()>,
+    }
+    impl CH3OPTS {
+        const OFFSET: usize = 0x01f0;
+        #[doc = r" Reset value"]
+        pub const RESET_VALUE: u32 = 0x0000_0000;
+        #[doc = r" Performs a single load operation on the memory-mapped register"]
+        pub fn read(&self) -> u32 {
+            unsafe { ((BASE_ADDRESS + Self::OFFSET) as *const u32).read_volatile() }
+        }
+        #[doc = r" Performs a single store operation on the memory-mapped register"]
+        #[allow(unused_unsafe)]
+        pub fn write(&self, bits: u32) {
+            unsafe { ((BASE_ADDRESS + Self::OFFSET) as *mut u32).write_volatile(bits) }
+        }
+        #[doc = r" Performs a read-modify-write on the memory-mapped register"]
+        #[doc = r""]
+        #[doc = r" This is a short-hand for `self.write(f(self.read()))`"]
+        #[allow(unused_unsafe)]
+        pub fn rmw(&self, f: impl FnOnce(u32) -> u32) {
+            self.write(f(self.read()))
+        }
+    }
+    #[doc = "DCP Debug Select Register"]
+    #[allow(non_camel_case_types)]
+    pub struct DBGSELECT {
+        _not_send_or_sync: PhantomData<*mut ()>,
+    }
+    impl DBGSELECT {
+        const OFFSET: usize = 0x0400;
+        #[doc = r" Reset value"]
+        pub const RESET_VALUE: u32 = 0x0000_0000;
+        #[doc = r" Performs a single load operation on the memory-mapped register"]
+        pub fn read(&self) -> u32 {
+            unsafe { ((BASE_ADDRESS + Self::OFFSET) as *const u32).read_volatile() }
+        }
+        #[doc = r" Performs a single store operation on the memory-mapped register"]
+        #[allow(unused_unsafe)]
+        pub fn write(&self, bits: u32) {
+            unsafe { ((BASE_ADDRESS + Self::OFFSET) as *mut u32).write_volatile(bits) }
+        }
+        #[doc = r" Performs a read-modify-write on the memory-mapped register"]
+        #[doc = r""]
+        #[doc = r" This is a short-hand for `self.write(f(self.read()))`"]
+        #[allow(unused_unsafe)]
+        pub fn rmw(&self, f: impl FnOnce(u32) -> u32) {
+            self.write(f(self.read()))
+        }
+    }
+    #[doc = "DCP Debug Data Register"]
+    #[allow(non_camel_case_types)]
+    pub struct DBGDATA {
+        _not_send_or_sync: PhantomData<*mut ()>,
+    }
+    impl DBGDATA {
+        const OFFSET: usize = 0x0410;
+        #[doc = r" Reset value"]
+        pub const RESET_VALUE: u32 = 0x0000_0000;
+        #[doc = r" Performs a single load operation on the memory-mapped register"]
+        pub fn read(&self) -> u32 {
+            unsafe { ((BASE_ADDRESS + Self::OFFSET) as *const u32).read_volatile() }
+        }
+        #[doc = r" Performs a single store operation on the memory-mapped register"]
+        #[allow(unused_unsafe)]
+        pub fn write(&self, bits: u32) {
+            unsafe { ((BASE_ADDRESS + Self::OFFSET) as *mut u32).write_volatile(bits) }
+        }
+        #[doc = r" Performs a read-modify-write on the memory-mapped register"]
+        #[doc = r""]
+        #[doc = r" This is a short-hand for `self.write(f(self.read()))`"]
+        #[allow(unused_unsafe)]
+        pub fn rmw(&self, f: impl FnOnce(u32) -> u32) {
+            self.write(f(self.read()))
+        }
+    }
+    #[doc = "DCP Page Table Register"]
+    #[allow(non_camel_case_types)]
+    pub struct PAGETABLE {
+        _not_send_or_sync: PhantomData<*mut ()>,
+    }
+    impl PAGETABLE {
+        const OFFSET: usize = 0x0420;
+        #[doc = r" Reset value"]
+        pub const RESET_VALUE: u32 = 0x0000_0000;
+        #[doc = r" Performs a single load operation on the memory-mapped register"]
+        pub fn read(&self) -> u32 {
+            unsafe { ((BASE_ADDRESS + Self::OFFSET) as *const u32).read_volatile() }
+        }
+        #[doc = r" Performs a single store operation on the memory-mapped register"]
+        #[allow(unused_unsafe)]
+        pub fn write(&self, bits: u32) {
+            unsafe { ((BASE_ADDRESS + Self::OFFSET) as *mut u32).write_volatile(bits) }
+        }
+        #[doc = r" Performs a read-modify-write on the memory-mapped register"]
+        #[doc = r""]
+        #[doc = r" This is a short-hand for `self.write(f(self.read()))`"]
+        #[allow(unused_unsafe)]
+        pub fn rmw(&self, f: impl FnOnce(u32) -> u32) {
+            self.write(f(self.read()))
+        }
+    }
+    #[doc = "DCP Version Register"]
+    #[allow(non_camel_case_types)]
+    pub struct VERSION {
+        _not_send_or_sync: PhantomData<*mut ()>,
+    }
+    impl VERSION {
+        const OFFSET: usize = 0x0430;
+        #[doc = r" Reset value"]
+        pub const RESET_VALUE: u32 = 0x0201_0000;
+        #[doc = r" Performs a single load operation on the memory-mapped register"]
+        pub fn read(&self) -> u32 {
+            unsafe { ((BASE_ADDRESS + Self::OFFSET) as *const u32).read_volatile() }
+        }
+        #[doc = r" Performs a single store operation on the memory-mapped register"]
+        #[allow(unused_unsafe)]
+        pub fn write(&self, bits: u32) {
+            unsafe { ((BASE_ADDRESS + Self::OFFSET) as *mut u32).write_volatile(bits) }
+        }
+        #[doc = r" Performs a read-modify-write on the memory-mapped register"]
+        #[doc = r""]
+        #[doc = r" This is a short-hand for `self.write(f(self.read()))`"]
+        #[allow(unused_unsafe)]
+        pub fn rmw(&self, f: impl FnOnce(u32) -> u32) {
+            self.write(f(self.read()))
+        }
+    }
+    impl Registers {
+        #[doc = r" # Safety"]
+        #[doc = r""]
+        #[doc = r" Creates a singleton from thin air; make sure we"]
+        #[doc = r" never hand out two instances of it"]
+        unsafe fn new() -> Self {
+            Self {
+                _not_sync: PhantomData,
+                CTRL: CTRL {
+                    _not_send_or_sync: PhantomData,
+                },
+                STAT: STAT {
+                    _not_send_or_sync: PhantomData,
+                },
+                CHANNELCTRL: CHANNELCTRL {
+                    _not_send_or_sync: PhantomData,
+                },
+                CHANNELCTRL_SET: CHANNELCTRL_SET {
+                    _not_send_or_sync: PhantomData,
+                },
+                CHANNELCTRL_CLR: CHANNELCTRL_CLR {
+                    _not_send_or_sync: PhantomData,
+                },
+                CAPABILITY0: CAPABILITY0 {
+                    _not_send_or_sync: PhantomData,
+                },
+                CAPABILITY1: CAPABILITY1 {
+                    _not_send_or_sync: PhantomData,
+                },
+                CONTEXT: CONTEXT {
+                    _not_send_or_sync: PhantomData,
+                },
+                KEY: KEY {
+                    _not_send_or_sync: PhantomData,
+                },
+                KEYDATA: KEYDATA {
+                    _not_send_or_sync: PhantomData,
+                },
+                PACKET0: PACKET0 {
+                    _not_send_or_sync: PhantomData,
+                },
+                PACKET1: PACKET1 {
+                    _not_send_or_sync: PhantomData,
+                },
+                PACKET2: PACKET2 {
+                    _not_send_or_sync: PhantomData,
+                },
+                PACKET3: PACKET3 {
+                    _not_send_or_sync: PhantomData,
+                },
+                PACKET4: PACKET4 {
+                    _not_send_or_sync: PhantomData,
+                },
+                PACKET5: PACKET5 {
+                    _not_send_or_sync: PhantomData,
+                },
+                PACKET6: PACKET6 {
+                    _not_send_or_sync: PhantomData,
+                },
+                CH0CMDPTR: CH0CMDPTR {
+                    _not_send_or_sync: PhantomData,
+                },
+                CH0SEMA: CH0SEMA {
+                    _not_send_or_sync: PhantomData,
+                },
+                CH0STAT: CH0STAT {
+                    _not_send_or_sync: PhantomData,
+                },
+                CH0OPTS: CH0OPTS {
+                    _not_send_or_sync: PhantomData,
+                },
+                CH1CMDPTR: CH1CMDPTR {
+                    _not_send_or_sync: PhantomData,
+                },
+                CH1SEMA: CH1SEMA {
+                    _not_send_or_sync: PhantomData,
+                },
+                CH1STAT: CH1STAT {
+                    _not_send_or_sync: PhantomData,
+                },
+                CH1OPTS: CH1OPTS {
+                    _not_send_or_sync: PhantomData,
+                },
+                CH2CMDPTR: CH2CMDPTR {
+                    _not_send_or_sync: PhantomData,
+                },
+                CH2SEMA: CH2SEMA {
+                    _not_send_or_sync: PhantomData,
+                },
+                CH2STAT: CH2STAT {
+                    _not_send_or_sync: PhantomData,
+                },
+                CH2OPTS: CH2OPTS {
+                    _not_send_or_sync: PhantomData,
+                },
+                CH3CMDPTR: CH3CMDPTR {
+                    _not_send_or_sync: PhantomData,
+                },
+                CH3SEMA: CH3SEMA {
+                    _not_send_or_sync: PhantomData,
+                },
+                CH3STAT: CH3STAT {
+                    _not_send_or_sync: PhantomData,
+                },
+                CH3OPTS: CH3OPTS {
+                    _not_send_or_sync: PhantomData,
+                },
+                DBGSELECT: DBGSELECT {
+                    _not_send_or_sync: PhantomData,
+                },
+                DBGDATA: DBGDATA {
+                    _not_send_or_sync: PhantomData,
+                },
+                PAGETABLE: PAGETABLE {
+                    _not_send_or_sync: PhantomData,
+                },
+                VERSION: VERSION {
+                    _not_send_or_sync: PhantomData,
+                },
+            }
+        }
+    }
+    #[allow(non_camel_case_types)]
+    #[doc = "HW_DCP"]
+    pub type HW_DCP = Registers;
+    impl HW_DCP {
+        #[doc = r" Takes the singleton that represents this peripheral instance"]
+        pub fn take() -> Option<Self> {
+            static TAKEN: AtomicBool = AtomicBool::new(false);
+            if TAKEN
+                .compare_exchange(false, true, Ordering::AcqRel, Ordering::Acquire)
+                .is_ok()
+            {
+                Some(unsafe { Registers::new() })
+            } else {
+                None
+            }
+        }
+        #[doc = r" Borrows the singleton without checking if it's"]
+        #[doc = r" currently being held by a context"]
+        #[doc = r""]
+        #[doc = r" **WARNING** this can break Read-Modify-Write"]
+        #[doc = r" operations being performed in other contexts."]
+        pub fn borrow_unchecked<T>(f: impl FnOnce(&Self) -> T) -> T {
+            f(&Registers {
+                _not_sync: PhantomData,
+                CTRL: CTRL {
+                    _not_send_or_sync: PhantomData,
+                },
+                STAT: STAT {
+                    _not_send_or_sync: PhantomData,
+                },
+                CHANNELCTRL: CHANNELCTRL {
+                    _not_send_or_sync: PhantomData,
+                },
+                CHANNELCTRL_SET: CHANNELCTRL_SET {
+                    _not_send_or_sync: PhantomData,
+                },
+                CHANNELCTRL_CLR: CHANNELCTRL_CLR {
+                    _not_send_or_sync: PhantomData,
+                },
+                CAPABILITY0: CAPABILITY0 {
+                    _not_send_or_sync: PhantomData,
+                },
+                CAPABILITY1: CAPABILITY1 {
+                    _not_send_or_sync: PhantomData,
+                },
+                CONTEXT: CONTEXT {
+                    _not_send_or_sync: PhantomData,
+                },
+                KEY: KEY {
+                    _not_send_or_sync: PhantomData,
+                },
+                KEYDATA: KEYDATA {
+                    _not_send_or_sync: PhantomData,
+                },
+                PACKET0: PACKET0 {
+                    _not_send_or_sync: PhantomData,
+                },
+                PACKET1: PACKET1 {
+                    _not_send_or_sync: PhantomData,
+                },
+                PACKET2: PACKET2 {
+                    _not_send_or_sync: PhantomData,
+                },
+                PACKET3: PACKET3 {
+                    _not_send_or_sync: PhantomData,
+                },
+                PACKET4: PACKET4 {
+                    _not_send_or_sync: PhantomData,
+                },
+                PACKET5: PACKET5 {
+                    _not_send_or_sync: PhantomData,
+                },
+                PACKET6: PACKET6 {
+                    _not_send_or_sync: PhantomData,
+                },
+                CH0CMDPTR: CH0CMDPTR {
+                    _not_send_or_sync: PhantomData,
+                },
+                CH0SEMA: CH0SEMA {
+                    _not_send_or_sync: PhantomData,
+                },
+                CH0STAT: CH0STAT {
+                    _not_send_or_sync: PhantomData,
+                },
+                CH0OPTS: CH0OPTS {
+                    _not_send_or_sync: PhantomData,
+                },
+                CH1CMDPTR: CH1CMDPTR {
+                    _not_send_or_sync: PhantomData,
+                },
+                CH1SEMA: CH1SEMA {
+                    _not_send_or_sync: PhantomData,
+                },
+                CH1STAT: CH1STAT {
+                    _not_send_or_sync: PhantomData,
+                },
+                CH1OPTS: CH1OPTS {
+                    _not_send_or_sync: PhantomData,
+                },
+                CH2CMDPTR: CH2CMDPTR {
+                    _not_send_or_sync: PhantomData,
+                },
+                CH2SEMA: CH2SEMA {
+                    _not_send_or_sync: PhantomData,
+                },
+                CH2STAT: CH2STAT {
+                    _not_send_or_sync: PhantomData,
+                },
+                CH2OPTS: CH2OPTS {
+                    _not_send_or_sync: PhantomData,
+                },
+                CH3CMDPTR: CH3CMDPTR {
+                    _not_send_or_sync: PhantomData,
+                },
+                CH3SEMA: CH3SEMA {
+                    _not_send_or_sync: PhantomData,
+                },
+                CH3STAT: CH3STAT {
+                    _not_send_or_sync: PhantomData,
+                },
+                CH3OPTS: CH3OPTS {
+                    _not_send_or_sync: PhantomData,
+                },
+                DBGSELECT: DBGSELECT {
+                    _not_send_or_sync: PhantomData,
+                },
+                DBGDATA: DBGDATA {
+                    _not_send_or_sync: PhantomData,
+                },
+                PAGETABLE: PAGETABLE {
+                    _not_send_or_sync: PhantomData,
+                },
+                VERSION: VERSION {
+                    _not_send_or_sync: PhantomData,
+                },
+            })
+        }
+    }
+}
+#[allow(non_snake_case)]
 #[doc = "GPIO"]
 pub mod gpio {
     use crate::Peripheral;

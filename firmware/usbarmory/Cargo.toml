@@ -12,6 +12,8 @@ categories  = ["embedded", "hardware-support", "no-std"]
 keywords    = ["arm", "cortex-a"]
 
 [dependencies]
+arrayref = "0.3.6"
+block-cipher-trait = "0.6.2"
 consts = { path = "../../common/consts" }
 cortex-a = { path = "../cortex-a" }
 heapless = "0.5.3"
