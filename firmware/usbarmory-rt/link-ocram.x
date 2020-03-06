@@ -15,7 +15,18 @@ MEMORY
   CAAM : ORIGIN = 0x00100000, LENGTH = 32K
 
   /* DDR3 RAM */
-  DRAM : ORIGIN = 0x80000000, LENGTH = 512M
+  /* NOTE
+     - DRAM starts at address 0x8000_0000 and has a size of 512MB
+     - the boot ROM will load u-boot into OCRAM, but
+     - u-boot will relocate itself at the end of DRAM (0xA000_0000); occupying
+       the space between `relocaddr` (see the output of the `bdinfo` command)
+       and the end of DRAM. In my case, `relocaddr` has a value of `0x9ff7a000`
+       so u-boot is using 536 KB of DRAM.
+     - u-boot loads ELFs at address 0x8200_0000; ELFs are usually <1MB in size
+     - given all this we'll limit our use of DRAM use to the range 0x8000_0000 -
+       0x8200_0000; that is before the ELF staging space.
+  */
+  DRAM : ORIGIN = 0x80000000, LENGTH = 32M
 }
 
 /* Use the default exception handler to handle all exceptions that have not been set by the user */
