@@ -106,6 +106,15 @@ dependencies = [
 ]
 
 [[package]]
+name = "digest"
+version = "0.8.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "f3d0c8c8752312f9713efd397ff63acb9f85585afbf179282e720e7704954dd5"
+dependencies = [
+ "generic-array 0.12.3",
+]
+
+[[package]]
 name = "exception-reset"
 version = "0.0.0"
 dependencies = [
@@ -291,6 +300,7 @@ dependencies = [
  "cortex-a",
  "cortex-a-rtfm",
  "cortex-m-semihosting",
+ "digest",
  "exception-reset",
  "heapless",
  "imx6ul-pac",
