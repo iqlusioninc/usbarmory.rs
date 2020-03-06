@@ -93,7 +93,7 @@ impl<D: ManagedBlockDevice> MbrDevice<D> {
         let mut mbr = Block::zeroed();
         raw.read(&mut mbr, 0).map_err(MbrError::Device)?;
 
-        if &mbr.bytes[usize::from(BLOCK_SIZE - 2)..] != &[0x55, 0xAA] {
+        if mbr.bytes[usize::from(BLOCK_SIZE - 2)..] != [0x55, 0xAA] {
             return Err(MbrError::InvalidMagic);
         }
 
@@ -139,10 +139,7 @@ impl<D: ManagedBlockDevice> MbrDevice<D> {
     /// Obtains access to the partition at index `part` (0 ..= 3).
     ///
     /// Returns a `NoPartition` error if `part` does not refer to an allocated partition.
-    pub fn partition<'a>(
-        &'a mut self,
-        part: u8,
-    ) -> Result<MbrPartitionRef<'a, D>, MbrError<D::Error>> {
+    pub fn partition(&mut self, part: u8) -> Result<MbrPartitionRef<'_, D>, MbrError<D::Error>> {
         let extent = self.part_extent(part)?;
 
         Ok(MbrPartitionRef {
