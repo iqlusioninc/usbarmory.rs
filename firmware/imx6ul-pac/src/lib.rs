@@ -9515,6 +9515,8 @@ pub mod usdhc {
         pub ADMA_ERR_STATUS: ADMA_ERR_STATUS<P>,
         #[doc = "ADMA System Address"]
         pub ADMA_SYS_ADDR: ADMA_SYS_ADDR<P>,
+        #[doc = "DLL (Delay Line) Control"]
+        pub DLL_CTRL: DLL_CTRL<P>,
         #[doc = "DLL Status"]
         pub DLL_STATUS: DLL_STATUS<P>,
         #[doc = "CLK Tuning Control and Status"]
@@ -10119,6 +10121,39 @@ pub mod usdhc {
             self.write(f(self.read()))
         }
     }
+    #[doc = "DLL (Delay Line) Control"]
+    #[allow(non_camel_case_types)]
+    pub struct DLL_CTRL<P>
+    where
+        P: Peripheral,
+    {
+        _p: PhantomData<P>,
+        _not_send_or_sync: PhantomData<*mut ()>,
+    }
+    impl<P> DLL_CTRL<P>
+    where
+        P: Peripheral,
+    {
+        const OFFSET: usize = 0x60;
+        #[doc = r" Reset value"]
+        pub const RESET_VALUE: u32 = 0x0000_0200;
+        #[doc = r" Performs a single load operation on the memory-mapped register"]
+        pub fn read(&self) -> u32 {
+            unsafe { ((P::BASE_ADDRESS + Self::OFFSET) as *const u32).read_volatile() }
+        }
+        #[doc = r" Performs a single store operation on the memory-mapped register"]
+        #[allow(unused_unsafe)]
+        pub fn write(&self, bits: u32) {
+            unsafe { ((P::BASE_ADDRESS + Self::OFFSET) as *mut u32).write_volatile(bits) }
+        }
+        #[doc = r" Performs a read-modify-write on the memory-mapped register"]
+        #[doc = r""]
+        #[doc = r" This is a short-hand for `self.write(f(self.read()))`"]
+        #[allow(unused_unsafe)]
+        pub fn rmw(&self, f: impl FnOnce(u32) -> u32) {
+            self.write(f(self.read()))
+        }
+    }
     #[doc = "DLL Status"]
     #[allow(non_camel_case_types)]
     pub struct DLL_STATUS<P>
@@ -10398,6 +10433,10 @@ pub mod usdhc {
                     _not_send_or_sync: PhantomData,
                 },
                 ADMA_SYS_ADDR: ADMA_SYS_ADDR {
+                    _p: PhantomData,
+                    _not_send_or_sync: PhantomData,
+                },
+                DLL_CTRL: DLL_CTRL {
                     _p: PhantomData,
                     _not_send_or_sync: PhantomData,
                 },

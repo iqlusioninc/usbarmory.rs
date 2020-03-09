@@ -64,11 +64,12 @@ fn line<'a>(line: &'a str, prev: Option<&'a str>, next: Option<&'a str>) -> Opti
         let next = next.expect("found split row; next line is required").trim();
 
         let (description, name) = if next.contains('(') && next.contains(')') {
-            let mut next_parts = next.splitn(2, '(');
-            let more_description = next_parts.next().expect("UNREACHABLE").trim();
-
+            // split from the right because the description may contain parenthesis
+            let mut next_parts = next.rsplitn(2, '(');
             let mut parts = next_parts.next().expect("UNREACHABLE").splitn(2, ')');
             let name = parts.next().expect("UNREACHABLE");
+
+            let more_description = next_parts.next().expect("UNREACHABLE").trim();
 
             let mut parts = prev.rsplitn(2, ' ');
             let last = parts.next().unwrap_or("");
@@ -92,9 +93,10 @@ fn line<'a>(line: &'a str, prev: Option<&'a str>, next: Option<&'a str>) -> Opti
 
         (description, name, width, parts.next()?.trim())
     } else {
-        let mut parts = rest.splitn(2, '(');
-        let description = parts.next()?.trim();
+        // split from the right because the description may contain parenthesis
+        let mut parts = rest.rsplitn(2, '(');
         let rest = parts.next()?;
+        let description = parts.next()?.trim();
 
         let mut parts = rest.splitn(2, ')');
         let name = parts.next()?;

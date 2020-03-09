@@ -96,6 +96,8 @@ impl eMMC {
                 selected: None,
                 verbose: false,
             };
+
+            emmc.software_reset();
             emmc.reset_cards();
             emmc.voltage_validation();
             emmc.register_cards();
@@ -289,15 +291,23 @@ impl eMMC {
             memlog!("command response error: {:?}", e);
             memlog_flush_and_reset!();
         }
-        let status = self.usdhc.CMD_RSP0.read();
+        let status = card::Status::from(self.usdhc.CMD_RSP0.read());
         if self.verbose {
-            memlog!("{:?}", card::Status::from(status));
+            memlog!("{:?}", status);
         }
 
         // wait for the transfer to finish
         // FIXME this could be non-blocking
         let mut int_status = 0;
+        let mut last = status;
         let has_transfer_completed = || {
+            let status = self.get_card_status(rca, false);
+
+            if last != status {
+                memlog!("{:?} @ {:?}", status, time::uptime());
+            }
+            last = status;
+
             int_status = self.usdhc.INT_STATUS.read();
             int_status & (INT_STATUS_ANY_ERROR | INT_STATUS_TC) != 0
         };
@@ -312,6 +322,7 @@ impl eMMC {
             memlog_flush_and_reset!();
         }
 
+        memlog!("write DONE @ {:?} ({:?})", time::uptime(), self.get_card_status(rca, false));
         if self.verbose {
             memlog!("write DONE @ {:?}", time::uptime());
         }
@@ -503,6 +514,90 @@ impl eMMC {
             memlog_flush_and_reset!();
         }
         memlog!("sent all cards to idle state @ {:?}", time::uptime());
+    }
+
+    fn software_reset(&self) {
+        memlog!("start uSDHC2 reset @ {:?}", time::uptime());
+
+        // clear FRC_SDCLK_ON before setting RSTA or changing clock frequency
+        const FRC_SDCLK_ON: u32 = 1 << 8;
+        self.usdhc
+            .VEND_SPEC
+            .rmw(|vend_spec| vend_spec & !FRC_SDCLK_ON);
+
+        // reset the uSDHC peripheral
+        const RSTA: u32 = 1 << 24;
+        const RESERVED: u32 = 0xf; // write as 1 reserved bits
+        self.usdhc.SYS_CTRL.rmw(|r| {
+            let r = r | RSTA | RESERVED;
+            memlog!("SYS_CTRL < {:#010x}", r);
+            r
+        });
+        memlog!("SYSCTRL: {:#010x}", self.usdhc.SYS_CTRL.read());
+
+        // wait for reset
+        while self.usdhc.SYS_CTRL.read() & RSTA != 0 {
+            crate::memlog_try_flush();
+        }
+
+        // select 1-bit mode; we'll reset the card so it will be operating in 1-bit mode
+        self.usdhc.PROT_CTRL.rmw(|r| {
+            const DTW_MASK: u32 = 0b11 << 1;
+            const DTW_B1: u32 = 0b00 << 1;
+
+            (r & !DTW_MASK) | DTW_B1
+        });
+
+        // wait for the clock to stabilize before changing the frequency
+        const SDSTB: u32 = 1 << 3;
+        while self.usdhc.PRES_STATE.read() & SDSTB == 0 {
+            crate::memlog_try_flush();
+        }
+
+        // reduce clock speed to 400 KHz; after reset the card will operate at its lowest speed
+        self.usdhc.SYS_CTRL.rmw(|mut r| {
+            const DTOCV_OFFSET: u8 = 16;
+            const DTOCV_MASK: u32 = 0xf << DTOCV_OFFSET;
+            const DVS_OFFSET: u8 = 4;
+            const DVS_MASK: u32 = 0b1111 << DVS_OFFSET;
+            const SDCLKFS_OFFSET: u8 = 8;
+            const SDCLKFS_MASK: u32 = 0xff << SDCLKFS_OFFSET;
+
+            // set data timeout counter to 1<<27
+            r &= !DTOCV_MASK;
+            r |= 0xe << DTOCV_OFFSET;
+
+            // set divisor to 15
+            r &= !DVS_MASK;
+            r |= 15 << DVS_OFFSET;
+
+            // set prescaler to 32
+            r &= !SDCLKFS_MASK;
+            r |= (0x10) << SDCLKFS_OFFSET;
+
+            // lowest 4 bits must always be ones
+            r |= 0xf;
+
+            // clock = 192 MHz / divisor / prescaler = 400 KHz
+            r
+        });
+
+        // wait for the clock to stabilize
+        while self.usdhc.PRES_STATE.read() & SDSTB == 0 {
+            crate::memlog_try_flush();
+        }
+
+        memlog!("400KHz clock stable @ {:?}", time::uptime());
+
+        // wait for CMD and DATA lines to become free
+        let busy = PRES_STATE_CDIHB | PRES_STATE_CIHB;
+        while self.usdhc.PRES_STATE.read() & busy != 0 {
+            crate::memlog_try_flush();
+        }
+
+        // send 80 clock cycles to the card
+        const INITA: u32 = 1 << 27;
+        self.usdhc.SYS_CTRL.rmw(|r| r | INITA);
     }
 
     // TODO this should bubble up errors
