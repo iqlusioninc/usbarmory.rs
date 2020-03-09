@@ -61,6 +61,7 @@ pub const BLOCK_SIZE: u16 = 512;
 
 /// A copy of an eMMC/SD card block.
 #[repr(align(4))]
+#[derive(Clone)]
 pub struct Block {
     /// The bytes contained in the memory block.
     pub bytes: [u8; BLOCK_SIZE as usize],
