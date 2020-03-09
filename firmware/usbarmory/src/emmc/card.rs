@@ -64,7 +64,7 @@ impl From<[u32; 4]> for Csd {
 }
 
 /// Card status
-#[derive(Debug)]
+#[derive(Debug, PartialEq)]
 pub struct Status {
     pub ready_for_data: bool,
     pub state: State,
