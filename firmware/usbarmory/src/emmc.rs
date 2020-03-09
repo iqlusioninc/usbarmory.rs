@@ -36,6 +36,33 @@ type Rca = NonZeroU16;
 
 /// Command complete
 const INT_STATUS_CC: u32 = 1; // bit 0
+/// Transfer complete
+const INT_STATUS_TC: u32 = 1 << 1; // bit 1
+/// Command Timeout Error
+const INT_STATUS_CTOE: u32 = 1 << 16;
+/// Command CRC Error
+const INT_STATUS_CCE: u32 = 1 << 17;
+/// Command End Bit Error
+const INT_STATUS_CEBE: u32 = 1 << 18;
+/// Command Index Error
+const INT_STATUS_CIE: u32 = 1 << 19;
+/// Data Timeout Error
+const INT_STATUS_DTOE: u32 = 1 << 20;
+/// Data CRC Error
+const INT_STATUS_DCE: u32 = 1 << 21;
+/// Data End Bit Error
+const INT_STATUS_DEBE: u32 = 1 << 22;
+/// DMA error
+const INT_STATUS_DMAE: u32 = 1 << 28;
+
+const INT_STATUS_ANY_ERROR: u32 = INT_STATUS_CTOE
+    | INT_STATUS_CCE
+    | INT_STATUS_CEBE
+    | INT_STATUS_CIE
+    | INT_STATUS_DTOE
+    | INT_STATUS_DCE
+    | INT_STATUS_DEBE
+    | INT_STATUS_DMAE;
 
 /// Command Inhibit (DATA)
 const PRES_STATE_CDIHB: u32 = 1 << 1;
@@ -48,15 +75,6 @@ const MIX_CTRL_RESERVED: u32 = 1 << 31;
 const MIX_CTRL_MBSEL_SINGLE: u32 = 0 << 5;
 /// Enable the DMA
 const MIX_CTRL_DMAEN_ENABLE: u32 = 1; // bit 0
-
-/// DMA error
-const INT_STATUS_DMAE: u32 = 1 << 28;
-/// Data End Bit Error
-const INT_STATUS_DEBE: u32 = 1 << 22;
-/// Data CRC Error
-const INT_STATUS_DCE: u32 = 1 << 21;
-/// Data Timeout Error
-const INT_STATUS_DTOE: u32 = 1 << 20;
 
 /// Relative address assigned to the eMMC
 // to make sure we are not making assumptions let's use a value other than the
@@ -195,21 +213,18 @@ impl eMMC {
 
         // wait for the transfer to finish
         // FIXME this could be non-blocking
-        const PRES_STATE_RTA: u32 = 1 << 9;
-        if util::wait_for_or_timeout(
-            || self.usdhc.PRES_STATE.read() & PRES_STATE_RTA == 0,
-            default_timeout(),
-        )
-        .is_err()
-        {
-            memlog!("RTA timeout");
+        let mut int_status = 0;
+        let has_transfer_completed = || {
+            int_status = self.usdhc.INT_STATUS.read();
+            int_status & (INT_STATUS_ANY_ERROR | INT_STATUS_TC) != 0
+        };
+        if util::wait_for_or_timeout(has_transfer_completed, default_timeout()).is_err() {
+            memlog!("read: INT_STATUS.TC timeout");
             memlog_flush_and_reset!();
         }
+        self.usdhc.INT_STATUS.clear(INT_STATUS_TC);
 
-        let int_status = self.usdhc.INT_STATUS.read();
-        let any_error = INT_STATUS_DMAE | INT_STATUS_DEBE | INT_STATUS_DCE | INT_STATUS_DTOE;
-
-        if int_status & any_error != 0 {
+        if int_status & INT_STATUS_ANY_ERROR != 0 {
             memlog!("data error (INT_STATUS={:#010x})", int_status);
             memlog_flush_and_reset!();
         }
@@ -264,14 +279,19 @@ impl eMMC {
 
         // wait for the transfer to finish
         // FIXME this could be non-blocking
-        const PRES_STATE_WTA: u32 = 1 << 8;
-        if util::wait_for_or_timeout(
-            || self.usdhc.PRES_STATE.read() & PRES_STATE_WTA == 0,
-            default_timeout(),
-        )
-        .is_err()
-        {
-            memlog!("WTA timeout");
+        let mut int_status = 0;
+        let has_transfer_completed = || {
+            int_status = self.usdhc.INT_STATUS.read();
+            int_status & (INT_STATUS_ANY_ERROR | INT_STATUS_TC) != 0
+        };
+        if util::wait_for_or_timeout(has_transfer_completed, default_timeout()).is_err() {
+            memlog!("write: INT_STATUS.TC timeout");
+            memlog_flush_and_reset!();
+        }
+        self.usdhc.INT_STATUS.clear(INT_STATUS_TC);
+
+        if int_status & INT_STATUS_ANY_ERROR != 0 {
+            memlog!("data error (INT_STATUS={:#010x})", int_status);
             memlog_flush_and_reset!();
         }
 
@@ -472,7 +492,11 @@ impl eMMC {
             memlog!("command response error: {:?}", e);
             memlog_flush_and_reset!();
         }
-        card::Status::from(self.usdhc.CMD_RSP0.read())
+        let status = card::Status::from(self.usdhc.CMD_RSP0.read());
+        if verbose {
+            memlog!("status={:?}", status);
+        }
+        status
     }
 
     // low-level API
@@ -544,16 +568,7 @@ impl eMMC {
 
     /// [blocking] Waits for a command response
     fn wait_response(&self) -> Result<(), Error> {
-        /// Command Timeout Error
-        const CTOE: u32 = 1 << 16;
-        /// Command CRC Error
-        const CCE: u32 = 1 << 17;
-        /// Command End Bit Error
-        const CEBE: u32 = 1 << 18;
-        /// Command Index Error
-        const CIE: u32 = 1 << 19;
-
-        let any_error = CTOE | CCE | CEBE | CIE;
+        let any_error = INT_STATUS_CTOE | INT_STATUS_CCE | INT_STATUS_CEBE | INT_STATUS_CIE;
         let mut int_status = 0;
         let has_command_completed = || {
             int_status = self.usdhc.INT_STATUS.read();
@@ -566,7 +581,7 @@ impl eMMC {
 
         self.usdhc.INT_STATUS.clear(INT_STATUS_CC);
 
-        if int_status & CTOE != 0 {
+        if int_status & INT_STATUS_CTOE != 0 {
             Err(Error::Timeout)
         } else if int_status & any_error != 0 {
             Err(Error::Other)
