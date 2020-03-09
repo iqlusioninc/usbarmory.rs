@@ -17,3 +17,12 @@ pub fn wait_for_or_timeout(mut cond: impl FnMut() -> bool, timeout: Duration) ->
     }
     Ok(())
 }
+
+#[repr(align(4))]
+pub struct Align4<T> {
+    pub inner: T,
+}
+
+pub fn round_down(n: usize, m: usize) -> usize {
+    n - (n % m)
+}

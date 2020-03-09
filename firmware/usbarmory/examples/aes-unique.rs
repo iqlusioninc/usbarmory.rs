@@ -26,7 +26,7 @@ use usbarmory::{dcp::Aes128, memlog, memlog_flush_and_reset};
 // like `#[rtfm::app]`
 #[no_mangle]
 fn main() -> ! {
-    let cipher = Aes128::new_unique();
+    let cipher = Aes128::new_unique().expect("AES engine already in use");
 
     let plaintext = [
         179, 176, 19, 230, 198, 237, 169, 162, 83, 237, 103, 21, 175, 240, 64, 242,

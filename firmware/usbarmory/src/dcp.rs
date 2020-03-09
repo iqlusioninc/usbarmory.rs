@@ -6,203 +6,51 @@
 //! - SHA-256
 //! - SHA-1
 //!
-//! Only AES-128 in ECB mode is currently exposed
+//! Only SHA-256 & AES-128 in ECB mode are currently exposed
+//!
+//! **NOTE** The DCP is only available on the i.MX6UL**Z** chip
 
 // References: section 13 of MX28RM
 
 use core::{
     cell::{Cell, UnsafeCell},
-    marker::PhantomData,
     ptr::NonNull,
-    sync::atomic::{self, AtomicBool, Ordering},
+    sync::atomic::{AtomicBool, Ordering},
     time::Duration,
 };
 
-use arrayref::array_ref;
-use block_cipher_trait::{
-    generic_array::{typenum::consts, GenericArray},
-    BlockCipher,
-};
 use pac::hw_dcp::HW_DCP;
 
-use crate::{memlog, memlog_flush_and_reset, util};
+pub use aes128::Aes128;
+pub use sha256::Sha256;
+
+mod aes128;
+mod sha256;
 
 fn default_timeout() -> Duration {
     Duration::from_millis(100)
 }
 
-/// Data Co-Processor
-pub struct Aes128 {
-    key: KeySelect,
-    // this struct implicitly owns a shared reference to `HW_DCP` ..
-    _not_send_or_sync: PhantomData<*mut ()>,
-}
-
-// .. however it accesses different registers so instances are OK to `Send`
-unsafe impl Send for Aes128 {}
-
 const STAT_ERROR_MASK: u32 = (0xff << 16) | (1 << 6) | (1 << 5) | (1 << 4) | (1 << 3) | (1 << 2);
 
-impl BlockCipher for Aes128 {
-    type KeySize = consts::U16;
-    type BlockSize = consts::U16;
-    type ParBlocks = consts::U1;
+// start from the highest numbered channel to reduce the size of the `Context` struc
+const AES128_CHANNEL: u8 = 3;
+const SHA256_CHANNEL: u8 = 2;
 
-    fn new(key: &GenericArray<u8, consts::U16>) -> Self {
-        // TODO support up to 4 live ciphers (active channels)
-        assert!(init(), "no more ciphers can't be created");
+// Big enough for two channels (channels #2 & #3)
+const CTXT_SZ: usize = 52 * 2;
 
-        // start from the highest numbered channel to reduce the size of the `Context` struc
-        let channel = 3;
-
-        HW_DCP::borrow_unchecked(|dcp| {
-            // install key in the write-only register
-            // NOTE to support more than one cipher this would need a mutex (e.g. spinlock) to do a
-            // exclusive write to these registers
-            dcp.KEY.write(channel << 6);
-            // XXX double check endianness
-            dcp.KEYDATA
-                .write(u32::from_le_bytes(*array_ref!(key, 0, 4)));
-            dcp.KEYDATA
-                .write(u32::from_le_bytes(*array_ref!(key, 4, 4)));
-            dcp.KEYDATA
-                .write(u32::from_le_bytes(*array_ref!(key, 8, 4)));
-            dcp.KEYDATA
-                .write(u32::from_le_bytes(*array_ref!(key, 12, 4)));
-
-            // enable channel #3
-            // NOTE single instruction write to a stateless register
-            dcp.CHANNELCTRL_SET.write(1 << channel);
-        });
-
-        Aes128 {
-            key: KeySelect::Key0,
-            _not_send_or_sync: PhantomData,
-        }
-    }
-
-    fn decrypt_block(&self, block: &mut GenericArray<u8, consts::U16>) {
-        self.xcrypt(block, false)
-    }
-
-    fn encrypt_block(&self, block: &mut GenericArray<u8, consts::U16>) {
-        self.xcrypt(block, true)
-    }
+// word-aligned for performance
+#[repr(align(4))]
+struct Context {
+    _bytes: [u8; CTXT_SZ],
 }
 
-impl Aes128 {
-    /// Creates a cipher that uses the unreadable OTP key
-    ///
-    /// **WARNING!** This routine does NOT check if the OTP was set to an all-zeros value
-    pub fn new_otp() -> Self {
-        Self::new_hardware(true)
-    }
-
-    /// Creates a cipher that uses the unreadable UNIQUE key
-    ///
-    /// This UNIQUE key is generated from the OTP key and a device-specific 64-bit value
-    pub fn new_unique() -> Self {
-        Self::new_hardware(false)
-    }
-
-    // Creates a cipher that uses one of the two available hardware keys
-    fn new_hardware(otp: bool) -> Self {
-        // TODO support up to 4 live ciphers (active channels)
-        assert!(init(), "no more ciphers can't be created");
-
-        // start from the highest numbered channel to reduce the size of the `Context` struc
-        let channel = 3;
-
-        HW_DCP::borrow_unchecked(|dcp| {
-            const STAT_OTP_KEY_READY: u32 = 1 << 28;
-
-            // check that the OTP is ready to use ("has been released")
-            let mut stat = 0;
-            let is_ready = || {
-                stat = dcp.STAT.read();
-                stat & STAT_OTP_KEY_READY != 0
-            };
-            if util::wait_for_or_timeout(is_ready, default_timeout()).is_err() {
-                memlog!("OTP key not released within timeout (STAT={:#010x})", stat);
-                memlog_flush_and_reset!()
-            }
-
-            // enable channel #3
-            // NOTE single instruction write to a stateless register
-            dcp.CHANNELCTRL_SET.write(1 << channel);
-        });
-
-        Aes128 {
-            key: if otp {
-                KeySelect::OtpKey
-            } else {
-                KeySelect::UniqueKey
-            },
-            _not_send_or_sync: PhantomData,
+impl Context {
+    const fn empty() -> Self {
+        Self {
+            _bytes: [0; CTXT_SZ],
         }
-    }
-
-    fn xcrypt(&self, block: &mut GenericArray<u8, consts::U16>, encrypt: bool) {
-        let cmd = Cmd::new();
-
-        cmd.control0.set(
-            *Control0::new()
-                .decr_semaphore(true)
-                .enable_cipher(true)
-                .cipher_encrypt(encrypt)
-                .otp_key(self.key == KeySelect::OtpKey),
-        );
-
-        cmd.control1.set(
-            *Control1::new()
-                .cipher_select(CipherSelect::Aes128)
-                .cipher_mode(CipherMode::Ecb)
-                .key_select(self.key),
-        );
-
-        cmd.src_buffer_addr.set(Some(NonNull::from(&block[0])));
-        cmd.dest_buffer_addr.set(Some(NonNull::from(&mut block[0])));
-        cmd.buffer_size.set(block.len());
-
-        HW_DCP::borrow_unchecked(|dcp| {
-            // TODO generalize over channel index
-            dcp.CH3CMDPTR.write(&cmd as *const Cmd as u32);
-
-            // the write below transfers ownership of `block` and `cmd` to the crypto engine; this
-            // fence drives all pending writes to `block` & `cmd` to completion
-            atomic::fence(Ordering::Release);
-
-            // start encryption
-            dcp.CH3SEMA.write(1);
-
-            // wait for channel to signal it's done -- the trait interface requires this operation
-            // to be blocking
-            let mut stat = 0;
-            let mut status = 0;
-            let is_done_or_error = || {
-                // NOTE(read_volatile) we want this statement to always perform a load
-                // instruction rather than read memory once and cache the value in a (CPU)
-                // register
-                status = unsafe { cmd.status.get().read_volatile() };
-                stat = dcp.CH3STAT.read();
-
-                // done or error
-                status & 1 != 0 || stat & STAT_ERROR_MASK != 0
-            };
-            if util::wait_for_or_timeout(is_done_or_error, default_timeout()).is_err() {
-                memlog!("encryption timeout (STAT={:#010x})", stat);
-                memlog_flush_and_reset!()
-            }
-
-            // the crypto engine is done with the block and has transferred ownership back to us
-            atomic::fence(Ordering::Acquire);
-
-            // the interface won't let us report the error so just abort the program
-            if stat & STAT_ERROR_MASK != 0 {
-                memlog!("error (STAT={:#010x}, Cmd.status={:#010x})", stat, status);
-                memlog_flush_and_reset!()
-            }
-        })
     }
 }
 
@@ -221,6 +69,19 @@ fn init() -> bool {
             "unsupported DCP version"
         );
 
+        let supports_aes128 = 1;
+        let supports_sha256 = 1 << 18;
+        let capability = dcp.CAPABILITY1.read();
+        assert!(
+            capability & supports_aes128 != 0,
+            "this DCP doesn't support AES128"
+        );
+
+        assert!(
+            capability & supports_sha256 != 0,
+            "this DCP doesn't support SHA256"
+        );
+
         // NOTE(static mut) this code runs at most once; CTXT will never be aliased
         static mut CTXT: UnsafeCell<Context> = UnsafeCell::new(Context::empty());
 
@@ -231,23 +92,6 @@ fn init() -> bool {
     } else {
         // already initialized
         false
-    }
-}
-
-// Big enough for one channel (channel #3)
-const CTXT_SZ: usize = 52;
-
-// word-aligned for performance
-#[repr(align(4))]
-struct Context {
-    _bytes: [u8; CTXT_SZ],
-}
-
-impl Context {
-    const fn empty() -> Self {
-        Self {
-            _bytes: [0; CTXT_SZ],
-        }
     }
 }
 
@@ -378,7 +222,7 @@ impl Control1 {
         cipher_select = (CipherSelect, 0xf, 0),
         cipher_mode = (CipherMode, 0xf, 4),
         key_select = (KeySelect, 0xff, 8),
-        // hash_select = (HashSelect, 0xf, 16),
+        hash_select = (HashSelect, 0xf, 16),
     );
 }
 
@@ -402,9 +246,8 @@ enum KeySelect {
     OtpKey = 0xff,
 }
 
-#[cfg(unused)]
 enum HashSelect {
-    Sha1 = 0,
-    Crc32 = 1,
+    // Sha1 = 0,
+    // Crc32 = 1,
     Sha256 = 2,
 }
