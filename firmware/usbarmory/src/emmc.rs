@@ -564,7 +564,7 @@ impl eMMC {
         const CMDINX_OFFSET: u8 = 24;
 
         let mut w_cmd = u32::from(cmd.index()) << CMDINX_OFFSET;
-        w_cmd |= u32::from(cmd.typ()) << CMDTYP_OFFSET;
+        w_cmd |= u32::from(cmd.cmdtyp()) << CMDTYP_OFFSET;
         w_cmd |= if cmd.data_present() {
             1 << DPSEL_OFFSET
         } else {

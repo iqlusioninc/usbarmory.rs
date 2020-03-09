@@ -69,6 +69,33 @@ pub enum Command {
     },
 }
 
+#[allow(dead_code)]
+#[allow(non_camel_case_types)]
+#[derive(PartialEq)]
+enum Type {
+    /// Brodcast Command with no response
+    bc,
+    /// Broadcast Command with Response
+    bcr,
+    /// Addressed Command
+    ac,
+    /// Addressed Data Transfer Command
+    adtc,
+}
+
+#[derive(PartialEq)]
+enum Response {
+    NoResponse,
+    R1,
+    R1b,
+    R2,
+    R3,
+    R4,
+    R5,
+    R5b,
+    R6,
+}
+
 impl Command {
     /// The index of this command
     // NOTE returns a `u6`
@@ -85,6 +112,39 @@ impl Command {
             Command::SetBlockLen { .. } => 16,
             Command::ReadSingleBlock { .. } => 17,
             Command::WriteSingleBlock { .. } => 24,
+        }
+    }
+
+    // see table 56-3
+    fn response(&self) -> Response {
+        match self {
+            Command::GoIdleState => Response::NoResponse,
+            Command::SendOpCond { .. } => Response::R3,
+            Command::AllSendCid => Response::R2,
+            Command::SetRelativeAddr { .. } => Response::R1, // eMMC (SDIO uses R6)
+            Command::Switch { .. } => Response::R1b,         // eMMC (SDIO uses R1)
+            Command::SelectCard { .. } => Response::R1b,
+            Command::SendCsd { .. } => Response::R2,
+            Command::SendStatus { .. } => Response::R1,
+            Command::SetBlockLen { .. } => Response::R1,
+            Command::ReadSingleBlock { .. } => Response::R1,
+            Command::WriteSingleBlock { .. } => Response::R1,
+        }
+    }
+
+    fn type_(&self) -> Type {
+        match self {
+            Command::GoIdleState => Type::bcr,
+            Command::SendOpCond { .. } => Type::bcr,
+            Command::AllSendCid => Type::bcr,
+            Command::SetRelativeAddr { .. } => Type::ac,
+            Command::Switch { .. } => Type::ac, // eMMC (SDIO version is adtc)
+            Command::SelectCard { .. } => Type::ac,
+            Command::SendCsd { .. } => Type::ac,
+            Command::SendStatus { .. } => Type::ac,
+            Command::SetBlockLen { .. } => Type::ac,
+            Command::ReadSingleBlock { .. } => Type::adtc,
+            Command::WriteSingleBlock { .. } => Type::adtc,
         }
     }
 
@@ -116,7 +176,7 @@ impl Command {
     }
 
     // NOTE returns a `u2`
-    pub fn typ(&self) -> u8 {
+    pub fn cmdtyp(&self) -> u8 {
         // Only CMD12 & CMD52 use a different value
         let idx = self.index();
         assert!(idx != 12 && idx != 52, "unimplemented");
@@ -128,26 +188,18 @@ impl Command {
     // See table 56-3 of ULRM; `adtc` commands transfer data; R1b commands
     // indicate busy-ness on the DATA0 line
     pub fn uses_data_line(&self) -> bool {
-        self.data_present()
-            || match self {
-                // R1b commands
-                Command::Switch { .. } | Command::SelectCard { .. } => true,
-                _ => false,
-            }
+        let resp = self.response();
+        self.data_present() || resp == Response::R1b || resp == Response::R5b
     }
 
     /// Whether this command transfers data (in either direction)
     // See table 56-3 of ULRM; `adtc` commands transfer data
     pub fn data_present(&self) -> bool {
-        match self {
-            // adtc commands
-            Command::ReadSingleBlock { .. } | Command::WriteSingleBlock { .. } => true,
-            _ => false,
-        }
+        self.type_() == Type::adtc
     }
 
     /// The response type that this command expects
-    // NOTE see tables 56-3 and 56-6 for a mapping from command to response type + checks
+    // NOTE see table 56-6
     pub fn response_type(&self) -> u8 {
         const NO_RESPONSE: u8 = 0b00;
         // 136-bit response
@@ -157,73 +209,35 @@ impl Command {
         // 48-bit response, check Busy after response
         const B48_RESPONSE_CHECK_BUSY: u8 = 0b11;
 
-        match self {
-            // No response commands
-            Command::GoIdleState => NO_RESPONSE,
-
-            // R1 commands
-            Command::SetRelativeAddr { .. }
-            | Command::SendStatus { .. }
-            | Command::SetBlockLen { .. }
-            | Command::ReadSingleBlock { .. }
-            | Command::WriteSingleBlock { .. } => B48_RESPONSE,
-
-            // R1b commands
-            Command::SelectCard { .. } | Command::Switch { .. } => B48_RESPONSE_CHECK_BUSY,
-
-            // R2 commands
-            Command::AllSendCid | Command::SendCsd { .. } => B136_RESPONSE,
-
-            // R3 commands
-            Command::SendOpCond { .. } => B48_RESPONSE,
+        match self.response() {
+            Response::NoResponse => NO_RESPONSE,
+            Response::R2 => B136_RESPONSE,
+            Response::R3 | Response::R4 => B48_RESPONSE,
+            Response::R1 | Response::R5 | Response::R6 => B48_RESPONSE,
+            Response::R1b | Response::R5b => B48_RESPONSE_CHECK_BUSY,
         }
     }
 
     /// Check command index in the response
+    // see table 56-6
     pub fn cicen(&self) -> bool {
-        match self {
-            // No response commands
-            Command::GoIdleState => false,
-
-            // R1 commands
-            Command::SetRelativeAddr { .. }
-            | Command::SendStatus { .. }
-            | Command::SetBlockLen { .. }
-            | Command::ReadSingleBlock { .. }
-            | Command::WriteSingleBlock { .. } => true,
-
-            // R1b commands
-            Command::SelectCard { .. } | Command::Switch { .. } => true,
-
-            // R2 commands
-            Command::AllSendCid | Command::SendCsd { .. } => false,
-
-            // R3 commands
-            Command::SendOpCond { .. } => false,
+        match self.response() {
+            Response::NoResponse => false,
+            Response::R2 => false,
+            Response::R3 | Response::R4 => false,
+            Response::R1 | Response::R5 | Response::R6 => true,
+            Response::R1b | Response::R5b => true,
         }
     }
 
-    /// Check command index in the response
+    /// Check command CRC in the response
     pub fn cccen(&self) -> bool {
-        match self {
-            // No response commands
-            Command::GoIdleState => false,
-
-            // R1 commands
-            Command::SetRelativeAddr { .. }
-            | Command::SendStatus { .. }
-            | Command::SetBlockLen { .. }
-            | Command::ReadSingleBlock { .. }
-            | Command::WriteSingleBlock { .. } => true,
-
-            // R1b commands
-            Command::SelectCard { .. } | Command::Switch { .. } => true,
-
-            // R2 commands
-            Command::AllSendCid | Command::SendCsd { .. } => true,
-
-            // R3 commands
-            Command::SendOpCond { .. } => false,
+        match self.response() {
+            Response::NoResponse => false,
+            Response::R2 => true,
+            Response::R3 | Response::R4 => false,
+            Response::R1 | Response::R5 | Response::R6 => true,
+            Response::R1b | Response::R5b => true,
         }
     }
 }
