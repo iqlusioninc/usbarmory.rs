@@ -12,6 +12,8 @@ categories  = ["embedded", "hardware-support", "no-std"]
 keywords    = ["arm", "cortex-a"]
 
 [dependencies]
+arrayref = "0.3.6"
+block-cipher-trait = "0.6.2"
 consts = { path = "../../common/consts" }
 cortex-a = { path = "../cortex-a" }
 heapless = "0.5.3"
@@ -20,8 +22,12 @@ pac = { package = "imx6ul-pac", path = "../imx6ul-pac" }
 rand_core = "0.5.1"
 typenum = "1.11.2"
 usb-device = "0.2.5"
-usbarmory-rt = { path = "../usbarmory-rt" }
 zerocopy = "0.3.0"
+
+[dependencies.usbarmory-rt]
+path = "../usbarmory-rt"
+## enable this feature to place .text and .rodata in DRAM
+# features = ["use-dram"]
 
 [dev-dependencies]
 as-slice = "0.1.3"

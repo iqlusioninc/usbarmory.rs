@@ -9,5 +9,9 @@ license = "Apache-2.0 OR MIT"
 cortex-a = { path = "../cortex-a" }
 pac = { package = "imx6ul-pac", path = "../imx6ul-pac" }
 
+[features]
+# enable this feature to place .text and .rodata in DDR3 RAM
+use-dram = []
+
 [build-dependencies]
 quote = "1.0.2"
