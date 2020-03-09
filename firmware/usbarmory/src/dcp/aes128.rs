@@ -55,6 +55,20 @@ impl BlockCipher for Aes128 {
 
 static AES_IN_USE: AtomicBool = AtomicBool::new(false);
 
+enum HardwareKey {
+    Unique,
+    Otp,
+}
+
+impl Into<KeySelect> for HardwareKey {
+    fn into(self: HardwareKey) -> KeySelect {
+        match self {
+            HardwareKey::Unique => KeySelect::UniqueKey,
+            HardwareKey::Otp => KeySelect::OtpKey,
+        }
+    }
+}
+
 impl Aes128 {
     /// Gets a handle to the AES-128 channel and configures it to use the unreadable OTP key
     ///
@@ -62,7 +76,7 @@ impl Aes128 {
     ///
     /// **WARNING!** This routine does NOT check if the OTP was set to an all-zeros value
     pub fn new_otp() -> Option<Self> {
-        Self::new_hardware(true)
+        Self::new_hardware(HardwareKey::Otp)
     }
 
     /// Gets a handle to the AES-128 channel and configures it to use the unreadable UNIQUE key
@@ -71,11 +85,11 @@ impl Aes128 {
     ///
     /// This UNIQUE key is generated from the OTP key and a device-specific 64-bit value
     pub fn new_unique() -> Option<Self> {
-        Self::new_hardware(false)
+        Self::new_hardware(HardwareKey::Unique)
     }
 
     // Creates a cipher that uses one of the two available hardware keys
-    fn new_hardware(otp: bool) -> Option<Self> {
+    fn new_hardware(key: HardwareKey) -> Option<Self> {
         if AES_IN_USE
             .compare_exchange_weak(false, true, Ordering::AcqRel, Ordering::Acquire)
             .is_ok()
@@ -102,11 +116,7 @@ impl Aes128 {
             });
 
             Some(Aes128 {
-                key: if otp {
-                    KeySelect::OtpKey
-                } else {
-                    KeySelect::UniqueKey
-                },
+                key: key.into(),
                 _not_send_or_sync: PhantomData,
             })
         } else {
