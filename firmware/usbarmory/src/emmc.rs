@@ -10,17 +10,18 @@ use pac::usdhc::uSDHC2;
 mod card;
 mod cmd;
 
-use core::time::Duration;
+use core::{fmt, time::Duration};
 
 use crate::{
     memlog, memlog_flush_and_reset,
+    storage::{Block, ManagedBlockDevice, BLOCK_SIZE},
     time::{self, Instant},
     util,
 };
 use cmd::Command;
 
 fn default_timeout() -> Duration {
-    Duration::from_millis(10)
+    Duration::from_millis(100)
 }
 
 /// [Singleton] Access to the on-board eMMC
@@ -30,6 +31,7 @@ pub struct eMMC {
     /// Currently selected card
     selected: Option<Rca>,
     blocks: u32,
+    verbose: bool,
 }
 
 type Rca = NonZeroU16;
@@ -74,6 +76,7 @@ impl eMMC {
                 usdhc,
                 blocks: 0,
                 selected: None,
+                verbose: false,
             };
             emmc.reset_cards();
             emmc.voltage_validation();
@@ -102,7 +105,9 @@ impl eMMC {
         assert!(block_nr < self.blocks, "block doesn't exist");
 
         // TODO check that the this block exists
-        memlog!("read(block_nr={}) @ {:?}", block_nr, time::uptime());
+        if self.verbose {
+            memlog!("read(block_nr={}) @ {:?}", block_nr, time::uptime());
+        }
 
         if self
             .read_single_block(block_nr, block.bytes.as_mut_ptr())
@@ -118,7 +123,9 @@ impl eMMC {
         assert!(block_nr < self.blocks, "block doesn't exist");
 
         // TODO check that the this block exists
-        memlog!("write(block_nr={}) @ {:?}", block_nr, time::uptime());
+        if self.verbose {
+            memlog!("write(block_nr={}) @ {:?}", block_nr, time::uptime());
+        }
 
         if self
             .write_single_block(block_nr, block.bytes.as_ptr())
@@ -161,8 +168,10 @@ impl eMMC {
             memlog_flush_and_reset!();
         };
 
-        let status = self.get_card_status(rca, true);
-        memlog!("{:?}", status);
+        let status = self.get_card_status(rca, false);
+        if self.verbose {
+            memlog!("{:?}", status);
+        }
 
         if !status.ready_for_data && status.state == card::State::Transfer {
             return Err(());
@@ -185,13 +194,15 @@ impl eMMC {
         self.usdhc.DS_ADDR.write(addr as usize as u32);
 
         // start the transfer
-        self.send_command(Command::ReadSingleBlock { block_nr }, true);
+        self.send_command(Command::ReadSingleBlock { block_nr }, false);
         if let Err(e) = self.wait_response() {
             memlog!("command response error: {:?}", e);
             memlog_flush_and_reset!();
         }
         let status = self.usdhc.CMD_RSP0.read();
-        memlog!("{:?}", card::Status::from(status));
+        if self.verbose {
+            memlog!("{:?}", card::Status::from(status));
+        }
 
         // wait for the transfer to finish
         // FIXME this could be non-blocking
@@ -218,7 +229,9 @@ impl eMMC {
         // let the DMA finish its memory operations before `block` is read
         atomic::fence(Ordering::Acquire);
 
-        memlog!("read DONE @ {:?}", time::uptime());
+        if self.verbose {
+            memlog!("read DONE @ {:?}", time::uptime());
+        }
         Ok(())
     }
 
@@ -230,8 +243,10 @@ impl eMMC {
             memlog_flush_and_reset!();
         };
 
-        let status = self.get_card_status(rca, true);
-        memlog!("{:?}", status);
+        let status = self.get_card_status(rca, false);
+        if self.verbose {
+            memlog!("{:?}", status);
+        }
 
         if !status.ready_for_data && status.state == card::State::Transfer {
             return Err(());
@@ -254,13 +269,15 @@ impl eMMC {
         self.usdhc.DS_ADDR.write(addr as usize as u32);
 
         // start the transfer
-        self.send_command(Command::WriteSingleBlock { block_nr }, true);
+        self.send_command(Command::WriteSingleBlock { block_nr }, false);
         if let Err(e) = self.wait_response() {
             memlog!("command response error: {:?}", e);
             memlog_flush_and_reset!();
         }
         let status = self.usdhc.CMD_RSP0.read();
-        memlog!("{:?}", card::Status::from(status));
+        if self.verbose {
+            memlog!("{:?}", card::Status::from(status));
+        }
 
         // wait for the transfer to finish
         // FIXME this could be non-blocking
@@ -275,7 +292,10 @@ impl eMMC {
             memlog_flush_and_reset!();
         }
 
-        memlog!("write DONE @ {:?}", time::uptime());
+        if self.verbose {
+            memlog!("write DONE @ {:?}", time::uptime());
+        }
+
         Ok(())
     }
 
@@ -578,32 +598,51 @@ impl eMMC {
 
 /// Command error
 #[derive(Clone, Copy, Debug, PartialEq)]
-enum Error {
+pub enum Error {
+    /// Card did not respond in time.
     Timeout,
+    /// Unknown error.
     Other,
 }
 
-// eMMC operating at high speed use have a block size of 512B
-const BLOCK_SIZE: u16 = 512;
-
-/// A copy of an eMMC block
-#[repr(align(4))]
-pub struct Block {
-    /// The bytes contained in the memory block
-    pub bytes: [u8; BLOCK_SIZE as usize],
-}
-
-impl Block {
-    /// Creates a `Block` buffer and initializes it to all zeros
-    pub fn new() -> Self {
-        Self {
-            bytes: [0; BLOCK_SIZE as usize],
+impl fmt::Display for Error {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        match self {
+            Error::Timeout => f.write_str("timeout"),
+            Error::Other => f.write_str("unknown error"),
         }
     }
 }
 
-impl Default for Block {
-    fn default() -> Self {
-        Self::new()
+impl ManagedBlockDevice for eMMC {
+    type Error = Error;
+
+    fn total_blocks(&self) -> u64 {
+        // FIXME: Implement proper capacity readout for eMMC.
+        // For now, this is hardcoded to 16 GB.
+        16_000_000_000 / 512
+    }
+
+    fn read(&self, block: &mut Block, lba: u64) -> Result<(), Self::Error> {
+        if lba > self.total_blocks() {
+            return Err(Error::Other);
+        }
+
+        Self::read(self, lba as u32, block);
+        Ok(())
+    }
+
+    fn write(&mut self, block: &Block, lba: u64) -> Result<(), Self::Error> {
+        if lba > self.total_blocks() {
+            return Err(Error::Other);
+        }
+
+        Self::write(self, lba as u32, block);
+        Ok(())
+    }
+
+    fn flush(&mut self) -> Result<(), Self::Error> {
+        Self::flush(self);
+        Ok(())
     }
 }

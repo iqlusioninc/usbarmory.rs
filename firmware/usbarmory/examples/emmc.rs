@@ -10,10 +10,7 @@
 
 use exception_reset as _; // default exception handler
 use panic_serial as _; // panic handler
-use usbarmory::{
-    emmc::{eMMC, Block},
-    memlog, memlog_flush_and_reset,
-};
+use usbarmory::{emmc::eMMC, memlog, memlog_flush_and_reset, storage::Block};
 
 // NOTE binary interfaces, using `no_mangle` and `extern`, are extremely unsafe
 // as no type checking is performed by the compiler; stick to safe interfaces
@@ -22,7 +19,7 @@ use usbarmory::{
 fn main() -> ! {
     let emmc = eMMC::take().expect("eMMC");
 
-    let mut block = Block::new();
+    let mut block = Block::zeroed();
     emmc.read(0, &mut block);
 
     memlog!("first byte of the first block: {}", block.bytes[0]);

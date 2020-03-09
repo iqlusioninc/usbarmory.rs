@@ -26,6 +26,7 @@ pub mod led;
 mod macros;
 pub mod rng;
 pub mod serial;
+pub mod storage;
 pub mod time;
 pub mod usbd;
 mod util;
