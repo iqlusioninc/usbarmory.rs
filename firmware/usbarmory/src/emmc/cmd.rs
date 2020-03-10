@@ -25,14 +25,8 @@ pub enum Command {
 
     // 6
     // NOTE MMC specific version; `SWITCH_FUNC` is the SD variant of the command
-    #[allow(dead_code)] // will be used to change the speed and data width
     Switch {
-        /// `u2`
-        access: u8,
-        index: u8,
-        value: u8,
-        /// `u3`
-        cmd: u8,
+        data: u32,
     },
 
     // 7
@@ -167,17 +161,7 @@ impl Command {
             Command::SendStatus { rca } => u32::from(rca.get()) << 16,
             Command::SetBlockLen { len } => *len,
             Command::SetRelativeAddr { rca } => u32::from(rca.get()) << 16,
-            Command::Switch {
-                access,
-                index,
-                value,
-                cmd,
-            } => {
-                (u32::from(*access) << 24)
-                    | (u32::from(*index) << 16)
-                    | (u32::from(*value) << 8)
-                    | u32::from(*cmd)
-            }
+            Command::Switch { data } => *data,
             Command::WriteSingleBlock { block_nr } => *block_nr,
         }
     }

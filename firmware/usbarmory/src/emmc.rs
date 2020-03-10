@@ -115,6 +115,67 @@ impl eMMC {
             // FIXME not correct for our card
             emmc.blocks = csd.number_of_blocks();
 
+            let mut ext_csd = [0; 512];
+            emmc.read_single_block(None, ext_csd.as_mut_ptr())
+                .expect("EXT_CSD read failed");
+
+            let card_type = ext_csd[196];
+            assert_ne!(card_type & 1, 0, "card doesn't support a 26 MHz clock");
+
+            emmc.send_command(Command::Switch { data: 0x1B90100 }, false);
+            emmc.wait_response().unwrap();
+            let status = emmc.get_card_status(RCA, false);
+            memlog!("{:?}", status);
+
+            emmc.read_single_block(None, ext_csd.as_mut_ptr())
+                .expect("EXT_CSD read failed");
+            let hs_timing = ext_csd[185];
+            assert_eq!(hs_timing, 1, "switching to high speed mode failed");
+
+            // clear FRC_SDCLK_ON before changing the clock
+            emmc.usdhc
+                .VEND_SPEC
+                .rmw(|vend_spec| vend_spec & !FRC_SDCLK_ON);
+
+            // wait for the clock to stabilize before changing the frequency
+            const SDSTB: u32 = 1 << 3;
+            while emmc.usdhc.PRES_STATE.read() & SDSTB == 0 {
+                crate::memlog_try_flush();
+            }
+
+            // set clock to 24 MHz
+            emmc.usdhc.SYS_CTRL.rmw(|mut r| {
+                const DTOCV_OFFSET: u8 = 16;
+                const DTOCV_MASK: u32 = 0xf << DTOCV_OFFSET;
+                const DVS_OFFSET: u8 = 4;
+                const DVS_MASK: u32 = 0b1111 << DVS_OFFSET;
+                const SDCLKFS_OFFSET: u8 = 8;
+                const SDCLKFS_MASK: u32 = 0xff << SDCLKFS_OFFSET;
+
+                // set data timeout counter to 1<<27
+                r &= !DTOCV_MASK;
+                r |= 14 << DTOCV_OFFSET;
+
+                // set divisor to 1
+                r &= !DVS_MASK;
+                r |= 0 << DVS_OFFSET;
+
+                // set prescaler to 8
+                r &= !SDCLKFS_MASK;
+                r |= 4 << SDCLKFS_OFFSET;
+
+                // lowest 4 bits must always be ones
+                r |= 0xf;
+
+                // clock = 192 MHz / divisor / prescaler = 24 MHz
+                r
+            });
+
+            // wait for the clock to stabilize 
+            while emmc.usdhc.PRES_STATE.read() & SDSTB == 0 {
+                crate::memlog_try_flush();
+            }
+
             emmc
         })
     }
