@@ -352,8 +352,6 @@ dependencies = [
 [[package]]
 name = "littlefs2"
 version = "0.1.0-alpha.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "abdd4ddd5caedd104a0627e4abbe1c001a088fc3ce996a210ce5547193f542a3"
 dependencies = [
  "bitflags",
  "cty",

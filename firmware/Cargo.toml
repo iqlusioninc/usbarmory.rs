@@ -49,3 +49,4 @@ overflow-checks = false
 
 [patch.crates-io]
 cc = { git = "https://github.com/jonas-schievink/cc-rs.git", branch = "armv7a" }
+littlefs2 = { path = "../../littlefs2" }
