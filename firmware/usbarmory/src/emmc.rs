@@ -130,7 +130,7 @@ impl eMMC {
         }
 
         if self
-            .read_single_block(block_nr, block.bytes.as_mut_ptr())
+            .read_single_block(Some(block_nr), block.bytes.as_mut_ptr())
             .is_err()
         {
             memlog!("card not ready for a data transfer");
@@ -180,7 +180,8 @@ impl eMMC {
 
     // mid-level API
     // NOTE(`block_nr`) this assumes that the card is a high-capacity device
-    fn read_single_block(&self, block_nr: u32, addr: *mut u8) -> Result<(), ()> {
+    // NOTE `block_nr=None` reads the EXT_CSD register
+    fn read_single_block(&self, block_nr: Option<u32>, addr: *mut u8) -> Result<(), ()> {
         let rca = if let Some(rca) = self.selected {
             rca
         } else {
@@ -193,7 +194,7 @@ impl eMMC {
             memlog!("{:?}", status);
         }
 
-        if !status.ready_for_data && status.state == card::State::Transfer {
+        if !status.ready_for_data || status.state != card::State::Transfer {
             return Err(());
         }
 
@@ -214,7 +215,10 @@ impl eMMC {
         self.usdhc.DS_ADDR.write(addr as usize as u32);
 
         // start the transfer
-        self.send_command(Command::ReadSingleBlock { block_nr }, false);
+        let cmd = block_nr
+            .map(|block_nr| Command::ReadSingleBlock { block_nr })
+            .unwrap_or(Command::SendExtCsd);
+        self.send_command(cmd, false);
         if let Err(e) = self.wait_response() {
             memlog!("command response error: {:?}", e);
             memlog_flush_and_reset!();
@@ -237,14 +241,14 @@ impl eMMC {
         }
         self.usdhc.INT_STATUS.clear(INT_STATUS_TC);
 
+        // TODO accessing `buf` requires cache invalidation
+        // let the DMA finish its memory operations before `block` is read
+        atomic::fence(Ordering::Acquire);
+
         if int_status & INT_STATUS_ANY_ERROR != 0 {
             memlog!("data error (INT_STATUS={:#010x})", int_status);
             memlog_flush_and_reset!();
         }
-
-        // TODO accessing `buf` requires cache invalidation
-        // let the DMA finish its memory operations before `block` is read
-        atomic::fence(Ordering::Acquire);
 
         if self.verbose {
             memlog!("read DONE @ {:?}", time::uptime());
@@ -317,12 +321,19 @@ impl eMMC {
         }
         self.usdhc.INT_STATUS.clear(INT_STATUS_TC);
 
+        // buffer handled back to us
+        atomic::fence(Ordering::Acquire);
+
         if int_status & INT_STATUS_ANY_ERROR != 0 {
             memlog!("data error (INT_STATUS={:#010x})", int_status);
             memlog_flush_and_reset!();
         }
 
-        memlog!("write DONE @ {:?} ({:?})", time::uptime(), self.get_card_status(rca, false));
+        memlog!(
+            "write DONE @ {:?} ({:?})",
+            time::uptime(),
+            self.get_card_status(rca, false)
+        );
         if self.verbose {
             memlog!("write DONE @ {:?}", time::uptime());
         }
@@ -519,7 +530,7 @@ impl eMMC {
     fn software_reset(&self) {
         memlog!("start uSDHC2 reset @ {:?}", time::uptime());
 
-        // clear FRC_SDCLK_ON before setting RSTA or changing clock frequency
+        // clear FRC_SDCLK_ON before setting RSTA
         const FRC_SDCLK_ON: u32 = 1 << 8;
         self.usdhc
             .VEND_SPEC
@@ -528,25 +539,29 @@ impl eMMC {
         // reset the uSDHC peripheral
         const RSTA: u32 = 1 << 24;
         const RESERVED: u32 = 0xf; // write as 1 reserved bits
-        self.usdhc.SYS_CTRL.rmw(|r| {
-            let r = r | RSTA | RESERVED;
-            memlog!("SYS_CTRL < {:#010x}", r);
-            r
-        });
-        memlog!("SYSCTRL: {:#010x}", self.usdhc.SYS_CTRL.read());
+        self.usdhc.SYS_CTRL.rmw(|r| r | RSTA | RESERVED);
 
         // wait for reset
         while self.usdhc.SYS_CTRL.read() & RSTA != 0 {
             crate::memlog_try_flush();
         }
 
-        // select 1-bit mode; we'll reset the card so it will be operating in 1-bit mode
-        self.usdhc.PROT_CTRL.rmw(|r| {
-            const DTW_MASK: u32 = 0b11 << 1;
-            const DTW_B1: u32 = 0b00 << 1;
+        // reset registers that RSTA doesn't touch
+        self.usdhc.MMC_BOOT.reset();
+        self.usdhc.MIX_CTRL.reset();
+        self.usdhc.CLK_TUNE_CTRL_STATUS.reset();
+        self.usdhc.VEND_SPEC.reset();
+        self.usdhc.DLL_CTRL.write(0);
 
-            (r & !DTW_MASK) | DTW_B1
-        });
+        // select 1-bit mode; we'll reset the card so it will be operating in 1-bit mode
+        self.usdhc.PROT_CTRL.reset();
+
+        memlog!("PROT_CTRL: {:#010x}", self.usdhc.PROT_CTRL.read());
+
+        // clear FRC_SDCLK_ON before changing the clock
+        self.usdhc
+            .VEND_SPEC
+            .rmw(|vend_spec| vend_spec & !FRC_SDCLK_ON);
 
         // wait for the clock to stabilize before changing the frequency
         const SDSTB: u32 = 1 << 3;
@@ -565,7 +580,7 @@ impl eMMC {
 
             // set data timeout counter to 1<<27
             r &= !DTOCV_MASK;
-            r |= 0xe << DTOCV_OFFSET;
+            r |= 14 << DTOCV_OFFSET;
 
             // set divisor to 15
             r &= !DVS_MASK;

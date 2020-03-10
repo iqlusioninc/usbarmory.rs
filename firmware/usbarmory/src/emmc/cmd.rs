@@ -5,37 +5,24 @@ use crate::emmc::Rca;
 // Table 56-3 in ULRM
 #[derive(Clone, Debug)]
 pub enum Command {
-    // No-response commands
     // 0
     GoIdleState,
 
-    // R1 commands
+    // 1
+    SendOpCond {
+        /// `u24` bits 8..=23 indicate the voltage range (2.0V -> 3.6V in 0.1V steps)
+        /// A value of `0` will query the supported voltage range of all cards
+        voltage_range: u32,
+    },
+
+    // 2
+    AllSendCid,
+
     // 3
     SetRelativeAddr {
         rca: Rca,
     },
-    // 13
-    SendStatus {
-        rca: Rca,
-    },
-    // 16
-    SetBlockLen {
-        len: u32,
-    },
-    // 17
-    ReadSingleBlock {
-        /// *Block* number (multiply by 512 to get the actual address)
-        // NOTE for low capacity (<2GB) cards this is the actual 32-bit address
-        block_nr: u32,
-    },
-    // 24
-    WriteSingleBlock {
-        /// *Block* address (multiply by 512 to get the actual address)
-        // NOTE for low capacity (<2GB) cards this is the actual 32-bit address
-        block_nr: u32,
-    },
 
-    // R1b commands
     // 6
     // NOTE MMC specific version; `SWITCH_FUNC` is the SD variant of the command
     #[allow(dead_code)] // will be used to change the speed and data width
@@ -47,25 +34,41 @@ pub enum Command {
         /// `u3`
         cmd: u8,
     },
+
     // 7
     SelectCard {
         rca: Option<Rca>,
     },
 
-    // R2 commands
-    // 2
-    AllSendCid,
+    // 8
+    SendExtCsd,
+
     // 9
     SendCsd {
         rca: Rca,
     },
 
-    // R3 commands
-    // 1
-    SendOpCond {
-        /// `u24` bits 8..=23 indicate the voltage range (2.0V -> 3.6V in 0.1V steps)
-        /// A value of `0` will query the supported voltage range of all cards
-        voltage_range: u32,
+    // 13
+    SendStatus {
+        rca: Rca,
+    },
+    // 16
+    SetBlockLen {
+        len: u32,
+    },
+
+    // 17
+    ReadSingleBlock {
+        /// *Block* number (multiply by 512 to get the actual address)
+        // NOTE for low capacity (<2GB) cards this is the actual 32-bit address
+        block_nr: u32,
+    },
+
+    // 24
+    WriteSingleBlock {
+        /// *Block* address (multiply by 512 to get the actual address)
+        // NOTE for low capacity (<2GB) cards this is the actual 32-bit address
+        block_nr: u32,
     },
 }
 
@@ -105,8 +108,9 @@ impl Command {
             Command::SendOpCond { .. } => 1,
             Command::AllSendCid => 2,
             Command::SetRelativeAddr { .. } => 3,
-            Command::Switch { .. } => 7,
+            Command::Switch { .. } => 6,
             Command::SelectCard { .. } => 7,
+            Command::SendExtCsd { .. } => 8,
             Command::SendCsd { .. } => 9,
             Command::SendStatus { .. } => 13,
             Command::SetBlockLen { .. } => 16,
@@ -123,6 +127,7 @@ impl Command {
             Command::AllSendCid => Response::R2,
             Command::SetRelativeAddr { .. } => Response::R1, // eMMC (SDIO uses R6)
             Command::Switch { .. } => Response::R1b,         // eMMC (SDIO uses R1)
+            Command::SendExtCsd => Response::R1,
             Command::SelectCard { .. } => Response::R1b,
             Command::SendCsd { .. } => Response::R2,
             Command::SendStatus { .. } => Response::R1,
@@ -139,6 +144,7 @@ impl Command {
             Command::AllSendCid => Type::bcr,
             Command::SetRelativeAddr { .. } => Type::ac,
             Command::Switch { .. } => Type::ac, // eMMC (SDIO version is adtc)
+            Command::SendExtCsd => Type::adtc,
             Command::SelectCard { .. } => Type::ac,
             Command::SendCsd { .. } => Type::ac,
             Command::SendStatus { .. } => Type::ac,
@@ -155,6 +161,7 @@ impl Command {
             Command::GoIdleState => 0,
             Command::ReadSingleBlock { block_nr } => *block_nr,
             Command::SelectCard { rca } => rca.map(|rca| u32::from(rca.get())).unwrap_or(0) << 16,
+            Command::SendExtCsd => 0,
             Command::SendCsd { rca } => u32::from(rca.get()) << 16,
             Command::SendOpCond { voltage_range } => *voltage_range,
             Command::SendStatus { rca } => u32::from(rca.get()) << 16,
