@@ -1,4 +1,4 @@
-[target.armv7a-none-eabi]
+[target.'cfg(all(target_arch = "arm", target_os = "none"))']
 
 # Some examples can be run in QEMU when no real hardware is available.
 #runner = "qemu-system-arm -cpu cortex-a7 -machine mcimx6ul-evk -nographic -semihosting-config enable=on,target=native -kernel"
@@ -12,12 +12,12 @@ runner = "cargo run --target x86_64-unknown-linux-gnu --manifest-path ../../host
 rustflags = [
   "-C", "linker=flip-lld",
   "-C", "link-arg=-Tlink.x",
-]
 
-[target.armv7a-none-eabihf]
-rustflags = [
-  "-C", "linker=flip-lld",
-  "-C", "link-arg=-Tlink.x",
+  # We need a libc since we depend on C code (littlefs2). This is probably not very portable, but
+  # there are not many ways to fix that. One way would be to link with GCC instead of (flip-)lld,
+  # which automatically populates search paths like this.
+  "-C", "link-arg=-L/usr/arm-none-eabi/lib",
+  "-C", "link-arg=-lc",
 ]
 
 [build]
