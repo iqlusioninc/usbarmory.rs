@@ -133,6 +133,7 @@ impl eMMC {
             assert_eq!(hs_timing, 1, "switching to high speed mode failed");
 
             // clear FRC_SDCLK_ON before changing the clock
+            const FRC_SDCLK_ON: u32 = 1 << 8;
             emmc.usdhc
                 .VEND_SPEC
                 .rmw(|vend_spec| vend_spec & !FRC_SDCLK_ON);
