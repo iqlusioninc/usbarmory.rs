@@ -157,6 +157,11 @@ pub mod ccm_analog {
         pub fn rmw(&self, f: impl FnOnce(u32) -> u32) {
             self.write(f(self.read()))
         }
+        #[doc = r" Writes the reset value"]
+        #[allow(unused_unsafe)]
+        pub fn reset(&self) {
+            self.write(Self::RESET_VALUE)
+        }
     }
     #[doc = "Analog ARM PLL control Register"]
     #[allow(non_camel_case_types)]
@@ -182,6 +187,11 @@ pub mod ccm_analog {
         #[allow(unused_unsafe)]
         pub fn rmw(&self, f: impl FnOnce(u32) -> u32) {
             self.write(f(self.read()))
+        }
+        #[doc = r" Writes the reset value"]
+        #[allow(unused_unsafe)]
+        pub fn reset(&self) {
+            self.write(Self::RESET_VALUE)
         }
     }
     #[doc = "Analog ARM PLL control Register"]
@@ -209,6 +219,11 @@ pub mod ccm_analog {
         pub fn rmw(&self, f: impl FnOnce(u32) -> u32) {
             self.write(f(self.read()))
         }
+        #[doc = r" Writes the reset value"]
+        #[allow(unused_unsafe)]
+        pub fn reset(&self) {
+            self.write(Self::RESET_VALUE)
+        }
     }
     #[doc = "Analog ARM PLL control Register"]
     #[allow(non_camel_case_types)]
@@ -234,6 +249,11 @@ pub mod ccm_analog {
         #[allow(unused_unsafe)]
         pub fn rmw(&self, f: impl FnOnce(u32) -> u32) {
             self.write(f(self.read()))
+        }
+        #[doc = r" Writes the reset value"]
+        #[allow(unused_unsafe)]
+        pub fn reset(&self) {
+            self.write(Self::RESET_VALUE)
         }
     }
     #[doc = "Analog USB1 480MHz PLL Control Register"]
@@ -261,6 +281,11 @@ pub mod ccm_analog {
         pub fn rmw(&self, f: impl FnOnce(u32) -> u32) {
             self.write(f(self.read()))
         }
+        #[doc = r" Writes the reset value"]
+        #[allow(unused_unsafe)]
+        pub fn reset(&self) {
+            self.write(Self::RESET_VALUE)
+        }
     }
     #[doc = "Analog USB1 480MHz PLL Control Register"]
     #[allow(non_camel_case_types)]
@@ -286,6 +311,11 @@ pub mod ccm_analog {
         #[allow(unused_unsafe)]
         pub fn rmw(&self, f: impl FnOnce(u32) -> u32) {
             self.write(f(self.read()))
+        }
+        #[doc = r" Writes the reset value"]
+        #[allow(unused_unsafe)]
+        pub fn reset(&self) {
+            self.write(Self::RESET_VALUE)
         }
     }
     #[doc = "Analog USB1 480MHz PLL Control Register"]
@@ -313,6 +343,11 @@ pub mod ccm_analog {
         pub fn rmw(&self, f: impl FnOnce(u32) -> u32) {
             self.write(f(self.read()))
         }
+        #[doc = r" Writes the reset value"]
+        #[allow(unused_unsafe)]
+        pub fn reset(&self) {
+            self.write(Self::RESET_VALUE)
+        }
     }
     #[doc = "Analog USB1 480MHz PLL Control Register"]
     #[allow(non_camel_case_types)]
@@ -338,6 +373,11 @@ pub mod ccm_analog {
         #[allow(unused_unsafe)]
         pub fn rmw(&self, f: impl FnOnce(u32) -> u32) {
             self.write(f(self.read()))
+        }
+        #[doc = r" Writes the reset value"]
+        #[allow(unused_unsafe)]
+        pub fn reset(&self) {
+            self.write(Self::RESET_VALUE)
         }
     }
     #[doc = "Analog USB2 480MHz PLL Control Register"]
@@ -365,6 +405,11 @@ pub mod ccm_analog {
         pub fn rmw(&self, f: impl FnOnce(u32) -> u32) {
             self.write(f(self.read()))
         }
+        #[doc = r" Writes the reset value"]
+        #[allow(unused_unsafe)]
+        pub fn reset(&self) {
+            self.write(Self::RESET_VALUE)
+        }
     }
     #[doc = "Analog USB2 480MHz PLL Control Register"]
     #[allow(non_camel_case_types)]
@@ -390,6 +435,11 @@ pub mod ccm_analog {
         #[allow(unused_unsafe)]
         pub fn rmw(&self, f: impl FnOnce(u32) -> u32) {
             self.write(f(self.read()))
+        }
+        #[doc = r" Writes the reset value"]
+        #[allow(unused_unsafe)]
+        pub fn reset(&self) {
+            self.write(Self::RESET_VALUE)
         }
     }
     #[doc = "Analog USB2 480MHz PLL Control Register"]
@@ -417,6 +467,11 @@ pub mod ccm_analog {
         pub fn rmw(&self, f: impl FnOnce(u32) -> u32) {
             self.write(f(self.read()))
         }
+        #[doc = r" Writes the reset value"]
+        #[allow(unused_unsafe)]
+        pub fn reset(&self) {
+            self.write(Self::RESET_VALUE)
+        }
     }
     #[doc = "Analog USB2 480MHz PLL Control Register"]
     #[allow(non_camel_case_types)]
@@ -442,6 +497,11 @@ pub mod ccm_analog {
         #[allow(unused_unsafe)]
         pub fn rmw(&self, f: impl FnOnce(u32) -> u32) {
             self.write(f(self.read()))
+        }
+        #[doc = r" Writes the reset value"]
+        #[allow(unused_unsafe)]
+        pub fn reset(&self) {
+            self.write(Self::RESET_VALUE)
         }
     }
     #[doc = "Analog System PLL Control Register"]
@@ -469,6 +529,11 @@ pub mod ccm_analog {
         pub fn rmw(&self, f: impl FnOnce(u32) -> u32) {
             self.write(f(self.read()))
         }
+        #[doc = r" Writes the reset value"]
+        #[allow(unused_unsafe)]
+        pub fn reset(&self) {
+            self.write(Self::RESET_VALUE)
+        }
     }
     #[doc = "Analog System PLL Control Register"]
     #[allow(non_camel_case_types)]
@@ -494,6 +559,11 @@ pub mod ccm_analog {
         #[allow(unused_unsafe)]
         pub fn rmw(&self, f: impl FnOnce(u32) -> u32) {
             self.write(f(self.read()))
+        }
+        #[doc = r" Writes the reset value"]
+        #[allow(unused_unsafe)]
+        pub fn reset(&self) {
+            self.write(Self::RESET_VALUE)
         }
     }
     #[doc = "Analog System PLL Control Register"]
@@ -521,6 +591,11 @@ pub mod ccm_analog {
         pub fn rmw(&self, f: impl FnOnce(u32) -> u32) {
             self.write(f(self.read()))
         }
+        #[doc = r" Writes the reset value"]
+        #[allow(unused_unsafe)]
+        pub fn reset(&self) {
+            self.write(Self::RESET_VALUE)
+        }
     }
     #[doc = "Analog System PLL Control Register"]
     #[allow(non_camel_case_types)]
@@ -546,6 +621,11 @@ pub mod ccm_analog {
         #[allow(unused_unsafe)]
         pub fn rmw(&self, f: impl FnOnce(u32) -> u32) {
             self.write(f(self.read()))
+        }
+        #[doc = r" Writes the reset value"]
+        #[allow(unused_unsafe)]
+        pub fn reset(&self) {
+            self.write(Self::RESET_VALUE)
         }
     }
     #[doc = "528MHz System PLL Spread Spectrum Register"]
@@ -573,6 +653,11 @@ pub mod ccm_analog {
         pub fn rmw(&self, f: impl FnOnce(u32) -> u32) {
             self.write(f(self.read()))
         }
+        #[doc = r" Writes the reset value"]
+        #[allow(unused_unsafe)]
+        pub fn reset(&self) {
+            self.write(Self::RESET_VALUE)
+        }
     }
     #[doc = "Numerator of 528MHz System PLL Fractional Loop Divider Register"]
     #[allow(non_camel_case_types)]
@@ -598,6 +683,11 @@ pub mod ccm_analog {
         #[allow(unused_unsafe)]
         pub fn rmw(&self, f: impl FnOnce(u32) -> u32) {
             self.write(f(self.read()))
+        }
+        #[doc = r" Writes the reset value"]
+        #[allow(unused_unsafe)]
+        pub fn reset(&self) {
+            self.write(Self::RESET_VALUE)
         }
     }
     #[doc = "Denominator of 528MHz System PLL Fractional Loop Divider Register"]
@@ -625,6 +715,11 @@ pub mod ccm_analog {
         pub fn rmw(&self, f: impl FnOnce(u32) -> u32) {
             self.write(f(self.read()))
         }
+        #[doc = r" Writes the reset value"]
+        #[allow(unused_unsafe)]
+        pub fn reset(&self) {
+            self.write(Self::RESET_VALUE)
+        }
     }
     #[doc = "Analog Audio PLL control Register"]
     #[allow(non_camel_case_types)]
@@ -650,6 +745,11 @@ pub mod ccm_analog {
         #[allow(unused_unsafe)]
         pub fn rmw(&self, f: impl FnOnce(u32) -> u32) {
             self.write(f(self.read()))
+        }
+        #[doc = r" Writes the reset value"]
+        #[allow(unused_unsafe)]
+        pub fn reset(&self) {
+            self.write(Self::RESET_VALUE)
         }
     }
     #[doc = "Analog Audio PLL control Register"]
@@ -677,6 +777,11 @@ pub mod ccm_analog {
         pub fn rmw(&self, f: impl FnOnce(u32) -> u32) {
             self.write(f(self.read()))
         }
+        #[doc = r" Writes the reset value"]
+        #[allow(unused_unsafe)]
+        pub fn reset(&self) {
+            self.write(Self::RESET_VALUE)
+        }
     }
     #[doc = "Analog Audio PLL control Register"]
     #[allow(non_camel_case_types)]
@@ -702,6 +807,11 @@ pub mod ccm_analog {
         #[allow(unused_unsafe)]
         pub fn rmw(&self, f: impl FnOnce(u32) -> u32) {
             self.write(f(self.read()))
+        }
+        #[doc = r" Writes the reset value"]
+        #[allow(unused_unsafe)]
+        pub fn reset(&self) {
+            self.write(Self::RESET_VALUE)
         }
     }
     #[doc = "Analog Audio PLL control Register"]
@@ -729,6 +839,11 @@ pub mod ccm_analog {
         pub fn rmw(&self, f: impl FnOnce(u32) -> u32) {
             self.write(f(self.read()))
         }
+        #[doc = r" Writes the reset value"]
+        #[allow(unused_unsafe)]
+        pub fn reset(&self) {
+            self.write(Self::RESET_VALUE)
+        }
     }
     #[doc = "Numerator of Audio PLL Fractional Loop Divider Register"]
     #[allow(non_camel_case_types)]
@@ -754,6 +869,11 @@ pub mod ccm_analog {
         #[allow(unused_unsafe)]
         pub fn rmw(&self, f: impl FnOnce(u32) -> u32) {
             self.write(f(self.read()))
+        }
+        #[doc = r" Writes the reset value"]
+        #[allow(unused_unsafe)]
+        pub fn reset(&self) {
+            self.write(Self::RESET_VALUE)
         }
     }
     #[doc = "Denominator of Audio PLL Fractional Loop Divider Register"]
@@ -781,6 +901,11 @@ pub mod ccm_analog {
         pub fn rmw(&self, f: impl FnOnce(u32) -> u32) {
             self.write(f(self.read()))
         }
+        #[doc = r" Writes the reset value"]
+        #[allow(unused_unsafe)]
+        pub fn reset(&self) {
+            self.write(Self::RESET_VALUE)
+        }
     }
     #[doc = "Analog Video PLL control Register"]
     #[allow(non_camel_case_types)]
@@ -806,6 +931,11 @@ pub mod ccm_analog {
         #[allow(unused_unsafe)]
         pub fn rmw(&self, f: impl FnOnce(u32) -> u32) {
             self.write(f(self.read()))
+        }
+        #[doc = r" Writes the reset value"]
+        #[allow(unused_unsafe)]
+        pub fn reset(&self) {
+            self.write(Self::RESET_VALUE)
         }
     }
     #[doc = "Analog Video PLL control Register"]
@@ -833,6 +963,11 @@ pub mod ccm_analog {
         pub fn rmw(&self, f: impl FnOnce(u32) -> u32) {
             self.write(f(self.read()))
         }
+        #[doc = r" Writes the reset value"]
+        #[allow(unused_unsafe)]
+        pub fn reset(&self) {
+            self.write(Self::RESET_VALUE)
+        }
     }
     #[doc = "Analog Video PLL control Register"]
     #[allow(non_camel_case_types)]
@@ -858,6 +993,11 @@ pub mod ccm_analog {
         #[allow(unused_unsafe)]
         pub fn rmw(&self, f: impl FnOnce(u32) -> u32) {
             self.write(f(self.read()))
+        }
+        #[doc = r" Writes the reset value"]
+        #[allow(unused_unsafe)]
+        pub fn reset(&self) {
+            self.write(Self::RESET_VALUE)
         }
     }
     #[doc = "Analog Video PLL control Register"]
@@ -885,6 +1025,11 @@ pub mod ccm_analog {
         pub fn rmw(&self, f: impl FnOnce(u32) -> u32) {
             self.write(f(self.read()))
         }
+        #[doc = r" Writes the reset value"]
+        #[allow(unused_unsafe)]
+        pub fn reset(&self) {
+            self.write(Self::RESET_VALUE)
+        }
     }
     #[doc = "Numerator of Video PLL Fractional Loop Divider Register"]
     #[allow(non_camel_case_types)]
@@ -910,6 +1055,11 @@ pub mod ccm_analog {
         #[allow(unused_unsafe)]
         pub fn rmw(&self, f: impl FnOnce(u32) -> u32) {
             self.write(f(self.read()))
+        }
+        #[doc = r" Writes the reset value"]
+        #[allow(unused_unsafe)]
+        pub fn reset(&self) {
+            self.write(Self::RESET_VALUE)
         }
     }
     #[doc = "Denominator of Video PLL Fractional Loop Divider Register"]
@@ -937,6 +1087,11 @@ pub mod ccm_analog {
         pub fn rmw(&self, f: impl FnOnce(u32) -> u32) {
             self.write(f(self.read()))
         }
+        #[doc = r" Writes the reset value"]
+        #[allow(unused_unsafe)]
+        pub fn reset(&self) {
+            self.write(Self::RESET_VALUE)
+        }
     }
     #[doc = "Analog ENET PLL Control Register"]
     #[allow(non_camel_case_types)]
@@ -962,6 +1117,11 @@ pub mod ccm_analog {
         #[allow(unused_unsafe)]
         pub fn rmw(&self, f: impl FnOnce(u32) -> u32) {
             self.write(f(self.read()))
+        }
+        #[doc = r" Writes the reset value"]
+        #[allow(unused_unsafe)]
+        pub fn reset(&self) {
+            self.write(Self::RESET_VALUE)
         }
     }
     #[doc = "Analog ENET PLL Control Register"]
@@ -989,6 +1149,11 @@ pub mod ccm_analog {
         pub fn rmw(&self, f: impl FnOnce(u32) -> u32) {
             self.write(f(self.read()))
         }
+        #[doc = r" Writes the reset value"]
+        #[allow(unused_unsafe)]
+        pub fn reset(&self) {
+            self.write(Self::RESET_VALUE)
+        }
     }
     #[doc = "Analog ENET PLL Control Register"]
     #[allow(non_camel_case_types)]
@@ -1014,6 +1179,11 @@ pub mod ccm_analog {
         #[allow(unused_unsafe)]
         pub fn rmw(&self, f: impl FnOnce(u32) -> u32) {
             self.write(f(self.read()))
+        }
+        #[doc = r" Writes the reset value"]
+        #[allow(unused_unsafe)]
+        pub fn reset(&self) {
+            self.write(Self::RESET_VALUE)
         }
     }
     #[doc = "Analog ENET PLL Control Register"]
@@ -1041,6 +1211,11 @@ pub mod ccm_analog {
         pub fn rmw(&self, f: impl FnOnce(u32) -> u32) {
             self.write(f(self.read()))
         }
+        #[doc = r" Writes the reset value"]
+        #[allow(unused_unsafe)]
+        pub fn reset(&self) {
+            self.write(Self::RESET_VALUE)
+        }
     }
     #[doc = "480MHz Clock (PLL3) Phase Fractional Divider Control Register"]
     #[allow(non_camel_case_types)]
@@ -1066,6 +1241,11 @@ pub mod ccm_analog {
         #[allow(unused_unsafe)]
         pub fn rmw(&self, f: impl FnOnce(u32) -> u32) {
             self.write(f(self.read()))
+        }
+        #[doc = r" Writes the reset value"]
+        #[allow(unused_unsafe)]
+        pub fn reset(&self) {
+            self.write(Self::RESET_VALUE)
         }
     }
     #[doc = "480MHz Clock (PLL3) Phase Fractional Divider Control Register"]
@@ -1093,6 +1273,11 @@ pub mod ccm_analog {
         pub fn rmw(&self, f: impl FnOnce(u32) -> u32) {
             self.write(f(self.read()))
         }
+        #[doc = r" Writes the reset value"]
+        #[allow(unused_unsafe)]
+        pub fn reset(&self) {
+            self.write(Self::RESET_VALUE)
+        }
     }
     #[doc = "480MHz Clock (PLL3) Phase Fractional Divider Control Register"]
     #[allow(non_camel_case_types)]
@@ -1118,6 +1303,11 @@ pub mod ccm_analog {
         #[allow(unused_unsafe)]
         pub fn rmw(&self, f: impl FnOnce(u32) -> u32) {
             self.write(f(self.read()))
+        }
+        #[doc = r" Writes the reset value"]
+        #[allow(unused_unsafe)]
+        pub fn reset(&self) {
+            self.write(Self::RESET_VALUE)
         }
     }
     #[doc = "480MHz Clock (PLL3) Phase Fractional Divider Control Register"]
@@ -1145,6 +1335,11 @@ pub mod ccm_analog {
         pub fn rmw(&self, f: impl FnOnce(u32) -> u32) {
             self.write(f(self.read()))
         }
+        #[doc = r" Writes the reset value"]
+        #[allow(unused_unsafe)]
+        pub fn reset(&self) {
+            self.write(Self::RESET_VALUE)
+        }
     }
     #[doc = "528MHz Clock (PLL2) Phase Fractional Divider Control Register"]
     #[allow(non_camel_case_types)]
@@ -1170,6 +1365,11 @@ pub mod ccm_analog {
         #[allow(unused_unsafe)]
         pub fn rmw(&self, f: impl FnOnce(u32) -> u32) {
             self.write(f(self.read()))
+        }
+        #[doc = r" Writes the reset value"]
+        #[allow(unused_unsafe)]
+        pub fn reset(&self) {
+            self.write(Self::RESET_VALUE)
         }
     }
     #[doc = "528MHz Clock (PLL2) Phase Fractional Divider Control Register"]
@@ -1197,6 +1397,11 @@ pub mod ccm_analog {
         pub fn rmw(&self, f: impl FnOnce(u32) -> u32) {
             self.write(f(self.read()))
         }
+        #[doc = r" Writes the reset value"]
+        #[allow(unused_unsafe)]
+        pub fn reset(&self) {
+            self.write(Self::RESET_VALUE)
+        }
     }
     #[doc = "528MHz Clock (PLL2) Phase Fractional Divider Control Register"]
     #[allow(non_camel_case_types)]
@@ -1222,6 +1427,11 @@ pub mod ccm_analog {
         #[allow(unused_unsafe)]
         pub fn rmw(&self, f: impl FnOnce(u32) -> u32) {
             self.write(f(self.read()))
+        }
+        #[doc = r" Writes the reset value"]
+        #[allow(unused_unsafe)]
+        pub fn reset(&self) {
+            self.write(Self::RESET_VALUE)
         }
     }
     #[doc = "528MHz Clock (PLL2) Phase Fractional Divider Control Register"]
@@ -1249,6 +1459,11 @@ pub mod ccm_analog {
         pub fn rmw(&self, f: impl FnOnce(u32) -> u32) {
             self.write(f(self.read()))
         }
+        #[doc = r" Writes the reset value"]
+        #[allow(unused_unsafe)]
+        pub fn reset(&self) {
+            self.write(Self::RESET_VALUE)
+        }
     }
     #[doc = "Miscellaneous Register 0"]
     #[allow(non_camel_case_types)]
@@ -1274,6 +1489,11 @@ pub mod ccm_analog {
         #[allow(unused_unsafe)]
         pub fn rmw(&self, f: impl FnOnce(u32) -> u32) {
             self.write(f(self.read()))
+        }
+        #[doc = r" Writes the reset value"]
+        #[allow(unused_unsafe)]
+        pub fn reset(&self) {
+            self.write(Self::RESET_VALUE)
         }
     }
     #[doc = "Miscellaneous Register 0"]
@@ -1301,6 +1521,11 @@ pub mod ccm_analog {
         pub fn rmw(&self, f: impl FnOnce(u32) -> u32) {
             self.write(f(self.read()))
         }
+        #[doc = r" Writes the reset value"]
+        #[allow(unused_unsafe)]
+        pub fn reset(&self) {
+            self.write(Self::RESET_VALUE)
+        }
     }
     #[doc = "Miscellaneous Register 0"]
     #[allow(non_camel_case_types)]
@@ -1326,6 +1551,11 @@ pub mod ccm_analog {
         #[allow(unused_unsafe)]
         pub fn rmw(&self, f: impl FnOnce(u32) -> u32) {
             self.write(f(self.read()))
+        }
+        #[doc = r" Writes the reset value"]
+        #[allow(unused_unsafe)]
+        pub fn reset(&self) {
+            self.write(Self::RESET_VALUE)
         }
     }
     #[doc = "Miscellaneous Register 0"]
@@ -1353,6 +1583,11 @@ pub mod ccm_analog {
         pub fn rmw(&self, f: impl FnOnce(u32) -> u32) {
             self.write(f(self.read()))
         }
+        #[doc = r" Writes the reset value"]
+        #[allow(unused_unsafe)]
+        pub fn reset(&self) {
+            self.write(Self::RESET_VALUE)
+        }
     }
     #[doc = "Miscellaneous Register 1"]
     #[allow(non_camel_case_types)]
@@ -1378,6 +1613,11 @@ pub mod ccm_analog {
         #[allow(unused_unsafe)]
         pub fn rmw(&self, f: impl FnOnce(u32) -> u32) {
             self.write(f(self.read()))
+        }
+        #[doc = r" Writes the reset value"]
+        #[allow(unused_unsafe)]
+        pub fn reset(&self) {
+            self.write(Self::RESET_VALUE)
         }
     }
     #[doc = "Miscellaneous Register 1"]
@@ -1405,6 +1645,11 @@ pub mod ccm_analog {
         pub fn rmw(&self, f: impl FnOnce(u32) -> u32) {
             self.write(f(self.read()))
         }
+        #[doc = r" Writes the reset value"]
+        #[allow(unused_unsafe)]
+        pub fn reset(&self) {
+            self.write(Self::RESET_VALUE)
+        }
     }
     #[doc = "Miscellaneous Register 1"]
     #[allow(non_camel_case_types)]
@@ -1430,6 +1675,11 @@ pub mod ccm_analog {
         #[allow(unused_unsafe)]
         pub fn rmw(&self, f: impl FnOnce(u32) -> u32) {
             self.write(f(self.read()))
+        }
+        #[doc = r" Writes the reset value"]
+        #[allow(unused_unsafe)]
+        pub fn reset(&self) {
+            self.write(Self::RESET_VALUE)
         }
     }
     #[doc = "Miscellaneous Register 1"]
@@ -1457,6 +1707,11 @@ pub mod ccm_analog {
         pub fn rmw(&self, f: impl FnOnce(u32) -> u32) {
             self.write(f(self.read()))
         }
+        #[doc = r" Writes the reset value"]
+        #[allow(unused_unsafe)]
+        pub fn reset(&self) {
+            self.write(Self::RESET_VALUE)
+        }
     }
     #[doc = "Miscellaneous Register 2"]
     #[allow(non_camel_case_types)]
@@ -1482,6 +1737,11 @@ pub mod ccm_analog {
         #[allow(unused_unsafe)]
         pub fn rmw(&self, f: impl FnOnce(u32) -> u32) {
             self.write(f(self.read()))
+        }
+        #[doc = r" Writes the reset value"]
+        #[allow(unused_unsafe)]
+        pub fn reset(&self) {
+            self.write(Self::RESET_VALUE)
         }
     }
     #[doc = "Miscellaneous Register 2"]
@@ -1509,6 +1769,11 @@ pub mod ccm_analog {
         pub fn rmw(&self, f: impl FnOnce(u32) -> u32) {
             self.write(f(self.read()))
         }
+        #[doc = r" Writes the reset value"]
+        #[allow(unused_unsafe)]
+        pub fn reset(&self) {
+            self.write(Self::RESET_VALUE)
+        }
     }
     #[doc = "Miscellaneous Register 2"]
     #[allow(non_camel_case_types)]
@@ -1535,6 +1800,11 @@ pub mod ccm_analog {
         pub fn rmw(&self, f: impl FnOnce(u32) -> u32) {
             self.write(f(self.read()))
         }
+        #[doc = r" Writes the reset value"]
+        #[allow(unused_unsafe)]
+        pub fn reset(&self) {
+            self.write(Self::RESET_VALUE)
+        }
     }
     #[doc = "Miscellaneous Register 2"]
     #[allow(non_camel_case_types)]
@@ -1560,6 +1830,11 @@ pub mod ccm_analog {
         #[allow(unused_unsafe)]
         pub fn rmw(&self, f: impl FnOnce(u32) -> u32) {
             self.write(f(self.read()))
+        }
+        #[doc = r" Writes the reset value"]
+        #[allow(unused_unsafe)]
+        pub fn reset(&self) {
+            self.write(Self::RESET_VALUE)
         }
     }
     impl Registers {
@@ -2044,6 +2319,11 @@ pub mod hw_dcp {
         pub fn rmw(&self, f: impl FnOnce(u32) -> u32) {
             self.write(f(self.read()))
         }
+        #[doc = r" Writes the reset value"]
+        #[allow(unused_unsafe)]
+        pub fn reset(&self) {
+            self.write(Self::RESET_VALUE)
+        }
     }
     #[doc = "DCP Status Register"]
     #[allow(non_camel_case_types)]
@@ -2069,6 +2349,11 @@ pub mod hw_dcp {
         #[allow(unused_unsafe)]
         pub fn rmw(&self, f: impl FnOnce(u32) -> u32) {
             self.write(f(self.read()))
+        }
+        #[doc = r" Writes the reset value"]
+        #[allow(unused_unsafe)]
+        pub fn reset(&self) {
+            self.write(Self::RESET_VALUE)
         }
     }
     #[doc = "DCP Channel Control Register"]
@@ -2096,6 +2381,11 @@ pub mod hw_dcp {
         pub fn rmw(&self, f: impl FnOnce(u32) -> u32) {
             self.write(f(self.read()))
         }
+        #[doc = r" Writes the reset value"]
+        #[allow(unused_unsafe)]
+        pub fn reset(&self) {
+            self.write(Self::RESET_VALUE)
+        }
     }
     #[doc = "DCP Channel Control Register"]
     #[allow(non_camel_case_types)]
@@ -2111,6 +2401,11 @@ pub mod hw_dcp {
         pub fn write(&self, bits: u32) {
             unsafe { ((BASE_ADDRESS + Self::OFFSET) as *mut u32).write_volatile(bits) }
         }
+        #[doc = r" Writes the reset value"]
+        #[allow(unused_unsafe)]
+        pub fn reset(&self) {
+            self.write(Self::RESET_VALUE)
+        }
     }
     #[doc = "DCP Channel Control Register"]
     #[allow(non_camel_case_types)]
@@ -2125,6 +2420,11 @@ pub mod hw_dcp {
         #[allow(unused_unsafe)]
         pub fn write(&self, bits: u32) {
             unsafe { ((BASE_ADDRESS + Self::OFFSET) as *mut u32).write_volatile(bits) }
+        }
+        #[doc = r" Writes the reset value"]
+        #[allow(unused_unsafe)]
+        pub fn reset(&self) {
+            self.write(Self::RESET_VALUE)
         }
     }
     #[doc = "DCP Capability 0 Register"]
@@ -2152,6 +2452,11 @@ pub mod hw_dcp {
         pub fn rmw(&self, f: impl FnOnce(u32) -> u32) {
             self.write(f(self.read()))
         }
+        #[doc = r" Writes the reset value"]
+        #[allow(unused_unsafe)]
+        pub fn reset(&self) {
+            self.write(Self::RESET_VALUE)
+        }
     }
     #[doc = "DCP Capability 1 Register"]
     #[allow(non_camel_case_types)]
@@ -2177,6 +2482,11 @@ pub mod hw_dcp {
         #[allow(unused_unsafe)]
         pub fn rmw(&self, f: impl FnOnce(u32) -> u32) {
             self.write(f(self.read()))
+        }
+        #[doc = r" Writes the reset value"]
+        #[allow(unused_unsafe)]
+        pub fn reset(&self) {
+            self.write(Self::RESET_VALUE)
         }
     }
     #[doc = "DCP Context Buffer Pointer"]
@@ -2204,6 +2514,11 @@ pub mod hw_dcp {
         pub fn rmw(&self, f: impl FnOnce(u32) -> u32) {
             self.write(f(self.read()))
         }
+        #[doc = r" Writes the reset value"]
+        #[allow(unused_unsafe)]
+        pub fn reset(&self) {
+            self.write(Self::RESET_VALUE)
+        }
     }
     #[doc = "DCP Key Index"]
     #[allow(non_camel_case_types)]
@@ -2229,6 +2544,11 @@ pub mod hw_dcp {
         #[allow(unused_unsafe)]
         pub fn rmw(&self, f: impl FnOnce(u32) -> u32) {
             self.write(f(self.read()))
+        }
+        #[doc = r" Writes the reset value"]
+        #[allow(unused_unsafe)]
+        pub fn reset(&self) {
+            self.write(Self::RESET_VALUE)
         }
     }
     #[doc = "DCP Key Data"]
@@ -2256,6 +2576,11 @@ pub mod hw_dcp {
         pub fn rmw(&self, f: impl FnOnce(u32) -> u32) {
             self.write(f(self.read()))
         }
+        #[doc = r" Writes the reset value"]
+        #[allow(unused_unsafe)]
+        pub fn reset(&self) {
+            self.write(Self::RESET_VALUE)
+        }
     }
     #[doc = "DCP Work Packet 0 Status Register"]
     #[allow(non_camel_case_types)]
@@ -2281,6 +2606,11 @@ pub mod hw_dcp {
         #[allow(unused_unsafe)]
         pub fn rmw(&self, f: impl FnOnce(u32) -> u32) {
             self.write(f(self.read()))
+        }
+        #[doc = r" Writes the reset value"]
+        #[allow(unused_unsafe)]
+        pub fn reset(&self) {
+            self.write(Self::RESET_VALUE)
         }
     }
     #[doc = "DCP Work Packet 1 Status Register"]
@@ -2308,6 +2638,11 @@ pub mod hw_dcp {
         pub fn rmw(&self, f: impl FnOnce(u32) -> u32) {
             self.write(f(self.read()))
         }
+        #[doc = r" Writes the reset value"]
+        #[allow(unused_unsafe)]
+        pub fn reset(&self) {
+            self.write(Self::RESET_VALUE)
+        }
     }
     #[doc = "DCP Work Packet 2 Status Register"]
     #[allow(non_camel_case_types)]
@@ -2333,6 +2668,11 @@ pub mod hw_dcp {
         #[allow(unused_unsafe)]
         pub fn rmw(&self, f: impl FnOnce(u32) -> u32) {
             self.write(f(self.read()))
+        }
+        #[doc = r" Writes the reset value"]
+        #[allow(unused_unsafe)]
+        pub fn reset(&self) {
+            self.write(Self::RESET_VALUE)
         }
     }
     #[doc = "DCP Work Packet 3 Status Register"]
@@ -2360,6 +2700,11 @@ pub mod hw_dcp {
         pub fn rmw(&self, f: impl FnOnce(u32) -> u32) {
             self.write(f(self.read()))
         }
+        #[doc = r" Writes the reset value"]
+        #[allow(unused_unsafe)]
+        pub fn reset(&self) {
+            self.write(Self::RESET_VALUE)
+        }
     }
     #[doc = "DCP Work Packet 4 Status Register"]
     #[allow(non_camel_case_types)]
@@ -2385,6 +2730,11 @@ pub mod hw_dcp {
         #[allow(unused_unsafe)]
         pub fn rmw(&self, f: impl FnOnce(u32) -> u32) {
             self.write(f(self.read()))
+        }
+        #[doc = r" Writes the reset value"]
+        #[allow(unused_unsafe)]
+        pub fn reset(&self) {
+            self.write(Self::RESET_VALUE)
         }
     }
     #[doc = "DCP Work Packet 5 Status Register"]
@@ -2412,6 +2762,11 @@ pub mod hw_dcp {
         pub fn rmw(&self, f: impl FnOnce(u32) -> u32) {
             self.write(f(self.read()))
         }
+        #[doc = r" Writes the reset value"]
+        #[allow(unused_unsafe)]
+        pub fn reset(&self) {
+            self.write(Self::RESET_VALUE)
+        }
     }
     #[doc = "DCP Work Packet 6 Status Register"]
     #[allow(non_camel_case_types)]
@@ -2437,6 +2792,11 @@ pub mod hw_dcp {
         #[allow(unused_unsafe)]
         pub fn rmw(&self, f: impl FnOnce(u32) -> u32) {
             self.write(f(self.read()))
+        }
+        #[doc = r" Writes the reset value"]
+        #[allow(unused_unsafe)]
+        pub fn reset(&self) {
+            self.write(Self::RESET_VALUE)
         }
     }
     #[doc = "DCP Channel 0 Command Pointer Address Register"]
@@ -2464,6 +2824,11 @@ pub mod hw_dcp {
         pub fn rmw(&self, f: impl FnOnce(u32) -> u32) {
             self.write(f(self.read()))
         }
+        #[doc = r" Writes the reset value"]
+        #[allow(unused_unsafe)]
+        pub fn reset(&self) {
+            self.write(Self::RESET_VALUE)
+        }
     }
     #[doc = "DCP Channel 0 Semaphore Register"]
     #[allow(non_camel_case_types)]
@@ -2489,6 +2854,11 @@ pub mod hw_dcp {
         #[allow(unused_unsafe)]
         pub fn rmw(&self, f: impl FnOnce(u32) -> u32) {
             self.write(f(self.read()))
+        }
+        #[doc = r" Writes the reset value"]
+        #[allow(unused_unsafe)]
+        pub fn reset(&self) {
+            self.write(Self::RESET_VALUE)
         }
     }
     #[doc = "DCP Channel 0 Status Register"]
@@ -2516,6 +2886,11 @@ pub mod hw_dcp {
         pub fn rmw(&self, f: impl FnOnce(u32) -> u32) {
             self.write(f(self.read()))
         }
+        #[doc = r" Writes the reset value"]
+        #[allow(unused_unsafe)]
+        pub fn reset(&self) {
+            self.write(Self::RESET_VALUE)
+        }
     }
     #[doc = "DCP Channel 0 Options Register"]
     #[allow(non_camel_case_types)]
@@ -2541,6 +2916,11 @@ pub mod hw_dcp {
         #[allow(unused_unsafe)]
         pub fn rmw(&self, f: impl FnOnce(u32) -> u32) {
             self.write(f(self.read()))
+        }
+        #[doc = r" Writes the reset value"]
+        #[allow(unused_unsafe)]
+        pub fn reset(&self) {
+            self.write(Self::RESET_VALUE)
         }
     }
     #[doc = "DCP Channel 1 Command Pointer Address Register"]
@@ -2568,6 +2948,11 @@ pub mod hw_dcp {
         pub fn rmw(&self, f: impl FnOnce(u32) -> u32) {
             self.write(f(self.read()))
         }
+        #[doc = r" Writes the reset value"]
+        #[allow(unused_unsafe)]
+        pub fn reset(&self) {
+            self.write(Self::RESET_VALUE)
+        }
     }
     #[doc = "DCP Channel 1 Semaphore Register"]
     #[allow(non_camel_case_types)]
@@ -2593,6 +2978,11 @@ pub mod hw_dcp {
         #[allow(unused_unsafe)]
         pub fn rmw(&self, f: impl FnOnce(u32) -> u32) {
             self.write(f(self.read()))
+        }
+        #[doc = r" Writes the reset value"]
+        #[allow(unused_unsafe)]
+        pub fn reset(&self) {
+            self.write(Self::RESET_VALUE)
         }
     }
     #[doc = "DCP Channel 1 Status Register"]
@@ -2620,6 +3010,11 @@ pub mod hw_dcp {
         pub fn rmw(&self, f: impl FnOnce(u32) -> u32) {
             self.write(f(self.read()))
         }
+        #[doc = r" Writes the reset value"]
+        #[allow(unused_unsafe)]
+        pub fn reset(&self) {
+            self.write(Self::RESET_VALUE)
+        }
     }
     #[doc = "DCP Channel 1 Options Register"]
     #[allow(non_camel_case_types)]
@@ -2645,6 +3040,11 @@ pub mod hw_dcp {
         #[allow(unused_unsafe)]
         pub fn rmw(&self, f: impl FnOnce(u32) -> u32) {
             self.write(f(self.read()))
+        }
+        #[doc = r" Writes the reset value"]
+        #[allow(unused_unsafe)]
+        pub fn reset(&self) {
+            self.write(Self::RESET_VALUE)
         }
     }
     #[doc = "DCP Channel 2 Command Pointer Address Register"]
@@ -2672,6 +3072,11 @@ pub mod hw_dcp {
         pub fn rmw(&self, f: impl FnOnce(u32) -> u32) {
             self.write(f(self.read()))
         }
+        #[doc = r" Writes the reset value"]
+        #[allow(unused_unsafe)]
+        pub fn reset(&self) {
+            self.write(Self::RESET_VALUE)
+        }
     }
     #[doc = "DCP Channel 2 Semaphore Register"]
     #[allow(non_camel_case_types)]
@@ -2697,6 +3102,11 @@ pub mod hw_dcp {
         #[allow(unused_unsafe)]
         pub fn rmw(&self, f: impl FnOnce(u32) -> u32) {
             self.write(f(self.read()))
+        }
+        #[doc = r" Writes the reset value"]
+        #[allow(unused_unsafe)]
+        pub fn reset(&self) {
+            self.write(Self::RESET_VALUE)
         }
     }
     #[doc = "DCP Channel 2 Status Register"]
@@ -2724,6 +3134,11 @@ pub mod hw_dcp {
         pub fn rmw(&self, f: impl FnOnce(u32) -> u32) {
             self.write(f(self.read()))
         }
+        #[doc = r" Writes the reset value"]
+        #[allow(unused_unsafe)]
+        pub fn reset(&self) {
+            self.write(Self::RESET_VALUE)
+        }
     }
     #[doc = "DCP Channel 2 Options Register"]
     #[allow(non_camel_case_types)]
@@ -2749,6 +3164,11 @@ pub mod hw_dcp {
         #[allow(unused_unsafe)]
         pub fn rmw(&self, f: impl FnOnce(u32) -> u32) {
             self.write(f(self.read()))
+        }
+        #[doc = r" Writes the reset value"]
+        #[allow(unused_unsafe)]
+        pub fn reset(&self) {
+            self.write(Self::RESET_VALUE)
         }
     }
     #[doc = "DCP Channel 3 Command Pointer Address Register"]
@@ -2776,6 +3196,11 @@ pub mod hw_dcp {
         pub fn rmw(&self, f: impl FnOnce(u32) -> u32) {
             self.write(f(self.read()))
         }
+        #[doc = r" Writes the reset value"]
+        #[allow(unused_unsafe)]
+        pub fn reset(&self) {
+            self.write(Self::RESET_VALUE)
+        }
     }
     #[doc = "DCP Channel 3 Semaphore Register"]
     #[allow(non_camel_case_types)]
@@ -2801,6 +3226,11 @@ pub mod hw_dcp {
         #[allow(unused_unsafe)]
         pub fn rmw(&self, f: impl FnOnce(u32) -> u32) {
             self.write(f(self.read()))
+        }
+        #[doc = r" Writes the reset value"]
+        #[allow(unused_unsafe)]
+        pub fn reset(&self) {
+            self.write(Self::RESET_VALUE)
         }
     }
     #[doc = "DCP Channel 3 Status Register"]
@@ -2828,6 +3258,11 @@ pub mod hw_dcp {
         pub fn rmw(&self, f: impl FnOnce(u32) -> u32) {
             self.write(f(self.read()))
         }
+        #[doc = r" Writes the reset value"]
+        #[allow(unused_unsafe)]
+        pub fn reset(&self) {
+            self.write(Self::RESET_VALUE)
+        }
     }
     #[doc = "DCP Channel 3 Options Register"]
     #[allow(non_camel_case_types)]
@@ -2853,6 +3288,11 @@ pub mod hw_dcp {
         #[allow(unused_unsafe)]
         pub fn rmw(&self, f: impl FnOnce(u32) -> u32) {
             self.write(f(self.read()))
+        }
+        #[doc = r" Writes the reset value"]
+        #[allow(unused_unsafe)]
+        pub fn reset(&self) {
+            self.write(Self::RESET_VALUE)
         }
     }
     #[doc = "DCP Debug Select Register"]
@@ -2880,6 +3320,11 @@ pub mod hw_dcp {
         pub fn rmw(&self, f: impl FnOnce(u32) -> u32) {
             self.write(f(self.read()))
         }
+        #[doc = r" Writes the reset value"]
+        #[allow(unused_unsafe)]
+        pub fn reset(&self) {
+            self.write(Self::RESET_VALUE)
+        }
     }
     #[doc = "DCP Debug Data Register"]
     #[allow(non_camel_case_types)]
@@ -2905,6 +3350,11 @@ pub mod hw_dcp {
         #[allow(unused_unsafe)]
         pub fn rmw(&self, f: impl FnOnce(u32) -> u32) {
             self.write(f(self.read()))
+        }
+        #[doc = r" Writes the reset value"]
+        #[allow(unused_unsafe)]
+        pub fn reset(&self) {
+            self.write(Self::RESET_VALUE)
         }
     }
     #[doc = "DCP Page Table Register"]
@@ -2932,6 +3382,11 @@ pub mod hw_dcp {
         pub fn rmw(&self, f: impl FnOnce(u32) -> u32) {
             self.write(f(self.read()))
         }
+        #[doc = r" Writes the reset value"]
+        #[allow(unused_unsafe)]
+        pub fn reset(&self) {
+            self.write(Self::RESET_VALUE)
+        }
     }
     #[doc = "DCP Version Register"]
     #[allow(non_camel_case_types)]
@@ -2957,6 +3412,11 @@ pub mod hw_dcp {
         #[allow(unused_unsafe)]
         pub fn rmw(&self, f: impl FnOnce(u32) -> u32) {
             self.write(f(self.read()))
+        }
+        #[doc = r" Writes the reset value"]
+        #[allow(unused_unsafe)]
+        pub fn reset(&self) {
+            self.write(Self::RESET_VALUE)
         }
     }
     impl Registers {
@@ -3286,6 +3746,11 @@ pub mod gpio {
         pub fn rmw(&self, f: impl FnOnce(u32) -> u32) {
             self.write(f(self.read()))
         }
+        #[doc = r" Writes the reset value"]
+        #[allow(unused_unsafe)]
+        pub fn reset(&self) {
+            self.write(Self::RESET_VALUE)
+        }
     }
     #[doc = "GPIO direction register"]
     #[allow(non_camel_case_types)]
@@ -3318,6 +3783,11 @@ pub mod gpio {
         #[allow(unused_unsafe)]
         pub fn rmw(&self, f: impl FnOnce(u32) -> u32) {
             self.write(f(self.read()))
+        }
+        #[doc = r" Writes the reset value"]
+        #[allow(unused_unsafe)]
+        pub fn reset(&self) {
+            self.write(Self::RESET_VALUE)
         }
     }
     #[doc = "GPIO pad status register"]
@@ -3373,6 +3843,11 @@ pub mod gpio {
         pub fn rmw(&self, f: impl FnOnce(u32) -> u32) {
             self.write(f(self.read()))
         }
+        #[doc = r" Writes the reset value"]
+        #[allow(unused_unsafe)]
+        pub fn reset(&self) {
+            self.write(Self::RESET_VALUE)
+        }
     }
     #[doc = "GPIO interrupt configuration register2"]
     #[allow(non_camel_case_types)]
@@ -3406,6 +3881,11 @@ pub mod gpio {
         pub fn rmw(&self, f: impl FnOnce(u32) -> u32) {
             self.write(f(self.read()))
         }
+        #[doc = r" Writes the reset value"]
+        #[allow(unused_unsafe)]
+        pub fn reset(&self) {
+            self.write(Self::RESET_VALUE)
+        }
     }
     #[doc = "GPIO interrupt mask register"]
     #[allow(non_camel_case_types)]
@@ -3438,6 +3918,11 @@ pub mod gpio {
         #[allow(unused_unsafe)]
         pub fn rmw(&self, f: impl FnOnce(u32) -> u32) {
             self.write(f(self.read()))
+        }
+        #[doc = r" Writes the reset value"]
+        #[allow(unused_unsafe)]
+        pub fn reset(&self) {
+            self.write(Self::RESET_VALUE)
         }
     }
     #[doc = "GPIO interrupt status register"]
@@ -3497,6 +3982,11 @@ pub mod gpio {
         #[allow(unused_unsafe)]
         pub fn rmw(&self, f: impl FnOnce(u32) -> u32) {
             self.write(f(self.read()))
+        }
+        #[doc = r" Writes the reset value"]
+        #[allow(unused_unsafe)]
+        pub fn reset(&self) {
+            self.write(Self::RESET_VALUE)
         }
     }
     impl<P> Registers<P>
@@ -3762,6 +4252,11 @@ pub mod rng {
         pub fn rmw(&self, f: impl FnOnce(u32) -> u32) {
             self.write(f(self.read()))
         }
+        #[doc = r" Writes the reset value"]
+        #[allow(unused_unsafe)]
+        pub fn reset(&self) {
+            self.write(Self::RESET_VALUE)
+        }
     }
     #[doc = "RNGB control register"]
     #[allow(non_camel_case_types)]
@@ -3787,6 +4282,11 @@ pub mod rng {
         #[allow(unused_unsafe)]
         pub fn rmw(&self, f: impl FnOnce(u32) -> u32) {
             self.write(f(self.read()))
+        }
+        #[doc = r" Writes the reset value"]
+        #[allow(unused_unsafe)]
+        pub fn reset(&self) {
+            self.write(Self::RESET_VALUE)
         }
     }
     #[doc = "RNGB status register"]
@@ -3957,6 +4457,11 @@ pub mod snvs_lp {
         pub fn rmw(&self, f: impl FnOnce(u32) -> u32) {
             self.write(f(self.read()))
         }
+        #[doc = r" Writes the reset value"]
+        #[allow(unused_unsafe)]
+        pub fn reset(&self) {
+            self.write(Self::RESET_VALUE)
+        }
     }
     #[doc = "SNVS_LP Control Register"]
     #[allow(non_camel_case_types)]
@@ -3982,6 +4487,11 @@ pub mod snvs_lp {
         #[allow(unused_unsafe)]
         pub fn rmw(&self, f: impl FnOnce(u32) -> u32) {
             self.write(f(self.read()))
+        }
+        #[doc = r" Writes the reset value"]
+        #[allow(unused_unsafe)]
+        pub fn reset(&self) {
+            self.write(Self::RESET_VALUE)
         }
     }
     #[doc = "SNVS_LP Status Register"]
@@ -4009,6 +4519,11 @@ pub mod snvs_lp {
         pub fn rmw(&self, f: impl FnOnce(u32) -> u32) {
             self.write(f(self.read()))
         }
+        #[doc = r" Writes the reset value"]
+        #[allow(unused_unsafe)]
+        pub fn reset(&self) {
+            self.write(Self::RESET_VALUE)
+        }
     }
     #[doc = "SNVS_LP Secure Monotonic Counter MSB Register"]
     #[allow(non_camel_case_types)]
@@ -4034,6 +4549,11 @@ pub mod snvs_lp {
         #[allow(unused_unsafe)]
         pub fn rmw(&self, f: impl FnOnce(u32) -> u32) {
             self.write(f(self.read()))
+        }
+        #[doc = r" Writes the reset value"]
+        #[allow(unused_unsafe)]
+        pub fn reset(&self) {
+            self.write(Self::RESET_VALUE)
         }
     }
     #[doc = "SNVS_LP Secure Monotonic Counter LSB Register"]
@@ -4061,6 +4581,11 @@ pub mod snvs_lp {
         pub fn rmw(&self, f: impl FnOnce(u32) -> u32) {
             self.write(f(self.read()))
         }
+        #[doc = r" Writes the reset value"]
+        #[allow(unused_unsafe)]
+        pub fn reset(&self) {
+            self.write(Self::RESET_VALUE)
+        }
     }
     #[doc = "SNVS_LP General-Purpose Register"]
     #[allow(non_camel_case_types)]
@@ -4086,6 +4611,11 @@ pub mod snvs_lp {
         #[allow(unused_unsafe)]
         pub fn rmw(&self, f: impl FnOnce(u32) -> u32) {
             self.write(f(self.read()))
+        }
+        #[doc = r" Writes the reset value"]
+        #[allow(unused_unsafe)]
+        pub fn reset(&self) {
+            self.write(Self::RESET_VALUE)
         }
     }
     impl Registers {
@@ -4222,6 +4752,11 @@ pub mod snvs_hp {
         pub fn rmw(&self, f: impl FnOnce(u32) -> u32) {
             self.write(f(self.read()))
         }
+        #[doc = r" Writes the reset value"]
+        #[allow(unused_unsafe)]
+        pub fn reset(&self) {
+            self.write(Self::RESET_VALUE)
+        }
     }
     #[doc = "SNVS_HP Command register"]
     #[allow(non_camel_case_types)]
@@ -4247,6 +4782,11 @@ pub mod snvs_hp {
         #[allow(unused_unsafe)]
         pub fn rmw(&self, f: impl FnOnce(u32) -> u32) {
             self.write(f(self.read()))
+        }
+        #[doc = r" Writes the reset value"]
+        #[allow(unused_unsafe)]
+        pub fn reset(&self) {
+            self.write(Self::RESET_VALUE)
         }
     }
     #[doc = "SNVS_HP Control register"]
@@ -4274,6 +4814,11 @@ pub mod snvs_hp {
         pub fn rmw(&self, f: impl FnOnce(u32) -> u32) {
             self.write(f(self.read()))
         }
+        #[doc = r" Writes the reset value"]
+        #[allow(unused_unsafe)]
+        pub fn reset(&self) {
+            self.write(Self::RESET_VALUE)
+        }
     }
     #[doc = "SNVS_HP Status register"]
     #[allow(non_camel_case_types)]
@@ -4299,6 +4844,11 @@ pub mod snvs_hp {
         #[allow(unused_unsafe)]
         pub fn rmw(&self, f: impl FnOnce(u32) -> u32) {
             self.write(f(self.read()))
+        }
+        #[doc = r" Writes the reset value"]
+        #[allow(unused_unsafe)]
+        pub fn reset(&self) {
+            self.write(Self::RESET_VALUE)
         }
     }
     #[doc = "SNVS_HP Real-Time Counter MSB Register"]
@@ -4326,6 +4876,11 @@ pub mod snvs_hp {
         pub fn rmw(&self, f: impl FnOnce(u32) -> u32) {
             self.write(f(self.read()))
         }
+        #[doc = r" Writes the reset value"]
+        #[allow(unused_unsafe)]
+        pub fn reset(&self) {
+            self.write(Self::RESET_VALUE)
+        }
     }
     #[doc = "SNVS_HP Real-Time Counter LSB Register"]
     #[allow(non_camel_case_types)]
@@ -4351,6 +4906,11 @@ pub mod snvs_hp {
         #[allow(unused_unsafe)]
         pub fn rmw(&self, f: impl FnOnce(u32) -> u32) {
             self.write(f(self.read()))
+        }
+        #[doc = r" Writes the reset value"]
+        #[allow(unused_unsafe)]
+        pub fn reset(&self) {
+            self.write(Self::RESET_VALUE)
         }
     }
     #[doc = "SNVS_HP Time Alarm MSB Register"]
@@ -4378,6 +4938,11 @@ pub mod snvs_hp {
         pub fn rmw(&self, f: impl FnOnce(u32) -> u32) {
             self.write(f(self.read()))
         }
+        #[doc = r" Writes the reset value"]
+        #[allow(unused_unsafe)]
+        pub fn reset(&self) {
+            self.write(Self::RESET_VALUE)
+        }
     }
     #[doc = "SNVS_HP Time Alarm LSB Register"]
     #[allow(non_camel_case_types)]
@@ -4403,6 +4968,11 @@ pub mod snvs_hp {
         #[allow(unused_unsafe)]
         pub fn rmw(&self, f: impl FnOnce(u32) -> u32) {
             self.write(f(self.read()))
+        }
+        #[doc = r" Writes the reset value"]
+        #[allow(unused_unsafe)]
+        pub fn reset(&self) {
+            self.write(Self::RESET_VALUE)
         }
     }
     #[doc = "SNVS_HP Version ID Register 1"]
@@ -4626,6 +5196,11 @@ pub mod uart {
         pub fn write(&self, bits: u32) {
             unsafe { ((P::BASE_ADDRESS + Self::OFFSET) as *mut u32).write_volatile(bits) }
         }
+        #[doc = r" Writes the reset value"]
+        #[allow(unused_unsafe)]
+        pub fn reset(&self) {
+            self.write(Self::RESET_VALUE)
+        }
     }
     #[doc = "UART Control Register 1"]
     #[allow(non_camel_case_types)]
@@ -4658,6 +5233,11 @@ pub mod uart {
         #[allow(unused_unsafe)]
         pub fn rmw(&self, f: impl FnOnce(u32) -> u32) {
             self.write(f(self.read()))
+        }
+        #[doc = r" Writes the reset value"]
+        #[allow(unused_unsafe)]
+        pub fn reset(&self) {
+            self.write(Self::RESET_VALUE)
         }
     }
     #[doc = "UART Control Register 2"]
@@ -4692,6 +5272,11 @@ pub mod uart {
         pub fn rmw(&self, f: impl FnOnce(u32) -> u32) {
             self.write(f(self.read()))
         }
+        #[doc = r" Writes the reset value"]
+        #[allow(unused_unsafe)]
+        pub fn reset(&self) {
+            self.write(Self::RESET_VALUE)
+        }
     }
     #[doc = "UART Control Register 3"]
     #[allow(non_camel_case_types)]
@@ -4724,6 +5309,11 @@ pub mod uart {
         #[allow(unused_unsafe)]
         pub fn rmw(&self, f: impl FnOnce(u32) -> u32) {
             self.write(f(self.read()))
+        }
+        #[doc = r" Writes the reset value"]
+        #[allow(unused_unsafe)]
+        pub fn reset(&self) {
+            self.write(Self::RESET_VALUE)
         }
     }
     #[doc = "UART Control Register 4"]
@@ -4758,6 +5348,11 @@ pub mod uart {
         pub fn rmw(&self, f: impl FnOnce(u32) -> u32) {
             self.write(f(self.read()))
         }
+        #[doc = r" Writes the reset value"]
+        #[allow(unused_unsafe)]
+        pub fn reset(&self) {
+            self.write(Self::RESET_VALUE)
+        }
     }
     #[doc = "UART FIFO Control Register"]
     #[allow(non_camel_case_types)]
@@ -4790,6 +5385,11 @@ pub mod uart {
         #[allow(unused_unsafe)]
         pub fn rmw(&self, f: impl FnOnce(u32) -> u32) {
             self.write(f(self.read()))
+        }
+        #[doc = r" Writes the reset value"]
+        #[allow(unused_unsafe)]
+        pub fn reset(&self) {
+            self.write(Self::RESET_VALUE)
         }
     }
     #[doc = "UART Status Register 1"]
@@ -4824,6 +5424,11 @@ pub mod uart {
         pub fn rmw(&self, f: impl FnOnce(u32) -> u32) {
             self.write(f(self.read()))
         }
+        #[doc = r" Writes the reset value"]
+        #[allow(unused_unsafe)]
+        pub fn reset(&self) {
+            self.write(Self::RESET_VALUE)
+        }
     }
     #[doc = "UART Status Register 2"]
     #[allow(non_camel_case_types)]
@@ -4856,6 +5461,11 @@ pub mod uart {
         #[allow(unused_unsafe)]
         pub fn rmw(&self, f: impl FnOnce(u32) -> u32) {
             self.write(f(self.read()))
+        }
+        #[doc = r" Writes the reset value"]
+        #[allow(unused_unsafe)]
+        pub fn reset(&self) {
+            self.write(Self::RESET_VALUE)
         }
     }
     #[doc = "UART Escape Character Register"]
@@ -4890,6 +5500,11 @@ pub mod uart {
         pub fn rmw(&self, f: impl FnOnce(u32) -> u32) {
             self.write(f(self.read()))
         }
+        #[doc = r" Writes the reset value"]
+        #[allow(unused_unsafe)]
+        pub fn reset(&self) {
+            self.write(Self::RESET_VALUE)
+        }
     }
     #[doc = "UART Escape Timer Register"]
     #[allow(non_camel_case_types)]
@@ -4922,6 +5537,11 @@ pub mod uart {
         #[allow(unused_unsafe)]
         pub fn rmw(&self, f: impl FnOnce(u32) -> u32) {
             self.write(f(self.read()))
+        }
+        #[doc = r" Writes the reset value"]
+        #[allow(unused_unsafe)]
+        pub fn reset(&self) {
+            self.write(Self::RESET_VALUE)
         }
     }
     #[doc = "UART BRM Incremental Register"]
@@ -4956,6 +5576,11 @@ pub mod uart {
         pub fn rmw(&self, f: impl FnOnce(u32) -> u32) {
             self.write(f(self.read()))
         }
+        #[doc = r" Writes the reset value"]
+        #[allow(unused_unsafe)]
+        pub fn reset(&self) {
+            self.write(Self::RESET_VALUE)
+        }
     }
     #[doc = "UART BRM Modulator Register"]
     #[allow(non_camel_case_types)]
@@ -4988,6 +5613,11 @@ pub mod uart {
         #[allow(unused_unsafe)]
         pub fn rmw(&self, f: impl FnOnce(u32) -> u32) {
             self.write(f(self.read()))
+        }
+        #[doc = r" Writes the reset value"]
+        #[allow(unused_unsafe)]
+        pub fn reset(&self) {
+            self.write(Self::RESET_VALUE)
         }
     }
     #[doc = "UART Baud Rate Count Register"]
@@ -5043,6 +5673,11 @@ pub mod uart {
         pub fn rmw(&self, f: impl FnOnce(u32) -> u32) {
             self.write(f(self.read()))
         }
+        #[doc = r" Writes the reset value"]
+        #[allow(unused_unsafe)]
+        pub fn reset(&self) {
+            self.write(Self::RESET_VALUE)
+        }
     }
     #[doc = "UART Test Register"]
     #[allow(non_camel_case_types)]
@@ -5076,6 +5711,11 @@ pub mod uart {
         pub fn rmw(&self, f: impl FnOnce(u32) -> u32) {
             self.write(f(self.read()))
         }
+        #[doc = r" Writes the reset value"]
+        #[allow(unused_unsafe)]
+        pub fn reset(&self) {
+            self.write(Self::RESET_VALUE)
+        }
     }
     #[doc = "UART RS-485 Mode Control Register"]
     #[allow(non_camel_case_types)]
@@ -5108,6 +5748,11 @@ pub mod uart {
         #[allow(unused_unsafe)]
         pub fn rmw(&self, f: impl FnOnce(u32) -> u32) {
             self.write(f(self.read()))
+        }
+        #[doc = r" Writes the reset value"]
+        #[allow(unused_unsafe)]
+        pub fn reset(&self) {
+            self.write(Self::RESET_VALUE)
         }
     }
     impl<P> Registers<P>
@@ -5531,6 +6176,11 @@ pub mod usb_analog {
         pub fn rmw(&self, f: impl FnOnce(u32) -> u32) {
             self.write(f(self.read()))
         }
+        #[doc = r" Writes the reset value"]
+        #[allow(unused_unsafe)]
+        pub fn reset(&self) {
+            self.write(Self::RESET_VALUE)
+        }
     }
     #[doc = "USB VBUS Detect Register"]
     #[allow(non_camel_case_types)]
@@ -5556,6 +6206,11 @@ pub mod usb_analog {
         #[allow(unused_unsafe)]
         pub fn rmw(&self, f: impl FnOnce(u32) -> u32) {
             self.write(f(self.read()))
+        }
+        #[doc = r" Writes the reset value"]
+        #[allow(unused_unsafe)]
+        pub fn reset(&self) {
+            self.write(Self::RESET_VALUE)
         }
     }
     #[doc = "USB VBUS Detect Register"]
@@ -5583,6 +6238,11 @@ pub mod usb_analog {
         pub fn rmw(&self, f: impl FnOnce(u32) -> u32) {
             self.write(f(self.read()))
         }
+        #[doc = r" Writes the reset value"]
+        #[allow(unused_unsafe)]
+        pub fn reset(&self) {
+            self.write(Self::RESET_VALUE)
+        }
     }
     #[doc = "USB VBUS Detect Register"]
     #[allow(non_camel_case_types)]
@@ -5608,6 +6268,11 @@ pub mod usb_analog {
         #[allow(unused_unsafe)]
         pub fn rmw(&self, f: impl FnOnce(u32) -> u32) {
             self.write(f(self.read()))
+        }
+        #[doc = r" Writes the reset value"]
+        #[allow(unused_unsafe)]
+        pub fn reset(&self) {
+            self.write(Self::RESET_VALUE)
         }
     }
     #[doc = "USB Charger Detect Register"]
@@ -5635,6 +6300,11 @@ pub mod usb_analog {
         pub fn rmw(&self, f: impl FnOnce(u32) -> u32) {
             self.write(f(self.read()))
         }
+        #[doc = r" Writes the reset value"]
+        #[allow(unused_unsafe)]
+        pub fn reset(&self) {
+            self.write(Self::RESET_VALUE)
+        }
     }
     #[doc = "USB Charger Detect Register"]
     #[allow(non_camel_case_types)]
@@ -5660,6 +6330,11 @@ pub mod usb_analog {
         #[allow(unused_unsafe)]
         pub fn rmw(&self, f: impl FnOnce(u32) -> u32) {
             self.write(f(self.read()))
+        }
+        #[doc = r" Writes the reset value"]
+        #[allow(unused_unsafe)]
+        pub fn reset(&self) {
+            self.write(Self::RESET_VALUE)
         }
     }
     #[doc = "USB Charger Detect Register"]
@@ -5687,6 +6362,11 @@ pub mod usb_analog {
         pub fn rmw(&self, f: impl FnOnce(u32) -> u32) {
             self.write(f(self.read()))
         }
+        #[doc = r" Writes the reset value"]
+        #[allow(unused_unsafe)]
+        pub fn reset(&self) {
+            self.write(Self::RESET_VALUE)
+        }
     }
     #[doc = "USB Charger Detect Register"]
     #[allow(non_camel_case_types)]
@@ -5712,6 +6392,11 @@ pub mod usb_analog {
         #[allow(unused_unsafe)]
         pub fn rmw(&self, f: impl FnOnce(u32) -> u32) {
             self.write(f(self.read()))
+        }
+        #[doc = r" Writes the reset value"]
+        #[allow(unused_unsafe)]
+        pub fn reset(&self) {
+            self.write(Self::RESET_VALUE)
         }
     }
     #[doc = "USB VBUS Detect Status Register"]
@@ -5767,6 +6452,11 @@ pub mod usb_analog {
         pub fn rmw(&self, f: impl FnOnce(u32) -> u32) {
             self.write(f(self.read()))
         }
+        #[doc = r" Writes the reset value"]
+        #[allow(unused_unsafe)]
+        pub fn reset(&self) {
+            self.write(Self::RESET_VALUE)
+        }
     }
     #[doc = "USB Misc Register"]
     #[allow(non_camel_case_types)]
@@ -5792,6 +6482,11 @@ pub mod usb_analog {
         #[allow(unused_unsafe)]
         pub fn rmw(&self, f: impl FnOnce(u32) -> u32) {
             self.write(f(self.read()))
+        }
+        #[doc = r" Writes the reset value"]
+        #[allow(unused_unsafe)]
+        pub fn reset(&self) {
+            self.write(Self::RESET_VALUE)
         }
     }
     #[doc = "USB Misc Register"]
@@ -5819,6 +6514,11 @@ pub mod usb_analog {
         pub fn rmw(&self, f: impl FnOnce(u32) -> u32) {
             self.write(f(self.read()))
         }
+        #[doc = r" Writes the reset value"]
+        #[allow(unused_unsafe)]
+        pub fn reset(&self) {
+            self.write(Self::RESET_VALUE)
+        }
     }
     #[doc = "USB Misc Register"]
     #[allow(non_camel_case_types)]
@@ -5844,6 +6544,11 @@ pub mod usb_analog {
         #[allow(unused_unsafe)]
         pub fn rmw(&self, f: impl FnOnce(u32) -> u32) {
             self.write(f(self.read()))
+        }
+        #[doc = r" Writes the reset value"]
+        #[allow(unused_unsafe)]
+        pub fn reset(&self) {
+            self.write(Self::RESET_VALUE)
         }
     }
     #[doc = "USB VBUS Detect Register"]
@@ -5871,6 +6576,11 @@ pub mod usb_analog {
         pub fn rmw(&self, f: impl FnOnce(u32) -> u32) {
             self.write(f(self.read()))
         }
+        #[doc = r" Writes the reset value"]
+        #[allow(unused_unsafe)]
+        pub fn reset(&self) {
+            self.write(Self::RESET_VALUE)
+        }
     }
     #[doc = "USB VBUS Detect Register"]
     #[allow(non_camel_case_types)]
@@ -5896,6 +6606,11 @@ pub mod usb_analog {
         #[allow(unused_unsafe)]
         pub fn rmw(&self, f: impl FnOnce(u32) -> u32) {
             self.write(f(self.read()))
+        }
+        #[doc = r" Writes the reset value"]
+        #[allow(unused_unsafe)]
+        pub fn reset(&self) {
+            self.write(Self::RESET_VALUE)
         }
     }
     #[doc = "USB VBUS Detect Register"]
@@ -5923,6 +6638,11 @@ pub mod usb_analog {
         pub fn rmw(&self, f: impl FnOnce(u32) -> u32) {
             self.write(f(self.read()))
         }
+        #[doc = r" Writes the reset value"]
+        #[allow(unused_unsafe)]
+        pub fn reset(&self) {
+            self.write(Self::RESET_VALUE)
+        }
     }
     #[doc = "USB VBUS Detect Register"]
     #[allow(non_camel_case_types)]
@@ -5948,6 +6668,11 @@ pub mod usb_analog {
         #[allow(unused_unsafe)]
         pub fn rmw(&self, f: impl FnOnce(u32) -> u32) {
             self.write(f(self.read()))
+        }
+        #[doc = r" Writes the reset value"]
+        #[allow(unused_unsafe)]
+        pub fn reset(&self) {
+            self.write(Self::RESET_VALUE)
         }
     }
     #[doc = "USB Charger Detect Register"]
@@ -5975,6 +6700,11 @@ pub mod usb_analog {
         pub fn rmw(&self, f: impl FnOnce(u32) -> u32) {
             self.write(f(self.read()))
         }
+        #[doc = r" Writes the reset value"]
+        #[allow(unused_unsafe)]
+        pub fn reset(&self) {
+            self.write(Self::RESET_VALUE)
+        }
     }
     #[doc = "USB Charger Detect Register"]
     #[allow(non_camel_case_types)]
@@ -6000,6 +6730,11 @@ pub mod usb_analog {
         #[allow(unused_unsafe)]
         pub fn rmw(&self, f: impl FnOnce(u32) -> u32) {
             self.write(f(self.read()))
+        }
+        #[doc = r" Writes the reset value"]
+        #[allow(unused_unsafe)]
+        pub fn reset(&self) {
+            self.write(Self::RESET_VALUE)
         }
     }
     #[doc = "USB Charger Detect Register"]
@@ -6027,6 +6762,11 @@ pub mod usb_analog {
         pub fn rmw(&self, f: impl FnOnce(u32) -> u32) {
             self.write(f(self.read()))
         }
+        #[doc = r" Writes the reset value"]
+        #[allow(unused_unsafe)]
+        pub fn reset(&self) {
+            self.write(Self::RESET_VALUE)
+        }
     }
     #[doc = "USB Charger Detect Register"]
     #[allow(non_camel_case_types)]
@@ -6052,6 +6792,11 @@ pub mod usb_analog {
         #[allow(unused_unsafe)]
         pub fn rmw(&self, f: impl FnOnce(u32) -> u32) {
             self.write(f(self.read()))
+        }
+        #[doc = r" Writes the reset value"]
+        #[allow(unused_unsafe)]
+        pub fn reset(&self) {
+            self.write(Self::RESET_VALUE)
         }
     }
     #[doc = "USB VBUS Detect Status Register"]
@@ -6107,6 +6852,11 @@ pub mod usb_analog {
         pub fn rmw(&self, f: impl FnOnce(u32) -> u32) {
             self.write(f(self.read()))
         }
+        #[doc = r" Writes the reset value"]
+        #[allow(unused_unsafe)]
+        pub fn reset(&self) {
+            self.write(Self::RESET_VALUE)
+        }
     }
     #[doc = "USB Misc Register"]
     #[allow(non_camel_case_types)]
@@ -6132,6 +6882,11 @@ pub mod usb_analog {
         #[allow(unused_unsafe)]
         pub fn rmw(&self, f: impl FnOnce(u32) -> u32) {
             self.write(f(self.read()))
+        }
+        #[doc = r" Writes the reset value"]
+        #[allow(unused_unsafe)]
+        pub fn reset(&self) {
+            self.write(Self::RESET_VALUE)
         }
     }
     #[doc = "USB Misc Register"]
@@ -6159,6 +6914,11 @@ pub mod usb_analog {
         pub fn rmw(&self, f: impl FnOnce(u32) -> u32) {
             self.write(f(self.read()))
         }
+        #[doc = r" Writes the reset value"]
+        #[allow(unused_unsafe)]
+        pub fn reset(&self) {
+            self.write(Self::RESET_VALUE)
+        }
     }
     #[doc = "USB Misc Register"]
     #[allow(non_camel_case_types)]
@@ -6184,6 +6944,11 @@ pub mod usb_analog {
         #[allow(unused_unsafe)]
         pub fn rmw(&self, f: impl FnOnce(u32) -> u32) {
             self.write(f(self.read()))
+        }
+        #[doc = r" Writes the reset value"]
+        #[allow(unused_unsafe)]
+        pub fn reset(&self) {
+            self.write(Self::RESET_VALUE)
         }
     }
     #[doc = "Chip Silicon Version"]
@@ -6460,6 +7225,11 @@ pub mod usbnc_usb {
         pub fn rmw(&self, f: impl FnOnce(u32) -> u32) {
             self.write(f(self.read()))
         }
+        #[doc = r" Writes the reset value"]
+        #[allow(unused_unsafe)]
+        pub fn reset(&self) {
+            self.write(Self::RESET_VALUE)
+        }
     }
     #[doc = "USB OTG2 Control Register"]
     #[allow(non_camel_case_types)]
@@ -6485,6 +7255,11 @@ pub mod usbnc_usb {
         #[allow(unused_unsafe)]
         pub fn rmw(&self, f: impl FnOnce(u32) -> u32) {
             self.write(f(self.read()))
+        }
+        #[doc = r" Writes the reset value"]
+        #[allow(unused_unsafe)]
+        pub fn reset(&self) {
+            self.write(Self::RESET_VALUE)
         }
     }
     #[doc = "OTG1 UTMI PHY Control 0 Register"]
@@ -6512,6 +7287,11 @@ pub mod usbnc_usb {
         pub fn rmw(&self, f: impl FnOnce(u32) -> u32) {
             self.write(f(self.read()))
         }
+        #[doc = r" Writes the reset value"]
+        #[allow(unused_unsafe)]
+        pub fn reset(&self) {
+            self.write(Self::RESET_VALUE)
+        }
     }
     #[doc = "OTG2 UTMI PHY Control 0 Register"]
     #[allow(non_camel_case_types)]
@@ -6537,6 +7317,11 @@ pub mod usbnc_usb {
         #[allow(unused_unsafe)]
         pub fn rmw(&self, f: impl FnOnce(u32) -> u32) {
             self.write(f(self.read()))
+        }
+        #[doc = r" Writes the reset value"]
+        #[allow(unused_unsafe)]
+        pub fn reset(&self) {
+            self.write(Self::RESET_VALUE)
         }
     }
     impl Registers {
@@ -6706,6 +7491,11 @@ pub mod usbphy {
         pub fn rmw(&self, f: impl FnOnce(u32) -> u32) {
             self.write(f(self.read()))
         }
+        #[doc = r" Writes the reset value"]
+        #[allow(unused_unsafe)]
+        pub fn reset(&self) {
+            self.write(Self::RESET_VALUE)
+        }
     }
     #[doc = "USB PHY Power-Down Register"]
     #[allow(non_camel_case_types)]
@@ -6738,6 +7528,11 @@ pub mod usbphy {
         #[allow(unused_unsafe)]
         pub fn rmw(&self, f: impl FnOnce(u32) -> u32) {
             self.write(f(self.read()))
+        }
+        #[doc = r" Writes the reset value"]
+        #[allow(unused_unsafe)]
+        pub fn reset(&self) {
+            self.write(Self::RESET_VALUE)
         }
     }
     #[doc = "USB PHY Power-Down Register"]
@@ -6772,6 +7567,11 @@ pub mod usbphy {
         pub fn rmw(&self, f: impl FnOnce(u32) -> u32) {
             self.write(f(self.read()))
         }
+        #[doc = r" Writes the reset value"]
+        #[allow(unused_unsafe)]
+        pub fn reset(&self) {
+            self.write(Self::RESET_VALUE)
+        }
     }
     #[doc = "USB PHY Power-Down Register"]
     #[allow(non_camel_case_types)]
@@ -6804,6 +7604,11 @@ pub mod usbphy {
         #[allow(unused_unsafe)]
         pub fn rmw(&self, f: impl FnOnce(u32) -> u32) {
             self.write(f(self.read()))
+        }
+        #[doc = r" Writes the reset value"]
+        #[allow(unused_unsafe)]
+        pub fn reset(&self) {
+            self.write(Self::RESET_VALUE)
         }
     }
     #[doc = "USB PHY Transmitter Control Register"]
@@ -6838,6 +7643,11 @@ pub mod usbphy {
         pub fn rmw(&self, f: impl FnOnce(u32) -> u32) {
             self.write(f(self.read()))
         }
+        #[doc = r" Writes the reset value"]
+        #[allow(unused_unsafe)]
+        pub fn reset(&self) {
+            self.write(Self::RESET_VALUE)
+        }
     }
     #[doc = "USB PHY Transmitter Control Register"]
     #[allow(non_camel_case_types)]
@@ -6870,6 +7680,11 @@ pub mod usbphy {
         #[allow(unused_unsafe)]
         pub fn rmw(&self, f: impl FnOnce(u32) -> u32) {
             self.write(f(self.read()))
+        }
+        #[doc = r" Writes the reset value"]
+        #[allow(unused_unsafe)]
+        pub fn reset(&self) {
+            self.write(Self::RESET_VALUE)
         }
     }
     #[doc = "USB PHY Transmitter Control Register"]
@@ -6904,6 +7719,11 @@ pub mod usbphy {
         pub fn rmw(&self, f: impl FnOnce(u32) -> u32) {
             self.write(f(self.read()))
         }
+        #[doc = r" Writes the reset value"]
+        #[allow(unused_unsafe)]
+        pub fn reset(&self) {
+            self.write(Self::RESET_VALUE)
+        }
     }
     #[doc = "USB PHY Transmitter Control Register"]
     #[allow(non_camel_case_types)]
@@ -6936,6 +7756,11 @@ pub mod usbphy {
         #[allow(unused_unsafe)]
         pub fn rmw(&self, f: impl FnOnce(u32) -> u32) {
             self.write(f(self.read()))
+        }
+        #[doc = r" Writes the reset value"]
+        #[allow(unused_unsafe)]
+        pub fn reset(&self) {
+            self.write(Self::RESET_VALUE)
         }
     }
     #[doc = "USB PHY Receiver Control Register"]
@@ -6970,6 +7795,11 @@ pub mod usbphy {
         pub fn rmw(&self, f: impl FnOnce(u32) -> u32) {
             self.write(f(self.read()))
         }
+        #[doc = r" Writes the reset value"]
+        #[allow(unused_unsafe)]
+        pub fn reset(&self) {
+            self.write(Self::RESET_VALUE)
+        }
     }
     #[doc = "USB PHY Receiver Control Register"]
     #[allow(non_camel_case_types)]
@@ -7002,6 +7832,11 @@ pub mod usbphy {
         #[allow(unused_unsafe)]
         pub fn rmw(&self, f: impl FnOnce(u32) -> u32) {
             self.write(f(self.read()))
+        }
+        #[doc = r" Writes the reset value"]
+        #[allow(unused_unsafe)]
+        pub fn reset(&self) {
+            self.write(Self::RESET_VALUE)
         }
     }
     #[doc = "USB PHY Receiver Control Register"]
@@ -7036,6 +7871,11 @@ pub mod usbphy {
         pub fn rmw(&self, f: impl FnOnce(u32) -> u32) {
             self.write(f(self.read()))
         }
+        #[doc = r" Writes the reset value"]
+        #[allow(unused_unsafe)]
+        pub fn reset(&self) {
+            self.write(Self::RESET_VALUE)
+        }
     }
     #[doc = "USB PHY Receiver Control Register"]
     #[allow(non_camel_case_types)]
@@ -7068,6 +7908,11 @@ pub mod usbphy {
         #[allow(unused_unsafe)]
         pub fn rmw(&self, f: impl FnOnce(u32) -> u32) {
             self.write(f(self.read()))
+        }
+        #[doc = r" Writes the reset value"]
+        #[allow(unused_unsafe)]
+        pub fn reset(&self) {
+            self.write(Self::RESET_VALUE)
         }
     }
     #[doc = "USB PHY General Control Register"]
@@ -7102,6 +7947,11 @@ pub mod usbphy {
         pub fn rmw(&self, f: impl FnOnce(u32) -> u32) {
             self.write(f(self.read()))
         }
+        #[doc = r" Writes the reset value"]
+        #[allow(unused_unsafe)]
+        pub fn reset(&self) {
+            self.write(Self::RESET_VALUE)
+        }
     }
     #[doc = "USB PHY General Control Register"]
     #[allow(non_camel_case_types)]
@@ -7134,6 +7984,11 @@ pub mod usbphy {
         #[allow(unused_unsafe)]
         pub fn rmw(&self, f: impl FnOnce(u32) -> u32) {
             self.write(f(self.read()))
+        }
+        #[doc = r" Writes the reset value"]
+        #[allow(unused_unsafe)]
+        pub fn reset(&self) {
+            self.write(Self::RESET_VALUE)
         }
     }
     #[doc = "USB PHY General Control Register"]
@@ -7168,6 +8023,11 @@ pub mod usbphy {
         pub fn rmw(&self, f: impl FnOnce(u32) -> u32) {
             self.write(f(self.read()))
         }
+        #[doc = r" Writes the reset value"]
+        #[allow(unused_unsafe)]
+        pub fn reset(&self) {
+            self.write(Self::RESET_VALUE)
+        }
     }
     #[doc = "USB PHY General Control Register"]
     #[allow(non_camel_case_types)]
@@ -7200,6 +8060,11 @@ pub mod usbphy {
         #[allow(unused_unsafe)]
         pub fn rmw(&self, f: impl FnOnce(u32) -> u32) {
             self.write(f(self.read()))
+        }
+        #[doc = r" Writes the reset value"]
+        #[allow(unused_unsafe)]
+        pub fn reset(&self) {
+            self.write(Self::RESET_VALUE)
         }
     }
     #[doc = "USB PHY Status Register"]
@@ -7234,6 +8099,11 @@ pub mod usbphy {
         pub fn rmw(&self, f: impl FnOnce(u32) -> u32) {
             self.write(f(self.read()))
         }
+        #[doc = r" Writes the reset value"]
+        #[allow(unused_unsafe)]
+        pub fn reset(&self) {
+            self.write(Self::RESET_VALUE)
+        }
     }
     #[doc = "USB PHY Debug Register"]
     #[allow(non_camel_case_types)]
@@ -7266,6 +8136,11 @@ pub mod usbphy {
         #[allow(unused_unsafe)]
         pub fn rmw(&self, f: impl FnOnce(u32) -> u32) {
             self.write(f(self.read()))
+        }
+        #[doc = r" Writes the reset value"]
+        #[allow(unused_unsafe)]
+        pub fn reset(&self) {
+            self.write(Self::RESET_VALUE)
         }
     }
     #[doc = "USB PHY Debug Register"]
@@ -7300,6 +8175,11 @@ pub mod usbphy {
         pub fn rmw(&self, f: impl FnOnce(u32) -> u32) {
             self.write(f(self.read()))
         }
+        #[doc = r" Writes the reset value"]
+        #[allow(unused_unsafe)]
+        pub fn reset(&self) {
+            self.write(Self::RESET_VALUE)
+        }
     }
     #[doc = "USB PHY Debug Register"]
     #[allow(non_camel_case_types)]
@@ -7333,6 +8213,11 @@ pub mod usbphy {
         pub fn rmw(&self, f: impl FnOnce(u32) -> u32) {
             self.write(f(self.read()))
         }
+        #[doc = r" Writes the reset value"]
+        #[allow(unused_unsafe)]
+        pub fn reset(&self) {
+            self.write(Self::RESET_VALUE)
+        }
     }
     #[doc = "USB PHY Debug Register"]
     #[allow(non_camel_case_types)]
@@ -7365,6 +8250,11 @@ pub mod usbphy {
         #[allow(unused_unsafe)]
         pub fn rmw(&self, f: impl FnOnce(u32) -> u32) {
             self.write(f(self.read()))
+        }
+        #[doc = r" Writes the reset value"]
+        #[allow(unused_unsafe)]
+        pub fn reset(&self) {
+            self.write(Self::RESET_VALUE)
         }
     }
     #[doc = "UTMI Debug Status Register 0"]
@@ -7420,6 +8310,11 @@ pub mod usbphy {
         pub fn rmw(&self, f: impl FnOnce(u32) -> u32) {
             self.write(f(self.read()))
         }
+        #[doc = r" Writes the reset value"]
+        #[allow(unused_unsafe)]
+        pub fn reset(&self) {
+            self.write(Self::RESET_VALUE)
+        }
     }
     #[doc = "UTMI Debug Status Register 1"]
     #[allow(non_camel_case_types)]
@@ -7452,6 +8347,11 @@ pub mod usbphy {
         #[allow(unused_unsafe)]
         pub fn rmw(&self, f: impl FnOnce(u32) -> u32) {
             self.write(f(self.read()))
+        }
+        #[doc = r" Writes the reset value"]
+        #[allow(unused_unsafe)]
+        pub fn reset(&self) {
+            self.write(Self::RESET_VALUE)
         }
     }
     #[doc = "UTMI Debug Status Register 1"]
@@ -7486,6 +8386,11 @@ pub mod usbphy {
         pub fn rmw(&self, f: impl FnOnce(u32) -> u32) {
             self.write(f(self.read()))
         }
+        #[doc = r" Writes the reset value"]
+        #[allow(unused_unsafe)]
+        pub fn reset(&self) {
+            self.write(Self::RESET_VALUE)
+        }
     }
     #[doc = "UTMI Debug Status Register 1"]
     #[allow(non_camel_case_types)]
@@ -7518,6 +8423,11 @@ pub mod usbphy {
         #[allow(unused_unsafe)]
         pub fn rmw(&self, f: impl FnOnce(u32) -> u32) {
             self.write(f(self.read()))
+        }
+        #[doc = r" Writes the reset value"]
+        #[allow(unused_unsafe)]
+        pub fn reset(&self) {
+            self.write(Self::RESET_VALUE)
         }
     }
     #[doc = "UTMI RTL Version"]
@@ -7993,6 +8903,11 @@ pub mod usb_uog {
         pub fn rmw(&self, f: impl FnOnce(u32) -> u32) {
             self.write(f(self.read()))
         }
+        #[doc = r" Writes the reset value"]
+        #[allow(unused_unsafe)]
+        pub fn reset(&self) {
+            self.write(Self::RESET_VALUE)
+        }
     }
     #[doc = "General Purpose Timer #0 Controller"]
     #[allow(non_camel_case_types)]
@@ -8025,6 +8940,11 @@ pub mod usb_uog {
         #[allow(unused_unsafe)]
         pub fn rmw(&self, f: impl FnOnce(u32) -> u32) {
             self.write(f(self.read()))
+        }
+        #[doc = r" Writes the reset value"]
+        #[allow(unused_unsafe)]
+        pub fn reset(&self) {
+            self.write(Self::RESET_VALUE)
         }
     }
     #[doc = "General Purpose Timer #1 Load"]
@@ -8059,6 +8979,11 @@ pub mod usb_uog {
         pub fn rmw(&self, f: impl FnOnce(u32) -> u32) {
             self.write(f(self.read()))
         }
+        #[doc = r" Writes the reset value"]
+        #[allow(unused_unsafe)]
+        pub fn reset(&self) {
+            self.write(Self::RESET_VALUE)
+        }
     }
     #[doc = "General Purpose Timer #1 Controller"]
     #[allow(non_camel_case_types)]
@@ -8092,6 +9017,11 @@ pub mod usb_uog {
         pub fn rmw(&self, f: impl FnOnce(u32) -> u32) {
             self.write(f(self.read()))
         }
+        #[doc = r" Writes the reset value"]
+        #[allow(unused_unsafe)]
+        pub fn reset(&self) {
+            self.write(Self::RESET_VALUE)
+        }
     }
     #[doc = "System Bus Config"]
     #[allow(non_camel_case_types)]
@@ -8124,6 +9054,11 @@ pub mod usb_uog {
         #[allow(unused_unsafe)]
         pub fn rmw(&self, f: impl FnOnce(u32) -> u32) {
             self.write(f(self.read()))
+        }
+        #[doc = r" Writes the reset value"]
+        #[allow(unused_unsafe)]
+        pub fn reset(&self) {
+            self.write(Self::RESET_VALUE)
         }
     }
     #[doc = "Capability Registers Length"]
@@ -8284,6 +9219,11 @@ pub mod usb_uog {
         pub fn rmw(&self, f: impl FnOnce(u32) -> u32) {
             self.write(f(self.read()))
         }
+        #[doc = r" Writes the reset value"]
+        #[allow(unused_unsafe)]
+        pub fn reset(&self) {
+            self.write(Self::RESET_VALUE)
+        }
     }
     #[doc = "USB Status Register"]
     #[allow(non_camel_case_types)]
@@ -8316,6 +9256,11 @@ pub mod usb_uog {
         #[allow(unused_unsafe)]
         pub fn rmw(&self, f: impl FnOnce(u32) -> u32) {
             self.write(f(self.read()))
+        }
+        #[doc = r" Writes the reset value"]
+        #[allow(unused_unsafe)]
+        pub fn reset(&self) {
+            self.write(Self::RESET_VALUE)
         }
     }
     #[doc = "Interrupt Enable Register"]
@@ -8350,6 +9295,11 @@ pub mod usb_uog {
         pub fn rmw(&self, f: impl FnOnce(u32) -> u32) {
             self.write(f(self.read()))
         }
+        #[doc = r" Writes the reset value"]
+        #[allow(unused_unsafe)]
+        pub fn reset(&self) {
+            self.write(Self::RESET_VALUE)
+        }
     }
     #[doc = "USB Frame Index"]
     #[allow(non_camel_case_types)]
@@ -8382,6 +9332,11 @@ pub mod usb_uog {
         #[allow(unused_unsafe)]
         pub fn rmw(&self, f: impl FnOnce(u32) -> u32) {
             self.write(f(self.read()))
+        }
+        #[doc = r" Writes the reset value"]
+        #[allow(unused_unsafe)]
+        pub fn reset(&self) {
+            self.write(Self::RESET_VALUE)
         }
     }
     #[doc = "Frame List Base Address"]
@@ -8416,6 +9371,11 @@ pub mod usb_uog {
         pub fn rmw(&self, f: impl FnOnce(u32) -> u32) {
             self.write(f(self.read()))
         }
+        #[doc = r" Writes the reset value"]
+        #[allow(unused_unsafe)]
+        pub fn reset(&self) {
+            self.write(Self::RESET_VALUE)
+        }
     }
     #[doc = "Device Address"]
     #[allow(non_camel_case_types)]
@@ -8448,6 +9408,11 @@ pub mod usb_uog {
         #[allow(unused_unsafe)]
         pub fn rmw(&self, f: impl FnOnce(u32) -> u32) {
             self.write(f(self.read()))
+        }
+        #[doc = r" Writes the reset value"]
+        #[allow(unused_unsafe)]
+        pub fn reset(&self) {
+            self.write(Self::RESET_VALUE)
         }
     }
     #[doc = "Next Asynch. Address"]
@@ -8482,6 +9447,11 @@ pub mod usb_uog {
         pub fn rmw(&self, f: impl FnOnce(u32) -> u32) {
             self.write(f(self.read()))
         }
+        #[doc = r" Writes the reset value"]
+        #[allow(unused_unsafe)]
+        pub fn reset(&self) {
+            self.write(Self::RESET_VALUE)
+        }
     }
     #[doc = "Endpoint List Address"]
     #[allow(non_camel_case_types)]
@@ -8514,6 +9484,11 @@ pub mod usb_uog {
         #[allow(unused_unsafe)]
         pub fn rmw(&self, f: impl FnOnce(u32) -> u32) {
             self.write(f(self.read()))
+        }
+        #[doc = r" Writes the reset value"]
+        #[allow(unused_unsafe)]
+        pub fn reset(&self) {
+            self.write(Self::RESET_VALUE)
         }
     }
     #[doc = "Programmable Burst Size"]
@@ -8548,6 +9523,11 @@ pub mod usb_uog {
         pub fn rmw(&self, f: impl FnOnce(u32) -> u32) {
             self.write(f(self.read()))
         }
+        #[doc = r" Writes the reset value"]
+        #[allow(unused_unsafe)]
+        pub fn reset(&self) {
+            self.write(Self::RESET_VALUE)
+        }
     }
     #[doc = "TX FIFO Fill Tuning"]
     #[allow(non_camel_case_types)]
@@ -8580,6 +9560,11 @@ pub mod usb_uog {
         #[allow(unused_unsafe)]
         pub fn rmw(&self, f: impl FnOnce(u32) -> u32) {
             self.write(f(self.read()))
+        }
+        #[doc = r" Writes the reset value"]
+        #[allow(unused_unsafe)]
+        pub fn reset(&self) {
+            self.write(Self::RESET_VALUE)
         }
     }
     #[doc = "Endpoint NAK"]
@@ -8614,6 +9599,11 @@ pub mod usb_uog {
         pub fn rmw(&self, f: impl FnOnce(u32) -> u32) {
             self.write(f(self.read()))
         }
+        #[doc = r" Writes the reset value"]
+        #[allow(unused_unsafe)]
+        pub fn reset(&self) {
+            self.write(Self::RESET_VALUE)
+        }
     }
     #[doc = "Endpoint NAK Enable"]
     #[allow(non_camel_case_types)]
@@ -8646,6 +9636,11 @@ pub mod usb_uog {
         #[allow(unused_unsafe)]
         pub fn rmw(&self, f: impl FnOnce(u32) -> u32) {
             self.write(f(self.read()))
+        }
+        #[doc = r" Writes the reset value"]
+        #[allow(unused_unsafe)]
+        pub fn reset(&self) {
+            self.write(Self::RESET_VALUE)
         }
     }
     #[doc = "Configure Flag Register"]
@@ -8680,6 +9675,11 @@ pub mod usb_uog {
         pub fn rmw(&self, f: impl FnOnce(u32) -> u32) {
             self.write(f(self.read()))
         }
+        #[doc = r" Writes the reset value"]
+        #[allow(unused_unsafe)]
+        pub fn reset(&self) {
+            self.write(Self::RESET_VALUE)
+        }
     }
     #[doc = "Port Status & Control"]
     #[allow(non_camel_case_types)]
@@ -8712,6 +9712,11 @@ pub mod usb_uog {
         #[allow(unused_unsafe)]
         pub fn rmw(&self, f: impl FnOnce(u32) -> u32) {
             self.write(f(self.read()))
+        }
+        #[doc = r" Writes the reset value"]
+        #[allow(unused_unsafe)]
+        pub fn reset(&self) {
+            self.write(Self::RESET_VALUE)
         }
     }
     #[doc = "On-The-Go Status & control"]
@@ -8746,6 +9751,11 @@ pub mod usb_uog {
         pub fn rmw(&self, f: impl FnOnce(u32) -> u32) {
             self.write(f(self.read()))
         }
+        #[doc = r" Writes the reset value"]
+        #[allow(unused_unsafe)]
+        pub fn reset(&self) {
+            self.write(Self::RESET_VALUE)
+        }
     }
     #[doc = "USB Device Mode"]
     #[allow(non_camel_case_types)]
@@ -8778,6 +9788,11 @@ pub mod usb_uog {
         #[allow(unused_unsafe)]
         pub fn rmw(&self, f: impl FnOnce(u32) -> u32) {
             self.write(f(self.read()))
+        }
+        #[doc = r" Writes the reset value"]
+        #[allow(unused_unsafe)]
+        pub fn reset(&self) {
+            self.write(Self::RESET_VALUE)
         }
     }
     #[doc = "Endpoint Setup Status"]
@@ -8812,6 +9827,11 @@ pub mod usb_uog {
         pub fn rmw(&self, f: impl FnOnce(u32) -> u32) {
             self.write(f(self.read()))
         }
+        #[doc = r" Writes the reset value"]
+        #[allow(unused_unsafe)]
+        pub fn reset(&self) {
+            self.write(Self::RESET_VALUE)
+        }
     }
     #[doc = "Endpoint Prime"]
     #[allow(non_camel_case_types)]
@@ -8845,6 +9865,11 @@ pub mod usb_uog {
         pub fn rmw(&self, f: impl FnOnce(u32) -> u32) {
             self.write(f(self.read()))
         }
+        #[doc = r" Writes the reset value"]
+        #[allow(unused_unsafe)]
+        pub fn reset(&self) {
+            self.write(Self::RESET_VALUE)
+        }
     }
     #[doc = "Endpoint Flush"]
     #[allow(non_camel_case_types)]
@@ -8877,6 +9902,11 @@ pub mod usb_uog {
         #[allow(unused_unsafe)]
         pub fn rmw(&self, f: impl FnOnce(u32) -> u32) {
             self.write(f(self.read()))
+        }
+        #[doc = r" Writes the reset value"]
+        #[allow(unused_unsafe)]
+        pub fn reset(&self) {
+            self.write(Self::RESET_VALUE)
         }
     }
     #[doc = "Endpoint Status"]
@@ -8932,6 +9962,11 @@ pub mod usb_uog {
         pub fn rmw(&self, f: impl FnOnce(u32) -> u32) {
             self.write(f(self.read()))
         }
+        #[doc = r" Writes the reset value"]
+        #[allow(unused_unsafe)]
+        pub fn reset(&self) {
+            self.write(Self::RESET_VALUE)
+        }
     }
     #[doc = "Endpoint Control0"]
     #[allow(non_camel_case_types)]
@@ -8964,6 +9999,11 @@ pub mod usb_uog {
         #[allow(unused_unsafe)]
         pub fn rmw(&self, f: impl FnOnce(u32) -> u32) {
             self.write(f(self.read()))
+        }
+        #[doc = r" Writes the reset value"]
+        #[allow(unused_unsafe)]
+        pub fn reset(&self) {
+            self.write(Self::RESET_VALUE)
         }
     }
     #[doc = "Endpoint Control 1"]
@@ -8998,6 +10038,11 @@ pub mod usb_uog {
         pub fn rmw(&self, f: impl FnOnce(u32) -> u32) {
             self.write(f(self.read()))
         }
+        #[doc = r" Writes the reset value"]
+        #[allow(unused_unsafe)]
+        pub fn reset(&self) {
+            self.write(Self::RESET_VALUE)
+        }
     }
     #[doc = "Endpoint Control 2"]
     #[allow(non_camel_case_types)]
@@ -9030,6 +10075,11 @@ pub mod usb_uog {
         #[allow(unused_unsafe)]
         pub fn rmw(&self, f: impl FnOnce(u32) -> u32) {
             self.write(f(self.read()))
+        }
+        #[doc = r" Writes the reset value"]
+        #[allow(unused_unsafe)]
+        pub fn reset(&self) {
+            self.write(Self::RESET_VALUE)
         }
     }
     #[doc = "Endpoint Control 3"]
@@ -9064,6 +10114,11 @@ pub mod usb_uog {
         pub fn rmw(&self, f: impl FnOnce(u32) -> u32) {
             self.write(f(self.read()))
         }
+        #[doc = r" Writes the reset value"]
+        #[allow(unused_unsafe)]
+        pub fn reset(&self) {
+            self.write(Self::RESET_VALUE)
+        }
     }
     #[doc = "Endpoint Control 4"]
     #[allow(non_camel_case_types)]
@@ -9096,6 +10151,11 @@ pub mod usb_uog {
         #[allow(unused_unsafe)]
         pub fn rmw(&self, f: impl FnOnce(u32) -> u32) {
             self.write(f(self.read()))
+        }
+        #[doc = r" Writes the reset value"]
+        #[allow(unused_unsafe)]
+        pub fn reset(&self) {
+            self.write(Self::RESET_VALUE)
         }
     }
     #[doc = "Endpoint Control 5"]
@@ -9130,6 +10190,11 @@ pub mod usb_uog {
         pub fn rmw(&self, f: impl FnOnce(u32) -> u32) {
             self.write(f(self.read()))
         }
+        #[doc = r" Writes the reset value"]
+        #[allow(unused_unsafe)]
+        pub fn reset(&self) {
+            self.write(Self::RESET_VALUE)
+        }
     }
     #[doc = "Endpoint Control 6"]
     #[allow(non_camel_case_types)]
@@ -9163,6 +10228,11 @@ pub mod usb_uog {
         pub fn rmw(&self, f: impl FnOnce(u32) -> u32) {
             self.write(f(self.read()))
         }
+        #[doc = r" Writes the reset value"]
+        #[allow(unused_unsafe)]
+        pub fn reset(&self) {
+            self.write(Self::RESET_VALUE)
+        }
     }
     #[doc = "Endpoint Control 7"]
     #[allow(non_camel_case_types)]
@@ -9195,6 +10265,11 @@ pub mod usb_uog {
         #[allow(unused_unsafe)]
         pub fn rmw(&self, f: impl FnOnce(u32) -> u32) {
             self.write(f(self.read()))
+        }
+        #[doc = r" Writes the reset value"]
+        #[allow(unused_unsafe)]
+        pub fn reset(&self) {
+            self.write(Self::RESET_VALUE)
         }
     }
     impl<P> Registers<P>
@@ -9563,6 +10638,11 @@ pub mod usdhc {
         pub fn rmw(&self, f: impl FnOnce(u32) -> u32) {
             self.write(f(self.read()))
         }
+        #[doc = r" Writes the reset value"]
+        #[allow(unused_unsafe)]
+        pub fn reset(&self) {
+            self.write(Self::RESET_VALUE)
+        }
     }
     #[doc = "Block Attributes"]
     #[allow(non_camel_case_types)]
@@ -9595,6 +10675,11 @@ pub mod usdhc {
         #[allow(unused_unsafe)]
         pub fn rmw(&self, f: impl FnOnce(u32) -> u32) {
             self.write(f(self.read()))
+        }
+        #[doc = r" Writes the reset value"]
+        #[allow(unused_unsafe)]
+        pub fn reset(&self) {
+            self.write(Self::RESET_VALUE)
         }
     }
     #[doc = "Command Argument"]
@@ -9629,6 +10714,11 @@ pub mod usdhc {
         pub fn rmw(&self, f: impl FnOnce(u32) -> u32) {
             self.write(f(self.read()))
         }
+        #[doc = r" Writes the reset value"]
+        #[allow(unused_unsafe)]
+        pub fn reset(&self) {
+            self.write(Self::RESET_VALUE)
+        }
     }
     #[doc = "Command Transfer Type"]
     #[allow(non_camel_case_types)]
@@ -9661,6 +10751,11 @@ pub mod usdhc {
         #[allow(unused_unsafe)]
         pub fn rmw(&self, f: impl FnOnce(u32) -> u32) {
             self.write(f(self.read()))
+        }
+        #[doc = r" Writes the reset value"]
+        #[allow(unused_unsafe)]
+        pub fn reset(&self) {
+            self.write(Self::RESET_VALUE)
         }
     }
     #[doc = "Command Response0"]
@@ -9779,6 +10874,11 @@ pub mod usdhc {
         pub fn rmw(&self, f: impl FnOnce(u32) -> u32) {
             self.write(f(self.read()))
         }
+        #[doc = r" Writes the reset value"]
+        #[allow(unused_unsafe)]
+        pub fn reset(&self) {
+            self.write(Self::RESET_VALUE)
+        }
     }
     #[doc = "Present State"]
     #[allow(non_camel_case_types)]
@@ -9833,6 +10933,11 @@ pub mod usdhc {
         pub fn rmw(&self, f: impl FnOnce(u32) -> u32) {
             self.write(f(self.read()))
         }
+        #[doc = r" Writes the reset value"]
+        #[allow(unused_unsafe)]
+        pub fn reset(&self) {
+            self.write(Self::RESET_VALUE)
+        }
     }
     #[doc = "System Control"]
     #[allow(non_camel_case_types)]
@@ -9865,6 +10970,11 @@ pub mod usdhc {
         #[allow(unused_unsafe)]
         pub fn rmw(&self, f: impl FnOnce(u32) -> u32) {
             self.write(f(self.read()))
+        }
+        #[doc = r" Writes the reset value"]
+        #[allow(unused_unsafe)]
+        pub fn reset(&self) {
+            self.write(Self::RESET_VALUE)
         }
     }
     #[doc = "Interrupt Status"]
@@ -9925,6 +11035,11 @@ pub mod usdhc {
         pub fn rmw(&self, f: impl FnOnce(u32) -> u32) {
             self.write(f(self.read()))
         }
+        #[doc = r" Writes the reset value"]
+        #[allow(unused_unsafe)]
+        pub fn reset(&self) {
+            self.write(Self::RESET_VALUE)
+        }
     }
     #[doc = "Interrupt Signal Enable"]
     #[allow(non_camel_case_types)]
@@ -9957,6 +11072,11 @@ pub mod usdhc {
         #[allow(unused_unsafe)]
         pub fn rmw(&self, f: impl FnOnce(u32) -> u32) {
             self.write(f(self.read()))
+        }
+        #[doc = r" Writes the reset value"]
+        #[allow(unused_unsafe)]
+        pub fn reset(&self) {
+            self.write(Self::RESET_VALUE)
         }
     }
     #[doc = "Auto CMD12 Error Status"]
@@ -10033,6 +11153,11 @@ pub mod usdhc {
         pub fn rmw(&self, f: impl FnOnce(u32) -> u32) {
             self.write(f(self.read()))
         }
+        #[doc = r" Writes the reset value"]
+        #[allow(unused_unsafe)]
+        pub fn reset(&self) {
+            self.write(Self::RESET_VALUE)
+        }
     }
     #[doc = "Mixer Control"]
     #[allow(non_camel_case_types)]
@@ -10065,6 +11190,11 @@ pub mod usdhc {
         #[allow(unused_unsafe)]
         pub fn rmw(&self, f: impl FnOnce(u32) -> u32) {
             self.write(f(self.read()))
+        }
+        #[doc = r" Writes the reset value"]
+        #[allow(unused_unsafe)]
+        pub fn reset(&self) {
+            self.write(Self::RESET_VALUE)
         }
     }
     #[doc = "ADMA Error Status Register"]
@@ -10120,6 +11250,11 @@ pub mod usdhc {
         pub fn rmw(&self, f: impl FnOnce(u32) -> u32) {
             self.write(f(self.read()))
         }
+        #[doc = r" Writes the reset value"]
+        #[allow(unused_unsafe)]
+        pub fn reset(&self) {
+            self.write(Self::RESET_VALUE)
+        }
     }
     #[doc = "DLL (Delay Line) Control"]
     #[allow(non_camel_case_types)]
@@ -10152,6 +11287,11 @@ pub mod usdhc {
         #[allow(unused_unsafe)]
         pub fn rmw(&self, f: impl FnOnce(u32) -> u32) {
             self.write(f(self.read()))
+        }
+        #[doc = r" Writes the reset value"]
+        #[allow(unused_unsafe)]
+        pub fn reset(&self) {
+            self.write(Self::RESET_VALUE)
         }
     }
     #[doc = "DLL Status"]
@@ -10207,6 +11347,11 @@ pub mod usdhc {
         pub fn rmw(&self, f: impl FnOnce(u32) -> u32) {
             self.write(f(self.read()))
         }
+        #[doc = r" Writes the reset value"]
+        #[allow(unused_unsafe)]
+        pub fn reset(&self) {
+            self.write(Self::RESET_VALUE)
+        }
     }
     #[doc = "Vendor Specific Register"]
     #[allow(non_camel_case_types)]
@@ -10239,6 +11384,11 @@ pub mod usdhc {
         #[allow(unused_unsafe)]
         pub fn rmw(&self, f: impl FnOnce(u32) -> u32) {
             self.write(f(self.read()))
+        }
+        #[doc = r" Writes the reset value"]
+        #[allow(unused_unsafe)]
+        pub fn reset(&self) {
+            self.write(Self::RESET_VALUE)
         }
     }
     #[doc = "MMC Boot Register"]
@@ -10273,6 +11423,11 @@ pub mod usdhc {
         pub fn rmw(&self, f: impl FnOnce(u32) -> u32) {
             self.write(f(self.read()))
         }
+        #[doc = r" Writes the reset value"]
+        #[allow(unused_unsafe)]
+        pub fn reset(&self) {
+            self.write(Self::RESET_VALUE)
+        }
     }
     #[doc = "Vendor Specific 2 Register"]
     #[allow(non_camel_case_types)]
@@ -10306,6 +11461,11 @@ pub mod usdhc {
         pub fn rmw(&self, f: impl FnOnce(u32) -> u32) {
             self.write(f(self.read()))
         }
+        #[doc = r" Writes the reset value"]
+        #[allow(unused_unsafe)]
+        pub fn reset(&self) {
+            self.write(Self::RESET_VALUE)
+        }
     }
     #[doc = "Tuning Control Register"]
     #[allow(non_camel_case_types)]
@@ -10338,6 +11498,11 @@ pub mod usdhc {
         #[allow(unused_unsafe)]
         pub fn rmw(&self, f: impl FnOnce(u32) -> u32) {
             self.write(f(self.read()))
+        }
+        #[doc = r" Writes the reset value"]
+        #[allow(unused_unsafe)]
+        pub fn reset(&self) {
+            self.write(Self::RESET_VALUE)
         }
     }
     impl<P> Registers<P>
@@ -10588,6 +11753,11 @@ pub mod wdog {
         pub fn rmw(&self, f: impl FnOnce(u16) -> u16) {
             self.write(f(self.read()))
         }
+        #[doc = r" Writes the reset value"]
+        #[allow(unused_unsafe)]
+        pub fn reset(&self) {
+            self.write(Self::RESET_VALUE)
+        }
     }
     #[doc = "Watchdog Service Register"]
     #[allow(non_camel_case_types)]
@@ -10620,6 +11790,11 @@ pub mod wdog {
         #[allow(unused_unsafe)]
         pub fn rmw(&self, f: impl FnOnce(u16) -> u16) {
             self.write(f(self.read()))
+        }
+        #[doc = r" Writes the reset value"]
+        #[allow(unused_unsafe)]
+        pub fn reset(&self) {
+            self.write(Self::RESET_VALUE)
         }
     }
     #[doc = "Watchdog Reset Status Register"]
@@ -10675,6 +11850,11 @@ pub mod wdog {
         pub fn rmw(&self, f: impl FnOnce(u16) -> u16) {
             self.write(f(self.read()))
         }
+        #[doc = r" Writes the reset value"]
+        #[allow(unused_unsafe)]
+        pub fn reset(&self) {
+            self.write(Self::RESET_VALUE)
+        }
     }
     #[doc = "Watchdog Miscellaneous Control Register"]
     #[allow(non_camel_case_types)]
@@ -10707,6 +11887,11 @@ pub mod wdog {
         #[allow(unused_unsafe)]
         pub fn rmw(&self, f: impl FnOnce(u16) -> u16) {
             self.write(f(self.read()))
+        }
+        #[doc = r" Writes the reset value"]
+        #[allow(unused_unsafe)]
+        pub fn reset(&self) {
+            self.write(Self::RESET_VALUE)
         }
     }
     impl<P> Registers<P>
@@ -10884,6 +12069,11 @@ pub mod gicc {
         pub fn rmw(&self, f: impl FnOnce(u32) -> u32) {
             self.write(f(self.read()))
         }
+        #[doc = r" Writes the reset value"]
+        #[allow(unused_unsafe)]
+        pub fn reset(&self) {
+            self.write(Self::RESET_VALUE)
+        }
     }
     #[doc = "Interrupt Priority Mask Register"]
     #[allow(non_camel_case_types)]
@@ -10909,6 +12099,11 @@ pub mod gicc {
         #[allow(unused_unsafe)]
         pub unsafe fn rmw(&self, f: impl FnOnce(u32) -> u32) {
             self.write(f(self.read()))
+        }
+        #[doc = r" Writes the reset value"]
+        #[allow(unused_unsafe)]
+        pub unsafe fn reset(&self) {
+            self.write(Self::RESET_VALUE)
         }
     }
     #[doc = "Interrupt Acknowledge Register"]
@@ -11067,6 +12262,11 @@ pub mod gicd {
         #[allow(unused_unsafe)]
         pub fn rmw(&self, f: impl FnOnce(u32) -> u32) {
             self.write(f(self.read()))
+        }
+        #[doc = r" Writes the reset value"]
+        #[allow(unused_unsafe)]
+        pub fn reset(&self) {
+            self.write(Self::RESET_VALUE)
         }
     }
     #[doc = "Interrupt Set-Enable Registers (4 instances)"]

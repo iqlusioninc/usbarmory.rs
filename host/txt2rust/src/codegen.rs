@@ -117,6 +117,25 @@ pub fn krate(peripherals: &[Peripheral]) -> TokenStream2 {
                         .reset_value
                         .map(|rv| {
                             let rv = unsuffixed_hex(rv, false);
+
+                            if reg.access == Access::ReadWrite || reg.access == Access::WriteOnly {
+                                let unsafety = if reg.unsafe_write {
+                                    quote!(unsafe)
+                                } else {
+                                    quote!()
+                                };
+
+                                methods.push(quote!(
+                                    /// Writes the reset value
+                                    #[allow(unused_unsafe)]
+                                    pub #unsafety fn reset(
+                                        &self , #iparam
+                                    ) {
+                                        self.write(#iarg Self::RESET_VALUE)
+                                    }
+                                ));
+                            }
+
                             quote!(
                                 /// Reset value
                                 pub const RESET_VALUE: #uxx = #rv;
@@ -318,6 +337,25 @@ pub fn krate(peripherals: &[Peripheral]) -> TokenStream2 {
                         .reset_value
                         .map(|rv| {
                             let rv = unsuffixed_hex(rv, false);
+
+                            if reg.access == Access::ReadWrite || reg.access == Access::WriteOnly {
+                                let unsafety = if reg.unsafe_write {
+                                    quote!(unsafe)
+                                } else {
+                                    quote!()
+                                };
+
+                                methods.push(quote!(
+                                    /// Writes the reset value
+                                    #[allow(unused_unsafe)]
+                                    pub #unsafety fn reset(
+                                        &self , #iparam
+                                    ) {
+                                        self.write(#iarg Self::RESET_VALUE)
+                                    }
+                                ));
+                            }
+
                             quote!(
                                 /// Reset value
                                 pub const RESET_VALUE: #uxx = #rv;
