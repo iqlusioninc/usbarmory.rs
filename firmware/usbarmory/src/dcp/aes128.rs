@@ -13,8 +13,8 @@ use pac::hw_dcp::HW_DCP;
 
 use crate::{
     dcp::{
-        self, CipherMode, CipherSelect, Cmd, Control0, Control1, KeySelect, AES128_CHANNEL,
-        STAT_ERROR_MASK,
+        self, CipherMode, CipherSelect, Cmd, Control0, Control1, KeySelect, AES128_HW_CHANNEL,
+        AES128_RAM_CHANNEL, STAT_ERROR_MASK,
     },
     memlog, memlog_flush_and_reset, util,
 };
@@ -31,7 +31,12 @@ unsafe impl Send for Aes128 {}
 
 impl Drop for Aes128 {
     fn drop(&mut self) {
-        AES_IN_USE.store(false, Ordering::Release)
+        match self.key {
+            KeySelect::Key0 => RAM_AES_IN_USE.store(false, Ordering::Release),
+            KeySelect::UniqueKey | KeySelect::OtpKey => {
+                HW_AES_IN_USE.store(false, Ordering::Release)
+            }
+        }
     }
 }
 
@@ -53,7 +58,8 @@ impl BlockCipher for Aes128 {
     }
 }
 
-static AES_IN_USE: AtomicBool = AtomicBool::new(false);
+static HW_AES_IN_USE: AtomicBool = AtomicBool::new(false);
+static RAM_AES_IN_USE: AtomicBool = AtomicBool::new(false);
 
 enum HardwareKey {
     Unique,
@@ -90,7 +96,7 @@ impl Aes128 {
 
     // Creates a cipher that uses one of the two available hardware keys
     fn new_hardware(key: HardwareKey) -> Option<Self> {
-        if AES_IN_USE
+        if HW_AES_IN_USE
             .compare_exchange_weak(false, true, Ordering::AcqRel, Ordering::Acquire)
             .is_ok()
         {
@@ -112,7 +118,7 @@ impl Aes128 {
 
                 // enable channel #3
                 // NOTE single instruction write to a stateless register
-                dcp.CHANNELCTRL_SET.write(1 << AES128_CHANNEL);
+                dcp.CHANNELCTRL_SET.write(1 << AES128_HW_CHANNEL);
             });
 
             Some(Aes128 {
@@ -125,7 +131,7 @@ impl Aes128 {
     }
 
     fn new_ram(key: &GenericArray<u8, consts::U16>) -> Option<Self> {
-        if AES_IN_USE
+        if RAM_AES_IN_USE
             .compare_exchange_weak(false, true, Ordering::AcqRel, Ordering::Acquire)
             .is_ok()
         {
@@ -135,8 +141,7 @@ impl Aes128 {
                 // install key in the write-only register
                 // NOTE to support multiple cipher instances this would need a mutex (e.g. spinlock)
                 // to do a exclusive write to these registers
-                dcp.KEY.write(u32::from(AES128_CHANNEL) << 6);
-                // XXX double check endianness
+                dcp.KEY.write(u32::from(AES128_RAM_CHANNEL) << 6);
                 dcp.KEYDATA
                     .write(u32::from_le_bytes(*array_ref!(key, 0, 4)));
                 dcp.KEYDATA
@@ -148,7 +153,7 @@ impl Aes128 {
 
                 // enable channel #3
                 // NOTE single instruction write to a stateless register
-                dcp.CHANNELCTRL_SET.write(1 << AES128_CHANNEL);
+                dcp.CHANNELCTRL_SET.write(1 << AES128_RAM_CHANNEL);
             });
 
             Some(Aes128 {

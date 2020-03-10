@@ -34,11 +34,12 @@ fn default_timeout() -> Duration {
 const STAT_ERROR_MASK: u32 = (0xff << 16) | (1 << 6) | (1 << 5) | (1 << 4) | (1 << 3) | (1 << 2);
 
 // start from the highest numbered channel to reduce the size of the `Context` struc
-const AES128_CHANNEL: u8 = 3;
+const AES128_HW_CHANNEL: u8 = 3;
 const SHA256_CHANNEL: u8 = 2;
+const AES128_RAM_CHANNEL: u8 = 1;
 
-// Big enough for two channels (channels #2 & #3)
-const CTXT_SZ: usize = 52 * 2;
+// Big enough for two channels (channels #1, #2 & #3) -- see table 13-1
+const CTXT_SZ: usize = 52 * 3;
 
 // word-aligned for performance
 #[repr(align(4))]
