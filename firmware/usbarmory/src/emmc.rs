@@ -124,8 +124,8 @@ impl eMMC {
 
             emmc.send_command(Command::Switch { data: 0x1B90100 }, false);
             emmc.wait_response().unwrap();
-            let status = emmc.get_card_status(RCA, false);
-            memlog!("{:?}", status);
+            // wait for the busy line to clear
+            let _ = emmc.get_card_status(RCA, false);
 
             emmc.read_single_block(None, ext_csd.as_mut_ptr())
                 .expect("EXT_CSD read failed");
@@ -161,21 +161,23 @@ impl eMMC {
                 r &= !DVS_MASK;
                 r |= 0 << DVS_OFFSET;
 
-                // set prescaler to 8
+                // set prescaler to 4
                 r &= !SDCLKFS_MASK;
-                r |= 4 << SDCLKFS_OFFSET;
+                r |= 2 << SDCLKFS_OFFSET;
 
                 // lowest 4 bits must always be ones
                 r |= 0xf;
 
-                // clock = 192 MHz / divisor / prescaler = 24 MHz
+                // clock = 192 MHz / divisor / prescaler = 48 MHz
                 r
             });
 
-            // wait for the clock to stabilize 
+            // wait for the clock to stabilize
             while emmc.usdhc.PRES_STATE.read() & SDSTB == 0 {
                 crate::memlog_try_flush();
             }
+
+            memlog!("clock frequency changed to 48 MHz @ {:?}", time::uptime());
 
             emmc
         })
