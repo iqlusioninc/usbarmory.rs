@@ -136,7 +136,7 @@ impl eMMC {
             emmc.blocks =
                 u32::from_le_bytes([ext_csd[212], ext_csd[213], ext_csd[214], ext_csd[215]]);
 
-            emmc.send_command(Command::Switch { data: 0x3B90100 }, false);
+            emmc.send_command(Command::Switch { data: 0x3B9_0100 }, false);
             emmc.wait_response()?;
             card::Status::from(emmc.usdhc.CMD_RSP0.read())?;
 

@@ -82,7 +82,7 @@ enum Type {
 
 #[derive(PartialEq)]
 enum Response {
-    NoResponse,
+    None,
     R1,
     R1b,
     R2,
@@ -116,7 +116,7 @@ impl Command {
     // see table 56-3
     fn response(&self) -> Response {
         match self {
-            Command::GoIdleState => Response::NoResponse,
+            Command::GoIdleState => Response::None,
             Command::SendOpCond { .. } => Response::R3,
             Command::AllSendCid => Response::R2,
             Command::SetRelativeAddr { .. } => Response::R1, // eMMC (SDIO uses R6)
@@ -201,7 +201,7 @@ impl Command {
         const B48_RESPONSE_CHECK_BUSY: u8 = 0b11;
 
         match self.response() {
-            Response::NoResponse => NO_RESPONSE,
+            Response::None => NO_RESPONSE,
             Response::R2 => B136_RESPONSE,
             Response::R3 | Response::R4 => B48_RESPONSE,
             Response::R1 | Response::R5 | Response::R6 => B48_RESPONSE,
@@ -213,7 +213,7 @@ impl Command {
     // see table 56-6
     pub fn cicen(&self) -> bool {
         match self.response() {
-            Response::NoResponse => false,
+            Response::None => false,
             Response::R2 => false,
             Response::R3 | Response::R4 => false,
             Response::R1 | Response::R5 | Response::R6 => true,
@@ -224,7 +224,7 @@ impl Command {
     /// Check command CRC in the response
     pub fn cccen(&self) -> bool {
         match self.response() {
-            Response::NoResponse => false,
+            Response::None => false,
             Response::R2 => true,
             Response::R3 | Response::R4 => false,
             Response::R1 | Response::R5 | Response::R6 => true,
