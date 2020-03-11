@@ -5,7 +5,7 @@
 
 use exception_reset as _; // default exception handler
 use panic_serial as _; // panic handler
-use usbarmory::{emmc::eMMC, memlog, memlog_flush_and_reset, storage::Block, time};
+use usbarmory::{emmc::eMMC, memlog, memlog_flush_and_reset, storage::Block};
 
 const BLOCK_NR: u32 = 204800; // an offset of 100MB
 
@@ -14,7 +14,7 @@ const BLOCK_NR: u32 = 204800; // an offset of 100MB
 // like `#[rtfm::app]`
 #[no_mangle]
 fn main() -> ! {
-    let emmc = eMMC::take().expect("eMMC");
+    let emmc = eMMC::take().expect("eMMC").unwrap();
 
     let mut orig = Block::zeroed();
     emmc.read(BLOCK_NR, &mut orig);
@@ -26,8 +26,8 @@ fn main() -> ! {
         .iter_mut()
         .for_each(|byte| *byte = byte.wrapping_add(1));
 
-    emmc.write(BLOCK_NR, &updated);
-    emmc.flush();
+    emmc.write(BLOCK_NR, &updated).unwrap();
+    emmc.flush().unwrap();
 
     let mut fresh = Block::zeroed();
     emmc.read(BLOCK_NR, &mut fresh);
