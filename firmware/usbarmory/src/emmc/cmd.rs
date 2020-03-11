@@ -5,15 +5,43 @@ use crate::emmc::Rca;
 // Table 56-3 in ULRM
 #[derive(Clone, Debug)]
 pub enum Command {
-    // No-response commands
     // 0
     GoIdleState,
 
-    // R1 commands
+    // 1
+    SendOpCond {
+        /// `u24` bits 8..=23 indicate the voltage range (2.0V -> 3.6V in 0.1V steps)
+        /// A value of `0` will query the supported voltage range of all cards
+        voltage_range: u32,
+    },
+
+    // 2
+    AllSendCid,
+
     // 3
     SetRelativeAddr {
         rca: Rca,
     },
+
+    // 6
+    // NOTE MMC specific version; `SWITCH_FUNC` is the SD variant of the command
+    Switch {
+        data: u32,
+    },
+
+    // 7
+    SelectCard {
+        rca: Option<Rca>,
+    },
+
+    // 8
+    SendExtCsd,
+
+    // 9
+    SendCsd {
+        rca: Rca,
+    },
+
     // 13
     SendStatus {
         rca: Rca,
@@ -22,51 +50,47 @@ pub enum Command {
     SetBlockLen {
         len: u32,
     },
+
     // 17
     ReadSingleBlock {
         /// *Block* number (multiply by 512 to get the actual address)
         // NOTE for low capacity (<2GB) cards this is the actual 32-bit address
         block_nr: u32,
     },
+
     // 24
     WriteSingleBlock {
         /// *Block* address (multiply by 512 to get the actual address)
         // NOTE for low capacity (<2GB) cards this is the actual 32-bit address
         block_nr: u32,
     },
+}
 
-    // R1b commands
-    // 6
-    // NOTE MMC specific version; `SWITCH_FUNC` is the SD variant of the command
-    #[allow(dead_code)] // will be used to change the speed and data width
-    Switch {
-        /// `u2`
-        access: u8,
-        index: u8,
-        value: u8,
-        /// `u3`
-        cmd: u8,
-    },
-    // 7
-    SelectCard {
-        rca: Option<Rca>,
-    },
+#[allow(dead_code)]
+#[allow(non_camel_case_types)]
+#[derive(PartialEq)]
+enum Type {
+    /// Brodcast Command with no response
+    bc,
+    /// Broadcast Command with Response
+    bcr,
+    /// Addressed Command
+    ac,
+    /// Addressed Data Transfer Command
+    adtc,
+}
 
-    // R2 commands
-    // 2
-    AllSendCid,
-    // 9
-    SendCsd {
-        rca: Rca,
-    },
-
-    // R3 commands
-    // 1
-    SendOpCond {
-        /// `u24` bits 8..=23 indicate the voltage range (2.0V -> 3.6V in 0.1V steps)
-        /// A value of `0` will query the supported voltage range of all cards
-        voltage_range: u32,
-    },
+#[derive(PartialEq)]
+enum Response {
+    None,
+    R1,
+    R1b,
+    R2,
+    R3,
+    R4,
+    R5,
+    R5b,
+    R6,
 }
 
 impl Command {
@@ -78,13 +102,49 @@ impl Command {
             Command::SendOpCond { .. } => 1,
             Command::AllSendCid => 2,
             Command::SetRelativeAddr { .. } => 3,
-            Command::Switch { .. } => 7,
+            Command::Switch { .. } => 6,
             Command::SelectCard { .. } => 7,
+            Command::SendExtCsd { .. } => 8,
             Command::SendCsd { .. } => 9,
             Command::SendStatus { .. } => 13,
             Command::SetBlockLen { .. } => 16,
             Command::ReadSingleBlock { .. } => 17,
             Command::WriteSingleBlock { .. } => 24,
+        }
+    }
+
+    // see table 56-3
+    fn response(&self) -> Response {
+        match self {
+            Command::GoIdleState => Response::None,
+            Command::SendOpCond { .. } => Response::R3,
+            Command::AllSendCid => Response::R2,
+            Command::SetRelativeAddr { .. } => Response::R1, // eMMC (SDIO uses R6)
+            Command::Switch { .. } => Response::R1b,         // eMMC (SDIO uses R1)
+            Command::SendExtCsd => Response::R1,
+            Command::SelectCard { .. } => Response::R1b,
+            Command::SendCsd { .. } => Response::R2,
+            Command::SendStatus { .. } => Response::R1,
+            Command::SetBlockLen { .. } => Response::R1,
+            Command::ReadSingleBlock { .. } => Response::R1,
+            Command::WriteSingleBlock { .. } => Response::R1,
+        }
+    }
+
+    fn type_(&self) -> Type {
+        match self {
+            Command::GoIdleState => Type::bcr,
+            Command::SendOpCond { .. } => Type::bcr,
+            Command::AllSendCid => Type::bcr,
+            Command::SetRelativeAddr { .. } => Type::ac,
+            Command::Switch { .. } => Type::ac, // eMMC (SDIO version is adtc)
+            Command::SendExtCsd => Type::adtc,
+            Command::SelectCard { .. } => Type::ac,
+            Command::SendCsd { .. } => Type::ac,
+            Command::SendStatus { .. } => Type::ac,
+            Command::SetBlockLen { .. } => Type::ac,
+            Command::ReadSingleBlock { .. } => Type::adtc,
+            Command::WriteSingleBlock { .. } => Type::adtc,
         }
     }
 
@@ -95,28 +155,19 @@ impl Command {
             Command::GoIdleState => 0,
             Command::ReadSingleBlock { block_nr } => *block_nr,
             Command::SelectCard { rca } => rca.map(|rca| u32::from(rca.get())).unwrap_or(0) << 16,
+            Command::SendExtCsd => 0,
             Command::SendCsd { rca } => u32::from(rca.get()) << 16,
             Command::SendOpCond { voltage_range } => *voltage_range,
             Command::SendStatus { rca } => u32::from(rca.get()) << 16,
             Command::SetBlockLen { len } => *len,
             Command::SetRelativeAddr { rca } => u32::from(rca.get()) << 16,
-            Command::Switch {
-                access,
-                index,
-                value,
-                cmd,
-            } => {
-                (u32::from(*access) << 24)
-                    | (u32::from(*index) << 16)
-                    | (u32::from(*value) << 8)
-                    | u32::from(*cmd)
-            }
+            Command::Switch { data } => *data,
             Command::WriteSingleBlock { block_nr } => *block_nr,
         }
     }
 
     // NOTE returns a `u2`
-    pub fn typ(&self) -> u8 {
+    pub fn cmdtyp(&self) -> u8 {
         // Only CMD12 & CMD52 use a different value
         let idx = self.index();
         assert!(idx != 12 && idx != 52, "unimplemented");
@@ -128,26 +179,18 @@ impl Command {
     // See table 56-3 of ULRM; `adtc` commands transfer data; R1b commands
     // indicate busy-ness on the DATA0 line
     pub fn uses_data_line(&self) -> bool {
-        self.data_present()
-            || match self {
-                // R1b commands
-                Command::Switch { .. } | Command::SelectCard { .. } => true,
-                _ => false,
-            }
+        let resp = self.response();
+        self.data_present() || resp == Response::R1b || resp == Response::R5b
     }
 
     /// Whether this command transfers data (in either direction)
     // See table 56-3 of ULRM; `adtc` commands transfer data
     pub fn data_present(&self) -> bool {
-        match self {
-            // adtc commands
-            Command::ReadSingleBlock { .. } | Command::WriteSingleBlock { .. } => true,
-            _ => false,
-        }
+        self.type_() == Type::adtc
     }
 
     /// The response type that this command expects
-    // NOTE see tables 56-3 and 56-6 for a mapping from command to response type + checks
+    // NOTE see table 56-6
     pub fn response_type(&self) -> u8 {
         const NO_RESPONSE: u8 = 0b00;
         // 136-bit response
@@ -157,73 +200,35 @@ impl Command {
         // 48-bit response, check Busy after response
         const B48_RESPONSE_CHECK_BUSY: u8 = 0b11;
 
-        match self {
-            // No response commands
-            Command::GoIdleState => NO_RESPONSE,
-
-            // R1 commands
-            Command::SetRelativeAddr { .. }
-            | Command::SendStatus { .. }
-            | Command::SetBlockLen { .. }
-            | Command::ReadSingleBlock { .. }
-            | Command::WriteSingleBlock { .. } => B48_RESPONSE,
-
-            // R1b commands
-            Command::SelectCard { .. } | Command::Switch { .. } => B48_RESPONSE_CHECK_BUSY,
-
-            // R2 commands
-            Command::AllSendCid | Command::SendCsd { .. } => B136_RESPONSE,
-
-            // R3 commands
-            Command::SendOpCond { .. } => B48_RESPONSE,
+        match self.response() {
+            Response::None => NO_RESPONSE,
+            Response::R2 => B136_RESPONSE,
+            Response::R3 | Response::R4 => B48_RESPONSE,
+            Response::R1 | Response::R5 | Response::R6 => B48_RESPONSE,
+            Response::R1b | Response::R5b => B48_RESPONSE_CHECK_BUSY,
         }
     }
 
     /// Check command index in the response
+    // see table 56-6
     pub fn cicen(&self) -> bool {
-        match self {
-            // No response commands
-            Command::GoIdleState => false,
-
-            // R1 commands
-            Command::SetRelativeAddr { .. }
-            | Command::SendStatus { .. }
-            | Command::SetBlockLen { .. }
-            | Command::ReadSingleBlock { .. }
-            | Command::WriteSingleBlock { .. } => true,
-
-            // R1b commands
-            Command::SelectCard { .. } | Command::Switch { .. } => true,
-
-            // R2 commands
-            Command::AllSendCid | Command::SendCsd { .. } => false,
-
-            // R3 commands
-            Command::SendOpCond { .. } => false,
+        match self.response() {
+            Response::None => false,
+            Response::R2 => false,
+            Response::R3 | Response::R4 => false,
+            Response::R1 | Response::R5 | Response::R6 => true,
+            Response::R1b | Response::R5b => true,
         }
     }
 
-    /// Check command index in the response
+    /// Check command CRC in the response
     pub fn cccen(&self) -> bool {
-        match self {
-            // No response commands
-            Command::GoIdleState => false,
-
-            // R1 commands
-            Command::SetRelativeAddr { .. }
-            | Command::SendStatus { .. }
-            | Command::SetBlockLen { .. }
-            | Command::ReadSingleBlock { .. }
-            | Command::WriteSingleBlock { .. } => true,
-
-            // R1b commands
-            Command::SelectCard { .. } | Command::Switch { .. } => true,
-
-            // R2 commands
-            Command::AllSendCid | Command::SendCsd { .. } => true,
-
-            // R3 commands
-            Command::SendOpCond { .. } => false,
+        match self.response() {
+            Response::None => false,
+            Response::R2 => true,
+            Response::R3 | Response::R4 => false,
+            Response::R1 | Response::R5 | Response::R6 => true,
+            Response::R1b | Response::R5b => true,
         }
     }
 }
