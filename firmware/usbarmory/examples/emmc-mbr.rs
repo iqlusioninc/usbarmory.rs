@@ -16,7 +16,7 @@ use usbarmory::{
 // like `#[rtfm::app]`
 #[no_mangle]
 fn main() -> ! {
-    let emmc = eMMC::take().expect("eMMC");
+    let emmc = eMMC::take().expect("eMMC").unwrap();
     let mut mbr = MbrDevice::open(emmc).unwrap();
 
     for part_idx in 0..4 {

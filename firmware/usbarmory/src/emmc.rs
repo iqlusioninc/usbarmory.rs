@@ -184,20 +184,14 @@ impl eMMC {
 
     // TODO partial reads and write (if the card supports them)
     /// Reads a block of memory
-    pub fn read(&self, block_nr: u32, block: &mut Block) {
+    pub fn read(&self, block_nr: u32, block: &mut Block) -> Result<(), Error> {
         assert!(block_nr < self.blocks, "block doesn't exist");
 
         if self.verbose {
             memlog!("read(block_nr={}) @ {:?}", block_nr, time::uptime());
         }
 
-        if self
-            .read_single_block(Some(block_nr), block.bytes.as_mut_ptr())
-            .is_err()
-        {
-            memlog!("card not ready for a data transfer");
-            memlog_flush_and_reset!();
-        }
+        self.read_single_block(Some(block_nr), block.bytes.as_mut_ptr())
     }
 
     /// Transfers a block of memory to the card for it to be programmed to flash
@@ -814,9 +808,7 @@ impl ManagedBlockDevice for eMMC {
     type Error = Error;
 
     fn total_blocks(&self) -> u64 {
-        // FIXME: Implement proper capacity readout for eMMC.
-        // For now, this is hardcoded to 16 GB.
-        16_000_000_000 / 512
+        self.blocks.into()
     }
 
     fn read(&self, block: &mut Block, lba: u64) -> Result<(), Self::Error> {
@@ -824,7 +816,7 @@ impl ManagedBlockDevice for eMMC {
             return Err(Error::Other);
         }
 
-        Self::read(self, lba as u32, block);
+        Self::read(self, lba as u32, block)?;
         Ok(())
     }
 

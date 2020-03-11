@@ -17,7 +17,7 @@ fn main() -> ! {
     let emmc = eMMC::take().expect("eMMC").unwrap();
 
     let mut orig = Block::zeroed();
-    emmc.read(BLOCK_NR, &mut orig);
+    emmc.read(BLOCK_NR, &mut orig).unwrap();
 
     let mut updated = orig.clone();
 
@@ -30,7 +30,7 @@ fn main() -> ! {
     emmc.flush().unwrap();
 
     let mut fresh = Block::zeroed();
-    emmc.read(BLOCK_NR, &mut fresh);
+    emmc.read(BLOCK_NR, &mut fresh).unwrap();
 
     if updated.bytes[..] == fresh.bytes[..] {
         memlog!("OK @ {:#x}", BLOCK_NR);

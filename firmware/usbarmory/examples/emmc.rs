@@ -17,16 +17,16 @@ use usbarmory::{emmc::eMMC, memlog, memlog_flush_and_reset, storage::Block};
 // like `#[rtfm::app]`
 #[no_mangle]
 fn main() -> ! {
-    let emmc = eMMC::take().expect("eMMC");
+    let emmc = eMMC::take().expect("eMMC").unwrap();
 
     let mut block = Block::zeroed();
-    emmc.read(0, &mut block);
+    emmc.read(0, &mut block).unwrap();
 
     memlog!("first byte of the first block: {}", block.bytes[0]);
     block.bytes[0] += 1;
 
-    emmc.write(0, &block);
-    emmc.flush();
+    emmc.write(0, &block).unwrap();
+    emmc.flush().unwrap();
 
     // then reset the board to return to the u-boot console
     memlog_flush_and_reset!();
