@@ -15,11 +15,11 @@ jobs:
       - name: Checkout sources
         uses: actions/checkout@v2
 
-      - name: Install beta toolchain
+      - name: Install stable toolchain
         uses: actions-rs/toolchain@v1
         with:
           target: armv7a-none-eabi
-          toolchain: beta
+          toolchain: 1.42.0
           override: true
 
       - name: Run cargo check
@@ -37,7 +37,7 @@ jobs:
       - name: Install stable toolchain
         uses: actions-rs/toolchain@v1
         with:
-          toolchain: stable
+          toolchain: 1.42.0
           override: true
 
       - name: Run cargo check
@@ -107,11 +107,11 @@ jobs:
 #     - name: Checkout sources
 #       uses: actions/checkout@v2
 
-#     - name: Install beta toolchain
+#     - name: Install stable toolchain
 #       uses: actions-rs/toolchain@v1
 #       with:
 #         target: armv7a-none-eabi
-#         toolchain: beta
+#         toolchain: 1.42.0
 #         override: true
 
 #     - name: Install QEMU
@@ -136,11 +136,11 @@ jobs:
       - name: Checkout sources
         uses: actions/checkout@v2
 
-      - name: Install beta toolchain
+      - name: Install stable toolchain
         uses: actions-rs/toolchain@v1
         with:
           target: armv7a-none-eabi
-          toolchain: beta
+          toolchain: 1.42.0
           override: true
 
       - name: Cache cargo registry
@@ -216,11 +216,11 @@ jobs:
       - name: Checkout sources
         uses: actions/checkout@v2
 
-      - name: Install beta toolchain
+      - name: Install stable toolchain
         uses: actions-rs/toolchain@v1
         with:
           target: armv7a-none-eabi
-          toolchain: beta
+          toolchain: 1.42.0
           override: true
 
       - name: Install clippy
