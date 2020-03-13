@@ -18,7 +18,7 @@ static TESTSTR: &[u8] = b"Hello File!";
 // like `#[rtfm::app]`
 #[no_mangle]
 fn main() -> ! {
-    let emmc = eMMC::take().expect("eMMC");
+    let emmc = eMMC::take().expect("eMMC").unwrap();
     for _ in 0..4 { usbarmory::memlog_try_flush(); }
 
     let mut mbr = MbrDevice::open(emmc).unwrap();
