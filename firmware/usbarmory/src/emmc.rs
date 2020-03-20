@@ -5,7 +5,7 @@ use core::{
     sync::atomic::{self, Ordering},
 };
 
-use pac::usdhc::uSDHC2;
+use pac::uSDHC2;
 
 mod card;
 mod cmd;

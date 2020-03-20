@@ -15,7 +15,7 @@
 
 pub use cortex_a::{delay, no_interrupts};
 pub use memlog::memlog;
-use pac::wdog::WDOG1;
+use pac::WDOG1;
 use usbarmory_rt as _;
 
 use crate::serial::Serial;

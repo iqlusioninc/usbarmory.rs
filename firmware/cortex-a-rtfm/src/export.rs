@@ -2,7 +2,7 @@ use core::cell::Cell;
 
 pub use cortex_a::{enable_irq, wfi};
 pub use heapless::{consts, i::Queue as iQueue, spsc::Queue};
-use pac::{gicc::GICC, gicd::GICD};
+use pac::{GICC, GICD};
 pub use usbarmory_rt::Interrupt;
 
 pub type FQ<N> = Queue<u8, N, u8>;

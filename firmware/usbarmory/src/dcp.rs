@@ -19,7 +19,7 @@ use core::{
     time::Duration,
 };
 
-use pac::hw_dcp::HW_DCP;
+use pac::HW_DCP;
 
 pub use aes128::Aes128;
 pub use sha256::Sha256;

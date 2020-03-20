@@ -3,7 +3,7 @@
 #![no_std]
 #![warn(missing_docs, rust_2018_idioms, unused_qualifications)]
 
-use pac::{gicc::GICC, gpio::GPIO4, snvs_hp::SNVS_HP};
+use pac::{GICC, GPIO4, SNVS_HP};
 
 // Software Generated Interrupts
 extern "C" {

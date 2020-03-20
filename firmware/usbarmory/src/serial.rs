@@ -9,7 +9,7 @@ use core::{
     sync::atomic::{AtomicU8, Ordering},
 };
 
-use pac::uart::UART2;
+use pac::UART2;
 
 const NEVER: u8 = 0; // never taken
 const TAKEN: u8 = 1; // currently taken

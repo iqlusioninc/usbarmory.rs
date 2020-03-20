@@ -27,7 +27,7 @@ use core::{
 };
 
 use generic_array::{typenum::consts, ArrayLength, GenericArray};
-use pac::gicc::GICC;
+use pac::GICC;
 
 // End users must only ever modify the `consts` type parameter of `B0` and `B1`
 

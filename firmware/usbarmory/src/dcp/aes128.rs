@@ -9,7 +9,7 @@ use block_cipher_trait::{
     generic_array::{typenum::consts, GenericArray},
     BlockCipher,
 };
-use pac::hw_dcp::HW_DCP;
+use pac::HW_DCP;
 
 use crate::{
     dcp::{

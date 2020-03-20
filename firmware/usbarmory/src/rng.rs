@@ -4,7 +4,7 @@
 
 use core::cmp;
 
-use pac::rng::RNG;
+use pac::RNG;
 use rand_core::{block::BlockRngCore, CryptoRng};
 
 /// A Random Number Generator backed by the hardware

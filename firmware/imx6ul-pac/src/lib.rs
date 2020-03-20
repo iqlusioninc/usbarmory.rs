@@ -8,8 +8,10 @@ pub trait Peripheral {
     #[doc = r" The base address of this peripheral instance"]
     const BASE_ADDRESS: usize;
 }
+#[cfg(feature = "ccm_analog")]
 pub use ccm_analog::CCM_ANALOG;
 #[allow(non_snake_case)]
+#[cfg(feature = "ccm_analog")]
 #[doc = "CCM_ANALOG"]
 pub mod ccm_analog {
     use core::{
@@ -2537,8 +2539,10 @@ pub mod ccm_analog {
         }
     }
 }
+#[cfg(feature = "mmdc")]
 pub use mmdc::MMDC;
 #[allow(non_snake_case)]
+#[cfg(feature = "mmdc")]
 #[doc = "MMDC"]
 pub mod mmdc {
     use core::{
@@ -5406,8 +5410,10 @@ pub mod mmdc {
         }
     }
 }
+#[cfg(feature = "ccm")]
 pub use ccm::CCM;
 #[allow(non_snake_case)]
+#[cfg(feature = "ccm")]
 #[doc = "CCM"]
 pub mod ccm {
     use core::{
@@ -6764,8 +6770,10 @@ pub mod ccm {
         }
     }
 }
+#[cfg(feature = "hw_dcp")]
 pub use hw_dcp::HW_DCP;
 #[allow(non_snake_case)]
+#[cfg(feature = "hw_dcp")]
 #[doc = "HW_DCP"]
 pub mod hw_dcp {
     use core::{
@@ -8461,12 +8469,18 @@ pub mod hw_dcp {
         }
     }
 }
+#[cfg(feature = "gpio")]
 pub use gpio::GPIO1;
+#[cfg(feature = "gpio")]
 pub use gpio::GPIO2;
+#[cfg(feature = "gpio")]
 pub use gpio::GPIO3;
+#[cfg(feature = "gpio")]
 pub use gpio::GPIO4;
+#[cfg(feature = "gpio")]
 pub use gpio::GPIO5;
 #[allow(non_snake_case)]
+#[cfg(feature = "gpio")]
 #[doc = "GPIO"]
 pub mod gpio {
     use crate::Peripheral;
@@ -9013,11 +9027,16 @@ pub mod gpio {
         }
     }
 }
+#[cfg(feature = "i2c")]
 pub use i2c::I2C1;
+#[cfg(feature = "i2c")]
 pub use i2c::I2C2;
+#[cfg(feature = "i2c")]
 pub use i2c::I2C3;
+#[cfg(feature = "i2c")]
 pub use i2c::I2C4;
 #[allow(non_snake_case)]
+#[cfg(feature = "i2c")]
 #[doc = "I2C"]
 pub mod i2c {
     use crate::Peripheral;
@@ -9416,8 +9435,10 @@ pub mod i2c {
         }
     }
 }
+#[cfg(feature = "iomuxc")]
 pub use iomuxc::IOMUXC;
 #[allow(non_snake_case)]
+#[cfg(feature = "iomuxc")]
 #[doc = "IOMUXC"]
 pub mod iomuxc {
     use core::{
@@ -25490,8 +25511,10 @@ pub mod iomuxc {
         }
     }
 }
+#[cfg(feature = "rng")]
 pub use rng::RNG;
 #[allow(non_snake_case)]
+#[cfg(feature = "rng")]
 #[doc = "RNG"]
 pub mod rng {
     use core::{
@@ -25746,8 +25769,10 @@ pub mod rng {
         }
     }
 }
+#[cfg(feature = "snvs_lp")]
 pub use snvs_lp::SNVS_LP;
 #[allow(non_snake_case)]
+#[cfg(feature = "snvs_lp")]
 #[doc = "SNVS_LP"]
 pub mod snvs_lp {
     use core::{
@@ -26070,8 +26095,10 @@ pub mod snvs_lp {
         }
     }
 }
+#[cfg(feature = "snvs_hp")]
 pub use snvs_hp::SNVS_HP;
 #[allow(non_snake_case)]
+#[cfg(feature = "snvs_hp")]
 #[doc = "SNVS_HP"]
 pub mod snvs_hp {
     use core::{
@@ -26540,15 +26567,24 @@ pub mod snvs_hp {
         }
     }
 }
+#[cfg(feature = "uart")]
 pub use uart::UART1;
+#[cfg(feature = "uart")]
 pub use uart::UART2;
+#[cfg(feature = "uart")]
 pub use uart::UART3;
+#[cfg(feature = "uart")]
 pub use uart::UART4;
+#[cfg(feature = "uart")]
 pub use uart::UART5;
+#[cfg(feature = "uart")]
 pub use uart::UART6;
+#[cfg(feature = "uart")]
 pub use uart::UART7;
+#[cfg(feature = "uart")]
 pub use uart::UART8;
 #[allow(non_snake_case)]
+#[cfg(feature = "uart")]
 #[doc = "UART"]
 pub mod uart {
     use crate::Peripheral;
@@ -27610,8 +27646,10 @@ pub mod uart {
         }
     }
 }
+#[cfg(feature = "usb_analog")]
 pub use usb_analog::USB_ANALOG;
 #[allow(non_snake_case)]
+#[cfg(feature = "usb_analog")]
 #[doc = "USB_ANALOG"]
 pub mod usb_analog {
     use core::{
@@ -28884,8 +28922,10 @@ pub mod usb_analog {
         }
     }
 }
+#[cfg(feature = "usbnc_usb")]
 pub use usbnc_usb::USBNC_USB;
 #[allow(non_snake_case)]
+#[cfg(feature = "usbnc_usb")]
 #[doc = "USBNC_USB"]
 pub mod usbnc_usb {
     use core::{
@@ -29118,9 +29158,12 @@ pub mod usbnc_usb {
         }
     }
 }
+#[cfg(feature = "usbphy")]
 pub use usbphy::USBPHY1;
+#[cfg(feature = "usbphy")]
 pub use usbphy::USBPHY2;
 #[allow(non_snake_case)]
+#[cfg(feature = "usbphy")]
 #[doc = "USBPHY"]
 pub mod usbphy {
     use crate::Peripheral;
@@ -30503,9 +30546,12 @@ pub mod usbphy {
         }
     }
 }
+#[cfg(feature = "usb_uog")]
 pub use usb_uog::USB_UOG1;
+#[cfg(feature = "usb_uog")]
 pub use usb_uog::USB_UOG2;
 #[allow(non_snake_case)]
+#[cfg(feature = "usb_uog")]
 #[doc = "USB_UOG"]
 pub mod usb_uog {
     use crate::Peripheral;
@@ -32632,9 +32678,12 @@ pub mod usb_uog {
         }
     }
 }
+#[cfg(feature = "usdhc")]
 pub use usdhc::uSDHC1;
+#[cfg(feature = "usdhc")]
 pub use usdhc::uSDHC2;
 #[allow(non_snake_case)]
+#[cfg(feature = "usdhc")]
 #[doc = "uSDHC"]
 pub mod usdhc {
     use crate::Peripheral;
@@ -33935,10 +33984,14 @@ pub mod usdhc {
         }
     }
 }
+#[cfg(feature = "wdog")]
 pub use wdog::WDOG1;
+#[cfg(feature = "wdog")]
 pub use wdog::WDOG2;
+#[cfg(feature = "wdog")]
 pub use wdog::WDOG3;
 #[allow(non_snake_case)]
+#[cfg(feature = "wdog")]
 #[doc = "WDOG"]
 pub mod wdog {
     use crate::Peripheral;
@@ -34290,8 +34343,10 @@ pub mod wdog {
         }
     }
 }
+#[cfg(feature = "gicc")]
 pub use gicc::GICC;
 #[allow(non_snake_case)]
+#[cfg(feature = "gicc")]
 #[doc = "GICC"]
 pub mod gicc {
     use core::{
@@ -34517,8 +34572,10 @@ pub mod gicc {
         }
     }
 }
+#[cfg(feature = "gicd")]
 pub use gicd::GICD;
 #[allow(non_snake_case)]
+#[cfg(feature = "gicd")]
 #[doc = "GICD"]
 pub mod gicd {
     use core::{
