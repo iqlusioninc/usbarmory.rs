@@ -225,6 +225,8 @@ pub fn krate(peripherals: &[Peripheral]) -> TokenStream2 {
                 let base_addr = unsuffixed_hex(*base_addr, false);
                 let mod_i = format_ident!("{}", pname_s.to_lowercase());
                 items.push(quote!(
+                    pub use #mod_i::#pname_i;
+
                     #[allow(non_snake_case)]
                     #[doc = #pname_s]
                     pub mod #mod_i {
@@ -427,10 +429,15 @@ pub fn krate(peripherals: &[Peripheral]) -> TokenStream2 {
                     }
                 ));
 
+                let mod_i = format_ident!("{}", pname_s.to_lowercase());
                 for (instance, base_addr) in instances {
                     let name_s = format!("{}{}", pname_s, instance);
                     let name_i = format_ident!("{}", name_s);
                     let n = format_ident!("_{}", instance);
+
+                    items.push(quote!(
+                        pub use #mod_i::#name_i;
+                    ));
 
                     let base_addr = unsuffixed_hex(*base_addr, false);
                     mod_items.push(quote!(
@@ -472,7 +479,6 @@ pub fn krate(peripherals: &[Peripheral]) -> TokenStream2 {
                     ));
                 }
 
-                let mod_i = format_ident!("{}", pname_s.to_lowercase());
                 items.push(quote!(
                     #[allow(non_snake_case)]
                     #[doc = #pname_s]
