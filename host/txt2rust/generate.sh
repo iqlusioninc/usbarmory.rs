@@ -24,6 +24,9 @@ main() {
     rm -f *.txt
     pdftotext -layout -f 1081 -l 1082 $mx28 dcp.txt
     pdftotext -layout -f 1141 -l 1142 $mx6ul gpio.txt
+    pdftotext -layout -f 1246 -l 1246 $mx6ul i2c.txt
+    pdftotext -layout -f 1280 -l 1300 $mx6ul iomuxc.txt
+    pdftotext -layout -f 2043 -l 2046 $mx6ul ccm-mmdc.txt
     pdftotext -layout -f 2921 -l 2922 $mx6ul snvs.txt
     pdftotext -layout -f 3093 -l 3093 $mx6ull rngb.txt
     pdftotext -layout -f 3101 -l 3107 $mx6ul uart.txt
@@ -33,6 +36,7 @@ main() {
     pdftotext -layout -f 3420 -l 3421 $mx6ul usb-analog.txt
     pdftotext -layout -f 3504 -l 3506 $mx6ul usdhc.txt
     pdftotext -layout -f 3584 -l 3584 $mx6ul wdog.txt
+    pdftotext -layout -f 641 -l 642 $mx6ul ccm.txt
     pdftotext -layout -f 693 -l 696 $mx6ul ccm-analog.txt
     cargo run -- *.txt
 
