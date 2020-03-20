@@ -1,0 +1,17 @@
+[package]
+authors = ["iqlusion"]
+edition = "2018"
+license = "Apache-2.0 OR MIT"
+name    = "image"
+publish = false
+version = "0.0.0"
+
+[dependencies]
+anyhow = "1.0.27"
+nom = "5.1.1"
+xmas-elf = "0.7.0"
+
+[dependencies.pac]
+package = "imx6ul-pac"
+path = "../../firmware/imx6ul-pac"
+features = ["iomuxc", "mmdc"]
