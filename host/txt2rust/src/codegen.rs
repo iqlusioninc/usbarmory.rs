@@ -54,7 +54,7 @@ pub fn krate(peripherals: &[Peripheral]) -> TokenStream2 {
                         };
                         let max = reg.instances;
                         (
-                            quote!(idx ,),
+                            quote!(idx,),
                             quote!(idx: #uxx ,),
                             quote!(assert!(idx < #max as #uxx);),
                             quote!(.add(usize::from(idx))),
@@ -142,6 +142,17 @@ pub fn krate(peripherals: &[Peripheral]) -> TokenStream2 {
                             )
                         })
                         .unwrap_or_else(|| quote!());
+
+                    methods.push(quote!(
+                        /// Returns the address of this register
+                            #[allow(unused_parens)]
+                            #[allow(unused_unsafe)]
+                            pub fn address(#iparam) -> *mut #uxx {
+                                unsafe {
+                                    ((BASE_ADDRESS + Self::OFFSET) as *mut #uxx) #ioffset
+                                }
+                            }
+                    ));
 
                     let offset = unsuffixed_hex(offset, true);
                     mod_items.push(quote!(
@@ -274,7 +285,7 @@ pub fn krate(peripherals: &[Peripheral]) -> TokenStream2 {
                         };
                         let max = reg.instances;
                         (
-                            quote!(idx ,),
+                            quote!(idx,),
                             quote!(idx: #uxx ,),
                             quote!(assert!(idx < #max as #uxx);),
                             quote!(.add(usize::from(idx))),
@@ -362,6 +373,14 @@ pub fn krate(peripherals: &[Peripheral]) -> TokenStream2 {
                             )
                         })
                         .unwrap_or_else(|| quote!());
+
+                    methods.push(quote!(
+                        /// Returns the address of this register
+                        #[allow(unused_parens)]
+                        pub fn address(#iparam) -> *mut #uxx {
+                            ((P::BASE_ADDRESS + Self::OFFSET) as *mut #uxx) #ioffset
+                        }
+                    ));
 
                     let offset = unsuffixed_hex(offset, true);
                     mod_items.push(quote!(
