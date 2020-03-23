@@ -17,7 +17,7 @@
 
 use exception_reset as _; // default exception handler
 use panic_serial as _; // panic handler
-use usbarmory::println;
+use usbarmory::{println, serial::Serial};
 
 #[rtfm::app]
 const APP: () = {
@@ -49,8 +49,7 @@ const APP: () = {
 
         println!("OK");
 
-        // wait 5 seconds
-        usbarmory::delay(5 * usbarmory::CPU_FREQUENCY);
+        Serial::flush();
 
         // then reset the board to return to the u-boot console
         usbarmory::reset()

@@ -17,7 +17,7 @@
 use exception_reset as _;
 use pac::{gicc::GICC, gicd::GICD};
 use panic_serial as _;
-use usbarmory::println;
+use usbarmory::{println, serial::Serial};
 
 // Lowest priority
 const P0: u8 = 0b1111_1000;
@@ -64,8 +64,7 @@ fn main() -> ! {
 
     println!("after SGI0");
 
-    // wait 5 seconds
-    usbarmory::delay(5 * usbarmory::CPU_FREQUENCY);
+    Serial::flush();
 
     usbarmory::reset()
 }

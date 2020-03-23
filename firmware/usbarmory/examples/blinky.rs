@@ -3,6 +3,8 @@
 #![no_main]
 #![no_std]
 
+use core::time::Duration;
+
 use exception_reset as _; // default exception handler
 use panic_serial as _; // panic handler
 use usbarmory::{led::Leds, serial::Serial, time};
@@ -23,6 +25,8 @@ fn main() -> ! {
         time::wait(dur);
 
         // reboot the system if the user pressed a key
+        // NOTE as the Cargo runner does NOT currently read stdin you'll need to power cycle the
+        // board to flash a new program
         if serial.try_read().is_some() {
             usbarmory::reset()
         }

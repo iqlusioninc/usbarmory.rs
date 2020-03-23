@@ -28,6 +28,7 @@ use panic_serial as _; // panic handler
 use usbarmory::{
     println,
     rng::{self, Rng},
+    serial::Serial,
     time::Instant,
 };
 
@@ -51,8 +52,7 @@ fn main() -> ! {
 
     println!("{:#?}", rng.stats());
 
-    // wait 5 seconds
-    usbarmory::delay(5 * usbarmory::CPU_FREQUENCY);
+    Serial::flush();
 
     // then reset the board to return to the u-boot console
     usbarmory::reset()
