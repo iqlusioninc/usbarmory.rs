@@ -3,9 +3,11 @@
 #![no_main]
 #![no_std]
 
+use core::time::Duration;
+
 use exception_reset as _; // default exception handler
 use panic_serial as _; // panic handler
-use usbarmory::led::Leds;
+use usbarmory::{led::Leds, time};
 
 // NOTE binary interfaces, using `no_mangle` and `extern`, are extremely unsafe
 // as no type checking is performed by the compiler; stick to safe interfaces
@@ -17,8 +19,8 @@ fn main() -> ! {
     leds.white.off();
 
     // wait 5 seconds
-    usbarmory::delay(5 * usbarmory::CPU_FREQUENCY);
+    time::wait(Duration::from_secs(5));
 
-    // then reset the board to return to the u-boot console
+    // then reset the board
     usbarmory::reset()
 }

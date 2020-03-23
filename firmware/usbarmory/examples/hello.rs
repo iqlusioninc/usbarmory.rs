@@ -8,7 +8,7 @@
 
 use exception_reset as _; // default exception handler
 use panic_serial as _; // panic handler
-use usbarmory::println;
+use usbarmory::{println, serial::Serial};
 
 // NOTE binary interfaces, using `no_mangle` and `extern`, are extremely unsafe
 // as no type checking is performed by the compiler; stick to safe interfaces
@@ -17,8 +17,7 @@ use usbarmory::println;
 fn main() -> ! {
     println!("Hello, world!");
 
-    // wait 5 seconds
-    usbarmory::delay(5 * usbarmory::CPU_FREQUENCY);
+    Serial::flush();
 
     // then reset the board to return to the u-boot console
     usbarmory::reset()

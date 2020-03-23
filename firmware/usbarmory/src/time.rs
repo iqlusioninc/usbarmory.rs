@@ -49,10 +49,14 @@ impl Instant {
             "supplied instant is later than self"
         );
 
+        self.unchecked_duration_since(earlier)
+    }
+
+    fn unchecked_duration_since(self, earlier: Instant) -> Duration {
         // The RTC is clocked at `32_768` Hz
         const RTC_FREQUENCY: u64 = 1 << 15;
 
-        let ticks = self.value - earlier.value;
+        let ticks = self.value.wrapping_sub(earlier.value);
         Duration::new(
             // this should lower to a right shift
             ticks / RTC_FREQUENCY,
@@ -79,4 +83,16 @@ impl ops::Sub for Instant {
 /// Returns the time elapsed since the system last (re)booted
 pub fn uptime() -> Duration {
     Instant::now() - Instant { value: 0 }
+}
+
+/// Blocks execution for *at least* the specified `Duration`
+///
+/// This may block for longer due to higher priority tasks
+pub fn wait(dur: Duration) {
+    let start = Instant::now();
+
+    while Instant::now().unchecked_duration_since(start) < dur {
+        // busy wait
+        continue;
+    }
 }

@@ -6,7 +6,7 @@
 
 use exception_reset as _;
 use panic_serial as _;
-use usbarmory::println;
+use usbarmory::{println, serial::Serial};
 
 // NOTE binary interfaces, using `no_mangle` and `extern`, are extremely unsafe
 // as no type checking is performed by the compiler; stick to safe interfaces
@@ -24,7 +24,7 @@ extern "C" fn UndefinedInstruction() -> ! {
     println!("You've met with a terrible fate, haven't you?");
 
     // wait 5 seconds
-    usbarmory::delay(5 * usbarmory::CPU_FREQUENCY);
+    Serial::flush();
 
     usbarmory::reset()
 }

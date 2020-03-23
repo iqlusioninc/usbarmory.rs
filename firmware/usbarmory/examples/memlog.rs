@@ -33,8 +33,7 @@ fn main() -> ! {
     }
 
     // this transmit all the data that remains in the in-memory logger over the
-    // serial interface. Once the transmission is done the system is reset and
-    // you get back to the `u-boot` console
+    // serial interface. Once the transmission is done the system is reset
     memlog_flush_and_reset!();
 }
 
