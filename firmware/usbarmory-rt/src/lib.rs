@@ -81,8 +81,12 @@ unsafe extern "C" fn start() -> ! {
     }
     serial::init();
 
-    // TODO on cold boots it seems the receptacle takes quite a while to become active so we should
-    // add a delay here or busy poll the FUSB303 until it becomes ready
+    // on cold boots it seems the receptacle takes quite a while to become active so we have added
+    // a delay (~200ms) here to give it time to become ready
+    let start = rtc::now();
+    while rtc::now() < start + 6554 {
+        continue;
+    }
 
     extern "Rust" {
         // NOTE(Rust ABI) this subroutine is provided by a Rust crate
