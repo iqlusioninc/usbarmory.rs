@@ -3,7 +3,14 @@
 #![no_std]
 #![warn(missing_docs, rust_2018_idioms, unused_qualifications)]
 
-use pac::{GICC, GPIO4, SNVS_HP};
+use core::sync::atomic::{self, Ordering};
+
+use pac::GICC;
+
+mod i2c;
+mod leds;
+mod rtc;
+mod serial;
 
 // Software Generated Interrupts
 extern "C" {
@@ -38,29 +45,44 @@ include!(concat!(env!("OUT_DIR"), "/interrupts.rs"));
 // and external assembly must use the stable C ABI
 #[no_mangle]
 unsafe extern "C" fn start() -> ! {
-    // NOTE RAM initialization is skipped here because u-boot takes care of it
+    // NOTE the ROM bootloader can't write the initial values of `.data` to OCRAM because it uses
+    // the OCRAM itself. Thus we copy those here, after the ROM bootloader has terminated and
+    // there's no risk to corrupt memory
+    extern "C" {
+        static mut _sbss: u32;
+        static mut _ebss: u32;
+        static mut _sdata: u32;
+        static mut _edata: u32;
+        static _sidata: u32;
+    }
+
+    r0::zero_bss(&mut _sbss, &mut _ebss);
+    r0::init_data(&mut _sdata, &mut _edata, &_sidata);
+
+    // ensure all the previous writes are committed before any of the following code (which may
+    // access `.data`) is executed
+    atomic::fence(Ordering::SeqCst);
 
     /* Initialize some peripherals that will always be configured in this way */
-    // LEDS
-    const BLUE: u32 = 1 << 22;
-    const WHITE: u32 = 1 << 21;
-    // NOTE(borrow_unchecked) this is "before main"; no singletons exist yet
-    GPIO4::borrow_unchecked(|gpio| {
-        // set them as outputs
-        let old = gpio.GDIR.read();
-        gpio.GDIR.write(old | BLUE | WHITE);
-        // turn the white LED on and the blue LED off to indicate we are alive
-        let old = gpio.DR.read();
-        gpio.DR.write((old | BLUE) & !WHITE);
-    });
-
-    /// HP Real-Time Counter Enable
-    const SNVS_HP_CR_RTC_EN: u32 = 1;
-
     // enable the RTC with no calibration
-    SNVS_HP::borrow_unchecked(|snvs| {
-        snvs.CR.write(SNVS_HP_CR_RTC_EN);
-    });
+    rtc::init();
+
+    // LEDS
+    leds::init();
+    // turn the white LED on and the blue LED off to indicate we are alive
+    leds::set(false, true);
+
+    // the debug accessory (which routes the serial output of the device to the host) is connected
+    // to the Armory through a USB-C receptacle. This receptacle is disabled by default so we enable
+    // it here. The IC that manages the receptacle (FUSB303) only talks I2C.
+    i2c::init();
+    if i2c::init_fusb303().is_err() {
+        fatal()
+    }
+    serial::init();
+
+    // TODO on cold boots it seems the receptacle takes quite a while to become active so we should
+    // add a delay here or busy poll the FUSB303 until it becomes ready
 
     extern "Rust" {
         // NOTE(Rust ABI) this subroutine is provided by a Rust crate
@@ -107,6 +129,15 @@ extern "C" fn IRQ() {
         // end of interrupt
         gicc.EOIR.write(iid as u32);
     });
+}
+
+/// Fatal error during initialization: turn on both LEDs and halt the processor
+fn fatal() -> ! {
+    leds::set(true, true);
+
+    loop {
+        continue;
+    }
 }
 
 // NOTE this is written in assembly because it should never touch the stack

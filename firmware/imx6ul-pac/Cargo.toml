@@ -7,11 +7,13 @@ publish = false
 version = "0.0.0"
 
 [features]
+ccm = []
 ccm_analog = []
 gicc = []
 gicd = []
 gpio = []
 hw_dcp = []
+i2c = []
 iomuxc = []
 mmdc = []
 rng = []

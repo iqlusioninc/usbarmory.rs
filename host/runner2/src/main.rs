@@ -40,7 +40,7 @@ fn main() -> Result<(), anyhow::Error> {
 
     thread::spawn(|| {
         if let Err(e) = redirect() {
-            println!("serial interface error: {}", e);
+            eprintln!("serial interface error: {}", e);
         }
     });
 
@@ -63,7 +63,17 @@ fn main() -> Result<(), anyhow::Error> {
         .stderr(Stdio::null())
         .status()?;
     if !status.success() {
-        bail!("`imx_usb` failed");
+        bail!(
+            "`imx_usb` failed
+Possible fix: power cycle the board and retry with the `COLD_BOOT` env var set to `1` but
+only set it for the *first* Cargo runner invocation. That is:
+
+$ # power cycle the board then run
+$ COLD_BOOT=1 cargo run --example foo
+
+$ # omit the env var (or unset it) for the rest of invocations
+$ cargo run --example bar"
+        );
     }
 
     // the program is running now; if we see the SDP device get re-enumerated it means the Armory
@@ -71,7 +81,11 @@ fn main() -> Result<(), anyhow::Error> {
     loop {
         if Sdp::reconnected(usb_address) {
             // stop the `redirect` thread and terminate this process
+            // but give it some time to flush any remaining data
+            thread::sleep(Duration::from_millis(100));
             STOP.store(true, Ordering::Relaxed);
+            thread::sleep(Duration::from_millis(100));
+            eprintln!("device has reset");
             return Ok(());
         } else {
             thread::sleep(Duration::from_millis(100))
@@ -111,6 +125,8 @@ fn redirect() -> Result<(), anyhow::Error> {
                 thread::sleep(Duration::from_micros(125));
             }
         }
+    } else {
+        eprintln!("warning: serial interface couldn't be opened");
     }
 
     Ok(())

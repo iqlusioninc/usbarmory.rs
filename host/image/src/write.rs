@@ -152,8 +152,9 @@ fn init_ddr() -> Vec<AddressValue> {
 }
 
 // space reserved for the IVT, DCD and Boot Data
+// NOTE if you change this you'll need to update `usbarmory-rt/link.x`
 const RESERVED: u32 = 1024;
-// space between the start of DRAM and the IVT (this is required to boot from the eMMC)
+// space between the start of DRAM and the IVT (this is required to boot from the eMMC/uSD)
 const PADDING: u32 = 1024;
 
 impl Image {
