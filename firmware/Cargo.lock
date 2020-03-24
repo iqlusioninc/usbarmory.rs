@@ -177,7 +177,6 @@ dependencies = [
 name = "memlog"
 version = "0.0.0"
 dependencies = [
- "generic-array 0.13.2",
  "imx6ul-pac",
 ]
 

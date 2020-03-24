@@ -97,7 +97,7 @@ SECTIONS
     _ebss = .;
   } > OCRAM
 
-  .uninit ADDR(.uninit) + SIZEOF(.uninit) (NOLOAD) :
+  .uninit ADDR(.bss) + SIZEOF(.bss) (NOLOAD) :
   {
     *(.uninit.*);
   } > OCRAM

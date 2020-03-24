@@ -5,9 +5,6 @@ license = "Apache-2.0 OR MIT"
 name    = "memlog"
 version = "0.0.0"
 
-[dependencies]
-generic-array = "0.13.2"
-
 [dependencies.pac]
 features = ["gicc"]
 package = "imx6ul-pac"
