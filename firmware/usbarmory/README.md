@@ -14,7 +14,7 @@ from [F-Secure].
 
 ## Minimum Supported Rust Version
 
-- Rust **1.42**, you can use `1.42.0-beta.*` until that version is released
+- Rust **1.42**
 
 ## Status
 
@@ -31,15 +31,22 @@ stage and will not be ready to use for some time.
 
 ## Development dependencies
 
-- `arm-none-eabi-binutils` OR (`cargo-binutils` + `llvm-tools-preview`), if you
-  need to inspect ELF files. `pacman -S arm-none-eabi-binutils` for the former;
-  `cargo install cargo-binutils` (run it outside the `firmware` directory) and
-  `rustup component add llvm-tools-preview` for the latter.
+- [`imx_usb`] to load Rust programs directly into RAM. This program is available
+  on Arch Linux as the `imx-usb-loader-git` AUR package.
 
-- `arm-none-eabi-gcc`, only required if modifying assembly (`.s`) files
+[`imx_usb`]: https://github.com/boundarydevices/imx_usb_loader
+
+- `arm-none-eabi-binutils` OR (`cargo-binutils` + `llvm-tools-preview`), if you
+  need to inspect ELF files. `sudo pacman -S arm-none-eabi-binutils` (Arch
+  Linux) for the former; `cargo install cargo-binutils` (run it outside the
+  `firmware` directory) and `rustup component add llvm-tools-preview` for the
+  latter.
+
+- `arm-none-eabi-gcc`, required to load programs into the eMMC. Also needed when
+  modifying assembly (`.s`) files (these need to be re-assembled).
 
 - `qemu-system-arm` v4.x, to run firmware on the host and for some unit testing.
-  Install it with `pacman -S qemu-arch-extra` on Arch Linux.
+  Install it with `sudo pacman -S qemu-arch-extra` on Arch Linux.
 
 ## Building examples
 
@@ -49,6 +56,9 @@ $ cargo build --example $example_name
 ```
 
 ## Running on QEMU
+
+> NOTE: QEMU examples are currently broken (they need a different pre-main
+> initialization routine)
 
 The examples whose name is prefixed with `qemu-` are meant to be run on QEMU and
 not on hardware. To run these example use the following QEMU command:
@@ -68,22 +78,16 @@ $ qemu-system-arm \
   -kernel ../target/armv7a-none-eabi/release/examples/qemu-hello
 ```
 
-Or simply run:
-
-``` rust
-$ cargo run --example qemu-hello
-```
-
 If a example doesn't explicitly terminate itself, press `C-a` + `c` to bring up
 the QEMU console then enter the `quit` command to terminate QEMU.
 
-## Running on hardware
+## Running on hardware (development mode)
 
-### Requirements
+### Required hardware
 
-- A micro SD card with a capacity of at least 4 GB
-
-- USB Armory debug accessory
+Not a hard requirement but the USB Armory debug accessory is highly recommended
+as `println!` and other logging mechanism will send data over the serial
+interface and the debug accessory lets you receive this data on the host side.
 
 ### ELF images
 
@@ -128,367 +132,214 @@ section              size      addr
 The ELF file is 40 KB on disk but only uses around 2 KB of memory when loaded
 in RAM.
 
-### One time setup
+### Using the USB Armory debug accessory
 
-We'll load ELF images interactively using the u-boot console so the first step
-is to flash u-boot in some persistent memory to use it as the second stage
-loader. We'll use the microSD card for this.
+You can omit this section if you are not going to use the debug accessory.
 
-#### Flash u-boot
+The debug accessory lets you receive data sent by the Armory through its serial
+interface (UART). To visualize the data and interact with the Armory via the
+serial interface you'll need to install and configure a terminal emulator like
+`minicom`. Furthermore, on Linux (and other POSIX OSes) you'll need to tweak
+some permissions to open the serial device as a non-root user. This section
+covers how to do those two.
 
-First flash [a pre-compiled Debian image][debian-images] (we have tested the
-20191219 release) into the SD card. The steps for this are documented
-[here][debian-flash]; a summary is reproduced below:
+#### `minicom`
 
-[debian-images]: https://github.com/f-secure-foundry/usbarmory-debian-base_image/releases
-[debian-flash]: https://github.com/f-secure-foundry/usbarmory-debian-base_image#installation
-
-``` rust
-$ ls *.raw.xz
-usbarmory-mark-two-debian_stretch-base_image-20191219.raw.xz
-
-$ unxz *.raw.xz
-
-$ # NOTE replace `/dev/sdX` with the path to the SD card
-$ sudo dd if=*.raw of=/dev/sdX bs=1M conv=fsync
-
-$ sync
-```
-
-Then insert the SD card in the Armory and set the boot switch (bottom side of
-the PCB) to the `μSD` position. You may need to remove the enclosure as the boot
-switch is covered by a plastic film.
-
-#### Non-root access to the debug accessory
-
-When plugged into a UNIX(-like) machine (via the side micro USB cable) the debug
-accessory appears as 4 different TTY devices. On Linux, you'll see them as
-`/dev/ttyUSB*` devices.
+Install `minicom` using the following command (Arch Linux):
 
 ``` console
-$ # first: connect your PC to the debug accessory using a micro USB cable
-$ ls -l /dev/ttyUSB*
-crw-rw---- 1 root uucp 188, 0 Jan  9 13:06 /dev/ttyUSB0
-crw-rw---- 1 root uucp 188, 1 Jan  9 13:06 /dev/ttyUSB1
-crw-rw---- 1 root uucp 188, 2 Jan  9 13:06 /dev/ttyUSB2
-crw-rw---- 1 root uucp 188, 3 Jan  9 13:06 /dev/ttyUSB3
+$ sudo pacman -S minicom
 ```
 
-The exact permissions depend on your OS / distribution. In the above case adding
-yourself to `uucp` group (`usermod -a -G uucp $username` & log out and in) would
-be all that's needed to access the USB device as a non-root user. If you need to
-change permissions write a udev rule like the one below, which will make the TTY
-devices world readable and writable:
+Create the following configuration file:
 
-``` console
-$ cat /etc/udev/rules.d/50-usbarmory.rules
-# USB Armory Mk II debug accessory (FT4232H)
-ATTRS{idVendor}=="0403", ATTRS{idProduct}=="6011", MODE:="0666"
+> **IMPORTANT** this file must contain at least one newline (`\n`) at the end or
+> `minicom` will fail to start, parse the config file or hang.
 
-$ # make the above rule effective
-$ # you'll need to unplug and replug the debug accessory
-$ sudo udevadm control --reload-rules
 ```
-
-#### Identify u-boot console
-
-The Debian u-boot image is configured to use UART2 serial interface for its
-console. The UART2 pins are routed to the *third* bus interface (*C*DBUS) of the
-(FTDI chip on the) debug accessory. On Linux, this interface corresponds to the
-`/dev/ttyUSB2` device. If your OS does not enumerate the USB devices of the FTDI
-chip in order then you can connect to each device in turn to see which is used
-for the u-boot console and Linux logs.
-
-Any terminal emulator will do (e.g. `ckermit`, `picocom`, etc.) but I recommend
-using `minicom` as we'll use that in the next step. Create the following file to
-make the defaults settings of `minicom` compatible with the Debian u-boot
-console.
-
-> NOTE: on Arch Linux you can install `minicom` with the following command `sudo
-> pacman -S minicom`
-
-> IMPORTANT: the following file must end in a newline or `minicom` will hang (!)
-> on startup
-
-``` console
 $ cat ~/.minirc.dfl
+pu addcarreturn Yes
 pu baudrate 115200
 pu bits 8
 pu parity N
-pu stopbits 1
 pu rtscts No
+pu stopbits 1
 pu xonxoff No
 
 ```
 
-Then you can connect to a USB serial interface using the following command:
+#### Non-root permissions
+
+If you connect the debug accessory to your PC using a micro USB cable you'll see
+the following USB device in `lsusb` (or equivalent):
 
 ``` console
-$ minicom -D /dev/ttyUSB2
-```
-
-Now connect the debug accessory to the *side* USB-C port of the Armory; make
-sure that the top sides of both boards are lined up: the LEDs on the Armory
-should be facing up and the components of the debug accessory should also be
-facing up. Note that it's *not* necessary to connect the Armory itself to your
-PC. If you power cycle the Armory by unplugging and replugging the debug
-accessory to your PC (micro USB cable) then you should see this output on
-`minicom` -- if you have connected to the right TTY device, otherwise repeat the
-power cycling with a different TTY device.
-
-
-``` console
-U-Boot 2019.07 (Dec 19 2019 - 12:39:10 +0100)
-
-CPU:   Freescale i.MX6ULL rev1.1 at 396 MHz
-Reset cause: WDOG
-Model: F-Secure USB armory Mk II
-Board: F-Secure USB armory Mk II
-I2C:   ready
-DRAM:  512 MiB
-MMC:   FSL_SDHC: 0, FSL_SDHC: 1
-Loading Environment from MMC... OK
-In:    serial
-Out:   serial
-Err:   serial
-Net:   usb_ether
-Error: usb_ether address not set.
-
-Hit any key to stop autoboot:  0
-switch to partitions #0, OK
-mmc0 is current device
-Scanning mmc 0:1...
-switch to partitions #0, OK
-mmc1(part 0) is current device
-** No partition table - mmc 1 **
-3065816 bytes read in 151 ms (19.4 MiB/s)
-22311 bytes read in 22 ms (990.2 KiB/s)
-Kernel image @ 0x80800000 [ 0x000000 - 0x2ec7d8 ]
-## Flattened Device Tree blob at 82000000
-   Booting using the fdt blob at 0x82000000
-   Loading Device Tree to 9f567000, end 9f56f726 ... OK
-
-Starting kernel ...
+$ lsusb
 (..)
-Debian GNU/Linux 9 usbarmory ttymxc1
-
-usbarmory login:
+Bus 001 Device 029: ID 0403:6011 Future Technology Devices International (..)
 ```
 
-Now you know which TTY device to use!
-
-#### Disable the Linux startup
-
-The Debian u-boot defaults to loading the Linux kernel but we want access to the
-u-boot console for development so let's change that. You can interrupt the Linux
-startup by entering the escape key into the u-boot console within two (!)
-seconds of the boot process. So have a `minicom` session connected the right TTY
-device, then power cycle the Armory and immediately mash the escape key on your
-keyboard. If you were fast enough you should see this output in the `minicom`
-session:
+On Linux, to use this USB device as a non-root user create the following file:
 
 ``` console
-=>
+$ cat /etc/udev/rules.d/50-usbarmory.rules
+ATTRS{idVendor}=="15a2", ATTRS{idProduct}=="0080", TAG+="uaccess"
 ```
 
-`=> ` is the u-boot prompt. If you don't see anything print you likely
-successfully stopped the Linux startup; you can confirm by entering the
-following command into `minicom`:
+Then run the following command to update `udev` rules:
 
 ``` console
-=> version
-U-Boot 2019.07 (Dec 19 2019 - 12:39:10 +0100)
-
-arm-linux-gnueabihf-gcc (Debian 8.3.0-2) 8.3.0
-GNU ld (GNU Binutils for Debian) 2.31.1
+$ sudo udevadm control --reload-rules
 ```
 
-Now enter the `printenv` command into the u-boot console:
+Re-connecting the debug accessory to your PC should show the following
+permissions: 
 
 ``` console
-=> printenv
+$ lsusb
 (..)
-bootcmd=run start_normal
-bootcmd_mmc0=devnum=0; run mmc_boot
-bootcmd_mmc1=devnum=1; run mmc_boot
-bootdelay=2
+Bus 001 Device 030: ID 0403:6011 Future Technology Devices International (..)
+
+$ # the '+' is the important part
+$ ls -l /dev/bus/usb/001/030
+crw-rw----+ 1 root root 189, 28 Mar 24 12:32 /dev/bus/usb/001/029
+```
+
+If you don't get a similar output try logging out and logging in again.
+
+### Hardware configuration (boot mode)
+
+- Select the microSD as the Armory's boot mode: there's a DIP switch on the back
+of the Armory; put it in the "uSD" position.
+
+- *Remove* any microSD card from the Armory and then connect it to a USB-C port
+ on your PC.
+ 
+If you run `lsusb` (or equivalent) you should see the following Vendor ID -
+ Product ID pair:
+
+``` console
+$ lsusb
 (..)
-```
-
-Check the `bootcmd` variable. This is the default boot command so write down its
-contents somewhere if you want to restore it later because we'll change it to
-*not* boot Linux. Run the following commands to change the boot command:
-
-``` console
-=> setenv bootcmd version
-
-=> saveenv
-Saving Environment to MMC... Writing to MMC(0)... OK
-
-=> reset
-resetting ...
-
-U-Boot 2019.07 (Dec 19 2019 - 12:39:10 +0100)
-
-CPU:   Freescale i.MX6ULL rev1.1 at 396 MHz
-Reset cause: WDOG
-Model: F-Secure USB armory Mk II
-Board: F-Secure USB armory Mk II
-I2C:   ready
-DRAM:  512 MiB
-MMC:   FSL_SDHC: 0, FSL_SDHC: 1
-Loading Environment from MMC... OK
-In:    serial
-Out:   serial
-Err:   serial
-Net:   usb_ether
-Error: usb_ether address not set.
-
-Hit any key to stop autoboot:  0
-U-Boot 2019.07 (Dec 19 2019 - 12:39:10 +0100)
-
-arm-linux-gnueabihf-gcc (Debian 8.3.0-2) 8.3.0
-GNU ld (GNU Binutils for Debian) 2.31.1
-
-=>
-```
-
-Now the Armory will always boot to the u-boot console.
-
-#### Setting up `ckermit`
-
-We'll transfer ELF images from the host to the Armory using the serial
-connection (u-boot console) between the two. The u-boot project recommends the
-C-Kermit terminal emulator for these binary transfers so let's set that up.
-
-> NOTE: On Arch Linux, you can install the tool with the `sudo pacman -S
-> ckermit` command.
-
-Create the following file to set the default settings of the tool:
-
-> NOTE: These are the settings recommended in the [u-boot manual]
-
-[u-boot manual]: https://www.denx.de/wiki/view/DULG/SystemSetup#Section_4.3.
-
-``` console
-$ cat .kermrc
-set carrier-watch off
-set handshake none
-set flow-control none
-robust
-set file type bin
-set file name lit
-set rec pack 1000
-set send pack 1000
-set window 5
+Bus 001 Device 022: ID 15a2:0080 Freescale Semiconductor, Inc.
+(..)
 ```
 
 ### Loading an ELF image
 
-Once you are done configuring u-boot on the target and C-Kermit on the host use
-the following procedure to load ELF images:
+Navigate to the `firmware/usbarmory` and use `cargo run` to load a program into
+memory. 
 
-> NOTE: on Arch Linux, the `/var/lock` directory is not writable by non-root
-> users so the `ckermit` command will fail to start. A workaround is to use a
-> different lock directory using the `LOCK_DIR` env variable. For example,
-> setting it like this: `export LOCK_DIR=/tmp` does the trick.
-
-``` console
-$ ckermit -l /dev/ttyUSB2 -b 115200 -c
-```
-
-This will establish a serial connection to the target; this is the u-boot
-console we used before:
+**IMPORTANT** Set the `COLD_BOOT` environment variable when loading a program
+for the *first* time after power cycling the board (unplugging it and plugging
+it again). Omit the env var in consecutive invocations.
 
 ``` console
-=> version
-U-Boot 2019.07 (Dec 19 2019 - 12:39:10 +0100)
+$ # use COLD_BOOT the first time
 
-arm-linux-gnueabihf-gcc (Debian 8.3.0-2) 8.3.0
-GNU ld (GNU Binutils for Debian) 2.31.1
+$ COLD_BOOT=1 cargo run --example hello
+Hello, world!
+(device has reset)
+
+$ # then omit COLD_BOOT
+
+$ cargo run --example hello
+Hello, world!
+(device has reset)
 ```
 
-The first step is to load the *entire* ELF image into the target memory. ELF
-images contain metadata and debug symbols so they can be rather large (e.g.
-MBs). We'll load the ELF image into DRAM (DDR3 RAM) first using the `loadb`
-command:
+Programs loaded using the Cargo runner are loaded into RAM. These programs will
+be lost when power is removed from the board.
 
-> NOTE DRAM starts at address `0x8000_0000` and it has a size of 512 MB (you can
-> check these facts using the `bdinfo` command in the u-boot console); part of
-> this memory is used by u-boot itself. `loadb` with no arguments will load data
-> into a part of DRAM that's not used by u-boot
+## Setting up a uSD Boot
+
+### Required hardware
+
+- uSD card
+- (USB) uSD card reader (host side)
+
+### Creating a program image
+
+The ROM bootloader doesn't understand ELF files; it expects a different program
+image format. A tool, named `elf2image`, is provided, in `host/image`, to
+convert ELF files to the image format expected by the ROM bootloader.
+
+Use the following command, from the `host/image` directory, to convert an ELF
+file: 
 
 ``` console
-=> loadb
-## Ready for binary (kermit) download to 0x82000000 at 115200 bps...
+$ # adjust this to your needs
+$ path2elf=../../firmware/target/armv7a-none-eabi/debug/examples/blinky
+
+$ cargo run --bin elf2image -- $path2elf
+
+$ stat --printf="%s\n" blinky.bin
+9840
+
+$ hexyl -n16 blinky.bin
+┌────────┬─────────────────────────┬─────────────────────────┬────────┬────────┐
+│00000000│ d1 00 20 40 00 08 00 80 ┊ 00 00 00 00 2c 04 00 80 │×0 @0•0×┊0000,•0×│
+└────────┴─────────────────────────┴─────────────────────────┴────────┴────────┘
 ```
 
-Now press `Ctrl-\`, followed by `c`. This will bring you to the C-Kermit
-console:
+### Flashing the image
+
+Insert the uSD card into your PC's card reader and identify its device file.
 
 ``` console
-=> loadb
-## Ready for binary (kermit) download to 0x82000000 at 115200 bps...
-
-(Back at x1)
-----------------------------------------------------
-C-Kermit 9.0.302 OPEN SOURCE:, 20 Aug 2011, for Linux (64-bit)
- Copyright (C) 1985, 2011,
-  Trustees of Columbia University in the City of New York.
-Type ? or HELP for help.
-(/tmp) C-Kermit>
+$ lsblk
+NAME          MAJ:MIN RM   SIZE RO TYPE  MOUNTPOINT
+mmcblk0       179:0    0  14.5G  0 disk
 ```
 
-Then tell C-Kermit where to find the ELF image using the `send` command:
+Run the following command to flash the image into the uSD card.
+
+**WARNING** the following command will corrupt existing data. Do a backup if
+there's anything on the uSD that you'll like to keep.
+
+**NOTE** The ROM bootloader expects the boot image to be located at a
+1024-byte offset. Hence the `seek=2` argument in the previous command. This
+also means that you can keep a partition table in those first 1024 bytes (e.g.
+MBR). You can partition the uSD before running the `dd` command -- ensure any
+partition you create doesn't collide with the image you are about to flash.
 
 ``` console
-(/tmp) C-Kermit> send /a/b/usbarmory.rs/firmware/target/armv7a-none-eabi/release/examples/leds
+$ sudo dd if=blinky.bin of=/dev/mmcblk0 bs=512 seek=2 conv=fsync
+$ sync
 ```
 
-You'll briefly see a progress bar and then return to the C-Kermit console. Now
-enter the `connect` command to return to the u-boot console:
+### Hardware configuration (boot mode)
 
-``` console
-(/tmp) C-Kermit> connect
-Connecting to /dev/ttyUSB2, speed 115200
- Escape character: Ctrl-\ (ASCII 28, FS): enabled
-Type the escape character followed by C to get back,
-or followed by ? to see other options.
-----------------------------------------------------
-CACHE: Misaligned operation at range [90000000, 90001284]
-## Total Size      = 0x00001284 = 4740 Bytes
-## Start Addr      = 0x82000000
-=>
-```
+- Select the microSD as the Armory's boot mode: there's a DIP switch on the back
+of the Armory; put it in the "uSD" position.
 
-Now we'll tell u-boot to read the ELF image we just wrote in DRAM, load the
-program data into the memory regions specified by the ELF metadata, and run the
-program by jumping into the entry point of the ELF. All this is done with the
-`bootelf` command:
+- *Insert* the uSD card into the Armory's slot.
 
-``` console
-$ bootelf -s
-## Starting application at 0x00900024 ...
-```
+Now you can plug the Armory into a USB-C port and it will run the program you
+just flashed.
 
-If you run the `leds` example you should see the blue LED turn on and the white
-LED turn off.
+## Setting up eMMC Boot
 
-"One-off" applications, like `leds`, will reset the SoC and return you to the
-u-boot console; from there you can load a new program using `loadb` and
-`bootelf` as shown before.
+As the Armory HAL currently doesn't provide functionality to receive images from
+a PC and flash them into the internal eMMC we'll use [u-boot] to flash images
+into the eMMC.
 
-Some applications, like `blinky`, have "no end" and won't reset the board. To
-flash a new program after running these applications you'll have to power cycle
-the Armory (unplug and replug) and repeat these steps.
+[u-boot]: https://www.denx.de/wiki/U-Boot
 
-### Setting up eMMC Boot
+### Required hardware
 
-It's also possible to flash U-Boot onto the internal eMMC. To do that, a custom
-U-Boot build is required that launches the firmware image from eMMC instead from
-the external SD card.
+- USB Armory debug accessory
+- micro USB cable (for the debug accessory)
 
-#### Building U-Boot
+**NOTE** if you haven't used the debug accessory before check out the "Running
+on hardware (development mode)" section for details on how to configure your PC
+to use it.
+
+### Creating a program image
+
+Same steps as in the "Setting up a uSD Boot" version.
+
+### Building U-Boot
 
 Clone U-Boot from `https://gitlab.denx.de/u-boot/u-boot.git` and check out the
 [`v2019.07`] tag, and obtain the following patches to add support for the USB
@@ -501,146 +352,104 @@ Now apply both of them by running `git am < file.patch` while in the checked-out
 repository.
 
 Run `make usbarmory-mark-two_config` to use the default USB Armory
-configuration. Now we need to edit `.config` as follows to make U-Boot boot from
-the internal eMMC:
+configuration.
 
-```patch
---- .config
-+++ .config
-@@ -224,8 +224,8 @@
- # CONFIG_TARGET_ZC5601 is not set
- CONFIG_SYS_DDR_512MB=y
- # CONFIG_SYS_DDR_1GB is not set
--CONFIG_SYS_BOOT_DEV_MICROSD=y
--# CONFIG_SYS_BOOT_DEV_EMMC is not set
-+# CONFIG_SYS_BOOT_DEV_MICROSD is not set
-+CONFIG_SYS_BOOT_DEV_EMMC=y
- CONFIG_SYS_BOOT_MODE_NORMAL=y
- # CONFIG_SYS_BOOT_MODE_UMS is not set
- # CONFIG_SYS_BOOT_MODE_TFTP is not set
+Then run `make`, as shown below, to build U-Boot:
+
+``` console
+$ # NOTE this depends on arm-none-eabi-gcc and other C build tools
+$ ARCH=arm CROSS_COMPILE=arm-none-eabi- make
 ```
 
-(You can apply this manually, or run `patch .config` and paste it into stdin.)
-
-Now, run `make` to build U-Boot. This should result in a `u-boot-dtb.imx` file,
-which contains the built U-Boot binary and any additional info needed by the
-i.MX boot ROM.
+This should result in a `u-boot-dtb.imx` file, which contains the built U-Boot
+binary.
 
 [`v2019.07`]: https://github.com/u-boot/u-boot/releases/tag/v2019.07
 [ubootpatch0]: https://raw.githubusercontent.com/f-secure-foundry/usbarmory/master/software/u-boot/0001-ARM-mx6-add-support-for-USB-armory-Mk-II-board.patch
 [ubootpatch1]: https://raw.githubusercontent.com/f-secure-foundry/usbarmory/master/software/u-boot/0001-Drop-linker-generated-array-creation-when-CONFIG_CMD.patch
 
-#### Partitioning the eMMC
+### Flashing the image
 
-The i.MX boot ROM is meant to work with MBR-partitioned disks, and the U-Boot
-image is supposed to be flashed between the MBR and the first partition of the
-disk. The first disk partition will hold our firmware image, while the second
-will hold any user data.
+For this step you'll need to put the Armory in uSD boot mode (dip switch on
+the back set to "uSD") and *remove* any uSD card from the Armory's card slot.
 
-In order to partition the eMMC, we can load U-Boot into RAM and have it emulate
-a USB mass storage device. To do that, make sure the switch on the Armory is in
-the `µSD` position, and *take out* the SD card. This will make it boot into the
-USB boot loader.
+Now connect the debug accessory to the USB Armory, connect the USB Armory into
+one of your PC's USB-C ports and connect the debug accessory to your PC (micro
+USB cable). You should see the following USB devices appear in `lsusb` (or
+equivalent): 
 
-To use it, you need to build the [`imx_usb_loader`] tool.
-
-To load our freshly built U-Boot, plug in the Armory as well as the debug
-accessory, and run
-
-    sudo ./imx_usb -v u-boot-dtb.imx
-
-At the end, this should output something like:
-
+``` console
+$ lsusb
+(..)
+Bus 001 Device 025: ID 15a2:0080 Freescale Semiconductor, Inc.
+(..)
+Bus 001 Device 029: ID 0403:6011 Future Technology Devices International (..)
 ```
+
+Now load u-boot into the device's RAM using the following command:
+
+``` console
+$ imx_usb -v ./u-boot-dtb.imx
+(..)
+<<<531456, 531456 bytes>>>
+succeeded (security 0x56787856, status 0x88888888)
 Verify success
 jumping to 0x877ff400
 ```
 
-Now U-Boot should be active and provide a prompt on the serial terminal. Run
-`ums 0 mmc 1` to expose the eMMC as a USB Mass Storage Device to the computer.
-Watch the `dmesg` output or use `lsblk` to find the Linux device this has
-created.
+Now access the u-boot console using `minicom`:
 
-Let's now create a partition layout like this:
+``` console
+$ minicom -b 115200 -D /dev/ttyUSB2
 
-```
-Number  Start   End     Size    Type     File system  Flags
- 1      5243kB  21.0MB  15.7MB  primary  ext2
- 2      21.0MB  15.7GB  15.7GB  primary
-```
+=> version
+U-Boot 2019.07-00002-gba935971cd (Mar 24 2020 - 12:23:32 +0100)
 
-To do that, run the following command, substituting `/dev/sdX` with your actual
-device:
-
-```
-sudo parted /dev/sdX \
-  --script mklabel msdos \
-  --script mkpart primary ext2 5M 21M \
-  --script mkpart primary 21M 100%
+arm-none-eabi-gcc (Arch Repository) 9.2.0
+GNU ld (GNU Binutils) 2.34
 ```
 
-**WARNING**: This will delete all data on the device. Double-check that you're
-passing the correct path, and that the eMMC doesn't contain any data you'd like
-to keep.
+Run the following command in the u-boot console to expose the eMMC as a USB Mass
+Storage Device:
 
-Running `lsblk` should now show somthing like this:
-
-```
-NAME        MAJ:MIN RM  SIZE RO TYPE MOUNTPOINT
-sdX           8:0    1 14.6G  0 disk
-├─sdX1        8:1    1   15M  0 part
-└─sdX2        8:2    1 14.6G  0 part
+``` console
+=> ums 0 mmc 1
 ```
 
-The next step is to copy the U-Boot image onto the eMMC. Run this command to do
-that:
+On a new host terminal identify the USB device:
 
-```
-sudo dd if=u-boot-dtb.imx of=/dev/sdX bs=512 seek=2 conv=fsync
-```
-
-(The boot ROM expects the image to start at an offset of 1024 Bytes, which is
-why we skip 2 blocks)
-
-Now we'll format the first partition and put a test firmware on it. Build one
-of the examples in this directory first (the commands below assume `leds`),
-then run something like this to move it to `/boot/firmware.elf` on the eMMC:
-
-```
-sudo mkfs.ext2 /dev/sdX1
-sudo mount /dev/sdX1 /mnt
-sudo mkdir /mnt/boot
-sudo cp target/armv7a-none-eabi/debug/examples/leds /mnt/boot/firmware.elf
-sudo umount /mnt
+``` console
+$ lsblk
+NAME          MAJ:MIN RM   SIZE RO TYPE  MOUNTPOINT
+sda             8:0    1  14.6G  0 disk
 ```
 
-To finish up, run `sync` and exit the Mass Storage emulation by pressing
-`Ctrl+C` in the U-Boot terminal. Unplug the Armory and flip the switch to the
-eMMC position.
+Flash the program image (the output of `elf2image`) using the following command:
 
-[`imx_usb_loader`]: https://github.com/boundarydevices/imx_usb_loader
+**WARNING** the following command will corrupt existing data. Do a backup if
+there's anything on the eMMC that you'll like to keep.
 
-#### Configuring U-Boot
+**NOTE** The ROM bootloader expects the boot image to be located at a
+1024-byte offset. Hence the `seek=2` argument in the previous command. This
+also means that you can keep a partition table in those first 1024 bytes (e.g.
+MBR). You can partition the uSD before running the `dd` command -- ensure any
+partition you create doesn't collide with the image you are about to flash.
 
-Plugging in the Armory should now land you in the U-Boot prompt after printing
-`zimage: Bad magic!`. This is because the U-Boot patches configure it to boot a
-Linux kernel that doesn't exist, with no way of overriding that behavior during
-build. Luckily, we can modify the environment variables controlling this
-behavior after the fact and persist them to eMMC (with secure boot, this won't
-be possible, but that will look for a different file anyways).
-
-To configure U-Boot to boot an ELF firmware from `/boot/firmware.elf` on the
-first partition, run the following commands:
-
-```
-=> setenv bootcmd ext2load mmc 1:1 0x82000000 /boot/firmware.elf \; bootelf
-=> saveenv
-=> reset
+``` console
+$ sudo dd if=blinky.bin of=/dev/sda bs=512 seek=2 conv=fsync
+$ sync
 ```
 
-If you chose an example that resets the CPU, this will continuously reboot into
-that example. You can interrupt this process by pressing a key when U-Boot
-prints `Hit any key to stop autoboot`.
+Now terminate the USB Mass Store Device emulation by pressing Ctrl-C in the
+`minicom` terminal / u-boot console. You can now disconnect the Armory.
+
+### Hardware configuration (boot mode)
+
+- Select the eMMC as the Armory's boot mode: there's a DIP switch on the back
+  of the Armory; put it in the "eMMC" position.
+
+Now you can plug the Armory into a USB-C port and it will run the program you
+just flashed.
 
 ## Contributing
 

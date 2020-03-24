@@ -85,7 +85,7 @@ $ cargo run --example bar"
             thread::sleep(Duration::from_millis(100));
             STOP.store(true, Ordering::Relaxed);
             thread::sleep(Duration::from_millis(100));
-            eprintln!("device has reset");
+            eprintln!("(device has reset)");
             return Ok(());
         } else {
             thread::sleep(Duration::from_millis(100))
