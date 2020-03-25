@@ -12,7 +12,7 @@ use core::cell::RefCell;
 
 use cortex_a::register::cpsr;
 use heapless::Vec;
-use pac::{CCM_ANALOG, USB_ANALOG, USB_UOG1, USBPHY1};
+use pac::{CCM_ANALOG, USBPHY1, USB_ANALOG, USB_UOG1};
 use typenum::marker_traits::Unsigned;
 
 use crate::{memlog, memlog_flush_and_reset};

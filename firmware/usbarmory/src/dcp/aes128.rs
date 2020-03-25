@@ -157,7 +157,8 @@ impl Aes128 {
                 // appears that a higher numbered channel needs to be enabled for this channel to
                 // work (probably the hardware expects the channels to be enabled from higher
                 // numbered to lower numbered)
-                dcp.CHANNELCTRL_SET.write((1 << AES128_RAM_CHANNEL) | (1 << 3));
+                dcp.CHANNELCTRL_SET
+                    .write((1 << AES128_RAM_CHANNEL) | (1 << 3));
             });
 
             Some(Aes128 {
