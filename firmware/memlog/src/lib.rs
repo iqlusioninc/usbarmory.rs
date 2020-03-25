@@ -19,55 +19,48 @@
 #![no_std]
 
 use core::{
-    cell::UnsafeCell,
-    cmp, fmt,
-    mem::MaybeUninit,
-    ptr, slice,
+    cmp, fmt, ptr, slice,
     sync::atomic::{AtomicUsize, Ordering},
 };
 
-use generic_array::{typenum::consts, ArrayLength, GenericArray};
-use pac::gicc::GICC;
+use pac::GICC;
 
-// End users must only ever modify the `consts` type parameter of `B0` and `B1`
+// End users must only ever modify these two `consts`
+const N0: usize = 8 * 1024; // size of circular buffer @ priority 0
+const N1: usize = 8 * 1024; // size of circular buffer @ priority !0
 
-/// Circular buffer @ priority 0
-static mut B0: Buffer<BigArray<consts::U4>> = Buffer::new();
-//                                     ^^
+#[link_section = ".uninit.memlog_B0"]
+static mut B0: [u8; N0] = [0; N0];
 
-/// Circular buffer @ priority !0
-static mut B1: Buffer<BigArray<consts::U8>> = Buffer::new();
-//                                     ^^
+#[link_section = ".uninit.memlog_B0"]
+static mut B1: [u8; N1] = [0; N1];
 
-/// Hard-coded buffer capacity
-const M: usize = 1024;
-
-struct Buffer<A> {
+struct Buffer {
+    bufferp: *mut u8,
+    cap: usize,
     read: AtomicUsize,
     write: AtomicUsize,
-    buffer: UnsafeCell<MaybeUninit<A>>,
 }
 
-impl<A> Buffer<A> {
-    const fn new() -> Self {
+impl Buffer {
+    /// # Safety
+    /// Caller must ensure tha `bufferp` points into an array that's at least `cap` bytes big
+    /// Caller must manually enforce Rust aliasing rules
+    const unsafe fn new(cap: usize, bufferp: *mut u8) -> Self {
         Self {
+            bufferp,
+            cap,
             read: AtomicUsize::new(0),
             write: AtomicUsize::new(0),
-            buffer: UnsafeCell::new(MaybeUninit::uninit()),
         }
     }
 }
 
-type BigArray<N> = GenericArray<[u8; 1024], N>;
-
-impl<N> Buffer<BigArray<N>>
-where
-    N: ArrayLength<[u8; 1024]>,
-{
+impl Buffer {
     fn push(&self, bytes: &[u8]) {
-        let bufferp = self.buffer.get() as *mut u8;
+        let bufferp = self.bufferp;
         let write = self.write.load(Ordering::Acquire);
-        let cap = M * N::USIZE;
+        let cap = self.cap;
 
         let read = self.read.load(Ordering::Relaxed);
         let n = bytes.len();
@@ -97,10 +90,10 @@ where
     }
 
     fn peek(&self, f: &mut Option<impl FnOnce(&[u8]) -> usize>) {
-        let bufferp = self.buffer.get() as *const u8;
+        let bufferp = self.bufferp;
         let read = self.read.load(Ordering::Acquire);
         let write = self.write.load(Ordering::Relaxed);
-        let cap = M * N::USIZE;
+        let cap = self.cap;
 
         // NOTE(cmp::min) avoid exceeding the boundary of the buffer
         let n = cmp::min(write.wrapping_sub(read), cap - (read % cap));
@@ -128,15 +121,18 @@ impl fmt::Write for Logger {
     }
 }
 
+static mut L0: Buffer = unsafe { Buffer::new(N0, &mut B0 as *mut _ as *mut u8) };
+static mut L1: Buffer = unsafe { Buffer::new(N1, &mut B1 as *mut _ as *mut u8) };
+
 /// Implementation details
 #[doc(hidden)]
 pub fn log(s: &str) {
     let bytes = s.as_bytes();
     unsafe {
         if in_main() {
-            B0.push(bytes);
+            L0.push(bytes);
         } else {
-            B1.push(bytes);
+            L1.push(bytes);
         }
     }
 }
@@ -151,8 +147,8 @@ pub fn peek(all: bool, f: impl FnOnce(&[u8]) -> usize) {
     unsafe {
         if all || in_main() {
             let mut f = Some(f);
-            B1.peek(&mut f);
-            B0.peek(&mut f);
+            L1.peek(&mut f);
+            L0.peek(&mut f);
         }
     }
 }
@@ -167,11 +163,11 @@ fn in_main() -> bool {
 #[macro_export]
 macro_rules! memlog {
     ($s:expr) => {
-        $crate::log(concat!($s, "\n\r"));
+        $crate::log(concat!($s, "\n"));
     };
 
     ($s:expr, $($args:tt)*) => {{
         use core::fmt::Write as _;
-        let _ = write!($crate::Logger, concat!($s, "\n\r"), $($args)*); // never errors
+        let _ = write!($crate::Logger, concat!($s, "\n"), $($args)*); // never errors
     }};
 }

@@ -20,7 +20,7 @@
 
 use exception_reset as _; // default exception handler
 use panic_serial as _; // panic handler
-use usbarmory::println;
+use usbarmory::{println, serial::Serial};
 
 // NOTE binary interfaces, using `no_mangle` and `extern`, are extremely unsafe
 // as no type checking is performed by the compiler; stick to safe interfaces
@@ -39,6 +39,7 @@ fn fib(n: u32) -> u32 {
     // force a 1KB stack allocation on each call
     let mut x = [0u8; 1024];
     println!("fib({}, {:?})", n, x.as_mut_ptr());
+    Serial::flush();
 
     if n < 2 {
         1

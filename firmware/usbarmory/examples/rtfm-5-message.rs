@@ -2,7 +2,7 @@
 //!
 //! Message passing is an alternative to explicit shared memory.
 //!
-//! This examples makes two tasks exchange ten million messages
+//! This examples makes two tasks exchange 100K messages
 
 #![no_main]
 #![no_std]
@@ -11,7 +11,7 @@ use exception_reset as _; // default exception handler
 use panic_serial as _; // panic handler
 use usbarmory::{println, serial::Serial};
 
-const THRESHOLD: u32 = 10_000_000;
+const THRESHOLD: u32 = 100_000;
 
 #[rtfm::app]
 const APP: () = {

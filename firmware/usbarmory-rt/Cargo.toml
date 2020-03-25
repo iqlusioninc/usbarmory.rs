@@ -7,11 +7,19 @@ license = "Apache-2.0 OR MIT"
 
 [dependencies]
 cortex-a = { path = "../cortex-a" }
-pac = { package = "imx6ul-pac", path = "../imx6ul-pac" }
+r0 = "1.0.0"
 
-[features]
-# enable this feature to place .text and .rodata in DDR3 RAM
-use-dram = []
+[dependencies.pac]
+package = "imx6ul-pac"
+path = "../imx6ul-pac"
+features = ["ccm", "gicc", "gpio", "i2c", "iomuxc", "snvs_hp", "uart"]
 
 [build-dependencies]
 quote = "1.0.2"
+
+[features]
+# put most of the program (.text and .rodata) in DDR RAM (512 MB)
+dram = []
+
+# put the whole program in OCRAM (128 KB)
+ocram = []

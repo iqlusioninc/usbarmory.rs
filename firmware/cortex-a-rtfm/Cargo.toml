@@ -12,6 +12,10 @@ name = "rtfm"
 cortex-a = { path = "../cortex-a" }
 cortex-a-rtfm-macros = { path = "macros" }
 heapless = "0.5.1"
-pac = { package = "imx6ul-pac",  path = "../imx6ul-pac" }
 rtfm-core = "0.3.0"
 usbarmory-rt = { path = "../usbarmory-rt" }
+
+[dependencies.pac]
+features = ["gicc", "gicd"]
+package = "imx6ul-pac"
+path = "../imx6ul-pac"

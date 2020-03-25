@@ -149,7 +149,7 @@ fn main() -> ! {
         memlog!("OK");
 
         // flush a bit so the memlog buffer doesn't completely fill
-        for _ in 0..100_000 {
+        for _ in 0..1_000 {
             usbarmory::memlog_try_flush();
         }
     }

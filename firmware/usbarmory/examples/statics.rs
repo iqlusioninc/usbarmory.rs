@@ -14,7 +14,7 @@ use core::sync::atomic::{AtomicU64, Ordering};
 
 use exception_reset as _; // default exception handler
 use panic_serial as _; // panic handler
-use usbarmory::println;
+use usbarmory::{println, serial::Serial};
 
 // .bss
 static X: AtomicU64 = AtomicU64::new(0);
@@ -41,9 +41,7 @@ fn main() -> ! {
         Y.load(Ordering::Relaxed)
     );
 
-    // wait 5 seconds
-    usbarmory::delay(5 * usbarmory::CPU_FREQUENCY);
+    Serial::flush();
 
-    // then reset the board to return to the u-boot console
     usbarmory::reset()
 }

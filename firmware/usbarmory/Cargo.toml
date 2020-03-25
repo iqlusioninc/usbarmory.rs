@@ -19,16 +19,21 @@ cortex-a = { path = "../cortex-a" }
 digest = "0.8.1"
 heapless = "0.5.3"
 memlog = { path = "../memlog" }
-pac = { package = "imx6ul-pac", path = "../imx6ul-pac" }
 rand_core = "0.5.1"
 typenum = "1.11.2"
 usb-device = "0.2.5"
 zerocopy = "0.3.0"
 
+[dependencies.pac]
+features = ["ccm_analog", "hw_dcp", "rng", "uart", "usb_analog", "usb_uog", "usbphy", "usdhc", "wdog"]
+package = "imx6ul-pac"
+path = "../imx6ul-pac"
+
 [dependencies.usbarmory-rt]
 path = "../usbarmory-rt"
-## enable this feature to place .text and .rodata in DRAM
-# features = ["use-dram"]
+## choose the location of the .text and .rodata sections -- pick only one line
+# features = ["dram"]
+features = ["ocram"]
 
 [dev-dependencies]
 as-slice = "0.1.3"

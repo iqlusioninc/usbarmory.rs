@@ -4,15 +4,21 @@
 //!
 //! ```
 //! 0ns
-//! 5.000064849s
+//! 5s
 //! ```
 
 #![no_main]
 #![no_std]
 
+use core::time::Duration;
+
 use exception_reset as _; // default exception handler
 use panic_serial as _; // panic handler
-use usbarmory::{println, serial::Serial, time::Instant};
+use usbarmory::{
+    println,
+    serial::Serial,
+    time::{self, Instant},
+};
 
 // NOTE binary interfaces, using `no_mangle` and `extern`, are extremely unsafe
 // as no type checking is performed by the compiler; stick to safe interfaces
@@ -21,14 +27,12 @@ use usbarmory::{println, serial::Serial, time::Instant};
 fn main() -> ! {
     let before = Instant::now();
 
-    // wait 5 seconds
-    usbarmory::delay(5 * usbarmory::CPU_FREQUENCY);
+    time::wait(Duration::from_secs(5));
 
     let elapsed = before.elapsed();
     println!("{:?}", elapsed);
 
     Serial::flush();
 
-    // then reset the board to return to the u-boot console
     usbarmory::reset()
 }

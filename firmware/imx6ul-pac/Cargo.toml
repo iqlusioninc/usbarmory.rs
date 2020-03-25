@@ -5,3 +5,22 @@ license = "Apache-2.0 OR MIT"
 name = "imx6ul-pac"
 publish = false
 version = "0.0.0"
+
+[features]
+ccm = []
+ccm_analog = []
+gicc = []
+gicd = []
+gpio = []
+hw_dcp = []
+i2c = []
+iomuxc = []
+mmdc = []
+rng = []
+snvs_hp = []
+uart = []
+usb_analog = []
+usb_uog = []
+usbphy = []
+usdhc = []
+wdog = []

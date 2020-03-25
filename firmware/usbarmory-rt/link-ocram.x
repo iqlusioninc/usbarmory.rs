@@ -1,32 +1,20 @@
 /* Entry point of the ELF image */
+/* NOTE the `image` crate is hardcoded to use "_start" as the entry point; if */
+/* you change `ENTRY` here you'll need to update that crate too */
 ENTRY(_start);
 
 /* # Memory regions */
 MEMORY
 {
-  /* NOTE u-boot places its memory at the start of DRAM. When interactively */
-  /* loading programs u-boot will automatically place them after the memory */
-  /* it's using */
-
   /* On-chip RAM */
   OCRAM : ORIGIN = 0x00900000, LENGTH = 128K
 
-  /* Secure RAM */
-  CAAM : ORIGIN = 0x00100000, LENGTH = 32K
-
   /* DDR3 RAM */
-  /* NOTE
-     - DRAM starts at address 0x8000_0000 and has a size of 512MB
-     - the boot ROM will load u-boot into OCRAM, but
-     - u-boot will relocate itself at the end of DRAM (0xA000_0000); occupying
-       the space between `relocaddr` (see the output of the `bdinfo` command)
-       and the end of DRAM. In my case, `relocaddr` has a value of `0x9ff7a000`
-       so u-boot is using 536 KB of DRAM.
-     - u-boot loads ELFs at address 0x8200_0000; ELFs are usually <1MB in size
-     - given all this we'll limit our use of DRAM use to the range 0x8000_0000 -
-       0x8200_0000; that is before the ELF staging space.
-  */
-  DRAM : ORIGIN = 0x80000000, LENGTH = 32M
+  /* the first 1024B of padding is required for booting from eMMC/uSD */
+  /* the second 1024B of padding is space reserved for the IVT, Boot Data and DCD  */
+  /* NOTE if you modify the size of the second section in `host/image` then
+     you'll need to modify the ORIGIN */
+  DRAM : ORIGIN = 0x80000800, LENGTH = 512M
 }
 
 /* Use the default exception handler to handle all exceptions that have not been set by the user */
@@ -60,6 +48,7 @@ INCLUDE interrupts.x
 
 /* Make the linker exhaustively search these symbols, otherwise they may be ignored even if provided */
 EXTERN(_exceptions);
+EXTERN(start);
 
 /* Top of the stack */
 PROVIDE(__stack_top__ = ORIGIN(OCRAM) + LENGTH(OCRAM));
@@ -73,8 +62,9 @@ SECTIONS
   /* ## Standard ELF sections */
   .text __ram_start__ :
   {
+    _stext = .;
+
     /* put the entry point first to make the objdump easier to read */
-    *(.text._start);
     *(.text.start);
 
     /* the exception vector has an alignment requirement */
@@ -82,31 +72,64 @@ SECTIONS
     KEEP(*(.text._exceptions));
 
     *(.text .text.*);
-  } > OCRAM
+
+    . = ALIGN(4);
+    _etext = .;
+  } > OCRAM AT>DRAM
+
+  _sitext = LOADADDR(.text);
 
   .rodata ADDR(.text) + SIZEOF(.text) :
   {
+    . = ALIGN(4);
+    _srodata = .;
+
     *(.rodata .rodata.*);
-  } > OCRAM
+
+    . = ALIGN(4);
+    _erodata = .;
+  } > OCRAM AT>DRAM
+
+  _sirodata = LOADADDR(.rodata);
 
   .data ADDR(.rodata) + SIZEOF(.rodata) :
   {
+    . = ALIGN(4);
+    _sdata = .;
+
     *(.data .data.*);
+
+    . = ALIGN(4);
+    _edata = .;
+  } > OCRAM AT>DRAM
+
+  _sidata = LOADADDR(.data);
+
+  .bss ADDR(.data) + SIZEOF(.data) (NOLOAD) :
+  {
+    . = ALIGN(4);
+    _sbss = .;
+
+    *(.bss .bss.*);
+
+    . = ALIGN(4);
+    _ebss = .;
   } > OCRAM
 
-  .bss ADDR(.data) + SIZEOF(.data) :
+  /* Non-standard linker sections */
+  .uninit ADDR(.bss) + SIZEOF(.bss) (NOLOAD) :
   {
-    *(.bss .bss.*);
+    *(.uninit.*);
   } > OCRAM
+
+  .start :
+  {
+    *(.start._start);
+  } > DRAM
 
   /* ## Discarded sections */
   /DISCARD/ :
   {
-    /* We are not using a debugger so we discard the DWARF sections
-       This makes the ELF file much smaller, which makes transfers over the
-       slow serial interface much faster */
-    *(.debug_*);
-
     /* Information required for unwinding that's used by Rust applications */
     *(.ARM.exidx);
     *(.ARM.exidx.*);
@@ -116,3 +139,7 @@ SECTIONS
 
 /* alignment requirement */
 ASSERT(_exceptions % 32 == 0, "exception vector is not 32-byte aligned");
+ASSERT(_stext % 4 == 0 && _etext % 4 == 0 && _sitext % 4 == 0, "`.text` is not 4-byte aligned");
+ASSERT(_srodata % 4 == 0 && _erodata % 4 == 0 && _sirodata % 4 == 0, "`.rodata` is not 4-byte aligned");
+ASSERT(_sdata % 4 == 0 && _edata % 4 == 0 && _sidata % 4 == 0, "`.data` is not 4-byte aligned");
+ASSERT(_sbss % 4 == 0 && _ebss % 4 == 0, "`.bss` is not 4-byte aligned");

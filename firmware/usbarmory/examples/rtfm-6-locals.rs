@@ -16,7 +16,7 @@ use usbarmory::{println, serial::Serial};
 // A memory pool, usable from any context
 pool!(P: [u8; 128]);
 
-const THRESHOLD: usize = 1_000_000;
+const THRESHOLD: usize = 1_000;
 
 #[rtfm::app]
 const APP: () = {

@@ -26,7 +26,7 @@ fn main() -> ! {
 
     Serial::flush();
 
-    // then reset the board to return to the u-boot console
+    // then reset the board
     usbarmory::reset()
 }
 

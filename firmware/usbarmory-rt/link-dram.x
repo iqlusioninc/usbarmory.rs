@@ -1,4 +1,6 @@
 /* Entry point of the ELF image */
+/* NOTE the `image` crate is hardcoded to use "_start" as the entry point; if */
+/* you change `ENTRY` here you'll need to update that crate too */
 ENTRY(_start);
 
 /* # Memory regions */
@@ -7,22 +9,12 @@ MEMORY
   /* On-chip RAM */
   OCRAM : ORIGIN = 0x00900000, LENGTH = 128K
 
-  /* Secure RAM */
-  CAAM : ORIGIN = 0x00100000, LENGTH = 32K
-
   /* DDR3 RAM */
-  /* NOTE
-     - DRAM starts at address 0x8000_0000 and has a size of 512MB
-     - the boot ROM will load u-boot into OCRAM, but
-     - u-boot will relocate itself at the end of DRAM (0xA000_0000); occupying
-       the space between `relocaddr` (see the output of the `bdinfo` command)
-       and the end of DRAM. In my case, `relocaddr` has a value of `0x9ff7a000`
-       so u-boot is using 536 KB of DRAM.
-     - u-boot loads ELFs at address 0x8200_0000; ELFs are usually <1MB in size
-     - given all this we'll limit our use of DRAM use to the range 0x8000_0000 -
-       0x8200_0000; that is before the ELF staging space.
-  */
-  DRAM : ORIGIN = 0x80000000, LENGTH = 32M
+  /* the first 1024B of padding is required for booting from eMMC/uSD */
+  /* the second 1024B of padding is space reserved for the IVT, Boot Data and DCD  */
+  /* NOTE if you modify the size of the second section in `host/image` then
+     you'll need to modify the ORIGIN */
+  DRAM : ORIGIN = 0x80000800, LENGTH = 512M
 }
 
 /* Use the default exception handler to handle all exceptions that have not been set by the user */
@@ -83,26 +75,39 @@ SECTIONS
   .rodata :
   {
     *(.rodata .rodata.*);
+    /* align the end of this section so `_sidata` ends up aligned as well */
+    . = ALIGN(4);
   } > DRAM
 
   .data __ram_start__ :
   {
+    . = ALIGN(4);
+    _sdata = .;
     *(.data .data.*);
+    . = ALIGN(4);
+    _edata = .;
+  } > OCRAM AT>DRAM
+
+  _sidata = LOADADDR(.data);
+
+  .bss ADDR(.data) + SIZEOF(.data) (NOLOAD) :
+  {
+    . = ALIGN(4);
+    _sbss = .;
+    *(.bss .bss.*);
+    . = ALIGN(4);
+    _ebss = .;
   } > OCRAM
 
-  .bss ADDR(.data) + SIZEOF(.data) :
+  /* Non-standard linker sections */
+  .uninit ADDR(.bss) + SIZEOF(.bss) (NOLOAD) :
   {
-    *(.bss .bss.*);
+    *(.uninit.*);
   } > OCRAM
 
   /* ## Discarded sections */
   /DISCARD/ :
   {
-    /* We are not using a debugger so we discard the DWARF sections
-       This makes the ELF file much smaller, which makes transfers over the
-       slow serial interface much faster */
-    *(.debug_*);
-
     /* Information required for unwinding that's used by Rust applications */
     *(.ARM.exidx);
     *(.ARM.exidx.*);
@@ -112,3 +117,5 @@ SECTIONS
 
 /* alignment requirement */
 ASSERT(_exceptions % 32 == 0, "exception vector is not 32-byte aligned");
+ASSERT(_sdata % 4 == 0 && _edata % 4 == 0 && _sidata % 4 == 0, "`.data` is not 4-byte aligned");
+ASSERT(_sbss % 4 == 0 && _ebss % 4 == 0, "`.bss` is not 4-byte aligned");

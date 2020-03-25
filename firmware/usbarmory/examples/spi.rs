@@ -13,7 +13,7 @@
 use exception_reset as _;
 use pac::{gicc::GICC, gicd::GICD, uart::UART2};
 use panic_serial as _;
-use usbarmory::{led::Leds, println};
+use usbarmory::{led::Leds, println, serial::Serial};
 
 // Lowest priority
 const P0: u8 = 0b1111_1000;
@@ -58,8 +58,7 @@ fn main() -> ! {
     // unmask IRQ interrupts
     unsafe { cortex_a::enable_irq() }
 
-    // wait 5 seconds ~ serial transmission will finish during this blocking call
-    usbarmory::delay(5 * usbarmory::CPU_FREQUENCY);
+    Serial::flush();
 
     usbarmory::reset()
 }
