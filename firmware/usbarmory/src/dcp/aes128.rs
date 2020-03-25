@@ -151,9 +151,13 @@ impl Aes128 {
                 dcp.KEYDATA
                     .write(u32::from_le_bytes(*array_ref!(key, 12, 4)));
 
-                // enable channel #3
+                // enable channel
                 // NOTE single instruction write to a stateless register
-                dcp.CHANNELCTRL_SET.write(1 << AES128_RAM_CHANNEL);
+                // NOTE(| 1 << 3) this is not documented (silicon bug? software restriction?) but
+                // appears that a higher numbered channel needs to be enabled for this channel to
+                // work (probably the hardware expects the channels to be enabled from higher
+                // numbered to lower numbered)
+                dcp.CHANNELCTRL_SET.write((1 << AES128_RAM_CHANNEL) | (1 << 3));
             });
 
             Some(Aes128 {
