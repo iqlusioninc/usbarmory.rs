@@ -11,6 +11,6 @@ anyhow = "1.0.27"
 arrayref = "0.3.6"
 rusb = "0.5.5"
 xmas-elf = "0.7.0"
-serialport = "3.3.0"
+serialport = { version = "3.3.0", default-features = false }
 image = { path = "../image" }
 tempfile = "3.1.0"
