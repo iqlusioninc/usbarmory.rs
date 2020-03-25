@@ -3,8 +3,11 @@
 use core::{cmp, ops::Range};
 use std::io::{self, Write};
 
+use anyhow::format_err;
 use xmas_elf::{
     program::{SegmentData, Type},
+    sections::SectionData,
+    symbol_table::Entry as _,
     ElfFile,
 };
 
@@ -30,6 +33,10 @@ pub struct Image {
 
     /// Optional DCD
     pub dcd: Option<Dcd>,
+
+    /// The address of the entry point
+    // NOTE currently hardcoded to point to the "_start" symbol
+    pub entry: u32,
 }
 
 /// Write commands that initialize the external DDR RAM
@@ -254,6 +261,25 @@ impl Image {
             }
         }
 
+        // FIXME this shouldn't be hardcoded but instead should fetch the entry point from the ELF
+        // metadata (see "Entry point address" in the output of `readelf -h $elf`)
+        // look for the entry point named "_start"
+        let mut start = None;
+        let symtab = elf.find_section_by_name(".symtab").ok_or_else(|| {
+            format_err!(
+                "`.symtab`
+section not found in ELF file"
+            )
+        })?;
+        let data = symtab.get_data(&elf).map_err(|s| format_err!("{}", s))?;
+        if let SectionData::SymbolTable32(entries) = data {
+            for entry in entries {
+                if entry.get_name(&elf) == Ok("_start") {
+                    start = Some(entry.value() as u32);
+                }
+            }
+        }
+
         Ok(Image {
             dcd: if skip_dcd {
                 None
@@ -261,6 +287,7 @@ impl Image {
                 Some(Dcd { writes: init_ddr() })
             },
             app,
+            entry: start.ok_or_else(|| format_err!("symbol `_start` was not found"))?,
         })
     }
 
@@ -277,7 +304,7 @@ impl Image {
             },
             // unused at the moment but would be placed after the DCD
             csf: 0,
-            entry: DRAM_START + PADDING + RESERVED,
+            entry: self.entry,
         };
         let boot_data = BootData {
             len: PADDING + RESERVED + self.app.len() as u32,

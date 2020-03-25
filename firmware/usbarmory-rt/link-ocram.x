@@ -1,4 +1,6 @@
 /* Entry point of the ELF image */
+/* NOTE the `image` crate is hardcoded to use "_start" as the entry point; if */
+/* you change `ENTRY` here you'll need to update that crate too */
 ENTRY(_start);
 
 /* # Memory regions */

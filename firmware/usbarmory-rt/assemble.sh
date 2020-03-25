@@ -13,6 +13,7 @@ main() {
     ar crs bin/armv7a-none-eabi-ocram.a bin/$crate-{common,ocram}.o
     ar crs bin/armv7a-none-eabi-dram.a bin/$crate-{common,dram}.o
 
+    # FIXME needs to be updated
     # arm-none-eabi-as -march=armv7-a+vfpv3 asm-common.s -o bin/$crate-common.o
     # arm-none-eabi-as -march=armv7-a+vfpv3 asm-vfp.s -o bin/$crate-vfp.o
     # ar crs bin/armv7a-none-eabihf.a bin/$crate-{common,vfp}.o

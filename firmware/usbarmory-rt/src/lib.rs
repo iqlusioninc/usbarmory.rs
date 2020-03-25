@@ -51,17 +51,6 @@ compile_error!("Cargo features `dram` and `ocram` are both enabled but only one 
 // and external assembly must use the stable C ABI
 #[no_mangle]
 unsafe extern "C" fn start() -> ! {
-    if cfg!(feature = "ocram") {
-        // we initialize .rodata here in the faster .text.start
-        extern "C" {
-            static mut _srodata: u32;
-            static mut _erodata: u32;
-            static _sirodata: u32;
-        }
-
-        r0::init_data(&mut _srodata, &mut _erodata, &_sirodata);
-    }
-
     // NOTE the ROM bootloader can't write the initial values of `.data` to OCRAM because it uses
     // the OCRAM itself. Thus we copy those here, after the ROM bootloader has terminated and
     // there's no risk to corrupt memory

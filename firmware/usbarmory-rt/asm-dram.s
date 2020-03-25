@@ -7,8 +7,7 @@ _start:
   ldr sp,=__stack_top__
 
   /* set VBAR (Vector Base Address) */
-  movw r0, #:lower16:_exceptions
-  movt r0, #:upper16:_exceptions
+  ldr r0,=_exceptions
   mcr p15, 0, r0, c12, c0, 0
 
   /* jump into the Rust part of the entry point */
