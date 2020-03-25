@@ -1,7 +1,6 @@
 [workspace]
 members = [
   "image",
-  "runner",
   "runner2",
   "txt2rust",
   "usbc",
