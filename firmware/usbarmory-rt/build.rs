@@ -16,12 +16,18 @@ fn main() -> Result<(), Box<dyn Error>> {
 
     // place the linker script somewhere the linker can find it
 
-    let link_x = fs::read("link.x")?;
+    // place the assembly part of the entry point somewhere the linker can find it
+    let suffix = if env::var("CARGO_FEATURE_DRAM").is_ok() {
+        "dram"
+    } else {
+        "ocram"
+    };
+
+    let link_x = fs::read(format!("link-{}.x", suffix))?;
     fs::write(out_dir.join("link.x"), link_x)?;
 
-    // place the assembly part of the entry point somewhere the linker can find it
     fs::copy(
-        format!("bin/{}.a", target),
+        format!("bin/{}-{}.a", target, suffix),
         out_dir.join(format!("lib{}.a", pkg_name)),
     )?;
     println!("cargo:rustc-link-lib=static={}", pkg_name);

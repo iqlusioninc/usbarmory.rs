@@ -97,6 +97,7 @@ SECTIONS
     _ebss = .;
   } > OCRAM
 
+  /* Non-standard linker sections */
   .uninit ADDR(.bss) + SIZEOF(.bss) (NOLOAD) :
   {
     *(.uninit.*);

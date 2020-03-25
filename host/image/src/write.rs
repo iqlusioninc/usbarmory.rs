@@ -160,8 +160,8 @@ const PADDING: u32 = 1024;
 impl Image {
     /// Creates image data from an ELF file
     pub fn from_elf(elf: &ElfFile<'_>, skip_dcd: bool) -> Result<Image, anyhow::Error> {
-        // sections to include in the program image
-        const DRAM_SECTIONS: &[&str] = &[".text", ".rodata"];
+        // sections to include in the program image, iff they are in DRAM
+        const SECTIONS: &[&str] = &[".text", ".rodata", ".start"];
 
         // do a first pass to determine the size of the `app` buffer
         let mut start = None;
@@ -170,7 +170,7 @@ impl Image {
             if let Ok(name) = sh.get_name(elf) {
                 let sect_start = sh.address() as u32;
 
-                if DRAM_SECTIONS.contains(&name) {
+                if SECTIONS.contains(&name) && DRAM.contains(&sect_start) {
                     let size = sh.size() as u32;
                     let sect_end = sect_start + size;
 
@@ -194,7 +194,7 @@ impl Image {
                 let phys_addr = ph.physical_addr() as u32;
                 let virt_addr = ph.virtual_addr() as u32;
 
-                // this is the .data section
+                // these are sections that need to be copied from DRAM To OCRAM
                 if OCRAM.contains(&virt_addr) && DRAM.contains(&phys_addr) {
                     let sect_start = phys_addr;
                     let size = ph.mem_size() as u32;
@@ -221,8 +221,10 @@ impl Image {
         let mut app = vec![0u8; end as usize - start as usize];
         for sh in elf.section_iter() {
             if let Ok(name) = sh.get_name(elf) {
-                if DRAM_SECTIONS.contains(&name) {
-                    let off = (sh.address() as u32 - start) as usize;
+                let addr = sh.address() as u32;
+
+                if SECTIONS.contains(&name) && DRAM.contains(&addr) {
+                    let off = (addr - start) as usize;
                     let size = sh.size() as usize;
                     let data = sh.raw_data(elf);
 

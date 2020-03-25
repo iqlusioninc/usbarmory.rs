@@ -39,12 +39,29 @@ static SGIS: [unsafe extern "C" fn(); 16] = [
 
 include!(concat!(env!("OUT_DIR"), "/interrupts.rs"));
 
+#[cfg(not(any(feature = "dram", feature = "ocram")))]
+compile_error!("one of the following Cargo features must be enabled: `dram` or `ocram`");
+
+#[cfg(all(feature = "dram", feature = "ocram"))]
+compile_error!("Cargo features `dram` and `ocram` are both enabled but only one must be enabled");
+
 // NOTE due to ABI requirements the real entry point, `_start`, is written in
 // assembly and lives in the `asm.s` file. That subroutine calls this one.
 // NOTE(C ABI) Rust ABI is unspecified / unstable; all calls between Rust code
 // and external assembly must use the stable C ABI
 #[no_mangle]
 unsafe extern "C" fn start() -> ! {
+    if cfg!(feature = "ocram") {
+        // we initialize .rodata here in the faster .text.start
+        extern "C" {
+            static mut _srodata: u32;
+            static mut _erodata: u32;
+            static _sirodata: u32;
+        }
+
+        r0::init_data(&mut _srodata, &mut _erodata, &_sirodata);
+    }
+
     // NOTE the ROM bootloader can't write the initial values of `.data` to OCRAM because it uses
     // the OCRAM itself. Thus we copy those here, after the ROM bootloader has terminated and
     // there's no risk to corrupt memory

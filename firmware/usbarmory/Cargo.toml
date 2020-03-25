@@ -31,8 +31,9 @@ path = "../imx6ul-pac"
 
 [dependencies.usbarmory-rt]
 path = "../usbarmory-rt"
-## enable this feature to place .text and .rodata in DRAM
-# features = ["use-dram"]
+## choose the location of the .text and .rodata sections -- pick only one line
+# features = ["dram"]
+features = ["ocram"]
 
 [dev-dependencies]
 as-slice = "0.1.3"
