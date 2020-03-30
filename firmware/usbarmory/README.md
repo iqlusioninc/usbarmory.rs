@@ -81,13 +81,7 @@ $ qemu-system-arm \
 If a example doesn't explicitly terminate itself, press `C-a` + `c` to bring up
 the QEMU console then enter the `quit` command to terminate QEMU.
 
-## Running on hardware (development mode)
-
-### Required hardware
-
-Not a hard requirement but the USB Armory debug accessory is highly recommended
-as `println!` and other logging mechanism will send data over the serial
-interface and the debug accessory lets you receive this data on the host side.
+## Good to know
 
 ### ELF images
 
@@ -207,16 +201,39 @@ crw-rw----+ 1 root root 189, 28 Mar 24 12:32 /dev/bus/usb/001/029
 
 If you don't get a similar output try logging out and logging in again.
 
+## Running on hardware (development mode)
+
+### Required hardware
+
+- USB Armory debug accessory
+- micro USB cable (for the debug accessory)
+
+### One time setup
+
+To be able to use the Cargo runner to quickly load and run Rust programs you'll
+need to zero the program image currently stored in the internal eMMC. Follow the
+steps of "Setting up an eMMC Boot" up to *before* the `dd` invocation. Instead
+of flashing a image proceed to zero the 4 KB that follow the 1 KB padding
+(reserved for the partition table).
+
+**WARNING** the following command will corrupt existing data. Do a backup if
+there's anything on the eMMC that you'll like to keep.
+
+``` console
+$ sudo dd if=/dev/zero of=/dev/sda bs=512 seek=2 count=8 conv=fsync
+$ sync
+```
+
+Now terminate the USB Mass Store Device emulation by pressing Ctrl-C in the
+`minicom` terminal / u-boot console. You can now disconnect the Armory.
+
 ### Hardware configuration (boot mode)
 
 - Select the microSD as the Armory's boot mode: there's a DIP switch on the back
-of the Armory; put it in the "uSD" position.
+of the Armory; put it in the "eMMC" position.
 
-- *Remove* any microSD card from the Armory and then connect it to a USB-C port
- on your PC.
- 
-If you run `lsusb` (or equivalent) you should see the following Vendor ID -
- Product ID pair:
+Now connect the Armory to the PC (USB-C port). If you run `lsusb` (or
+ equivalent) you should see the following Vendor ID -  Product ID pair:
 
 ``` console
 $ lsusb
@@ -318,7 +335,7 @@ of the Armory; put it in the "uSD" position.
 Now you can plug the Armory into a USB-C port and it will run the program you
 just flashed.
 
-## Setting up eMMC Boot
+## Setting up an eMMC Boot
 
 As the Armory HAL currently doesn't provide functionality to receive images from
 a PC and flash them into the internal eMMC we'll use [u-boot] to flash images
