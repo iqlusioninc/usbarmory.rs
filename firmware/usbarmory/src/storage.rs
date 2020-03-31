@@ -109,7 +109,10 @@ impl<D: ManagedBlockDevice> MbrDevice<D> {
 
         let mbr = part_table.to_block();
         raw.write(&mbr, 0).map_err(MbrError::Device)?;
-        Ok(MbrDevice { raw, part_table: part_table.entries })
+        Ok(MbrDevice {
+            raw,
+            part_table: part_table.entries,
+        })
     }
 
     /// Opens an MBR-partitioned block device `raw` and parses the partition table.
