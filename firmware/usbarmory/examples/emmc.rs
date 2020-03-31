@@ -30,7 +30,6 @@ fn main() -> ! {
     block.bytes[0] = block.bytes[0].wrapping_add(1);
 
     emmc.write(0, &block).unwrap();
-    emmc.flush().unwrap();
 
     // then reset the board to return to the u-boot console
     memlog_flush_and_reset!();
