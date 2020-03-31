@@ -1,8 +1,9 @@
 //! Partition table and block device access.
 
 use core::{fmt, mem::size_of};
+
 use memlog::memlog;
-use zerocopy::{FromBytes, LayoutVerified};
+use zerocopy::{AsBytes, FromBytes, LayoutVerified};
 
 /// Trait for block devices that can read, write, and erase 512-Byte blocks.
 ///
@@ -89,6 +90,31 @@ pub struct MbrDevice<D: ManagedBlockDevice> {
 }
 
 impl<D: ManagedBlockDevice> MbrDevice<D> {
+    /// Creates a new MBR-partitioned block device by writing the given partition `table` into it
+    pub fn create(mut raw: D, part_table: &PartitionTable) -> Result<Self, MbrError<D::Error>> {
+        let total_blocks = raw.total_blocks();
+        let end = part_table
+            .as_slice()
+            .last()
+            .map(|entry| {
+                let extent = entry.extent();
+                extent.start + extent.sectors
+            })
+            .unwrap_or(0);
+
+        if u64::from(end) > total_blocks {
+            memlog!("PART end = {} > total_blocks = {}", end, total_blocks);
+            return Err(MbrError::InvalidPartExtent);
+        }
+
+        let mbr = part_table.to_block();
+        raw.write(&mbr, 0).map_err(MbrError::Device)?;
+        Ok(MbrDevice {
+            raw,
+            part_table: part_table.entries,
+        })
+    }
+
     /// Opens an MBR-partitioned block device `raw` and parses the partition table.
     pub fn open(raw: D) -> Result<Self, MbrError<D::Error>> {
         let mut mbr = Block::zeroed();
@@ -149,6 +175,11 @@ impl<D: ManagedBlockDevice> MbrDevice<D> {
         })
     }
 
+    /// Returns a debug view into the partition table
+    pub fn debug<'s>(&'s self) -> impl fmt::Debug + 's {
+        &self.part_table
+    }
+
     fn part_extent(&self, part: u8) -> Result<PartExtent, MbrError<D::Error>> {
         if part >= 4 {
             return Err(MbrError::NoPartition);
@@ -164,9 +195,10 @@ impl<D: ManagedBlockDevice> MbrDevice<D> {
     }
 }
 
-#[derive(FromBytes, Debug, Copy, Clone)]
+/// An entry in the MBR partition table
+#[derive(AsBytes, FromBytes, Debug, Copy, Clone)]
 #[repr(C)]
-struct PartitionEntry {
+pub struct PartitionEntry {
     status: u8,
     start_chs: [u8; 3],
     part_type: u8,
@@ -176,6 +208,23 @@ struct PartitionEntry {
 }
 
 impl PartitionEntry {
+    /// Creates a new partition entry that starts at `start_lba` and it's `num_sectors` big
+    pub fn new(start_lba: u32, num_sectors: u32) -> Self {
+        // this is what `fdisk` uses by default; it doesn't really matter in our case
+        const PART_TYPE_LINUX: u8 = 0x83;
+
+        Self {
+            status: 0,
+            // TODO we should enter something sensible here
+            start_chs: [0; 3],
+            // and here
+            end_chs: [0; 3],
+            part_type: PART_TYPE_LINUX,
+            start_lba,
+            num_sectors,
+        }
+    }
+
     /// Returns a zeroed/unallocated partition table entry.
     fn zeroed() -> Self {
         Self {
@@ -194,6 +243,76 @@ impl PartitionEntry {
             sectors: self.num_sectors,
         }
     }
+}
+
+/// MBR partition table
+pub struct PartitionTable {
+    entries: [PartitionEntry; 4],
+    index: usize,
+}
+
+impl Default for PartitionTable {
+    fn default() -> Self {
+        Self::new()
+    }
+}
+
+impl PartitionTable {
+    /// Creates an empty partition table
+    pub fn new() -> Self {
+        Self {
+            entries: [PartitionEntry::zeroed(); 4],
+            index: 0,
+        }
+    }
+
+    fn as_slice(&self) -> &[PartitionEntry] {
+        &self.entries[..self.index]
+    }
+
+    /// Adds a new partition to the table
+    ///
+    /// NOTE partitions must be added in order (increasing `start_lba`)
+    pub fn add(&mut self, entry: PartitionEntry) -> Result<(), PartError> {
+        let end = self
+            .as_slice()
+            .last()
+            .map(|entry| entry.start_lba + entry.num_sectors)
+            .unwrap_or(0);
+
+        if entry.start_lba < end {
+            Err(PartError::PartitionCollision)
+        } else if self.index < self.entries.len() {
+            self.entries[self.index] = entry;
+            Ok(())
+        } else {
+            Err(PartError::TooManyPartitions)
+        }
+    }
+
+    fn to_block(&self) -> Block {
+        let mut block = Block::zeroed();
+        let mut start = 446;
+        for entry in &self.entries {
+            let bytes = entry.as_bytes();
+            let len = bytes.len();
+            block.bytes[start..start + len].copy_from_slice(bytes);
+            start += len;
+        }
+        // magic number
+        block.bytes[510] = 0x55;
+        block.bytes[511] = 0xAA;
+        block
+    }
+}
+
+/// Partition error
+#[derive(Debug)]
+pub enum PartError {
+    /// New partition collides with an existing collision
+    PartitionCollision,
+    /// The partition table has already 4 primary partitions
+    TooManyPartitions,
 }
 
 struct PartExtent {

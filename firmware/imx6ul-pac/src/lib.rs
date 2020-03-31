@@ -26567,6 +26567,686 @@ pub mod snvs_hp {
         }
     }
 }
+#[cfg(feature = "src")]
+pub use src::SRC;
+#[allow(non_snake_case)]
+#[cfg(feature = "src")]
+#[doc = "SRC"]
+pub mod src {
+    use core::{
+        marker::PhantomData,
+        sync::atomic::{AtomicBool, Ordering},
+    };
+    const BASE_ADDRESS: usize = 0x020d_8000;
+    #[doc = r" The registers that make up the peripheral"]
+    #[allow(non_snake_case)]
+    pub struct Registers {
+        _not_sync: PhantomData<*mut ()>,
+        #[doc = "SRC Control Register"]
+        pub SCR: SCR,
+        #[doc = "SRC Boot Mode Register 1"]
+        pub SBMR1: SBMR1,
+        #[doc = "SRC Reset Status Register"]
+        pub SRSR: SRSR,
+        #[doc = "SRC Interrupt Status Register"]
+        pub SISR: SISR,
+        #[doc = "SRC Boot Mode Register 2"]
+        pub SBMR2: SBMR2,
+        #[doc = "SRC General Purpose Register 1"]
+        pub GPR1: GPR1,
+        #[doc = "SRC General Purpose Register 2"]
+        pub GPR2: GPR2,
+        #[doc = "SRC General Purpose Register 3"]
+        pub GPR3: GPR3,
+        #[doc = "SRC General Purpose Register 4"]
+        pub GPR4: GPR4,
+        #[doc = "SRC General Purpose Register 5"]
+        pub GPR5: GPR5,
+        #[doc = "SRC General Purpose Register 6"]
+        pub GPR6: GPR6,
+        #[doc = "SRC General Purpose Register 7"]
+        pub GPR7: GPR7,
+        #[doc = "SRC General Purpose Register 8"]
+        pub GPR8: GPR8,
+        #[doc = "SRC General Purpose Register 9"]
+        pub GPR9: GPR9,
+        #[doc = "SRC General Purpose Register 10"]
+        pub GPR10: GPR10,
+    }
+    unsafe impl Send for Registers {}
+    #[doc = "SRC Control Register"]
+    #[allow(non_camel_case_types)]
+    pub struct SCR {
+        _not_send_or_sync: PhantomData<*mut ()>,
+    }
+    impl SCR {
+        const OFFSET: usize = 0x00;
+        #[doc = r" Reset value"]
+        pub const RESET_VALUE: u32 = 0x0000_0521;
+        #[doc = r" Performs a single load operation on the memory-mapped register"]
+        pub fn read(&self) -> u32 {
+            unsafe { ((BASE_ADDRESS + Self::OFFSET) as *const u32).read_volatile() }
+        }
+        #[doc = r" Performs a single store operation on the memory-mapped register"]
+        #[allow(unused_unsafe)]
+        pub fn write(&self, bits: u32) {
+            unsafe { ((BASE_ADDRESS + Self::OFFSET) as *mut u32).write_volatile(bits) }
+        }
+        #[doc = r" Performs a read-modify-write on the memory-mapped register"]
+        #[doc = r""]
+        #[doc = r" This is a short-hand for `self.write(f(self.read()))`"]
+        #[allow(unused_unsafe)]
+        pub fn rmw(&self, f: impl FnOnce(u32) -> u32) {
+            self.write(f(self.read()))
+        }
+        #[doc = r" Writes the reset value"]
+        #[allow(unused_unsafe)]
+        pub fn reset(&self) {
+            self.write(Self::RESET_VALUE)
+        }
+        #[doc = r" Returns the address of this register"]
+        #[allow(unused_parens)]
+        #[allow(unused_unsafe)]
+        pub fn address() -> *mut u32 {
+            unsafe { ((BASE_ADDRESS + Self::OFFSET) as *mut u32) }
+        }
+    }
+    #[doc = "SRC Boot Mode Register 1"]
+    #[allow(non_camel_case_types)]
+    pub struct SBMR1 {
+        _not_send_or_sync: PhantomData<*mut ()>,
+    }
+    impl SBMR1 {
+        const OFFSET: usize = 0x04;
+        #[doc = r" Reset value"]
+        pub const RESET_VALUE: u32 = 0x0000_0000;
+        #[doc = r" Performs a single load operation on the memory-mapped register"]
+        pub fn read(&self) -> u32 {
+            unsafe { ((BASE_ADDRESS + Self::OFFSET) as *const u32).read_volatile() }
+        }
+        #[doc = r" Returns the address of this register"]
+        #[allow(unused_parens)]
+        #[allow(unused_unsafe)]
+        pub fn address() -> *mut u32 {
+            unsafe { ((BASE_ADDRESS + Self::OFFSET) as *mut u32) }
+        }
+    }
+    #[doc = "SRC Reset Status Register"]
+    #[allow(non_camel_case_types)]
+    pub struct SRSR {
+        _not_send_or_sync: PhantomData<*mut ()>,
+    }
+    impl SRSR {
+        const OFFSET: usize = 0x08;
+        #[doc = r" Reset value"]
+        pub const RESET_VALUE: u32 = 0x0000_0001;
+        #[doc = r" Performs a single load operation on the memory-mapped register"]
+        pub fn read(&self) -> u32 {
+            unsafe { ((BASE_ADDRESS + Self::OFFSET) as *const u32).read_volatile() }
+        }
+        #[doc = r" Performs a single store operation on the memory-mapped register"]
+        #[allow(unused_unsafe)]
+        pub fn write(&self, bits: u32) {
+            unsafe { ((BASE_ADDRESS + Self::OFFSET) as *mut u32).write_volatile(bits) }
+        }
+        #[doc = r" Performs a read-modify-write on the memory-mapped register"]
+        #[doc = r""]
+        #[doc = r" This is a short-hand for `self.write(f(self.read()))`"]
+        #[allow(unused_unsafe)]
+        pub fn rmw(&self, f: impl FnOnce(u32) -> u32) {
+            self.write(f(self.read()))
+        }
+        #[doc = r" Writes the reset value"]
+        #[allow(unused_unsafe)]
+        pub fn reset(&self) {
+            self.write(Self::RESET_VALUE)
+        }
+        #[doc = r" Returns the address of this register"]
+        #[allow(unused_parens)]
+        #[allow(unused_unsafe)]
+        pub fn address() -> *mut u32 {
+            unsafe { ((BASE_ADDRESS + Self::OFFSET) as *mut u32) }
+        }
+    }
+    #[doc = "SRC Interrupt Status Register"]
+    #[allow(non_camel_case_types)]
+    pub struct SISR {
+        _not_send_or_sync: PhantomData<*mut ()>,
+    }
+    impl SISR {
+        const OFFSET: usize = 0x14;
+        #[doc = r" Reset value"]
+        pub const RESET_VALUE: u32 = 0x0000_0000;
+        #[doc = r" Performs a single load operation on the memory-mapped register"]
+        pub fn read(&self) -> u32 {
+            unsafe { ((BASE_ADDRESS + Self::OFFSET) as *const u32).read_volatile() }
+        }
+        #[doc = r" Returns the address of this register"]
+        #[allow(unused_parens)]
+        #[allow(unused_unsafe)]
+        pub fn address() -> *mut u32 {
+            unsafe { ((BASE_ADDRESS + Self::OFFSET) as *mut u32) }
+        }
+    }
+    #[doc = "SRC Boot Mode Register 2"]
+    #[allow(non_camel_case_types)]
+    pub struct SBMR2 {
+        _not_send_or_sync: PhantomData<*mut ()>,
+    }
+    impl SBMR2 {
+        const OFFSET: usize = 0x1c;
+        #[doc = r" Reset value"]
+        pub const RESET_VALUE: u32 = 0x0000_0000;
+        #[doc = r" Performs a single load operation on the memory-mapped register"]
+        pub fn read(&self) -> u32 {
+            unsafe { ((BASE_ADDRESS + Self::OFFSET) as *const u32).read_volatile() }
+        }
+        #[doc = r" Returns the address of this register"]
+        #[allow(unused_parens)]
+        #[allow(unused_unsafe)]
+        pub fn address() -> *mut u32 {
+            unsafe { ((BASE_ADDRESS + Self::OFFSET) as *mut u32) }
+        }
+    }
+    #[doc = "SRC General Purpose Register 1"]
+    #[allow(non_camel_case_types)]
+    pub struct GPR1 {
+        _not_send_or_sync: PhantomData<*mut ()>,
+    }
+    impl GPR1 {
+        const OFFSET: usize = 0x20;
+        #[doc = r" Reset value"]
+        pub const RESET_VALUE: u32 = 0x0000_0000;
+        #[doc = r" Performs a single load operation on the memory-mapped register"]
+        pub fn read(&self) -> u32 {
+            unsafe { ((BASE_ADDRESS + Self::OFFSET) as *const u32).read_volatile() }
+        }
+        #[doc = r" Performs a single store operation on the memory-mapped register"]
+        #[allow(unused_unsafe)]
+        pub fn write(&self, bits: u32) {
+            unsafe { ((BASE_ADDRESS + Self::OFFSET) as *mut u32).write_volatile(bits) }
+        }
+        #[doc = r" Performs a read-modify-write on the memory-mapped register"]
+        #[doc = r""]
+        #[doc = r" This is a short-hand for `self.write(f(self.read()))`"]
+        #[allow(unused_unsafe)]
+        pub fn rmw(&self, f: impl FnOnce(u32) -> u32) {
+            self.write(f(self.read()))
+        }
+        #[doc = r" Writes the reset value"]
+        #[allow(unused_unsafe)]
+        pub fn reset(&self) {
+            self.write(Self::RESET_VALUE)
+        }
+        #[doc = r" Returns the address of this register"]
+        #[allow(unused_parens)]
+        #[allow(unused_unsafe)]
+        pub fn address() -> *mut u32 {
+            unsafe { ((BASE_ADDRESS + Self::OFFSET) as *mut u32) }
+        }
+    }
+    #[doc = "SRC General Purpose Register 2"]
+    #[allow(non_camel_case_types)]
+    pub struct GPR2 {
+        _not_send_or_sync: PhantomData<*mut ()>,
+    }
+    impl GPR2 {
+        const OFFSET: usize = 0x24;
+        #[doc = r" Reset value"]
+        pub const RESET_VALUE: u32 = 0x0000_0000;
+        #[doc = r" Performs a single load operation on the memory-mapped register"]
+        pub fn read(&self) -> u32 {
+            unsafe { ((BASE_ADDRESS + Self::OFFSET) as *const u32).read_volatile() }
+        }
+        #[doc = r" Performs a single store operation on the memory-mapped register"]
+        #[allow(unused_unsafe)]
+        pub fn write(&self, bits: u32) {
+            unsafe { ((BASE_ADDRESS + Self::OFFSET) as *mut u32).write_volatile(bits) }
+        }
+        #[doc = r" Performs a read-modify-write on the memory-mapped register"]
+        #[doc = r""]
+        #[doc = r" This is a short-hand for `self.write(f(self.read()))`"]
+        #[allow(unused_unsafe)]
+        pub fn rmw(&self, f: impl FnOnce(u32) -> u32) {
+            self.write(f(self.read()))
+        }
+        #[doc = r" Writes the reset value"]
+        #[allow(unused_unsafe)]
+        pub fn reset(&self) {
+            self.write(Self::RESET_VALUE)
+        }
+        #[doc = r" Returns the address of this register"]
+        #[allow(unused_parens)]
+        #[allow(unused_unsafe)]
+        pub fn address() -> *mut u32 {
+            unsafe { ((BASE_ADDRESS + Self::OFFSET) as *mut u32) }
+        }
+    }
+    #[doc = "SRC General Purpose Register 3"]
+    #[allow(non_camel_case_types)]
+    pub struct GPR3 {
+        _not_send_or_sync: PhantomData<*mut ()>,
+    }
+    impl GPR3 {
+        const OFFSET: usize = 0x28;
+        #[doc = r" Reset value"]
+        pub const RESET_VALUE: u32 = 0x0000_0000;
+        #[doc = r" Performs a single load operation on the memory-mapped register"]
+        pub fn read(&self) -> u32 {
+            unsafe { ((BASE_ADDRESS + Self::OFFSET) as *const u32).read_volatile() }
+        }
+        #[doc = r" Performs a single store operation on the memory-mapped register"]
+        #[allow(unused_unsafe)]
+        pub fn write(&self, bits: u32) {
+            unsafe { ((BASE_ADDRESS + Self::OFFSET) as *mut u32).write_volatile(bits) }
+        }
+        #[doc = r" Performs a read-modify-write on the memory-mapped register"]
+        #[doc = r""]
+        #[doc = r" This is a short-hand for `self.write(f(self.read()))`"]
+        #[allow(unused_unsafe)]
+        pub fn rmw(&self, f: impl FnOnce(u32) -> u32) {
+            self.write(f(self.read()))
+        }
+        #[doc = r" Writes the reset value"]
+        #[allow(unused_unsafe)]
+        pub fn reset(&self) {
+            self.write(Self::RESET_VALUE)
+        }
+        #[doc = r" Returns the address of this register"]
+        #[allow(unused_parens)]
+        #[allow(unused_unsafe)]
+        pub fn address() -> *mut u32 {
+            unsafe { ((BASE_ADDRESS + Self::OFFSET) as *mut u32) }
+        }
+    }
+    #[doc = "SRC General Purpose Register 4"]
+    #[allow(non_camel_case_types)]
+    pub struct GPR4 {
+        _not_send_or_sync: PhantomData<*mut ()>,
+    }
+    impl GPR4 {
+        const OFFSET: usize = 0x2c;
+        #[doc = r" Reset value"]
+        pub const RESET_VALUE: u32 = 0x0000_0000;
+        #[doc = r" Performs a single load operation on the memory-mapped register"]
+        pub fn read(&self) -> u32 {
+            unsafe { ((BASE_ADDRESS + Self::OFFSET) as *const u32).read_volatile() }
+        }
+        #[doc = r" Performs a single store operation on the memory-mapped register"]
+        #[allow(unused_unsafe)]
+        pub fn write(&self, bits: u32) {
+            unsafe { ((BASE_ADDRESS + Self::OFFSET) as *mut u32).write_volatile(bits) }
+        }
+        #[doc = r" Performs a read-modify-write on the memory-mapped register"]
+        #[doc = r""]
+        #[doc = r" This is a short-hand for `self.write(f(self.read()))`"]
+        #[allow(unused_unsafe)]
+        pub fn rmw(&self, f: impl FnOnce(u32) -> u32) {
+            self.write(f(self.read()))
+        }
+        #[doc = r" Writes the reset value"]
+        #[allow(unused_unsafe)]
+        pub fn reset(&self) {
+            self.write(Self::RESET_VALUE)
+        }
+        #[doc = r" Returns the address of this register"]
+        #[allow(unused_parens)]
+        #[allow(unused_unsafe)]
+        pub fn address() -> *mut u32 {
+            unsafe { ((BASE_ADDRESS + Self::OFFSET) as *mut u32) }
+        }
+    }
+    #[doc = "SRC General Purpose Register 5"]
+    #[allow(non_camel_case_types)]
+    pub struct GPR5 {
+        _not_send_or_sync: PhantomData<*mut ()>,
+    }
+    impl GPR5 {
+        const OFFSET: usize = 0x30;
+        #[doc = r" Reset value"]
+        pub const RESET_VALUE: u32 = 0x0000_0000;
+        #[doc = r" Performs a single load operation on the memory-mapped register"]
+        pub fn read(&self) -> u32 {
+            unsafe { ((BASE_ADDRESS + Self::OFFSET) as *const u32).read_volatile() }
+        }
+        #[doc = r" Performs a single store operation on the memory-mapped register"]
+        #[allow(unused_unsafe)]
+        pub fn write(&self, bits: u32) {
+            unsafe { ((BASE_ADDRESS + Self::OFFSET) as *mut u32).write_volatile(bits) }
+        }
+        #[doc = r" Performs a read-modify-write on the memory-mapped register"]
+        #[doc = r""]
+        #[doc = r" This is a short-hand for `self.write(f(self.read()))`"]
+        #[allow(unused_unsafe)]
+        pub fn rmw(&self, f: impl FnOnce(u32) -> u32) {
+            self.write(f(self.read()))
+        }
+        #[doc = r" Writes the reset value"]
+        #[allow(unused_unsafe)]
+        pub fn reset(&self) {
+            self.write(Self::RESET_VALUE)
+        }
+        #[doc = r" Returns the address of this register"]
+        #[allow(unused_parens)]
+        #[allow(unused_unsafe)]
+        pub fn address() -> *mut u32 {
+            unsafe { ((BASE_ADDRESS + Self::OFFSET) as *mut u32) }
+        }
+    }
+    #[doc = "SRC General Purpose Register 6"]
+    #[allow(non_camel_case_types)]
+    pub struct GPR6 {
+        _not_send_or_sync: PhantomData<*mut ()>,
+    }
+    impl GPR6 {
+        const OFFSET: usize = 0x34;
+        #[doc = r" Reset value"]
+        pub const RESET_VALUE: u32 = 0x0000_0000;
+        #[doc = r" Performs a single load operation on the memory-mapped register"]
+        pub fn read(&self) -> u32 {
+            unsafe { ((BASE_ADDRESS + Self::OFFSET) as *const u32).read_volatile() }
+        }
+        #[doc = r" Performs a single store operation on the memory-mapped register"]
+        #[allow(unused_unsafe)]
+        pub fn write(&self, bits: u32) {
+            unsafe { ((BASE_ADDRESS + Self::OFFSET) as *mut u32).write_volatile(bits) }
+        }
+        #[doc = r" Performs a read-modify-write on the memory-mapped register"]
+        #[doc = r""]
+        #[doc = r" This is a short-hand for `self.write(f(self.read()))`"]
+        #[allow(unused_unsafe)]
+        pub fn rmw(&self, f: impl FnOnce(u32) -> u32) {
+            self.write(f(self.read()))
+        }
+        #[doc = r" Writes the reset value"]
+        #[allow(unused_unsafe)]
+        pub fn reset(&self) {
+            self.write(Self::RESET_VALUE)
+        }
+        #[doc = r" Returns the address of this register"]
+        #[allow(unused_parens)]
+        #[allow(unused_unsafe)]
+        pub fn address() -> *mut u32 {
+            unsafe { ((BASE_ADDRESS + Self::OFFSET) as *mut u32) }
+        }
+    }
+    #[doc = "SRC General Purpose Register 7"]
+    #[allow(non_camel_case_types)]
+    pub struct GPR7 {
+        _not_send_or_sync: PhantomData<*mut ()>,
+    }
+    impl GPR7 {
+        const OFFSET: usize = 0x38;
+        #[doc = r" Reset value"]
+        pub const RESET_VALUE: u32 = 0x0000_0000;
+        #[doc = r" Performs a single load operation on the memory-mapped register"]
+        pub fn read(&self) -> u32 {
+            unsafe { ((BASE_ADDRESS + Self::OFFSET) as *const u32).read_volatile() }
+        }
+        #[doc = r" Performs a single store operation on the memory-mapped register"]
+        #[allow(unused_unsafe)]
+        pub fn write(&self, bits: u32) {
+            unsafe { ((BASE_ADDRESS + Self::OFFSET) as *mut u32).write_volatile(bits) }
+        }
+        #[doc = r" Performs a read-modify-write on the memory-mapped register"]
+        #[doc = r""]
+        #[doc = r" This is a short-hand for `self.write(f(self.read()))`"]
+        #[allow(unused_unsafe)]
+        pub fn rmw(&self, f: impl FnOnce(u32) -> u32) {
+            self.write(f(self.read()))
+        }
+        #[doc = r" Writes the reset value"]
+        #[allow(unused_unsafe)]
+        pub fn reset(&self) {
+            self.write(Self::RESET_VALUE)
+        }
+        #[doc = r" Returns the address of this register"]
+        #[allow(unused_parens)]
+        #[allow(unused_unsafe)]
+        pub fn address() -> *mut u32 {
+            unsafe { ((BASE_ADDRESS + Self::OFFSET) as *mut u32) }
+        }
+    }
+    #[doc = "SRC General Purpose Register 8"]
+    #[allow(non_camel_case_types)]
+    pub struct GPR8 {
+        _not_send_or_sync: PhantomData<*mut ()>,
+    }
+    impl GPR8 {
+        const OFFSET: usize = 0x3c;
+        #[doc = r" Reset value"]
+        pub const RESET_VALUE: u32 = 0x0000_0000;
+        #[doc = r" Performs a single load operation on the memory-mapped register"]
+        pub fn read(&self) -> u32 {
+            unsafe { ((BASE_ADDRESS + Self::OFFSET) as *const u32).read_volatile() }
+        }
+        #[doc = r" Performs a single store operation on the memory-mapped register"]
+        #[allow(unused_unsafe)]
+        pub fn write(&self, bits: u32) {
+            unsafe { ((BASE_ADDRESS + Self::OFFSET) as *mut u32).write_volatile(bits) }
+        }
+        #[doc = r" Performs a read-modify-write on the memory-mapped register"]
+        #[doc = r""]
+        #[doc = r" This is a short-hand for `self.write(f(self.read()))`"]
+        #[allow(unused_unsafe)]
+        pub fn rmw(&self, f: impl FnOnce(u32) -> u32) {
+            self.write(f(self.read()))
+        }
+        #[doc = r" Writes the reset value"]
+        #[allow(unused_unsafe)]
+        pub fn reset(&self) {
+            self.write(Self::RESET_VALUE)
+        }
+        #[doc = r" Returns the address of this register"]
+        #[allow(unused_parens)]
+        #[allow(unused_unsafe)]
+        pub fn address() -> *mut u32 {
+            unsafe { ((BASE_ADDRESS + Self::OFFSET) as *mut u32) }
+        }
+    }
+    #[doc = "SRC General Purpose Register 9"]
+    #[allow(non_camel_case_types)]
+    pub struct GPR9 {
+        _not_send_or_sync: PhantomData<*mut ()>,
+    }
+    impl GPR9 {
+        const OFFSET: usize = 0x40;
+        #[doc = r" Reset value"]
+        pub const RESET_VALUE: u32 = 0x0000_0000;
+        #[doc = r" Performs a single load operation on the memory-mapped register"]
+        pub fn read(&self) -> u32 {
+            unsafe { ((BASE_ADDRESS + Self::OFFSET) as *const u32).read_volatile() }
+        }
+        #[doc = r" Performs a single store operation on the memory-mapped register"]
+        #[allow(unused_unsafe)]
+        pub fn write(&self, bits: u32) {
+            unsafe { ((BASE_ADDRESS + Self::OFFSET) as *mut u32).write_volatile(bits) }
+        }
+        #[doc = r" Performs a read-modify-write on the memory-mapped register"]
+        #[doc = r""]
+        #[doc = r" This is a short-hand for `self.write(f(self.read()))`"]
+        #[allow(unused_unsafe)]
+        pub fn rmw(&self, f: impl FnOnce(u32) -> u32) {
+            self.write(f(self.read()))
+        }
+        #[doc = r" Writes the reset value"]
+        #[allow(unused_unsafe)]
+        pub fn reset(&self) {
+            self.write(Self::RESET_VALUE)
+        }
+        #[doc = r" Returns the address of this register"]
+        #[allow(unused_parens)]
+        #[allow(unused_unsafe)]
+        pub fn address() -> *mut u32 {
+            unsafe { ((BASE_ADDRESS + Self::OFFSET) as *mut u32) }
+        }
+    }
+    #[doc = "SRC General Purpose Register 10"]
+    #[allow(non_camel_case_types)]
+    pub struct GPR10 {
+        _not_send_or_sync: PhantomData<*mut ()>,
+    }
+    impl GPR10 {
+        const OFFSET: usize = 0x44;
+        #[doc = r" Reset value"]
+        pub const RESET_VALUE: u32 = 0x0000_0000;
+        #[doc = r" Performs a single load operation on the memory-mapped register"]
+        pub fn read(&self) -> u32 {
+            unsafe { ((BASE_ADDRESS + Self::OFFSET) as *const u32).read_volatile() }
+        }
+        #[doc = r" Performs a single store operation on the memory-mapped register"]
+        #[allow(unused_unsafe)]
+        pub fn write(&self, bits: u32) {
+            unsafe { ((BASE_ADDRESS + Self::OFFSET) as *mut u32).write_volatile(bits) }
+        }
+        #[doc = r" Performs a read-modify-write on the memory-mapped register"]
+        #[doc = r""]
+        #[doc = r" This is a short-hand for `self.write(f(self.read()))`"]
+        #[allow(unused_unsafe)]
+        pub fn rmw(&self, f: impl FnOnce(u32) -> u32) {
+            self.write(f(self.read()))
+        }
+        #[doc = r" Writes the reset value"]
+        #[allow(unused_unsafe)]
+        pub fn reset(&self) {
+            self.write(Self::RESET_VALUE)
+        }
+        #[doc = r" Returns the address of this register"]
+        #[allow(unused_parens)]
+        #[allow(unused_unsafe)]
+        pub fn address() -> *mut u32 {
+            unsafe { ((BASE_ADDRESS + Self::OFFSET) as *mut u32) }
+        }
+    }
+    impl Registers {
+        #[doc = r" # Safety"]
+        #[doc = r""]
+        #[doc = r" Creates a singleton from thin air; make sure we"]
+        #[doc = r" never hand out two instances of it"]
+        unsafe fn new() -> Self {
+            Self {
+                _not_sync: PhantomData,
+                SCR: SCR {
+                    _not_send_or_sync: PhantomData,
+                },
+                SBMR1: SBMR1 {
+                    _not_send_or_sync: PhantomData,
+                },
+                SRSR: SRSR {
+                    _not_send_or_sync: PhantomData,
+                },
+                SISR: SISR {
+                    _not_send_or_sync: PhantomData,
+                },
+                SBMR2: SBMR2 {
+                    _not_send_or_sync: PhantomData,
+                },
+                GPR1: GPR1 {
+                    _not_send_or_sync: PhantomData,
+                },
+                GPR2: GPR2 {
+                    _not_send_or_sync: PhantomData,
+                },
+                GPR3: GPR3 {
+                    _not_send_or_sync: PhantomData,
+                },
+                GPR4: GPR4 {
+                    _not_send_or_sync: PhantomData,
+                },
+                GPR5: GPR5 {
+                    _not_send_or_sync: PhantomData,
+                },
+                GPR6: GPR6 {
+                    _not_send_or_sync: PhantomData,
+                },
+                GPR7: GPR7 {
+                    _not_send_or_sync: PhantomData,
+                },
+                GPR8: GPR8 {
+                    _not_send_or_sync: PhantomData,
+                },
+                GPR9: GPR9 {
+                    _not_send_or_sync: PhantomData,
+                },
+                GPR10: GPR10 {
+                    _not_send_or_sync: PhantomData,
+                },
+            }
+        }
+    }
+    #[allow(non_camel_case_types)]
+    #[doc = "SRC"]
+    pub type SRC = Registers;
+    impl SRC {
+        #[doc = r" Takes the singleton that represents this peripheral instance"]
+        pub fn take() -> Option<Self> {
+            static TAKEN: AtomicBool = AtomicBool::new(false);
+            if TAKEN
+                .compare_exchange(false, true, Ordering::AcqRel, Ordering::Acquire)
+                .is_ok()
+            {
+                Some(unsafe { Registers::new() })
+            } else {
+                None
+            }
+        }
+        #[doc = r" Borrows the singleton without checking if it's"]
+        #[doc = r" currently being held by a context"]
+        #[doc = r""]
+        #[doc = r" **WARNING** this can break Read-Modify-Write"]
+        #[doc = r" operations being performed in other contexts."]
+        pub fn borrow_unchecked<T>(f: impl FnOnce(&Self) -> T) -> T {
+            f(&Registers {
+                _not_sync: PhantomData,
+                SCR: SCR {
+                    _not_send_or_sync: PhantomData,
+                },
+                SBMR1: SBMR1 {
+                    _not_send_or_sync: PhantomData,
+                },
+                SRSR: SRSR {
+                    _not_send_or_sync: PhantomData,
+                },
+                SISR: SISR {
+                    _not_send_or_sync: PhantomData,
+                },
+                SBMR2: SBMR2 {
+                    _not_send_or_sync: PhantomData,
+                },
+                GPR1: GPR1 {
+                    _not_send_or_sync: PhantomData,
+                },
+                GPR2: GPR2 {
+                    _not_send_or_sync: PhantomData,
+                },
+                GPR3: GPR3 {
+                    _not_send_or_sync: PhantomData,
+                },
+                GPR4: GPR4 {
+                    _not_send_or_sync: PhantomData,
+                },
+                GPR5: GPR5 {
+                    _not_send_or_sync: PhantomData,
+                },
+                GPR6: GPR6 {
+                    _not_send_or_sync: PhantomData,
+                },
+                GPR7: GPR7 {
+                    _not_send_or_sync: PhantomData,
+                },
+                GPR8: GPR8 {
+                    _not_send_or_sync: PhantomData,
+                },
+                GPR9: GPR9 {
+                    _not_send_or_sync: PhantomData,
+                },
+                GPR10: GPR10 {
+                    _not_send_or_sync: PhantomData,
+                },
+            })
+        }
+    }
+}
 #[cfg(feature = "uart")]
 pub use uart::UART1;
 #[cfg(feature = "uart")]

@@ -1,4 +1,7 @@
 //! eMMC: check that write, flush, read works as expected
+//!
+//! **WARNING** this may corrupt data on the eMMC; make a back up or double check that this won't
+//! overwrite existing data
 
 #![no_main]
 #![no_std]
@@ -27,7 +30,8 @@ fn main() -> ! {
         .for_each(|byte| *byte = byte.wrapping_add(1));
 
     emmc.write(BLOCK_NR, &updated).unwrap();
-    emmc.flush().unwrap();
+
+    // NOTE all writes are immediately flushed to the eMMC
 
     let mut fresh = Block::zeroed();
     emmc.read(BLOCK_NR, &mut fresh).unwrap();
@@ -35,21 +39,28 @@ fn main() -> ! {
     if updated.bytes[..] == fresh.bytes[..] {
         memlog!("OK @ {:#x}", BLOCK_NR);
     } else {
-        memlog!("error @ {:#x}: blocks don't match", BLOCK_NR);
-
+        let mut total = 0;
+        let mut first = None;
+        let mut last = 0;
         for i in 0..fresh.bytes.len() {
             if updated.bytes[i] != fresh.bytes[i] {
-                memlog!(
-                    "@ {:#04x}: initial: {:#04x}, got: {:#04x}, expected: {:#04x}",
-                    i,
-                    orig.bytes[i],
-                    fresh.bytes[i],
-                    updated.bytes[i],
-                );
+                if first.is_none() {
+                    first = Some(i);
+                }
+                total += 1;
+                last = i;
             }
         }
+
+        memlog!(
+            "error @ {:#x}: blocks don't match ({}B differ, first={}, last={})",
+            BLOCK_NR,
+            total,
+            first.unwrap(),
+            last
+        );
     }
 
-    // then reset the board to return to the u-boot console
+    // then reset the board
     memlog_flush_and_reset!();
 }

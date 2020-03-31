@@ -16,6 +16,9 @@ use crate::{
     ivt, BootData, Ivt,
 };
 
+/// ROM bootloader limitation
+const MAX_IMAGE_SIZE: u32 = 32 * 1024 * 1024;
+
 const K: u32 = 1024;
 const M: u32 = 1024 * K;
 const OCRAM_START: u32 = 0x00900000;
@@ -311,6 +314,11 @@ section not found in ELF file"
             plugin: 0,
             start: DRAM_START,
         };
+        assert!(
+            boot_data.len <= MAX_IMAGE_SIZE,
+            "the ROM bootloader supports image sizes up to 32 MB (got {}B)",
+            boot_data.len
+        );
         let mut pos = 0;
         ivt.write(w)?;
         pos += u32::from(Ivt::SIZE);

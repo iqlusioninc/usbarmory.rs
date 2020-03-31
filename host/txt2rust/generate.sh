@@ -28,6 +28,7 @@ main() {
     pdftotext -layout -f 1280 -l 1300 $mx6ul iomuxc.txt
     pdftotext -layout -f 2043 -l 2046 $mx6ul ccm-mmdc.txt
     pdftotext -layout -f 2921 -l 2922 $mx6ul snvs.txt
+    pdftotext -layout -f 3009 -l 3009 $mx6ul src.txt
     pdftotext -layout -f 3093 -l 3093 $mx6ull rngb.txt
     pdftotext -layout -f 3101 -l 3107 $mx6ul uart.txt
     pdftotext -layout -f 3309 -l 3309 $mx6ul usb-nc.txt

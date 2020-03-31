@@ -25,7 +25,7 @@ usb-device = "0.2.5"
 zerocopy = "0.3.0"
 
 [dependencies.pac]
-features = ["ccm_analog", "hw_dcp", "rng", "uart", "usb_analog", "usb_uog", "usbphy", "usdhc", "wdog"]
+features = ["ccm_analog", "hw_dcp", "rng", "src", "uart", "usb_analog", "usb_uog", "usbphy", "usdhc", "wdog"]
 package = "imx6ul-pac"
 path = "../imx6ul-pac"
 
