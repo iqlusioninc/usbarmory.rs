@@ -251,6 +251,12 @@ pub struct PartitionTable {
     index: usize,
 }
 
+impl Default for PartitionTable {
+    fn default() -> Self {
+        Self::new()
+    }
+}
+
 impl PartitionTable {
     /// Creates an empty partition table
     pub fn new() -> Self {
@@ -276,13 +282,11 @@ impl PartitionTable {
 
         if entry.start_lba < end {
             Err(PartError::PartitionCollision)
+        } else if self.index < self.entries.len() {
+            self.entries[self.index] = entry;
+            Ok(())
         } else {
-            if self.index < self.entries.len() {
-                self.entries[self.index] = entry;
-                Ok(())
-            } else {
-                Err(PartError::TooManyPartitions)
-            }
+            Err(PartError::TooManyPartitions)
         }
     }
 

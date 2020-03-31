@@ -45,14 +45,14 @@ enum Width {
 }
 
 impl Width {
-    fn dtw(&self) -> u8 {
+    fn dtw(self) -> u8 {
         match self {
             Width::B1 => 0b00,
             Width::B8 => 0b10,
         }
     }
 
-    fn ddr(&self) -> bool {
+    fn ddr(self) -> bool {
         false
     }
 }
@@ -521,7 +521,7 @@ impl eMMC {
 
     /// Selects an operating voltage that supports most (all?) cards on the bus
     fn voltage_validation(&self) -> Result<(), Error> {
-        let target_ocr = 0x00FF8000;
+        let target_ocr = 0x00FF_8000;
 
         /// 0 = Card is busy; 1 = Card has finished powering up
         const OCR_RDY: u32 = 1 << 31;
