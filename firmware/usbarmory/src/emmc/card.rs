@@ -13,6 +13,7 @@ pub struct Csd {
     write_block_size_log2: u8,
 }
 
+#[cfg(TODO = "eMMC_and_uSD_support")]
 impl Csd {
     /// Returns the version of the eMMC specification supported by the card
     pub fn version(&self) -> u8 {
