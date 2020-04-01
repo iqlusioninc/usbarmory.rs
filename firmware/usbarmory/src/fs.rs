@@ -31,6 +31,12 @@ impl<D: ManagedBlockDevice> LittleFsAlloc<D> {
     }
 }
 
+impl<D: ManagedBlockDevice> Default for LittleFsAlloc<D> {
+    fn default() -> Self {
+        Self::new()
+    }
+}
+
 /// A littlefs2 file system.
 pub struct LittleFs<'a, D: ManagedBlockDevice> {
     storage: LfsStorage<D>,
@@ -113,6 +119,12 @@ impl<D: ManagedBlockDevice> FileAlloc<D> {
     }
 }
 
+impl<D: ManagedBlockDevice> Default for FileAlloc<D> {
+    fn default() -> Self {
+        Self::new()
+    }
+}
+
 /// An open file.
 ///
 /// NOTE unlike `littlefs2::File`, this newtype has close on drop semantics. Any error that arises
@@ -123,6 +135,7 @@ pub struct File<'a, 'fs, D: ManagedBlockDevice> {
     fs: &'a mut LittleFs<'fs, D>,
 }
 
+#[allow(clippy::len_without_is_empty)]
 impl<'a, 'fs, D: ManagedBlockDevice> File<'a, 'fs, D> {
     /// Opens the file at `path`.
     pub fn open(
