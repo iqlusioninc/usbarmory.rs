@@ -371,12 +371,22 @@ repository.
 Run `make usbarmory-mark-two_config` to use the default USB Armory
 configuration.
 
+You will also the arm7 toolchain from the Linux packagemer or [ARM](https://developer.arm.com/tools-and-software/open-source-software/developer-tools/gnu-toolchain/gnu-rm/downloads).
+
+
 Then run `make`, as shown below, to build U-Boot:
 
+Linux
 ``` console
 $ # NOTE this depends on arm-none-eabi-gcc and other C build tools
 $ ARCH=arm CROSS_COMPILE=arm-none-eabi- make
 ```
+
+On Mac, you need to work around two things.
+
+1. You need to make the compiler and linker aware of OpenSSL. These [instructions](https://medium.com/@timmykko/using-openssl-library-with-macos-sierra-7807cfd47892) worked.
+
+2. Need to work around MacOS variant of `sed`. [This](https://gist.github.com/andre3k1/e3a1a7133fded5de5a9ee99c87c6fa0d) is one option.
 
 This should result in a `u-boot-dtb.imx` file, which contains the built U-Boot
 binary.
@@ -452,10 +462,20 @@ also means that you can keep a partition table in those first 1024 bytes (e.g.
 MBR). You can partition the uSD before running the `dd` command -- ensure any
 partition you create doesn't collide with the image you are about to flash.
 
+Linux
+
 ``` console
 $ sudo dd if=blinky.bin of=/dev/sda bs=512 seek=2 conv=fsync
 $ sync
 ```
+
+MacOS
+
+``` console
+$ sudo dd if=blinky.bin of=/dev/rdisk2 bs=512 seek=2 conv=sync
+$ sync
+```
+
 
 Now terminate the USB Mass Store Device emulation by pressing Ctrl-C in the
 `minicom` terminal / u-boot console. You can now disconnect the Armory.
