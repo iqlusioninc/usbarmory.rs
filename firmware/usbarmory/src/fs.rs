@@ -4,8 +4,9 @@ use crate::storage::{Block, ManagedBlockDevice, BLOCK_SIZE};
 use littlefs2::{
     consts,
     driver::Storage,
-    fs::{self, FileAllocation, FileType, Filesystem, FilesystemAllocation, SeekFrom},
-    io::{self, Read, Write, Seek},
+    fs::{self, FileAllocation, FileType, Filesystem, FilesystemAllocation, Metadata, SeekFrom},
+    io::{self, Read, Seek, Write},
+    path::Filename,
 };
 use memlog::memlog;
 
@@ -14,7 +15,7 @@ use memlog::memlog;
 /// This should be removed and calculated dynamically based on the partition size.
 ///
 /// littlefs2 has a hard 2^32 Byte limit.
-const BLOCK_COUNT: usize = !0 / (BLOCK_SIZE as usize);
+const BLOCK_COUNT: usize = 131_072; // 64 MiB
 
 /// Backing storage used by littlefs.
 pub struct LittleFsAlloc<D: ManagedBlockDevice> {
@@ -113,8 +114,12 @@ impl<D: ManagedBlockDevice> FileAlloc<D> {
 }
 
 /// An open file.
+///
+/// NOTE unlike `littlefs2::File`, this newtype has close on drop semantics. Any error that arises
+/// while closing the file will result in a panic. Use the `close` method to handle IO errors
+/// instead of potentially panicking.
 pub struct File<'a, 'fs, D: ManagedBlockDevice> {
-    inner: fs::File<'a, LfsStorage<D>>,
+    inner: Option<fs::File<'a, LfsStorage<D>>>,
     fs: &'a mut LittleFs<'fs, D>,
 }
 
@@ -125,10 +130,11 @@ impl<'a, 'fs, D: ManagedBlockDevice> File<'a, 'fs, D> {
         alloc: &'a mut FileAlloc<D>,
         path: impl AsRef<[u8]>,
     ) -> io::Result<Self> {
-        let mut inner = fs::File::open(path.as_ref(), &mut alloc.inner, &mut fs.fs, &mut fs.storage)?;
+        let mut inner =
+            fs::File::open(path.as_ref(), &mut alloc.inner, &mut fs.fs, &mut fs.storage)?;
         inner.seek(&mut fs.fs, &mut fs.storage, SeekFrom::Start(0))?;
         Ok(Self {
-            inner,
+            inner: Some(inner),
             fs,
         })
     }
@@ -140,7 +146,12 @@ impl<'a, 'fs, D: ManagedBlockDevice> File<'a, 'fs, D> {
         path: impl AsRef<[u8]>,
     ) -> io::Result<Self> {
         Ok(Self {
-            inner: fs::File::create(path.as_ref(), &mut alloc.inner, &mut fs.fs, &mut fs.storage)?,
+            inner: Some(fs::File::create(
+                path.as_ref(),
+                &mut alloc.inner,
+                &mut fs.fs,
+                &mut fs.storage,
+            )?),
             fs,
         })
     }
@@ -148,6 +159,8 @@ impl<'a, 'fs, D: ManagedBlockDevice> File<'a, 'fs, D> {
     /// Calls a closure with the file at `path`.
     ///
     /// This avoids having to use `FileAlloc`.
+    ///
+    /// NOTE the file will be `sync`-ed and `close`-d after `f` is executed
     pub fn open_and_then<R>(
         fs: &mut LittleFs<'a, D>,
         path: impl AsRef<[u8]>,
@@ -164,6 +177,8 @@ impl<'a, 'fs, D: ManagedBlockDevice> File<'a, 'fs, D> {
     /// Calls a closure with a file created at `path`.
     ///
     /// This avoids having to use `FileAlloc`.
+    ///
+    /// NOTE the file will be `sync`-ed and `close`-d after `f` is executed
     pub fn create_and_then<R>(
         fs: &mut LittleFs<'a, D>,
         path: impl AsRef<[u8]>,
@@ -172,32 +187,68 @@ impl<'a, 'fs, D: ManagedBlockDevice> File<'a, 'fs, D> {
         let mut alloc = FileAlloc::new();
         let mut file = File::create(fs, &mut alloc, path)?;
 
-        f(&mut file)
+        let r = f(&mut file)?;
+        file.close()?;
+        Ok(r)
     }
 
     /// Consumes and closes the file.
-    pub fn close(self) -> io::Result<()> {
-        self.inner.close(&mut self.fs.fs, &mut self.fs.storage)
+    ///
+    /// This will also synchronize the contents of the file to disk (i.e. flush the file write
+    /// cache)
+    ///
+    /// NOTE the file will also be closed when dropped; but you can use this method to handle IO
+    /// errors that may occur while closing the file
+    pub fn close(mut self) -> io::Result<()> {
+        self.inner
+            .take()
+            .unwrap_or_else(|| unsafe { assume_unreachable!() })
+            .close(&mut self.fs.fs, &mut self.fs.storage)
     }
 
     /// Returns the length of this file in Bytes.
     pub fn len(&mut self) -> io::Result<usize> {
-        self.inner.len(&mut self.fs.fs, &mut self.fs.storage)
+        self.inner
+            .as_mut()
+            .unwrap_or_else(|| unsafe { assume_unreachable!() })
+            .len(&mut self.fs.fs, &mut self.fs.storage)
     }
 
     /// Reads bytes from this file into `buf`.
     pub fn read(&mut self, buf: &mut [u8]) -> io::Result<usize> {
-        self.inner.read(&mut self.fs.fs, &mut self.fs.storage, buf)
+        self.inner
+            .as_mut()
+            .unwrap_or_else(|| unsafe { assume_unreachable!() })
+            .read(&mut self.fs.fs, &mut self.fs.storage, buf)
     }
 
     /// Writes byte from `buf` into this file.
+    ///
+    /// NOTE writes are cached in memory; use `sync` to flush the cache to disk
     pub fn write(&mut self, buf: &[u8]) -> io::Result<usize> {
-        self.inner.write(&mut self.fs.fs, &mut self.fs.storage, buf)
+        self.inner
+            .as_mut()
+            .unwrap_or_else(|| unsafe { assume_unreachable!() })
+            .write(&mut self.fs.fs, &mut self.fs.storage, buf)
     }
 
-    /// Flushes any data written to this file to the underlying storage.
-    pub fn flush(&mut self) -> io::Result<()> {
-        self.inner.flush(&mut self.fs.fs, &mut self.fs.storage)
+    /// Synchronize file contents to storage
+    pub fn sync(&mut self) -> io::Result<()> {
+        self.inner
+            .as_mut()
+            .unwrap_or_else(|| unsafe { assume_unreachable!() })
+            .sync(&mut self.fs.fs, &mut self.fs.storage)
+    }
+}
+
+impl<D> Drop for File<'_, '_, D>
+where
+    D: ManagedBlockDevice,
+{
+    fn drop(&mut self) {
+        if let Some(inner) = self.inner.take() {
+            inner.close(&mut self.fs.fs, &mut self.fs.storage).unwrap()
+        }
     }
 }
 
@@ -229,10 +280,19 @@ impl<D: ManagedBlockDevice> DirEntry<D> {
         self.inner.file_type()
     }
 
-    // FIXME: Add filename access once the littlefs2 crate supports it.
+    /// Returns the name of this entry
+    pub fn file_name(&self) -> Filename<LfsStorage<D>> {
+        self.inner.file_name()
+    }
+
+    /// Returns the metadata of this entry
+    pub fn metadata(&self) -> Metadata {
+        self.inner.metadata()
+    }
 }
 
-struct LfsStorage<D: ManagedBlockDevice> {
+#[doc(hidden)]
+pub struct LfsStorage<D: ManagedBlockDevice> {
     inner: D,
 }
 
@@ -255,8 +315,6 @@ impl<D: ManagedBlockDevice> Storage for LfsStorage<D> {
     const FILEBYTES_MAX: usize = 2_147_483_647;
 
     fn read(&self, off: usize, buf: &mut [u8]) -> littlefs2::io::Result<usize> {
-        memlog!("read {} @ {:x}", buf.len(), off);
-
         let mut lba = off / Self::BLOCK_SIZE;
 
         let mut block = Block::zeroed();
@@ -268,13 +326,10 @@ impl<D: ManagedBlockDevice> Storage for LfsStorage<D> {
             lba += 1;
         }
 
-        // XXX this is ignored
         Ok(buf.len())
     }
 
     fn write(&mut self, off: usize, data: &[u8]) -> littlefs2::io::Result<usize> {
-        memlog!("write {} @ {:x}", data.len(), off);
-
         let mut lba = off / Self::BLOCK_SIZE;
 
         let mut block = Block::zeroed();
@@ -288,15 +343,11 @@ impl<D: ManagedBlockDevice> Storage for LfsStorage<D> {
 
         self.inner.flush().map_err(|_| littlefs2::io::Error::Io)?;
 
-        // XXX this is ignored
         Ok(data.len())
     }
 
-    fn erase(&mut self, off: usize, len: usize) -> littlefs2::io::Result<usize> {
+    fn erase(&mut self, _off: usize, len: usize) -> littlefs2::io::Result<usize> {
         // A `ManagedBlockDevice` can just overwrite individual blocks, no need to erase any.
-        memlog!("erase {} @ {:x}", len, off);
-
-        // XXX this is ignored
         Ok(len)
     }
 }

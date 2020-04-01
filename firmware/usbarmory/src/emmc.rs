@@ -163,6 +163,8 @@ impl eMMC {
             emmc.blocks =
                 u32::from_le_bytes([ext_csd[212], ext_csd[213], ext_csd[214], ext_csd[215]]);
 
+            memlog!("card has {} blocks", emmc.blocks);
+
             Ok(emmc)
         })
     }
@@ -832,9 +834,7 @@ impl ManagedBlockDevice for eMMC {
     type Error = Error;
 
     fn total_blocks(&self) -> u64 {
-        // FIXME: Implement proper capacity readout for eMMC.
-        // For now, this is hardcoded to 16 GB.
-        16_000_000_000 / 512
+        u64::from(self.blocks)
     }
 
     fn read(&self, block: &mut Block, lba: u64) -> Result<(), Self::Error> {

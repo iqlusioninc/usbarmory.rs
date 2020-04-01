@@ -21,11 +21,13 @@ use usbarmory_rt as _;
 
 use crate::serial::Serial;
 
+#[macro_use]
+mod macros;
+
 pub mod dcp;
 pub mod emmc;
 pub mod fs;
 pub mod led;
-mod macros;
 pub mod rng;
 pub mod serial;
 pub mod storage;

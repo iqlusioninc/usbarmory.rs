@@ -134,8 +134,6 @@ impl<D: ManagedBlockDevice> MbrDevice<D> {
         let mut part_table = [PartitionEntry::zeroed(); 4];
         part_table.copy_from_slice(parts);
 
-        memlog!("MBR parttable: {:?}", parts);
-
         for part in parts {
             if part.part_type != 0x00 {
                 // Entry allocated, extent must be valid.
