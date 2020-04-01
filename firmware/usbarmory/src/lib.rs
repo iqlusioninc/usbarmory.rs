@@ -13,6 +13,7 @@
 )]
 #![warn(missing_docs, rust_2018_idioms, unused_qualifications)]
 
+use c_stubs as _; // C functions required by littlefs2
 pub use cortex_a::{delay, no_interrupts};
 pub use memlog::{log, Logger};
 use pac::{GICC, WDOG1};
