@@ -11,6 +11,9 @@ extern "C" {
     fn memcpy(dst: *mut c_void, src: *const c_void, n: size_t) -> *mut c_void;
 }
 
+/// # Safety
+/// - `src` must be a valid C string (null terminated)
+/// - `dst` must be large enough to hold `src`
 #[no_mangle]
 pub unsafe fn strcpy(dst: *mut c_char, src: *const c_char) -> *mut c_char {
     memcpy(dst as *mut c_void, src as *const c_void, strlen(src)) as *mut c_char
