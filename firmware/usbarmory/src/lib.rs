@@ -14,8 +14,8 @@
 #![warn(missing_docs, rust_2018_idioms, unused_qualifications)]
 
 pub use cortex_a::{delay, no_interrupts};
-pub use memlog::memlog;
-use pac::WDOG1;
+pub use memlog::{log, Logger};
+use pac::{GICC, WDOG1};
 use usbarmory_rt as _;
 
 use crate::serial::Serial;
@@ -89,9 +89,17 @@ pub fn memlog_flush_and_reset(file: &str, line: u32) -> ! {
 /// [Non-blocking] Transmits some of the contents of the in-memory logger over
 /// the serial interface
 pub fn memlog_try_flush() {
-    memlog::peek(false, |s| {
-        Serial::borrow_unchecked(|serial| serial.try_write_all(s))
-    })
+    if in_main() {
+        memlog::peek(false, |s| {
+            Serial::borrow_unchecked(|serial| serial.try_write_all(s))
+        })
+    }
+}
+
+// Or "not in interrupt context"
+fn in_main() -> bool {
+    // "main" runs at the lowest priority of `0xff` (hardware priority)
+    GICC::borrow_unchecked(|gicc| gicc.RPR.read()) == 0xff
 }
 
 /// Runs the given closure and panics if it didn't complete within `timeout`
@@ -123,4 +131,20 @@ pub fn debug_timebox<T>(timeout: core::time::Duration, f: impl FnOnce() -> T) ->
         timeout
     );
     r
+}
+
+// like `memlog::memlog!` macro but with an added opportunistic flush
+/// Logs the formatted string into the device memory
+#[macro_export]
+macro_rules! memlog {
+    ($s:expr) => {
+        $crate::log(concat!($s, "\n"));
+        $crate::memlog_try_flush();
+    };
+
+    ($s:expr, $($args:tt)*) => {{
+        use core::fmt::Write as _;
+        let _ = write!($crate::Logger, concat!($s, "\n"), $($args)*); // never errors
+        $crate::memlog_try_flush();
+    }};
 }
