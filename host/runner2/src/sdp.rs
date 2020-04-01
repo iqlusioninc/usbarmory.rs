@@ -6,10 +6,11 @@ use std::thread;
 use anyhow::bail;
 use arrayref::array_ref;
 
-use crate::hid::HidDev;
+// use crate::hid::HidDev;
+use hidapi::{HidApi, HidDevice};
 
 pub struct Sdp {
-    hid: HidDev,
+    hid: HidDevice,
 }
 
 const VID: u16 = 0x15a2; // NXP
@@ -17,11 +18,10 @@ const PID: u16 = 0x0080; // I.MX6ULZ in SDP mode
 
 impl Sdp {
     pub fn open() -> Result<Self, anyhow::Error> {
+        let api = HidApi::new()?;
         for _ in 0..3 {
-            if let Some(handle) = rusb::open_device_with_vid_pid(VID, PID) {
-                return Ok(Sdp {
-                    hid: HidDev::from_handle(handle)?,
-                });
+            if let Ok(dev) = api.open(VID, PID) {
+                return Ok(Sdp { hid: dev });
             }
 
             thread::sleep(Duration::from_secs(1))
@@ -31,7 +31,8 @@ impl Sdp {
     }
 
     pub fn usb_address(&self) -> u8 {
-        self.hid.address()
+        // self.hid.address()
+        todo!()
     }
 
     pub fn reconnected(old_address: u8) -> bool {
@@ -51,7 +52,8 @@ impl Sdp {
     }
 
     pub fn read_memory(&self, address: u32) -> Result<u32, anyhow::Error> {
-        self.hid.set_report(
+        println!("A");
+        self.hid.write(
             &Command::ReadRegister {
                 address,
                 count: 1,
@@ -59,21 +61,31 @@ impl Sdp {
             }
             .bytes(),
         )?;
+        println!("B");
 
         const SEC_REPORT_ID: u8 = 3;
         const SEC_OPEN: [u8; 4] = [0x56, 0x78, 0x78, 0x56];
 
         let mut sec = [0; 5];
-        let sec = self.hid.read_interrupt(&mut sec)?;
+        let mut n = self.hid.read(&mut sec)?;
+        // HACK! no idea we get a 1 byte read ... is the next buffer used in the next op one byte
+        // too short?
+        if n == 1 {
+            n = self.hid.read(&mut sec)?;
+        }
+        println!("C");
+        let sec = &sec[..n];
 
         if sec[0] != SEC_REPORT_ID || sec[1..] != SEC_OPEN[..] {
-            bail!("HAB is in the closed state");
+            bail!("HAB is in the closed state ({:?})", sec);
         }
 
         const DATA_REPORT_ID: u8 = 4;
 
         let mut data = [0; 65];
-        let data = self.hid.read_interrupt(&mut data)?;
+        let n = self.hid.read(&mut data)?;
+        println!("D");
+        let data = &data[..n];
 
         if data[0] != DATA_REPORT_ID {
             bail!("unexpected report id");

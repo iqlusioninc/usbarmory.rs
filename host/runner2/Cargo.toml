@@ -14,3 +14,4 @@ xmas-elf = "0.7.0"
 serialport = { version = "3.3.0", default-features = false }
 image = { path = "../image" }
 tempfile = "3.1.0"
+hidapi = "1.2.1"
