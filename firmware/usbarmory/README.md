@@ -34,7 +34,7 @@ stage and will not be ready to use for some time.
 - [`imx_usb`] to load Rust programs directly into RAM. This program is available
   on Arch Linux as the `imx-usb-loader-git` AUR package.
 
-[`imx_usb`]: https://github.com/boundarydevices/imx_usb_loader
+[`imx_usb`]: https://github.com/boundarydevices/imx_usb_loader. *This depedency doesn't appear to be able to claim the USB device on MacOS. Currently the best solution is VirtualBox to a Linux guest. Remember to install Guest Additions!*
 
 - `arm-none-eabi-binutils` OR (`cargo-binutils` + `llvm-tools-preview`), if you
   need to inspect ELF files. `sudo pacman -S arm-none-eabi-binutils` (Arch
@@ -43,7 +43,7 @@ stage and will not be ready to use for some time.
   latter.
 
 - `arm-none-eabi-gcc`, required to load programs into the eMMC. Also needed when
-  modifying assembly (`.s`) files (these need to be re-assembled).
+  modifying assembly (`.s`) files (these need to be re-assembled) which can be acquired [here](https://developer.arm.com/tools-and-software/open-source-software/developer-tools/gnu-toolchain/gnu-rm/downloads).
 
 - `qemu-system-arm` v4.x, to run firmware on the host and for some unit testing.
   Install it with `sudo pacman -S qemu-arch-extra` on Arch Linux.
@@ -370,9 +370,6 @@ repository.
 
 Run `make usbarmory-mark-two_config` to use the default USB Armory
 configuration.
-
-You will also the arm7 toolchain from the Linux packagemer or [ARM](https://developer.arm.com/tools-and-software/open-source-software/developer-tools/gnu-toolchain/gnu-rm/downloads).
-
 
 Then run `make`, as shown below, to build U-Boot:
 
