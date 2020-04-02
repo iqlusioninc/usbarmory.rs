@@ -31,7 +31,7 @@ jobs:
       - name: Run cargo check
         working-directory: ./firmware
         run: |
-          cargo check --features fs
+          cargo check
 
   host-check:
     name: Check host crates
@@ -191,7 +191,7 @@ jobs:
           sudo ln -s /usr/bin/llvm-config{-9,}
 
       - name: Build examples using the dev profile
-        working-directory: ./firmware
+        working-directory: ./firmware/usbarmory
         run: |
           cargo build --examples --features fs
 
@@ -247,4 +247,4 @@ jobs:
       - name: Run cargo clippy
         working-directory: ./firmware
         run: |
-          cargo clippy --features fs -- -D warnings
+          cargo clippy -- -D warnings
