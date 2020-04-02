@@ -13,6 +13,7 @@
 )]
 #![warn(missing_docs, rust_2018_idioms, unused_qualifications)]
 
+#[cfg(feature = "fs")]
 use c_stubs as _; // C functions required by littlefs2
 pub use cortex_a::{delay, no_interrupts};
 pub use memlog::{log, Logger};
@@ -26,6 +27,7 @@ mod macros;
 
 pub mod dcp;
 pub mod emmc;
+#[cfg(feature = "fs")]
 pub mod fs;
 pub mod led;
 pub mod rng;

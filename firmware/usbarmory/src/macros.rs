@@ -47,6 +47,7 @@ macro_rules! memlog_flush_and_reset {
     };
 }
 
+#[allow(unused_macros)]
 macro_rules! assume_unreachable {
     () => {
         if cfg!(debug_assertions) {

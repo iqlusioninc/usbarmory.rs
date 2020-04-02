@@ -31,7 +31,7 @@ jobs:
       - name: Run cargo check
         working-directory: ./firmware
         run: |
-          cargo check
+          cargo check --features fs
 
   host-check:
     name: Check host crates
@@ -193,12 +193,12 @@ jobs:
       - name: Build examples using the dev profile
         working-directory: ./firmware
         run: |
-          cargo build --examples
+          cargo build --examples --features fs
 
       - name: Build examples using the release profile
         working-directory: ./firmware/usbarmory
         run: |
-          cargo build --examples --release
+          cargo build --examples --features fs --release
 
   fmt:
     name: Rustfmt
@@ -247,4 +247,4 @@ jobs:
       - name: Run cargo clippy
         working-directory: ./firmware
         run: |
-          cargo clippy -- -D warnings
+          cargo clippy --features fs -- -D warnings
