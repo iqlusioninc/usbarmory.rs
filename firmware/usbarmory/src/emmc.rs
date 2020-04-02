@@ -777,9 +777,7 @@ impl eMMC {
                     int_status = self.usdhc.INT_STATUS.read();
                     int_status & any_error != 0 || int_status & transfer_done == transfer_done
                 };
-                if util::wait_for_or_timeout(has_command_completed, default_timeout())
-                    .is_err()
-                {
+                if util::wait_for_or_timeout(has_command_completed, default_timeout()).is_err() {
                     return Err(Error::Timeout);
                 }
 
