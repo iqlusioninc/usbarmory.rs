@@ -41,7 +41,7 @@ stage and will not be ready to use for some time.
 - [`imx_usb`] to load Rust programs directly into RAM. This program is available
   on Arch Linux as the `imx-usb-loader-git` AUR package.
 
-[`imx_usb`]: https://github.com/boundarydevices/imx_usb_loader
+[`imx_usb`]: https://github.com/boundarydevices/imx_usb_loader. *This depedency doesn't appear to be able to claim the USB device on MacOS. Currently the best solution is VirtualBox to a Linux guest. Remember to install Guest Additions!*
 
 - `arm-none-eabi-binutils` OR (`cargo-binutils` + `llvm-tools-preview`), if you
   need to inspect ELF files. `sudo pacman -S arm-none-eabi-binutils` (Arch
@@ -50,7 +50,7 @@ stage and will not be ready to use for some time.
   latter.
 
 - `arm-none-eabi-gcc`, required to load programs into the eMMC. Also needed when
-  modifying assembly (`.s`) files (these need to be re-assembled).
+  modifying assembly (`.s`) files (these need to be re-assembled) which can be acquired [here](https://developer.arm.com/tools-and-software/open-source-software/developer-tools/gnu-toolchain/gnu-rm/downloads).
 
 - `qemu-system-arm` v4.x, to run firmware on the host and for some unit testing.
   Install it with `sudo pacman -S qemu-arch-extra` on Arch Linux.
@@ -363,7 +363,59 @@ to use it.
 
 Same steps as in the "Setting up a uSD Boot" version.
 
-### Building U-Boot
+### Getting a U-Boot image
+
+There are two ways to get a u-boot image for the USB Armory:
+
+#### Pre-compiled release
+
+This is the simpler, preferred way.
+
+- Download [this pre-compiled Debian image][armory-debian]. A newer image may
+also work but that's the one we have tested.
+
+[armory-debian]: https://github.com/f-secure-foundry/usbarmory-debian-base_image/releases/tag/20200114
+
+``` console
+$ # or grab the `.zip` version
+$ # or use your web browser instead of `curl`
+$ curl -LO https://github.com/f-secure-foundry/usbarmory-debian-base_image/releases/download/20200114/usbarmory-mark-two-debian_stretch-base_image-20200114.raw.xz
+```
+
+- `unxz` it
+
+``` console
+$ # or `unzip` it
+$ unxz usbarmory-mark-two-debian_stretch-base_image-20200114.raw.xz
+```
+
+- Print the partition table
+
+``` console
+$ fdisk -lu usbarmory-mark-two-debian_stretch-base_image-20200114.raw
+Disk usbarmory-mark-two-debian_stretch-base_image-20200114.raw: 3.43 GiB, 3670016000 bytes, 7168000 sectors
+Units: sectors of 1 * 512 = 512 bytes
+Sector size (logical/physical): 512 bytes / 512 bytes
+I/O size (minimum/optimal): 512 bytes / 512 bytes
+Disklabel type: dos
+Disk identifier: 0xfcf454fb
+
+Device                                                     Boot Start     End Sectors  Size Id Type
+usbarmory-mark-two-debian_stretch-base_image-20200114.raw1      10240 7167999 7157760  3.4G 83 Linux
+```
+
+Note the *Start* column: that's the start address (in sectors) of the Debian
+rootfs. The data from the start of the `.raw` image to that address is the
+u-boot image.
+
+- Use `dd` to extract the u-boot image
+
+``` console
+$ # adjust the offset if you are using a different debian release
+$ dd if=usbarmory-mark-two-debian_stretch-base_image-20200114.raw of=u-boot-dtb.imx bs=512 count=10240
+```
+
+#### Building it yourself
 
 Clone U-Boot from `https://gitlab.denx.de/u-boot/u-boot.git` and check out the
 [`v2019.07`] tag, and obtain the following patches to add support for the USB
@@ -380,10 +432,17 @@ configuration.
 
 Then run `make`, as shown below, to build U-Boot:
 
+Linux
 ``` console
 $ # NOTE this depends on arm-none-eabi-gcc and other C build tools
 $ ARCH=arm CROSS_COMPILE=arm-none-eabi- make
 ```
+
+On Mac, you need to work around two things.
+
+1. You need to make the compiler and linker aware of OpenSSL. These [instructions](https://medium.com/@timmykko/using-openssl-library-with-macos-sierra-7807cfd47892) worked.
+
+2. Need to work around MacOS variant of `sed`. [This](https://gist.github.com/andre3k1/e3a1a7133fded5de5a9ee99c87c6fa0d) is one option.
 
 This should result in a `u-boot-dtb.imx` file, which contains the built U-Boot
 binary.
@@ -459,10 +518,20 @@ also means that you can keep a partition table in those first 1024 bytes (e.g.
 MBR). You can partition the uSD before running the `dd` command -- ensure any
 partition you create doesn't collide with the image you are about to flash.
 
+Linux
+
 ``` console
 $ sudo dd if=blinky.bin of=/dev/sda bs=512 seek=2 conv=fsync
 $ sync
 ```
+
+MacOS
+
+``` console
+$ sudo dd if=blinky.bin of=/dev/rdisk2 bs=512 seek=2 conv=sync
+$ sync
+```
+
 
 Now terminate the USB Mass Store Device emulation by pressing Ctrl-C in the
 `minicom` terminal / u-boot console. You can now disconnect the Armory.
