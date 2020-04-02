@@ -11,10 +11,23 @@ readme      = "README.md"
 categories  = ["embedded", "hardware-support", "no-std"]
 keywords    = ["arm", "cortex-a"]
 
+[[example]]
+name = "emmc-fs"
+required-features = ["fs"]
+
+[[example]]
+name = "emmc-fs2"
+required-features = ["fs"]
+
+[[example]]
+name = "emmc-fs-format"
+required-features = ["fs"]
+
 [dependencies]
 arrayref = "0.3.6"
 block-cipher-trait = "0.6.2"
 consts = { path = "../../common/consts" }
+c-stubs = { path = "../../common/c-stubs" }
 cortex-a = { path = "../cortex-a" }
 digest = "0.8.1"
 heapless = "0.5.3"
@@ -23,6 +36,10 @@ rand_core = "0.5.1"
 typenum = "1.11.2"
 usb-device = "0.2.5"
 zerocopy = "0.3.0"
+
+[dependencies.littlefs2]
+optional = true
+version = "0.1.0-alpha.0"
 
 [dependencies.pac]
 features = ["ccm_analog", "hw_dcp", "rng", "src", "uart", "usb_analog", "usb_uog", "usbphy", "usdhc", "wdog"]
@@ -42,3 +59,6 @@ cortex-m-semihosting = { git = "https://github.com/japaric/cortex-m-semihosting"
 exception-reset = { path = "../exception-reset" }
 heapless = "0.5.3"
 panic-serial = { path = "../panic-serial" }
+
+[features]
+fs = ["littlefs2"]

@@ -46,3 +46,14 @@ macro_rules! memlog_flush_and_reset {
         $crate::memlog_flush_and_reset(file!(), line!())
     };
 }
+
+#[allow(unused_macros)]
+macro_rules! assume_unreachable {
+    () => {
+        if cfg!(debug_assertions) {
+            unreachable!()
+        } else {
+            core::hint::unreachable_unchecked()
+        }
+    };
+}

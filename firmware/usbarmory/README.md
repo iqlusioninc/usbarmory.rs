@@ -21,13 +21,20 @@ from [F-Secure].
 This project is an incomplete work-in-progress in an early developmental
 stage and will not be ready to use for some time.
 
-## Building dependencies
+## Build dependencies
 
 - [flip-lld], linker wrapper that adds zero-cost stack overflow protection.
   `cargo install --git https://github.com/japaric/flip-lld`.
 
 - `armv7a-none-eabi` compiler support. Install with `rustup target add
   armv7a-none-eabi`.
+
+- if using the `fs` API, which is gated behind the `fs` Cargo feature:
+  `llvm-config`, `libclang` and 32-bit libc headers. On Arch you can install
+  those with `sudo pacman -S clang lib32-glibc`. Check that the `llvm-config`
+  binary is in your $PATH (if you have something like `llvm-config-9` then
+  you'll need a symlink) and that the file `/usr/include/gnu/stubs-32.h` exists
+  (path may be slightly different on other *nix OSes)
 
 ## Development dependencies
 
