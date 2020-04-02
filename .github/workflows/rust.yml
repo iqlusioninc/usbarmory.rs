@@ -24,7 +24,7 @@ jobs:
 
       - name: Install build dependencies
         run: |
-          sudo apt-get install clang-9 gcc-arm-none-eabi
+          sudo apt-get install clang-9 gcc-arm-none-eabi libc6-dev-i386
           sudo ln -s /usr/bin/llvm-config{-9,}
 
       - name: Run cargo check
@@ -185,7 +185,7 @@ jobs:
 
       - name: Install build dependencies
         run: |
-          sudo apt-get install clang-9 gcc-arm-none-eabi
+          sudo apt-get install clang-9 gcc-arm-none-eabi libc6-dev-i386
           sudo ln -s /usr/bin/llvm-config{-9,}
 
       - name: Build examples using the dev profile
@@ -238,7 +238,7 @@ jobs:
 
       - name: Install build dependencies
         run: |
-          sudo apt-get install clang-9 gcc-arm-none-eabi
+          sudo apt-get install clang-9 gcc-arm-none-eabi libc6-dev-i386
           sudo ln -s /usr/bin/llvm-config{-9,}
 
       - name: Run cargo clippy
