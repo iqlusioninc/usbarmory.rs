@@ -23,7 +23,9 @@ jobs:
           override: true
 
       - name: Install build dependencies
-        run: sudo apt-get install clang-9 gcc-arm-none-eabi
+        run: |
+          sudo apt-get install clang-9 gcc-arm-none-eabi
+          sudo ln -s /usr/bin/llvm-config{-9,}
 
       - name: Run cargo check
         working-directory: ./firmware
@@ -182,7 +184,9 @@ jobs:
           cargo install --git https://github.com/japaric/flip-lld --rev b1028b9b140150379ecdcea2c07580af933378e9
 
       - name: Install build dependencies
-        run: sudo apt-get install clang-9 gcc-arm-none-eabi
+        run: |
+          sudo apt-get install clang-9 gcc-arm-none-eabi
+          sudo ln -s /usr/bin/llvm-config{-9,}
 
       - name: Build examples using the dev profile
         working-directory: ./firmware
@@ -233,7 +237,9 @@ jobs:
         run: rustup component add clippy
 
       - name: Install build dependencies
-        run: sudo apt-get install clang-9 gcc-arm-none-eabi
+        run: |
+          sudo apt-get install clang-9 gcc-arm-none-eabi
+          sudo ln -s /usr/bin/llvm-config{-9,}
 
       - name: Run cargo clippy
         working-directory: ./firmware
