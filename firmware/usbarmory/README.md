@@ -356,7 +356,59 @@ to use it.
 
 Same steps as in the "Setting up a uSD Boot" version.
 
-### Building U-Boot
+### Getting a U-Boot image
+
+There are two ways to get a u-boot image for the USB Armory:
+
+#### Pre-compiled release
+
+This is the simpler, preferred way.
+
+- Download [this pre-compiled Debian image][armory-debian]. A newer image may
+also work but that's the one we have tested.
+
+[armory-debian]: https://github.com/f-secure-foundry/usbarmory-debian-base_image/releases/tag/20200114
+
+``` console
+$ # or grab the `.zip` version
+$ # or use your web browser instead of `curl`
+$ curl -LO https://github.com/f-secure-foundry/usbarmory-debian-base_image/releases/download/20200114/usbarmory-mark-two-debian_stretch-base_image-20200114.raw.xz
+```
+
+- `unxz` it
+
+``` console
+$ # or `unzip` it
+$ unxz usbarmory-mark-two-debian_stretch-base_image-20200114.raw.xz
+```
+
+- Print the partition table
+
+``` console
+$ fdisk -lu usbarmory-mark-two-debian_stretch-base_image-20200114.raw
+Disk usbarmory-mark-two-debian_stretch-base_image-20200114.raw: 3.43 GiB, 3670016000 bytes, 7168000 sectors
+Units: sectors of 1 * 512 = 512 bytes
+Sector size (logical/physical): 512 bytes / 512 bytes
+I/O size (minimum/optimal): 512 bytes / 512 bytes
+Disklabel type: dos
+Disk identifier: 0xfcf454fb
+
+Device                                                     Boot Start     End Sectors  Size Id Type
+usbarmory-mark-two-debian_stretch-base_image-20200114.raw1      10240 7167999 7157760  3.4G 83 Linux
+```
+
+Note the *Start* column: that's the start address (in sectors) of the Debian
+rootfs. The data from the start of the `.raw` image to that address is the
+u-boot image.
+
+- Use `dd` to extract the u-boot image
+
+``` console
+$ # adjust the offset if you are using a different debian release
+$ dd if=usbarmory-mark-two-debian_stretch-base_image-20200114.raw of=u-boot-dtb.imx bs=512 count=10240
+```
+
+#### Building it yourself
 
 Clone U-Boot from `https://gitlab.denx.de/u-boot/u-boot.git` and check out the
 [`v2019.07`] tag, and obtain the following patches to add support for the USB
