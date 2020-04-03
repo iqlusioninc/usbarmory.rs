@@ -44,6 +44,10 @@ stage and will not be ready to use for some time.
   `firmware` directory) and `rustup component add llvm-tools-preview` for the
   latter.
 
+- `libusb-1.0-dev` & `libudev-dev` are required to use the Cargo runner which
+  loads Rust programs on the Armory. Install them with `sudo apt-get install
+  libudev-dev libusb-1.0-dev` (Ubuntu).
+
 - `arm-none-eabi-gcc`, required to load programs into the eMMC. Also needed when
   modifying assembly (`.s`) files (these need to be re-assembled).
 
