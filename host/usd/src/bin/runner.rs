@@ -12,7 +12,7 @@ use std::{
 
 use anyhow::{bail, format_err};
 use image::write::Image;
-use serialport::SerialPortSettings;
+use serialport::{SerialPortSettings, SerialPortType};
 use xmas_elf::ElfFile;
 
 use usd::Usd;
@@ -78,25 +78,31 @@ static STOP: AtomicBool = AtomicBool::new(false);
 
 /// Redirects serial data to the console
 fn redirect() -> Result<(), anyhow::Error> {
-    // FIXME this should look for the right port using `serialport::available_ports`
-    #[cfg(target_os = "linux")]
-    const PATH: &str = "/dev/ttyUSB2";
-    #[cfg(not(target_os = "linux"))]
-    compile_error!(
-        "non-Linux host: path to serial device (debug accessory) must be entered into the program"
-    );
-
+    const VID: u16 = 0x0403; // Future Technology Devices International, Ltd
+    const PID: u16 = 0x6011; // FT4232H Quad HS USB-UART/FIFO IC
+    const DEVNO: usize = 2; // device #3 is the one we want
     const BAUD_RATE: u32 = 4_000_000;
-    // the FT4232H uses 512B USB packets
-    const BUFSZ: usize = 512;
+    const BUFSZ: usize = 512; // the FT4232H uses 512B USB packets
 
     let mut settings = SerialPortSettings::default();
     settings.baud_rate = BAUD_RATE;
 
-    let stdout = io::stdout();
-    let mut stdout = stdout.lock();
-    let mut buf = [0; BUFSZ];
-    if let Ok(mut serial) = serialport::open_with_settings(PATH, &settings) {
+    let mut candidates = vec![];
+    for info in serialport::available_ports()?.into_iter() {
+        if let SerialPortType::UsbPort(usb) = info.port_type {
+            if usb.vid == VID && usb.pid == PID {
+                candidates.push(info.port_name);
+            }
+        }
+    }
+
+    if let Some(path) = candidates.get(DEVNO) {
+        let mut serial = serialport::open_with_settings(path, &settings)?;
+
+        let stdout = io::stdout();
+        let mut stdout = stdout.lock();
+        let mut buf = [0; BUFSZ];
+
         while !STOP.load(Ordering::Relaxed) {
             if serial.bytes_to_read()? != 0 {
                 let len = serial.read(&mut buf)?;
@@ -107,7 +113,11 @@ fn redirect() -> Result<(), anyhow::Error> {
             }
         }
     } else {
-        eprintln!("warning: serial interface couldn't be opened");
+        bail!(
+            "USB device {:04x}:{:04x} (serial interface) was not found",
+            VID,
+            PID
+        )
     }
 
     Ok(())
