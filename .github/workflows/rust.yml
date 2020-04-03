@@ -46,6 +46,11 @@ jobs:
           toolchain: 1.42.0
           override: true
 
+      - name: Install build dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install libudev-dev
+
       - name: Run cargo check
         working-directory: ./host
         run: |
