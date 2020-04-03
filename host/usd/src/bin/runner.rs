@@ -17,11 +17,7 @@ use serialport::SerialPortSettings;
 use tempfile::NamedTempFile;
 use xmas_elf::ElfFile;
 
-use crate::sdp::Sdp;
-
-mod hid;
-#[allow(dead_code)]
-mod sdp;
+use usd::Usd;
 
 fn main() -> Result<(), anyhow::Error> {
     // NOTE(skip) program name
@@ -35,8 +31,8 @@ fn main() -> Result<(), anyhow::Error> {
     let elf = ElfFile::new(&bytes).map_err(|s| format_err!("{}", s))?;
 
     // wait until the USB device is available
-    let sdp = Sdp::open()?;
-    let usb_address = sdp.usb_address();
+    let usd = Usd::open()?;
+    let usb_address = usd.usb_address();
 
     thread::spawn(|| {
         if let Err(e) = redirect() {
@@ -55,7 +51,7 @@ fn main() -> Result<(), anyhow::Error> {
     image.write(&mut file)?;
 
     // release the USB device before calling `imx_usb`
-    drop(sdp);
+    drop(usd);
 
     let status = Command::new("imx_usb")
         .arg(file.path())
@@ -79,7 +75,7 @@ $ cargo run --example bar"
     // the program is running now; if we see the SDP device get re-enumerated it means the Armory
     // rebooted back into SDP mode
     loop {
-        if Sdp::reconnected(usb_address) {
+        if usd::util::has_been_reenumerated(usb_address) {
             // stop the `redirect` thread and terminate this process
             // but give it some time to flush any remaining data
             thread::sleep(Duration::from_millis(100));

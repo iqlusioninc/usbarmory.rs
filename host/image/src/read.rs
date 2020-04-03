@@ -6,7 +6,7 @@ use crate::{BootData, Dcd, Ivt};
 
 /// Parsed program image (does not contain application data)
 #[derive(Debug)]
-pub struct Image {
+pub struct Image<'a> {
     /// Image Vector Table
     pub ivt: Ivt,
 
@@ -14,12 +14,12 @@ pub struct Image {
     pub boot_data: BootData,
 
     /// Optional DCD
-    pub dcd: Option<Dcd>,
+    pub dcd: Option<Dcd<'a>>,
 }
 
-impl Image {
+impl<'a> Image<'a> {
     /// Parses a program image
-    pub fn parse(input: &[u8]) -> Result<Self, anyhow::Error> {
+    pub fn parse(input: &'a [u8]) -> Result<Self, anyhow::Error> {
         let ivt = Ivt::parse(input)
             .map_err(|_| format_err!("error parsing the IVT"))?
             .1;
