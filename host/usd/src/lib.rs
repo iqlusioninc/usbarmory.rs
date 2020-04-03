@@ -36,6 +36,7 @@ pub const PID: u16 = 0x0080; // I.MX6ULZ in Serial Downloader (SD) mode
 pub const OCRAM_FREE_ADDRESS: u32 = 0x91_0000;
 
 impl Usd {
+    /// Opens the USB Serial Downloader device
     pub fn open() -> Result<Self, anyhow::Error> {
         for _ in 0..3 {
             if let Some(hid) = hid::Device::open()? {
@@ -56,20 +57,22 @@ impl Usd {
         self.verbose = verbose;
     }
 
+    /// Returns the USB address of the USB Serial Downloader device
     pub fn usb_address(&self) -> u8 {
         self.hid.address()
     }
 
-    pub fn dcd_write(&mut self, address: u32, data: &[u8]) -> Result<(), anyhow::Error> {
+    /// Writes the given `dcd` into the device's memory at `address`
+    pub fn dcd_write(&mut self, address: u32, dcd: &[u8]) -> Result<(), anyhow::Error> {
         if self.verbose {
-            eprintln!("dcd_write(address={:#010x}, count={})", address, data.len());
+            eprintln!("dcd_write(address={:#010x}, count={})", address, dcd.len());
         }
 
-        assert!(data.len() < u32::max_value() as usize);
+        assert!(dcd.len() < u32::max_value() as usize);
 
         self.send_command(Command::DcdWrite {
             address,
-            count: data.len() as u32,
+            count: dcd.len() as u32,
         })?;
 
         const DATA_REPORT_ID: u8 = 2;
@@ -77,7 +80,7 @@ impl Usd {
 
         let mut report = [0; DATA_REPORT_SIZE + 1];
         report[0] = DATA_REPORT_ID;
-        for chunk in data.chunks(DATA_REPORT_SIZE) {
+        for chunk in dcd.chunks(DATA_REPORT_SIZE) {
             let n = chunk.len();
             if self.verbose {
                 eprint!(".");
@@ -109,6 +112,8 @@ impl Usd {
 
     /// Sends the JUMP_ADDRESS command
     ///
+    /// `address` must be the address of a previously written DCD
+    ///
     /// The device won't respond to further commands
     pub fn jump_address(mut self, address: u32) -> Result<(), anyhow::Error> {
         if self.verbose {
@@ -130,7 +135,10 @@ impl Usd {
         Ok(())
     }
 
+    /// Reads one word of device memory
     pub fn read_memory(&mut self, address: u32) -> Result<u32, anyhow::Error> {
+        assert_eq!(address % 4, 0, "address must be 4-byte aligned");
+
         self.send_command(Command::ReadRegister {
             address,
             count: 1,
@@ -144,6 +152,7 @@ impl Usd {
         Ok(u32::from_le_bytes(*array_ref!(resp, 1, 4)))
     }
 
+    #[cfg(untested)]
     pub fn skip_dcd_header(&mut self) -> Result<(), anyhow::Error> {
         if self.verbose {
             eprintln!("skip_dcd_header");
@@ -172,6 +181,7 @@ impl Usd {
         Ok(())
     }
 
+    /// Writes the given `data` into the device's memory at `address`
     pub fn write_file(&mut self, address: u32, data: &[u8]) -> Result<(), anyhow::Error> {
         if self.verbose {
             eprintln!(

@@ -28,12 +28,13 @@ fn main() -> Result<(), anyhow::Error> {
         usd.dcd_write(usd::OCRAM_FREE_ADDRESS, dcd.as_bytes())?;
         println!("clearing DCD pointer ({:#010x})", dcd_ptr);
     }
+
+    // make it as if the image contained no DCD -- we don't want the device to run it twice
     if clear_dcd {
         bytes[12..16].iter_mut().for_each(|b| *b = 0);
     }
-    // std::thread::sleep(core::time::Duration::from_millis(10));
+
     usd.write_file(address, &bytes)?;
-    // TODO pass skip_dcd_header to JUMP_ADDRESS?
     usd.jump_address(address)?;
 
     eprintln!("DONE");

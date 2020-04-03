@@ -7,14 +7,12 @@ use core::{
 use std::{
     env, fs,
     io::{self, Write},
-    process::{Command, Stdio},
     thread,
 };
 
 use anyhow::{bail, format_err};
 use image::write::Image;
 use serialport::SerialPortSettings;
-use tempfile::NamedTempFile;
 use xmas_elf::ElfFile;
 
 use usd::Usd;
@@ -31,7 +29,7 @@ fn main() -> Result<(), anyhow::Error> {
     let elf = ElfFile::new(&bytes).map_err(|s| format_err!("{}", s))?;
 
     // wait until the USB device is available
-    let usd = Usd::open()?;
+    let mut usd = Usd::open()?;
     let usb_address = usd.usb_address();
 
     thread::spawn(|| {
@@ -40,40 +38,27 @@ fn main() -> Result<(), anyhow::Error> {
         }
     });
 
+    // do not include a DCD in the image because we'll send it over USB
+    let skip_dcd = true;
+    let image = Image::from_elf(&elf, skip_dcd)?;
+
     // cold boot: include the DCD to initialize DDR RAM
     // warm reset: omit the DCD because DDR RAM is already initialized (and trying to re-initialize
     // will hang the Armory)
-    let skip_dcd = env::var_os("COLD_BOOT").is_none();
+    let cold_boot = env::var_os("COLD_BOOT").is_some();
 
-    // write the program image to disk because `imx_usb` needs a path to it
-    let image = Image::from_elf(&elf, skip_dcd)?;
-    let mut file = NamedTempFile::new()?;
-    image.write(&mut file)?;
-
-    // release the USB device before calling `imx_usb`
-    drop(usd);
-
-    let status = Command::new("imx_usb")
-        .arg(file.path())
-        .stdout(Stdio::null())
-        .stderr(Stdio::null())
-        .status()?;
-    if !status.success() {
-        bail!(
-            "`imx_usb` failed
-Possible fix: power cycle the board and retry with the `COLD_BOOT` env var set to `1` but
-only set it for the *first* Cargo runner invocation. That is:
-
-$ # power cycle the board then run
-$ COLD_BOOT=1 cargo run --example foo
-
-$ # omit the env var (or unset it) for the rest of invocations
-$ cargo run --example bar"
-        );
+    if cold_boot {
+        // DCD to initialize the external DDR RAM
+        let dcd = image::write::init_ddr();
+        usd.dcd_write(usd::OCRAM_FREE_ADDRESS, &dcd.into_bytes())?;
     }
 
-    // the program is running now; if we see the SDP device get re-enumerated it means the Armory
-    // rebooted back into SDP mode
+    let address = image.self_address();
+    usd.write_file(address, &image.into_bytes())?;
+    usd.jump_address(address)?;
+
+    // the program is running now; if we see the USB device get re-enumerated it means the Armory
+    // rebooted back into USD mode
     loop {
         if usd::util::has_been_reenumerated(usb_address) {
             // stop the `redirect` thread and terminate this process

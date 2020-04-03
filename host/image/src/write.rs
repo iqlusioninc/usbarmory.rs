@@ -43,7 +43,7 @@ pub struct Image {
 }
 
 /// Write commands that initialize the external DDR RAM
-fn init_ddr() -> Vec<AddressValue> {
+pub fn init_ddr() -> Dcd {
     macro_rules! write {
         ($writes:expr, $register:ty, $value:expr) => {
             $writes.push(AddressValue {
@@ -158,7 +158,7 @@ fn init_ddr() -> Vec<AddressValue> {
     // configuration done
     write!(writes, mmdc::MDSCR, 0);
 
-    writes
+    Dcd { writes }
 }
 
 // space reserved for the IVT, DCD and Boot Data
@@ -287,18 +287,26 @@ section not found in ELF file"
             dcd: if skip_dcd {
                 None
             } else {
-                Some(Dcd { writes: init_ddr() })
+                Some(init_ddr())
             },
             app,
             entry: start.ok_or_else(|| format_err!("symbol `_start` was not found"))?,
         })
     }
 
+    /// Returns the binary representation of the image
+    pub fn into_bytes(self) -> Vec<u8> {
+        let mut bytes = vec![];
+        // no I/O is performed so this never errors
+        self.write(&mut bytes).expect("unreachable");
+        bytes
+    }
+
     /// Writes the program image
     pub fn write(mut self, w: &mut impl Write) -> io::Result<()> {
         let ivt = Ivt {
             header: ivt::Header::default(),
-            self_: DRAM_START + PADDING,
+            self_: self.self_address(),
             boot: DRAM_START + PADDING + u32::from(Ivt::SIZE),
             dcd: if self.dcd.is_some() {
                 DRAM_START + PADDING + u32::from(Ivt::SIZE + BootData::SIZE)
@@ -332,6 +340,11 @@ section not found in ELF file"
         w.write_all(&self.app)?;
         Ok(())
     }
+
+    /// Returns the address where this image will be loaded by the ROM
+    pub fn self_address(&self) -> u32 {
+        DRAM_START + PADDING
+    }
 }
 
 /// DCD
@@ -341,6 +354,14 @@ pub struct Dcd {
 }
 
 impl Dcd {
+    /// Converts the DCD into its binary representation
+    pub fn into_bytes(self) -> Vec<u8> {
+        let mut bytes = vec![];
+        // no I/O performed so no error will be returned
+        self.write(&mut bytes).expect("unreachable");
+        bytes
+    }
+
     fn write(self, w: &mut impl Write) -> io::Result<()> {
         let mut header = dcd::Header::default();
         header.length = self.size();

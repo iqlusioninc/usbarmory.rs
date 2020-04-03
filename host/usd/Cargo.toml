@@ -12,7 +12,6 @@ arrayref = "0.3.6"
 image = { path = "../image" }
 rusb = "0.5.5"
 serialport = { version = "3.3.0", default-features = false }
-tempfile = "3.1.0"
 xmas-elf = "0.7.0"
 
 [dependencies.hidapi]
@@ -21,4 +20,5 @@ version = "1.2.1"
 
 [features]
 default = ["hidapi"]
+# alternative HID backend -- disable `hidapi' if you plan to use this one
 rusb-hid = []
