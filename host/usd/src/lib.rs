@@ -105,7 +105,9 @@ impl Usd {
             )
         }
 
-        println!("DCD_WRITE ACK-ed");
+        if self.verbose {
+            eprintln!("DCD_WRITE ACK-ed");
+        }
 
         Ok(())
     }
