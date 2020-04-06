@@ -3,14 +3,17 @@
 use core::cell::RefCell;
 
 use crate::storage::{Block, ManagedBlockDevice, BLOCK_SIZE};
+use generic_array::ArrayLength;
+pub use heapless::consts;
 use littlefs2::{
-    consts,
     driver::Storage,
     fs::{self, FileAllocation, FileType, Filesystem, FilesystemAllocation, Metadata, SeekFrom},
     io::{self, Read, Seek, Write},
     path::Filename,
 };
 use memlog::memlog;
+
+pub mod transactional;
 
 /// Hardcoded filesystem block count.
 ///
@@ -47,9 +50,9 @@ pub struct LittleFs<'a, D: ManagedBlockDevice> {
     fs: RefCell<Filesystem<'a, LfsStorage<D>>>,
 }
 
-impl<'a, D: ManagedBlockDevice> LittleFs<'a, D> {
+impl<'fs, D: ManagedBlockDevice> LittleFs<'fs, D> {
     /// Mounts a littlefs2 file system.
-    pub fn mount(alloc: &'a mut LittleFsAlloc<D>, blockdev: D) -> io::Result<Self> {
+    pub fn mount(alloc: &'fs mut LittleFsAlloc<D>, blockdev: D) -> io::Result<Self> {
         if blockdev.total_blocks() < BLOCK_COUNT as u64 {
             memlog!(
                 "expected at least {} blocks, got {}",
@@ -60,7 +63,10 @@ impl<'a, D: ManagedBlockDevice> LittleFs<'a, D> {
             return Err(littlefs2::io::Error::NoSpace); // close enough?
         }
 
-        let mut storage = RefCell::new(LfsStorage { inner: blockdev });
+        let mut storage = RefCell::new(LfsStorage {
+            read_only: false,
+            inner: blockdev,
+        });
         let fs = RefCell::new(Filesystem::mount(&mut alloc.inner, storage.get_mut())?);
 
         Ok(Self { storage, fs })
@@ -81,7 +87,10 @@ impl<'a, D: ManagedBlockDevice> LittleFs<'a, D> {
 
     /// Formats `blockdev`, creating a fresh littlefs file system (this erases all data!).
     pub fn format(blockdev: D) -> io::Result<()> {
-        Filesystem::format(&mut LfsStorage { inner: blockdev })
+        Filesystem::format(&mut LfsStorage {
+            read_only: false,
+            inner: blockdev,
+        })
     }
 
     /// Returns the available space in Bytes (approximated).
@@ -107,11 +116,28 @@ impl<'a, D: ManagedBlockDevice> LittleFs<'a, D> {
     }
 
     /// Returns an iterator over the contents of the directory at `path`.
-    pub fn read_dir<'r>(&'r self, path: impl AsRef<[u8]>) -> io::Result<ReadDir<'r, 'a, D>> {
+    pub fn read_dir<'r>(&'r self, path: impl AsRef<[u8]>) -> io::Result<ReadDir<'r, 'fs, D>> {
         self.fs
             .borrow_mut()
             .read_dir(path.as_ref(), &mut self.storage.borrow_mut())
             .map(move |inner| ReadDir { fs: self, inner })
+    }
+
+    /// Puts the filesystem in "transactional" mode
+    ///
+    /// The FS can support up to `N` (type level integer) open files
+    ///
+    /// In this mode:
+    /// - `fs` operations that require writing to the eMMC are forbidden
+    /// - all `File` write operations will be cached to memory and only be committed to the eMMC
+    /// when the `sync` method is called. This method exists the transactional mode
+    pub fn transactional<'f, N>(self) -> transactional::Fs<'fs, 'f, D, N>
+    where
+        N: ArrayLength<transactional::File<'f, 'fs, D>>,
+    {
+        // put the eMMC in read-only mode
+        self.storage.borrow_mut().read_only = true;
+        transactional::Fs::wrap(self)
     }
 }
 
@@ -140,8 +166,11 @@ impl<D: ManagedBlockDevice> Default for FileAlloc<D> {
 /// NOTE unlike `littlefs2::File`, this newtype has close on drop semantics. Any error that arises
 /// while closing the file will result in a panic. Use the `close` method to handle IO errors
 /// instead of potentially panicking.
-pub struct File<'a, 'fs, D: ManagedBlockDevice> {
-    inner: Option<RefCell<fs::File<'a, LfsStorage<D>>>>,
+pub struct File<'a, 'fs, D>
+where
+    D: ManagedBlockDevice,
+{
+    inner: Option<fs::File<'a, LfsStorage<D>>>,
     fs: &'a LittleFs<'fs, D>,
 }
 
@@ -165,7 +194,7 @@ impl<'a, 'fs, D: ManagedBlockDevice> File<'a, 'fs, D> {
             SeekFrom::Start(0),
         )?;
         Ok(Self {
-            inner: Some(RefCell::new(inner)),
+            inner: Some(inner),
             fs,
         })
     }
@@ -177,12 +206,12 @@ impl<'a, 'fs, D: ManagedBlockDevice> File<'a, 'fs, D> {
         path: impl AsRef<[u8]>,
     ) -> io::Result<Self> {
         Ok(Self {
-            inner: Some(RefCell::new(fs::File::create(
+            inner: Some(fs::File::create(
                 path.as_ref(),
                 &mut alloc.inner,
                 &mut fs.fs.borrow_mut(),
                 &mut fs.storage.borrow_mut(),
-            )?)),
+            )?),
             fs,
         })
     }
@@ -234,7 +263,6 @@ impl<'a, 'fs, D: ManagedBlockDevice> File<'a, 'fs, D> {
         self.inner
             .take()
             .unwrap_or_else(|| unsafe { assume_unreachable!() })
-            .into_inner()
             .close(
                 &mut self.fs.fs.borrow_mut(),
                 &mut self.fs.storage.borrow_mut(),
@@ -242,11 +270,10 @@ impl<'a, 'fs, D: ManagedBlockDevice> File<'a, 'fs, D> {
     }
 
     /// Returns the length of this file in Bytes.
-    pub fn len(&self) -> io::Result<usize> {
+    pub fn len(&mut self) -> io::Result<usize> {
         self.inner
-            .as_ref()
+            .as_mut()
             .unwrap_or_else(|| unsafe { assume_unreachable!() })
-            .borrow_mut()
             .len(
                 &mut self.fs.fs.borrow_mut(),
                 &mut self.fs.storage.borrow_mut(),
@@ -254,11 +281,10 @@ impl<'a, 'fs, D: ManagedBlockDevice> File<'a, 'fs, D> {
     }
 
     /// Reads bytes from this file into `buf`.
-    pub fn read(&self, buf: &mut [u8]) -> io::Result<usize> {
+    pub fn read(&mut self, buf: &mut [u8]) -> io::Result<usize> {
         self.inner
-            .as_ref()
+            .as_mut()
             .unwrap_or_else(|| unsafe { assume_unreachable!() })
-            .borrow_mut()
             .read(
                 &mut self.fs.fs.borrow_mut(),
                 &mut self.fs.storage.borrow_mut(),
@@ -269,11 +295,10 @@ impl<'a, 'fs, D: ManagedBlockDevice> File<'a, 'fs, D> {
     /// Writes byte from `buf` into this file.
     ///
     /// NOTE writes are cached in memory; use `sync` to flush the cache to disk
-    pub fn write(&self, buf: &[u8]) -> io::Result<usize> {
+    pub fn write(&mut self, buf: &[u8]) -> io::Result<usize> {
         self.inner
-            .as_ref()
+            .as_mut()
             .unwrap_or_else(|| unsafe { assume_unreachable!() })
-            .borrow_mut()
             .write(
                 &mut self.fs.fs.borrow_mut(),
                 &mut self.fs.storage.borrow_mut(),
@@ -282,11 +307,10 @@ impl<'a, 'fs, D: ManagedBlockDevice> File<'a, 'fs, D> {
     }
 
     /// Synchronize file contents to storage
-    pub fn sync(&self) -> io::Result<()> {
+    pub fn sync(&mut self) -> io::Result<()> {
         self.inner
-            .as_ref()
+            .as_mut()
             .unwrap_or_else(|| unsafe { assume_unreachable!() })
-            .borrow_mut()
             .sync(
                 &mut self.fs.fs.borrow_mut(),
                 &mut self.fs.storage.borrow_mut(),
@@ -301,7 +325,6 @@ where
     fn drop(&mut self) {
         if let Some(inner) = self.inner.take() {
             inner
-                .into_inner()
                 .close(
                     &mut self.fs.fs.borrow_mut(),
                     &mut self.fs.storage.borrow_mut(),
@@ -355,6 +378,8 @@ impl<D: ManagedBlockDevice> DirEntry<D> {
 
 #[doc(hidden)]
 pub struct LfsStorage<D: ManagedBlockDevice> {
+    // set to `true` in transactional mode
+    pub(crate) read_only: bool,
     inner: D,
 }
 
@@ -392,6 +417,14 @@ impl<D: ManagedBlockDevice> Storage for LfsStorage<D> {
     }
 
     fn write(&mut self, off: usize, data: &[u8]) -> littlefs2::io::Result<usize> {
+        assert!(
+            !self.read_only,
+            "attempted to write to the eMMC while in transactional mode
+this could indicate either:
+- a bug in the `transactional::*` API
+- ran out of cache memory for file writes (fix: increase the cache size in `src/fs.rs`)"
+        );
+
         let mut lba = off / Self::BLOCK_SIZE;
 
         let mut block = Block::zeroed();

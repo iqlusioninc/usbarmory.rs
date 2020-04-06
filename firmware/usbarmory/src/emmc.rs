@@ -849,6 +849,8 @@ impl ManagedBlockDevice for eMMC {
             return Err(Error::Other);
         }
 
+        memlog!("write(lba={:#x})", lba);
+
         Self::write(self, lba as u32, block)?;
         Ok(())
     }

@@ -20,16 +20,29 @@ name = "emmc-fs2"
 required-features = ["fs"]
 
 [[example]]
+name = "emmc-fs3"
+required-features = ["fs"]
+
+[[example]]
+name = "emmc-fs4"
+required-features = ["fs"]
+
+[[example]]
+name = "emmc-tfs"
+required-features = ["fs"]
+
+[[example]]
 name = "emmc-fs-format"
 required-features = ["fs"]
 
 [dependencies]
 arrayref = "0.3.6"
 block-cipher-trait = "0.6.2"
-consts = { path = "../../common/consts" }
 c-stubs = { path = "../../common/c-stubs" }
+consts = { path = "../../common/consts" }
 cortex-a = { path = "../cortex-a" }
 digest = "0.8.1"
+generic-array = "0.13.2"
 heapless = "0.5.3"
 memlog = { path = "../memlog" }
 rand_core = "0.5.1"
@@ -49,8 +62,8 @@ path = "../imx6ul-pac"
 [dependencies.usbarmory-rt]
 path = "../usbarmory-rt"
 ## choose the location of the .text and .rodata sections -- pick only one line
-# features = ["dram"]
-features = ["ocram"]
+features = ["dram"]
+# features = ["ocram"]
 
 [dev-dependencies]
 as-slice = "0.1.3"
