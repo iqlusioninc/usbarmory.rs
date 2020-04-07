@@ -6,6 +6,7 @@
 //!   (IMX6ULZRM)
 
 use core::{
+    mem::ManuallyDrop,
     ops::{self, Range},
     time::Duration,
 };
@@ -27,7 +28,9 @@ pub mod util;
 ///
 /// This abstraction implements the i.MX Serial Downloader Protocol (SDP)
 pub struct Usd {
-    hid: hid::Device,
+    // on errors the USB device becomes unresponsive and the destructor of `hid::Device` can hang so
+    // avoid running it
+    hid: ManuallyDrop<hid::Device>,
     verbose: bool,
 }
 
@@ -41,7 +44,7 @@ impl Usd {
         for _ in 0..3 {
             if let Some(hid) = hid::Device::open()? {
                 return Ok(Usd {
-                    hid,
+                    hid: ManuallyDrop::new(hid),
                     verbose: false,
                 });
             }
@@ -129,10 +132,6 @@ impl Usd {
         if self.verbose {
             eprintln!("JUMP_ADDRESS ACK-ed");
         }
-
-        // the USB device is disconnected at this point; forget the handle to avoid trying to
-        // communicate with it
-        core::mem::forget(self);
 
         Ok(())
     }

@@ -10,12 +10,23 @@ use std::{
     thread,
 };
 
-use anyhow::{bail, format_err};
+use anyhow::{bail, format_err, Context};
 use image::write::Image;
 use serialport::{SerialPortSettings, SerialPortType};
 use xmas_elf::ElfFile;
 
 use usd::Usd;
+
+const COLD_BOOT_ERROR: &str = "Potential COLD_BOOT error
+
+Likely fix: power cycle the board and retry with the `COLD_BOOT` env var set to `1` but
+only set it for the *first* Cargo runner invocation. That is:
+
+$ # power cycle the board then run
+$ COLD_BOOT=1 cargo run --example foo
+
+$ # omit the env var (or unset it) for the rest of invocations
+$ cargo run --example bar";
 
 fn main() -> Result<(), anyhow::Error> {
     // NOTE(skip) program name
@@ -50,11 +61,17 @@ fn main() -> Result<(), anyhow::Error> {
     if cold_boot {
         // DCD to initialize the external DDR RAM
         let dcd = image::write::init_ddr();
-        usd.dcd_write(usd::OCRAM_FREE_ADDRESS, &dcd.into_bytes())?;
+        usd.dcd_write(usd::OCRAM_FREE_ADDRESS, &dcd.into_bytes())
+            .context(COLD_BOOT_ERROR)?;
     }
 
     let address = image.self_address();
-    usd.write_file(address, &image.into_bytes())?;
+    let res = usd.write_file(address, &image.into_bytes());
+    if !cold_boot {
+        res.context(COLD_BOOT_ERROR)?
+    } else {
+        res?
+    }
     usd.jump_address(address)?;
 
     // the program is running now; if we see the USB device get re-enumerated it means the Armory

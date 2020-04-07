@@ -1,5 +1,6 @@
 // NOTE using `hidapi` instead of `rusb` because the latter fails to claim the device on macOS
 
+use anyhow::bail;
 use hidapi::{HidApi, HidDevice};
 
 use crate::{util, PID, VID};
@@ -29,8 +30,14 @@ impl Device {
     }
 
     pub fn read<'b>(&mut self, buf: &'b mut [u8]) -> Result<&'b [u8], anyhow::Error> {
-        let n = self.inner.read(buf)?;
-        Ok(&buf[..n])
+        let n = self
+            .inner
+            .read_timeout(buf, util::default_timeout().subsec_millis() as i32)?;
+        if n == 0 {
+            bail!("HID read timeout")
+        } else {
+            Ok(&buf[..n])
+        }
     }
 
     pub fn write(&mut self, data: &[u8]) -> Result<(), anyhow::Error> {
