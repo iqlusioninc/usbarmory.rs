@@ -41,6 +41,7 @@ fn main() -> Result<(), anyhow::Error> {
 
     // wait until the USB device is available
     let mut usd = Usd::open()?;
+    usd.set_verbose(true);
     let usb_address = usd.usb_address();
 
     thread::spawn(|| {
@@ -116,8 +117,7 @@ fn redirect() -> Result<(), anyhow::Error> {
     if let Some(path) = candidates.get(DEVNO) {
         let mut serial = serialport::open_with_settings(path, &settings)?;
 
-        let stdout = io::stdout();
-        let mut stdout = stdout.lock();
+        let mut stdout = io::stdout();
         let mut buf = [0; BUFSZ];
 
         while !STOP.load(Ordering::Relaxed) {
