@@ -38,16 +38,19 @@ stage and will not be ready to use for some time.
 
 ## Development dependencies
 
-- [`imx_usb`] to load Rust programs directly into RAM. This program is available
-  on Arch Linux as the `imx-usb-loader-git` AUR package.
-
-[`imx_usb`]: https://github.com/boundarydevices/imx_usb_loader
-
 - `arm-none-eabi-binutils` OR (`cargo-binutils` + `llvm-tools-preview`), if you
   need to inspect ELF files. `sudo pacman -S arm-none-eabi-binutils` (Arch
   Linux) for the former; `cargo install cargo-binutils` (run it outside the
   `firmware` directory) and `rustup component add llvm-tools-preview` for the
   latter.
+
+- `libusb-1.0-dev` & `libudev-dev` are required to use the Cargo runner which
+  loads Rust programs on the Armory. Install them with `sudo apt-get install
+  libudev-dev libusb-1.0-dev` (Ubuntu).
+
+- `usd-runner`, the Cargo runner mentioned in the previous bullet. Install it
+  with `cd host/usd && cargo install --path .`. This will also install the
+  `usd-load` tool.
 
 - `arm-none-eabi-gcc`, required to load programs into the eMMC. Also needed when
   modifying assembly (`.s`) files (these need to be re-assembled).
@@ -413,12 +416,30 @@ Bus 001 Device 029: ID 0403:6011 Future Technology Devices International (..)
 Now load u-boot into the device's RAM using the following command:
 
 ``` console
-$ imx_usb -v ./u-boot-dtb.imx
-(..)
-<<<531456, 531456 bytes>>>
-succeeded (security 0x56787856, status 0x88888888)
-Verify success
-jumping to 0x877ff400
+$ # usd-load command comes from the `host/usd` crate
+$ usd-load /path/to/u-boot-dtb.imx
+Ivt {
+    header: Header {
+        tag: 209,
+        length: 32,
+        version: 64,
+    },
+    self: 0x877ff400,
+    boot: 0x877ff420,
+    dcd: 0x877ff42c,
+    csf: 0x87881000,
+    entry: 0x87800000,
+}
+dcd_write(address=0x00910000, count=480)
+.
+DCD_WRITE ACK-ed
+clearing DCD pointer (0x877ff42c)
+write_file(address=0x877ff400, count=531456)
+........................................
+WRITE_FILE ACK-ed
+jump_address(address=0x877ff400)
+JUMP_ADDRESS ACK-ed
+DONE
 ```
 
 Now access the u-boot console using `minicom`:

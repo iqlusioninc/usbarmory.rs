@@ -7,7 +7,7 @@
 # like shown here.
 # Yes, this uses Cargo as the runner invoked by Cargo. It looks a bit funny but
 # does seem to work. It might break when using `cargo +version run` though.
-runner = "cargo run --target x86_64-unknown-linux-gnu --manifest-path ../../host/runner2/Cargo.toml --"
+runner = "usd-runner"
 
 rustflags = [
   "-C", "linker=flip-lld",

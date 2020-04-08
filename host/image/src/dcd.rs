@@ -7,31 +7,48 @@ use nom::{bits::complete as bits, bytes::complete as bytes, number::complete as 
 use crate::Hex;
 
 /// Device Configuration Data
-#[derive(Debug)]
-pub struct Dcd {
+pub struct Dcd<'a> {
     /// DCD header
     pub header: Header,
 
     /// DCD commands
     pub commands: Vec<Command>,
+
+    bytes: &'a [u8],
 }
 
-impl Dcd {
-    pub(crate) fn parse(input: &[u8]) -> IResult<&[u8], Self> {
-        let (input, header) = Header::parse(input)?;
+impl fmt::Debug for Dcd<'_> {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        f.debug_struct("Dcd")
+            .field("header", &self.header)
+            .field("commands", &self.commands)
+            .finish()
+    }
+}
+
+impl<'a> Dcd<'a> {
+    pub(crate) fn parse(input: &'a [u8]) -> IResult<&'a [u8], Self> {
+        let (input_, header) = Header::parse(input)?;
         let length = header
             .length
             .checked_sub(Header::SIZE.into())
             .expect("TODO");
-        let (input, commands) = Command::parse(input, length)?;
+        let (input_, commands) = Command::parse(input_, length)?;
 
+        let dcd_len = header.length;
         Ok((
-            input,
+            input_,
             Self {
                 header,
-                commands: commands,
+                commands,
+                bytes: &input[..usize::from(dcd_len)],
             },
         ))
+    }
+
+    /// Returns the byte representation of the DCD
+    pub fn as_bytes(&self) -> &[u8] {
+        self.bytes
     }
 }
 

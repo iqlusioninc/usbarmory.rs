@@ -22,7 +22,7 @@ pub struct Ivt {
 
     /// Absolute address of the boot image after it has been loaded
     pub self_: u32,
- 
+
     /// Address of the Command Sequence File (CSF) section, or `0` if unused
     pub csf: u32,
 }
