@@ -48,6 +48,10 @@ stage and will not be ready to use for some time.
   loads Rust programs on the Armory. Install them with `sudo apt-get install
   libudev-dev libusb-1.0-dev` (Ubuntu).
 
+- `usd-runner`, the Cargo runner mentioned in the previous bullet. Install it
+  with `cd host/usd && cargo install --path .`. This will also install the
+  `usd-load` tool.
+
 - `arm-none-eabi-gcc`, required to load programs into the eMMC. Also needed when
   modifying assembly (`.s`) files (these need to be re-assembled).
 
@@ -412,9 +416,8 @@ Bus 001 Device 029: ID 0403:6011 Future Technology Devices International (..)
 Now load u-boot into the device's RAM using the following command:
 
 ``` console
-$ cd host/usd
-
-$ cargo run --bin load -- /path/to/u-boot-dtb.imx
+$ # usd-load command comes from the `host/usd` crate
+$ usd-load /path/to/u-boot-dtb.imx
 Ivt {
     header: Header {
         tag: 209,
