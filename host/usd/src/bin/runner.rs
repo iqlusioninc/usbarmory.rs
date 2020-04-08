@@ -41,7 +41,6 @@ fn main() -> Result<(), anyhow::Error> {
 
     // wait until the USB device is available
     let mut usd = Usd::open()?;
-    usd.set_verbose(true);
     let usb_address = usd.usb_address();
 
     thread::spawn(|| {
