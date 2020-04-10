@@ -18,6 +18,6 @@ anyone can contribute regardless of race, gender, or sexual orientation.
 If you observe harassment which you do not think is being addressed, please
 [contact us] and we will seek to remedy the situation.
 
-[CODE_OF_CONDUCT.md]: https://github.com/iqlusioninc/armistice/blob/develop/CODE_OF_CONDUCT.md
+[CODE_OF_CONDUCT.md]: https://github.com/iqlusioninc/usbarmory.rs/blob/develop/CODE_OF_CONDUCT.md
 [pull request]: https://help.github.com/articles/about-pull-requests/
 [contact us]: mailto:oss@iqlusion.io

@@ -42,8 +42,7 @@ without any additional terms or conditions.
 [build-image]: https://github.com/iqlusioninc/usbarmory.rs/workflows/Rust/badge.svg?branch=develop&event=push
 [build-link]: https://github.com/iqlusioninc/usbarmory.rs/actions
 [license-image]: https://img.shields.io/badge/license-Apache2.0/MIT-blue.svg
-[license-link]: https://github.com/iqlusioninc/armistice/blob/develop/LICENSE
-[msrv-image]: https://img.shields.io/badge/rustc-1.42+-red.svg
+[msrv-image]: https://img.shields.io/badge/rustc-1.42+-blue.svg
 [gitter-image]: https://badges.gitter.im/iqlusioninc/community.svg
 [gitter-link]: https://gitter.im/iqlusioninc/community
 
@@ -51,7 +50,7 @@ without any additional terms or conditions.
 
 [usbarmory]: https://github.com/f-secure-foundry/usbarmory/wiki
 [F-Secure]: https://foundry.f-secure.com/
-[CONTRIBUTING.md]: https://github.com/iqlusioninc/armistice/blob/develop/CONTRIBUTING.md
-[CODE_OF_CONDUCT.md]: https://github.com/iqlusioninc/armistice/blob/develop/CODE_OF_CONDUCT.md
+[CONTRIBUTING.md]: https://github.com/iqlusioninc/usbarmory.rs/blob/develop/CONTRIBUTING.md
+[CODE_OF_CONDUCT.md]: https://github.com/iqlusioninc/usbarmory.rs/blob/develop/CODE_OF_CONDUCT.md
 [Apache License, Version 2.0]: https://www.apache.org/licenses/LICENSE-2.0
 [MIT license]: https://opensource.org/licenses/MIT
