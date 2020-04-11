@@ -113,6 +113,8 @@ fn redirect() -> Result<(), anyhow::Error> {
         }
     }
 
+    candidates.sort();
+
     if let Some(path) = candidates.get(DEVNO) {
         let mut serial = serialport::open_with_settings(path, &settings)?;
 
