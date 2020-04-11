@@ -98,7 +98,7 @@ fn redirect() -> Result<(), anyhow::Error> {
     const VID: u16 = 0x0403; // Future Technology Devices International, Ltd
     const PID: u16 = 0x6011; // FT4232H Quad HS USB-UART/FIFO IC
     const DEVNO: usize = 2; // device #3 is the one we want
-    const BAUD_RATE: u32 = 4_000_000;
+    const BAUD_RATE: u32 = 3_000_000; // max baud rate supported on macOS (TODO: 4Mbaud on Linux hosts)
     const BUFSZ: usize = 512; // the FT4232H uses 512B USB packets
 
     let mut settings = SerialPortSettings::default();
