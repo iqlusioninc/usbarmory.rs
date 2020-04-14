@@ -51,9 +51,16 @@ pub fn init() {
         // reference clock is input divided by 1 (80 MHz); DCE mode
         uart.UFCR.write(0x0a81);
 
-        // configure baud rate: 3,000,000 baud (TODO: use 4Mbaud on Linux hosts)
-        uart.UBIR.write(2);
-        uart.UBMR.write(4);
+        if cfg!(host_is_macos) {
+            // macOS' FTDI driver does NOT support 4 Mbps so use a lower speed
+            // baud rate = 3 Mbps
+            uart.UBIR.write(2);
+            uart.UBMR.write(4);
+        } else {
+            // baud rate = 4 Mbps
+            uart.UBIR.write(0xf);
+            uart.UBMR.write(20 - 1);
+        }
 
         uart.UMCR.write(0);
 
