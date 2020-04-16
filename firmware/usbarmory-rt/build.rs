@@ -11,6 +11,11 @@ fn main() -> Result<(), Box<dyn Error>> {
     let out_dir = &PathBuf::from(env::var("OUT_DIR")?);
     let pkg_name = env::var("CARGO_PKG_NAME")?;
     let target = env::var("TARGET")?;
+    let host = env::var("HOST")?;
+
+    if host.ends_with("-apple-darwin") {
+        println!("cargo:rustc-cfg=host_is_macos");
+    }
 
     txt2rust(&out_dir)?;
 
