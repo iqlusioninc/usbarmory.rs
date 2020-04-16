@@ -1,2 +1,2 @@
 [workspace]
-members = ["consts", "c-stubs"]
+members = ["consts", "c-stubs", "littlefs"]

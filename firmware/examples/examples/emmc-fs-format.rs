@@ -5,7 +5,7 @@
 
 use exception_reset as _; // default exception handler
 use panic_serial as _; // panic handler
-use usbarmory::{emmc::eMMC, fs::LittleFs, memlog, memlog_flush_and_reset, storage::MbrDevice};
+use usbarmory::{emmc::eMMC, fs::Fs, memlog, memlog_flush_and_reset, storage::MbrDevice};
 
 // NOTE binary interfaces, using `no_mangle` and `extern`, are extremely unsafe
 // as no type checking is performed by the compiler; stick to safe interfaces
@@ -14,10 +14,11 @@ use usbarmory::{emmc::eMMC, fs::LittleFs, memlog, memlog_flush_and_reset, storag
 fn main() -> ! {
     let emmc = eMMC::take().expect("eMMC").unwrap();
 
-    let mut mbr = MbrDevice::open(emmc).unwrap();
-    let mut main_part = mbr.partition(0).unwrap();
+    let mbr = MbrDevice::open(emmc).unwrap();
+    let part = mbr.into_partition(0).unwrap();
 
-    LittleFs::format(&mut main_part).unwrap();
+    let format = true;
+    Fs::mount(part, format).unwrap();
 
     memlog!("formatting DONE");
 

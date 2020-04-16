@@ -828,7 +828,8 @@ impl fmt::Display for Error {
     }
 }
 
-impl ManagedBlockDevice for eMMC {
+// NOTE(unsafe) eMMC is a singleton
+unsafe impl ManagedBlockDevice for eMMC {
     type Error = Error;
 
     fn total_blocks(&self) -> u64 {
@@ -844,17 +845,12 @@ impl ManagedBlockDevice for eMMC {
         Ok(())
     }
 
-    fn write(&mut self, block: &Block, lba: u64) -> Result<(), Self::Error> {
+    fn write(&self, block: &Block, lba: u64) -> Result<(), Self::Error> {
         if lba > self.total_blocks() {
             return Err(Error::Other);
         }
 
         Self::write(self, lba as u32, block)?;
-        Ok(())
-    }
-
-    fn flush(&mut self) -> Result<(), Self::Error> {
-        // no-operation
         Ok(())
     }
 }

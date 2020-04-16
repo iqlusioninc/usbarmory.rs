@@ -17,15 +17,15 @@ use usbarmory::{
 #[no_mangle]
 fn main() -> ! {
     let emmc = eMMC::take().expect("eMMC").unwrap();
-    let mut mbr = MbrDevice::open(emmc).unwrap();
+    let mbr = MbrDevice::open(emmc).unwrap();
 
     memlog!("{:#?}", mbr.debug());
 
-    for part_idx in 0..4 {
-        if let Ok(part) = mbr.partition(part_idx) {
-            let bytes = part.total_blocks() * u64::from(BLOCK_SIZE);
-            memlog!("Partition {} is {} MiB", part_idx, bytes / 1024 / 1024);
-        }
+    if let Ok(part) = mbr.into_partition(0) {
+        memlog!(
+            "first partition is {} MiB",
+            (part.total_blocks() * u64::from(BLOCK_SIZE)) / 1024 / 1024
+        );
     }
 
     // then reset the board

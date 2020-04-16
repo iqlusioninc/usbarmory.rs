@@ -19,7 +19,7 @@ pub unsafe fn strcpy(dst: *mut c_char, src: *const c_char) -> *mut c_char {
     memcpy(dst as *mut c_void, src as *const c_void, strlen(src)) as *mut c_char
 }
 
-unsafe fn strlen(mut s: *const c_char) -> size_t {
+pub unsafe fn strlen(mut s: *const c_char) -> size_t {
     let mut n = 0;
     while *s != 0 {
         s = s.add(1);
