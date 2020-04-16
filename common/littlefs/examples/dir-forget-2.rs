@@ -29,4 +29,6 @@ fn main() {
     mem::forget(fs::read_dir(f, b".\0".try_into().unwrap()).unwrap());
 
     fs::remove(f, filename).unwrap();
+
+    println!("OK");
 }

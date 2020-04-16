@@ -22,6 +22,8 @@ fn main() {
 
     foo(f);
     bar(f);
+
+    println!("OK");
 }
 
 #[inline(never)]
