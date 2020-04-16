@@ -239,17 +239,15 @@ where
 
         if ret == 0 {
             None
+        } else if let Err(e) = io::check_ret(ret) {
+            Some(Err(e))
         } else {
-            if let Err(e) = io::check_ret(ret) {
-                Some(Err(e))
-            } else {
-                let info = unsafe { info.assume_init() };
-                let entry = DirEntry {
-                    metadata: Metadata::from_info(info),
-                };
+            let info = unsafe { info.assume_init() };
+            let entry = DirEntry {
+                metadata: Metadata::from_info(info),
+            };
 
-                Some(Ok(entry))
-            }
+            Some(Ok(entry))
         }
     }
 }
@@ -325,6 +323,8 @@ pub struct Metadata {
     size: usize,
 }
 
+// NOTE(allow) `std::fs` version does not have an `is_empty` method
+#[allow(clippy::len_without_is_empty)]
 impl Metadata {
     fn from_info(info: ll::lfs_info) -> Self {
         Self {
@@ -375,13 +375,13 @@ pub enum FileType {
 
 impl FileType {
     /// Tests whether this file type represents a directory.
-    pub fn is_dir(&self) -> bool {
-        *self == FileType::Dir
+    pub fn is_dir(self) -> bool {
+        self == FileType::Dir
     }
 
     /// Tests whether this file type represents a regular file
-    pub fn is_file(&self) -> bool {
-        *self == FileType::File
+    pub fn is_file(self) -> bool {
+        self == FileType::File
     }
 }
 
@@ -487,6 +487,8 @@ where
     state: ManuallyDrop<Box<F>>,
 }
 
+// NOTE(allow) `std::fs` version does not have an `is_empty` method
+#[allow(clippy::len_without_is_empty)]
 impl<FS> File<FS>
 where
     FS: Filesystem,

@@ -25,7 +25,10 @@ impl Path {
     }
 
     /// Unchecked version of `from_bytes_with_nul`
-    pub unsafe fn from_bytes_with_nul_unchecked<'b>(bytes: &'b [u8]) -> &'b Self {
+    ///
+    /// # Safety
+    /// `bytes` must be null terminated string comprised of only ASCII characters
+    pub unsafe fn from_bytes_with_nul_unchecked(bytes: &[u8]) -> &Self {
         &*(bytes as *const [u8] as *const Path)
     }
 
@@ -46,7 +49,10 @@ impl Path {
     }
 
     /// Unchecked version of `from_cstr`
-    pub unsafe fn from_cstr_unchecked<'s>(cstr: &'s CStr) -> &'s Self {
+    ///
+    /// # Safety
+    /// `cstr` must be comprised only of ASCII characters
+    pub unsafe fn from_cstr_unchecked(cstr: &CStr) -> &Self {
         &*(cstr as *const CStr as *const Path)
     }
 
@@ -131,6 +137,8 @@ impl PathBuf {
             "" => return,
 
             // `self` becomes `/` (root), to match `std::Path` implementation
+            // NOTE(allow) cast is necessary on some architectures (e.g. x86)
+            #[allow(clippy::unnecessary_cast)]
             "/" => {
                 self.buf[0] = b'/' as c_char;
                 self.buf[1] = 0;

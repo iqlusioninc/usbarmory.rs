@@ -27,30 +27,28 @@
 //! // Filesystem on top of storage `S`
 //! filesystem!(F, Storage = S, max_open_files = 4, read_dir_depth = 2);
 //!
-//! fn main() {
-//!     // claim ownership over the ram storage
-//!     let storage = S::claim().expect("Storage already claimed");
+//! // claim ownership over the ram storage
+//! let storage = S::claim().expect("Storage already claimed");
 //!
-//!     // mount the filesystem but format a the storage device first
-//!     let format = true;
-//!     let f = F::mount(storage, format).unwrap();
+//! // mount the filesystem but format a the storage device first
+//! let format = true;
+//! let f = F::mount(storage, format).unwrap();
 //!
-//!     // create a directory
-//!     fs::create_dir(f, b"/foo\0".try_into().unwrap()).unwrap();
+//! // create a directory
+//! fs::create_dir(f, b"/foo\0".try_into().unwrap()).unwrap();
 //!
-//!     // create a file
-//!     let mut f1 = File::create(f, b"/foo/bar.txt\0".try_into().unwrap()).unwrap();
+//! // create a file
+//! let mut f1 = File::create(f, b"/foo/bar.txt\0".try_into().unwrap()).unwrap();
 //!
-//!     // write data to the file cache
-//!     f1.write(b"Hello, world!").unwrap();
+//! // write data to the file cache
+//! f1.write(b"Hello, world!").unwrap();
 //!
-//!     // commit data to the storage device and discard the file handle
-//!     f1.close().unwrap();
+//! // commit data to the storage device and discard the file handle
+//! f1.close().unwrap();
 //!
-//!     // iterate over the contents of the root directory
-//!     for entry in fs::read_dir(f, b"/\0".try_into().unwrap()).unwrap() {
-//!         println!("{:?}", entry.unwrap());
-//!     }
+//! // iterate over the contents of the root directory
+//! for entry in fs::read_dir(f, b"/\0".try_into().unwrap()).unwrap() {
+//!     println!("{:?}", entry.unwrap());
 //! }
 //! ```
 //!
@@ -100,6 +98,10 @@ pub struct NotSendOrSync {
 
 #[doc(hidden)]
 impl NotSendOrSync {
+    /// Macro implementation detail
+    ///
+    /// # Safety
+    /// `unsafe` to prevent construction of singletons in safe code
     pub unsafe fn new() -> Self {
         Self {
             _inner: PhantomData,
