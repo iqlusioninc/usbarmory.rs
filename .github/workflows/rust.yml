@@ -86,7 +86,7 @@ jobs:
           cargo r --features unsafe-x86 --target x86_64-unknown-linux-gnu --example file-forget --release
 
       - name: Run MSan
-        working-directory: ./common
+        working-directory: ./common/littlefs
         env:
           RUSTFLAGS: -Z sanitizer=memory
         run: |
