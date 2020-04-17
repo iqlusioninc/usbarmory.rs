@@ -66,24 +66,33 @@ macro_rules! storage {
 
                 static mut MEMORY: [u8; $n * $crate::consts::BLOCK_SIZE as usize] =
                     [0; $n * $crate::consts::BLOCK_SIZE as usize];
+                static mut LOCKED: bool = false;
 
-                Inner::new(&mut MEMORY)
+                Inner::new(&mut MEMORY, &mut LOCKED)
             }
         }
 
         unsafe impl $crate::storage::Storage for $storage {
             const BLOCK_COUNT: u32 = $n;
 
-            fn read(&self, offset: usize, buf: &mut [u8]) -> $crate::io::Result<usize> {
+            fn read(&self, offset: usize, buf: &mut [u8]) -> $crate::io::Result<()> {
                 unsafe { Self::inner().read(offset, buf) }
             }
 
-            fn write(&self, offset: usize, data: &[u8]) -> $crate::io::Result<usize> {
+            fn write(&self, offset: usize, data: &[u8]) -> $crate::io::Result<()> {
                 unsafe { Self::inner().write(offset, data) }
             }
 
-            fn erase(&self, offset: usize, len: usize) -> $crate::io::Result<usize> {
+            fn erase(&self, offset: usize, len: usize) -> $crate::io::Result<()> {
                 unsafe { Self::inner().erase(offset, len) }
+            }
+
+            fn lock(&self) {
+                unsafe { Self::inner().lock() }
+            }
+
+            fn unlock(&self) {
+                unsafe { Self::inner().unlock() }
             }
         }
     };
@@ -92,15 +101,16 @@ macro_rules! storage {
 #[doc(hidden)]
 pub struct Inner {
     data: &'static mut [u8],
+    locked: &'static mut bool,
 }
 
 #[doc(hidden)]
 impl Inner {
-    pub fn new(data: &'static mut [u8]) -> Self {
-        Self { data }
+    pub fn new(data: &'static mut [u8], locked: &'static mut bool) -> Self {
+        Self { data, locked }
     }
 
-    pub fn read(&self, offset: usize, buf: &mut [u8]) -> io::Result<usize> {
+    pub fn read(&self, offset: usize, buf: &mut [u8]) -> io::Result<()> {
         let read_size = consts::READ_SIZE as usize;
 
         debug_assert!(offset % read_size == 0);
@@ -108,10 +118,14 @@ impl Inner {
 
         let n = buf.len();
         buf.copy_from_slice(&self.data[offset..offset + n]);
-        Ok(n)
+        Ok(())
     }
 
-    pub fn write(&mut self, offset: usize, data: &[u8]) -> io::Result<usize> {
+    pub fn write(&mut self, offset: usize, data: &[u8]) -> io::Result<()> {
+        if *self.locked {
+            return Err(io::Error::WriteWhileLocked);
+        }
+
         let write_size = consts::WRITE_SIZE as usize;
 
         debug_assert!(offset % write_size == 0);
@@ -119,10 +133,10 @@ impl Inner {
 
         let n = data.len();
         self.data[offset..offset + n].copy_from_slice(data);
-        Ok(n)
+        Ok(())
     }
 
-    pub fn erase(&mut self, offset: usize, len: usize) -> io::Result<usize> {
+    pub fn erase(&mut self, offset: usize, len: usize) -> io::Result<()> {
         const ERASE_VALUE: u8 = 0xFF;
 
         let block_size = consts::BLOCK_SIZE as usize;
@@ -132,6 +146,14 @@ impl Inner {
         for byte in self.data[offset..offset + len].iter_mut() {
             *byte = ERASE_VALUE;
         }
-        Ok(len)
+        Ok(())
+    }
+
+    pub fn lock(&mut self) {
+        *self.locked = true;
+    }
+
+    pub fn unlock(&mut self) {
+        *self.locked = false;
     }
 }
