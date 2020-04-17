@@ -5,8 +5,8 @@
 //! - `firmware/usbarmory/src/fs.rs`
 //! - `common/littlefs/src/consts.rs`
 
-pub use littlefs::{fs::*, io::Error};
 use littlefs::{filesystem, io, storage::Storage};
+pub use littlefs::{fs::*, io::Error};
 
 use crate::{
     emmc::eMMC,
