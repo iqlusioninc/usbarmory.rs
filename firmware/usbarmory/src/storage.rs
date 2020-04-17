@@ -1,6 +1,6 @@
 //! Partition table and block device access.
 
-use core::{fmt, mem::size_of};
+use core::{cell::Cell, fmt, mem::size_of};
 
 use memlog::memlog;
 use zerocopy::{AsBytes, FromBytes, LayoutVerified};
@@ -148,8 +148,9 @@ impl<D: ManagedBlockDevice> MbrDevice<D> {
         let extent = self.part_extent(part)?;
 
         Ok(MbrPartition {
-            raw: self.raw,
             extent,
+            lock: Cell::new(false),
+            raw: self.raw,
         })
     }
 
@@ -333,6 +334,9 @@ impl<D: fmt::Display> fmt::Display for MbrError<D> {
 pub struct MbrPartition<D: ManagedBlockDevice> {
     raw: D,
     extent: PartExtent,
+    // only used when the `fs` feature is enabled
+    #[allow(dead_code)]
+    pub(crate) lock: Cell<bool>,
 }
 
 unsafe impl<D: ManagedBlockDevice> ManagedBlockDevice for MbrPartition<D> {

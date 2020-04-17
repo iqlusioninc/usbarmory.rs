@@ -5,8 +5,8 @@
 //! - `firmware/usbarmory/src/fs.rs`
 //! - `common/littlefs/src/consts.rs`
 
-use littlefs::{filesystem, io, storage::Storage};
 pub use littlefs::{fs::*, io::Error};
+use littlefs::{filesystem, io, storage::Storage};
 
 use crate::{
     emmc::eMMC,
@@ -41,7 +41,7 @@ where
     // FIXME: This really shouldn't be a constant.
     const BLOCK_COUNT: u32 = BLOCK_COUNT;
 
-    fn read(&self, off: usize, buf: &mut [u8]) -> io::Result<usize> {
+    fn read(&self, off: usize, buf: &mut [u8]) -> io::Result<()> {
         let mut lba = off / usize::from(BLOCK_SIZE);
 
         let mut block = Block::zeroed();
@@ -51,10 +51,14 @@ where
             lba += 1;
         }
 
-        Ok(buf.len())
+        Ok(())
     }
 
-    fn write(&self, off: usize, data: &[u8]) -> io::Result<usize> {
+    fn write(&self, off: usize, data: &[u8]) -> io::Result<()> {
+        if self.lock.get() {
+            return Err(io::Error::WriteWhileLocked);
+        }
+
         let mut lba = off / usize::from(BLOCK_SIZE);
 
         let mut block = Block::zeroed();
@@ -64,11 +68,19 @@ where
             lba += 1;
         }
 
-        Ok(data.len())
+        Ok(())
     }
 
-    fn erase(&self, _off: usize, len: usize) -> io::Result<usize> {
+    fn erase(&self, _off: usize, _len: usize) -> io::Result<()> {
         // A `ManagedBlockDevice` can just overwrite individual blocks, no need to erase any.
-        Ok(len)
+        Ok(())
+    }
+
+    fn lock(&self) {
+        self.lock.set(true)
+    }
+
+    fn unlock(&self) {
+        self.lock.set(false)
     }
 }

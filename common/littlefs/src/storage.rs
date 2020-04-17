@@ -13,13 +13,22 @@ pub unsafe trait Storage {
     const BLOCK_COUNT: u32;
 
     /// Reads data from the storage device
-    fn read(&self, off: usize, buf: &mut [u8]) -> io::Result<usize>;
+    // NOTE(`Result<()`) C API expects the return value to be `<= 0`
+    fn read(&self, off: usize, buf: &mut [u8]) -> io::Result<()>;
 
     /// Write data to the storage device
-    fn write(&self, off: usize, data: &[u8]) -> io::Result<usize>;
+    // NOTE(`Result<()`) C API expects the return value to be `<= 0`
+    fn write(&self, off: usize, data: &[u8]) -> io::Result<()>;
 
     /// Erases data from the storage device
-    fn erase(&self, off: usize, len: usize) -> io::Result<usize>;
+    // NOTE(`Result<()`) C API expects the return value to be `<= 0`
+    fn erase(&self, off: usize, len: usize) -> io::Result<()>;
+
+    /// Locks the storage device; any attempt to write to it will result in a panic
+    fn lock(&self);
+
+    /// Unlocks the storage device, re-allowing writes to it
+    fn unlock(&self);
 }
 
 /// Declares a storage device backed by a statically block of RAM

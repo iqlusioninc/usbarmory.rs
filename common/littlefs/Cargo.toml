@@ -9,6 +9,7 @@ version = "0.0.0"
 bitflags = "1.2.1"
 c-stubs = { path = "../c-stubs" }
 cty = "0.2.1"
+generic-array = "0.13.2"
 heapless = "0.5.4"
 ll = { version = "0.1.4", package = "littlefs2-sys" }
 
