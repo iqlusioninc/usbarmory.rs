@@ -568,6 +568,33 @@ impl OpenOptions {
     }
 }
 
+/// Enumeration of possible methods to seek within an I/O object.
+#[derive(Clone, Copy, Debug, Eq, PartialEq)]
+pub enum SeekFrom {
+    Current(i32),
+    End(i32),
+    Start(u32),
+}
+
+impl SeekFrom {
+    fn off(self) -> i32 {
+        match self {
+            SeekFrom::Current(i) => i,
+            SeekFrom::End(i) => i,
+            // XXX handle wrap around?
+            SeekFrom::Start(u) => u as i32,
+        }
+    }
+
+    fn whence(self) -> u32 {
+        match self {
+            SeekFrom::Current(_) => ll::lfs_whence_flags_LFS_SEEK_CUR,
+            SeekFrom::End(_) => ll::lfs_whence_flags_LFS_SEEK_END,
+            SeekFrom::Start(_) => ll::lfs_whence_flags_LFS_SEEK_SET,
+        }
+    }
+}
+
 /// An open file
 ///
 /// *NOTE* files will be automatically closed when `drop`-ped. If an I/O error occurs while closing
@@ -647,6 +674,21 @@ where
         };
         drop(state);
         io::check_ret(ret).map(|sz| sz as usize)
+    }
+
+    /// Changes the position of the file
+    pub fn seek(&mut self, pos: SeekFrom) -> io::Result<usize> {
+        let mut state = self.fs.handle().state.borrow_mut();
+        let ret = unsafe {
+            ll::lfs_file_seek(
+                state.as_mut_ptr(),
+                &mut self.state.file,
+                pos.off(),
+                pos.whence() as i32,
+            )
+        };
+        drop(state);
+        io::check_ret(ret).map(|off| off as usize)
     }
 
     /// Synchronizes the file to disk

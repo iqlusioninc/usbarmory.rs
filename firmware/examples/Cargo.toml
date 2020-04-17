@@ -22,7 +22,19 @@ name = "emmc-fs4"
 required-features = ["fs"]
 
 [[example]]
+name = "emmc-fs5"
+required-features = ["fs"]
+
+[[example]]
 name = "emmc-fs-format"
+required-features = ["fs"]
+
+[[example]]
+name = "emmc-fs-transaction"
+required-features = ["fs"]
+
+[[example]]
+name = "emmc-fs-transaction-err"
 required-features = ["fs"]
 
 [dependencies]
