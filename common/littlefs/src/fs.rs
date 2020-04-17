@@ -227,6 +227,8 @@ pub fn rename(fs: impl Filesystem, from: &Path, to: &Path) -> io::Result<()> {
 
 /// Starts a filesystem transaction
 ///
+/// Up to `N` (type level integer) files can be modified during this transaction
+///
 /// In this mode all writes to disk will be deferred to the `Transaction.commit` operation
 ///
 /// # Errors
@@ -651,6 +653,11 @@ where
         // no need to run the destructor because we already closed the file
         mem::forget(self);
         Ok(())
+    }
+
+    /// Returns a handle to the filesystem this file lives in
+    pub fn fs(&self) -> FS {
+        self.fs
     }
 
     /// Returns the size of the file, in bytes, this metadata is for.
