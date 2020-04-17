@@ -96,6 +96,12 @@ impl<'b> TryFrom<&'b [u8]> for &'b Path {
     }
 }
 
+impl PartialEq<str> for Path {
+    fn eq(&self, rhs: &str) -> bool {
+        self.as_ref() == rhs
+    }
+}
+
 // without this you need to slice byte string literals (`b"foo\0"[..].try_into()`)
 macro_rules! array_impls {
     ($($N:expr),+) => {

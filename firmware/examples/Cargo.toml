@@ -37,6 +37,10 @@ required-features = ["fs"]
 name = "emmc-fs-transaction-err"
 required-features = ["fs"]
 
+[[example]]
+name = "emmc-fs-read-dir"
+required-features = ["fs"]
+
 [dependencies]
 block-cipher-trait = "0.6.2"
 consts = { path = "../../common/consts" }

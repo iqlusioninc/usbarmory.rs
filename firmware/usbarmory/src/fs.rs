@@ -6,7 +6,7 @@
 //! - `common/littlefs/src/consts.rs`
 
 use littlefs::{filesystem, io, storage::Storage};
-pub use littlefs::{fs::*, io::Error};
+pub use littlefs::{fs::*, io::Error, path::Path};
 
 use crate::{
     emmc::eMMC,
@@ -14,7 +14,7 @@ use crate::{
 };
 
 // NOTE end-users should only modify these constants
-const READ_DIR_DEPTH: usize = 2;
+const READ_DIR_DEPTH: usize = 4;
 const MAX_OPEN_FILES: usize = 4;
 
 /// Hardcoded filesystem block count.
