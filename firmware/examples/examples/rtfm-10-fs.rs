@@ -116,7 +116,11 @@ const APP: () = {
         let filename = filename();
         let mut buf = [0; 32];
         let n = f.read(&mut buf).unwrap();
-        println!("[baz] read({}) -> {:?}", filename, str::from_utf8(&buf[..n]));
+        println!(
+            "[baz] read({}) -> {:?}",
+            filename,
+            str::from_utf8(&buf[..n])
+        );
         f.close().unwrap();
         println!("[baz] closed {}", filename);
     }
