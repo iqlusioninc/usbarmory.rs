@@ -13,7 +13,7 @@ use exception_reset as _; // default exception handler
 use panic_serial as _; // panic handler
 use usbarmory::{
     emmc::eMMC,
-    fs::{self, File, Fs, SeekFrom},
+    fs::{File, Fs, SeekFrom},
     memlog, memlog_flush_and_reset,
     storage::MbrDevice,
 };
