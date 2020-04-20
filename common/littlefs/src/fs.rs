@@ -34,7 +34,7 @@ pub unsafe trait Filesystem: Copy {
     type Storage: Storage + 'static;
 
     #[doc(hidden)]
-    fn handle(self) -> &'static Inner<Self::Storage>;
+    fn lock<T>(self, f: impl FnOnce(&Inner<Self::Storage>) -> T) -> T;
 
     /// Mounts the filesystem
     ///
@@ -64,7 +64,7 @@ macro_rules! filesystem {
         $(#[$attr])*
         #[derive(Clone, Copy)]
         pub struct $fs {
-            _inner: $crate::NotSendOrSync,
+            _inner: $crate::Private,
         }
 
         impl $fs {
@@ -88,7 +88,7 @@ macro_rules! filesystem {
 
                 use $crate::{
                     fs::{Buffers, Config, Inner, State},
-                    NotSendOrSync,
+                    Private,
                 };
 
                 // NOTE(unsafe) this section is executed at most once because `storage` is an owned
@@ -112,7 +112,7 @@ macro_rules! filesystem {
                     Self::ptr().write(inner);
 
                     // add memory to the pools before the filesystem is used
-                    use $crate::mem::Pool as _; // grow exact method
+                    use $crate::mem::Pool as _; // grow_exact method
 
                     static mut MD: MaybeUninit<[$crate::mem::DNode; $read_dir_depth]> =
                         MaybeUninit::uninit();
@@ -123,7 +123,7 @@ macro_rules! filesystem {
                     $crate::mem::F::grow_exact(&mut MF);
 
                     Ok($fs {
-                        _inner: NotSendOrSync::new(),
+                        _inner: Private::new(),
                     })
                 }
             }
@@ -132,8 +132,10 @@ macro_rules! filesystem {
         unsafe impl $crate::fs::Filesystem for $fs {
             type Storage = $storage;
 
-            fn handle(self) -> &'static $crate::fs::Inner<$storage> {
-                unsafe { &*Self::ptr() }
+            fn lock<T>(self, f: impl FnOnce(&$crate::fs::Inner<$storage>) -> T) -> T {
+                $crate::lock(|| {
+                    f(unsafe { &*Self::ptr() })
+                })
             }
 
             fn mount(storage: $storage, format: bool) -> $crate::io::Result<Self> {
@@ -154,31 +156,34 @@ where
 }
 
 fn used_blocks(fs: impl Filesystem) -> io::Result<u32> {
-    let mut state = fs.handle().state.borrow_mut();
-    // XXX does this really need a `*mut` pointer?
-    let ret = unsafe { ll::lfs_fs_size(state.as_mut_ptr()) };
-    drop(state);
+    let ret = fs.lock(|inner| {
+        let mut state = inner.state.borrow_mut();
+        // XXX does this (FFI call) really need a `*mut` pointer?
+        unsafe { ll::lfs_fs_size(state.as_mut_ptr()) }
+    });
     io::check_ret(ret)
 }
 
 /// Creates a new, empty directory at the provided path
 pub fn create_dir(fs: impl Filesystem, path: &Path) -> io::Result<()> {
-    if fs.handle().transaction_mode.get() {
-        return Err(io::Error::TransactionInProgress);
-    }
+    fs.lock(|inner| {
+        if inner.transaction_mode.get() {
+            return Err(io::Error::TransactionInProgress);
+        }
 
-    let mut state = fs.handle().state.borrow_mut();
-    let ret = unsafe { ll::lfs_mkdir(state.as_mut_ptr(), path.as_ptr()) };
-    drop(state);
-    io::check_ret(ret).map(drop)
+        let mut state = inner.state.borrow_mut();
+        Ok(unsafe { ll::lfs_mkdir(state.as_mut_ptr(), path.as_ptr()) })
+    })
+    .and_then(|ret| io::check_ret(ret).map(drop))
 }
 
 /// Given a path, query the file system to get information about a file, directory, etc.
 pub fn metadata(fs: impl Filesystem, path: &Path) -> io::Result<Metadata> {
-    let mut state = fs.handle().state.borrow_mut();
     let mut info = MaybeUninit::uninit();
-    let ret = unsafe { ll::lfs_stat(state.as_mut_ptr(), path.as_ptr(), info.as_mut_ptr()) };
-    drop(state);
+    let ret = fs.lock(|inner| {
+        let mut state = inner.state.borrow_mut();
+        unsafe { ll::lfs_stat(state.as_mut_ptr(), path.as_ptr(), info.as_mut_ptr()) }
+    });
     io::check_ret(ret)?;
     Ok(Metadata::from_info(unsafe { info.assume_init() }))
 }
@@ -194,35 +199,38 @@ where
             // FIXME(upstream) it should not be necessary to zero the allocation
             .init(unsafe { mem::zeroed() }),
     );
-    let mut state = fs.handle().state.borrow_mut();
-    let ret = unsafe { ll::lfs_dir_open(state.as_mut_ptr(), &mut **dir, path.as_ptr()) };
-    drop(state);
+    let ret = fs.lock(|inner| unsafe {
+        let mut state = inner.state.borrow_mut();
+        ll::lfs_dir_open(state.as_mut_ptr(), &mut **dir, path.as_ptr())
+    });
     io::check_ret(ret)?;
     Ok(ReadDir { dir, fs })
 }
 
 /// Removes a file or directory from the filesystem.
 pub fn remove(fs: impl Filesystem, path: &Path) -> io::Result<()> {
-    if fs.handle().transaction_mode.get() {
-        return Err(io::Error::TransactionInProgress);
-    }
+    fs.lock(|inner| {
+        if inner.transaction_mode.get() {
+            return Err(io::Error::TransactionInProgress);
+        }
 
-    let mut state = fs.handle().state.borrow_mut();
-    let ret = unsafe { ll::lfs_remove(state.as_mut_ptr(), path.as_ptr()) };
-    drop(state);
-    io::check_ret(ret).map(drop)
+        let mut state = inner.state.borrow_mut();
+        Ok(unsafe { ll::lfs_remove(state.as_mut_ptr(), path.as_ptr()) })
+    })
+    .and_then(|ret| io::check_ret(ret).map(drop))
 }
 
 /// Rename a file or directory to a new name, replacing the original file if `to` already exists.
 pub fn rename(fs: impl Filesystem, from: &Path, to: &Path) -> io::Result<()> {
-    if fs.handle().transaction_mode.get() {
-        return Err(io::Error::TransactionInProgress);
-    }
+    fs.lock(|inner| {
+        if inner.transaction_mode.get() {
+            return Err(io::Error::TransactionInProgress);
+        }
 
-    let mut state = fs.handle().state.borrow_mut();
-    let ret = unsafe { ll::lfs_rename(state.as_mut_ptr(), from.as_ptr(), to.as_ptr()) };
-    drop(state);
-    io::check_ret(ret).map(drop)
+        let mut state = inner.state.borrow_mut();
+        Ok(unsafe { ll::lfs_rename(state.as_mut_ptr(), from.as_ptr(), to.as_ptr()) })
+    })
+    .and_then(|ret| io::check_ret(ret).map(drop))
 }
 
 /// Starts a filesystem transaction
@@ -249,19 +257,20 @@ where
     F: Filesystem,
     N: ArrayLength<File<F>>,
 {
-    let handle = fs.handle();
-    if handle.transaction_mode.get() {
-        Err(io::Error::TransactionInProgress)
-    } else if handle.open_files.get() != 0 {
-        Err(io::Error::OpenFilesExist)
-    } else {
-        handle.storage().lock();
-        handle.transaction_mode.set(true);
-        Ok(Transaction {
-            arena: Arena::new(),
-            fs,
-        })
-    }
+    fs.lock(|inner| {
+        if inner.transaction_mode.get() {
+            Err(io::Error::TransactionInProgress)
+        } else if inner.open_files.get() != 0 {
+            Err(io::Error::OpenFilesExist)
+        } else {
+            inner.storage().lock();
+            inner.transaction_mode.set(true);
+            Ok(Transaction {
+                arena: Arena::new(),
+                fs,
+            })
+        }
+    })
 }
 
 /// A filesystem transaction
@@ -292,12 +301,15 @@ where
 
     /// Commits all cached writes to disk
     pub fn commit(self) -> io::Result<()> {
-        self.fs.handle().storage().unlock();
-        for f in self.arena.into_iter() {
-            f.close()?;
-        }
-        self.fs.handle().transaction_mode.set(false);
-        Ok(())
+        self.fs.lock(|inner| {
+            inner.storage().unlock();
+            for f in self.arena.into_iter() {
+                // FIXME don't lock again
+                f.close()?;
+            }
+            inner.transaction_mode.set(false);
+            Ok(())
+        })
     }
 }
 
@@ -324,10 +336,10 @@ where
     fn next(&mut self) -> Option<Self::Item> {
         let mut info = MaybeUninit::<ll::lfs_info>::uninit();
 
-        let mut state = self.fs.handle().state.borrow_mut();
-        let ret =
-            unsafe { ll::lfs_dir_read(state.as_mut_ptr(), &mut **self.dir, info.as_mut_ptr()) };
-        drop(state);
+        let ret = self.fs.lock(|inner| {
+            let mut state = inner.state.borrow_mut();
+            unsafe { ll::lfs_dir_read(state.as_mut_ptr(), &mut **self.dir, info.as_mut_ptr()) }
+        });
 
         if ret == 0 {
             None
@@ -357,9 +369,10 @@ where
     }
 
     fn close_in_place(&mut self) -> io::Result<()> {
-        let mut state = self.fs.handle().state.borrow_mut();
-        let ret = unsafe { ll::lfs_dir_close(state.as_mut_ptr(), &mut **self.dir) };
-        drop(state);
+        let ret = self.fs.lock(|inner| unsafe {
+            let mut state = inner.state.borrow_mut();
+            ll::lfs_dir_close(state.as_mut_ptr(), &mut **self.dir)
+        });
         io::check_ret(ret)?;
         // now that we have unliked (self.)`dir` from (self.)`fs` we can release `dir`'s memory
         unsafe { ManuallyDrop::drop(&mut self.dir) }
@@ -552,20 +565,24 @@ impl OpenOptions {
         // in a box
         state.config.buffer = state.cache.as_mut_ptr().cast();
 
-        let mut fsstate = fs.handle().state.borrow_mut();
-        let ret = unsafe {
-            ll::lfs_file_opencfg(
-                fsstate.as_mut_ptr(),
-                &mut state.file,
-                path.as_ptr(),
-                self.0.bits() as i32,
-                &state.config,
-            )
-        };
-        drop(fsstate);
+        fs.lock(|inner| {
+            let mut fsstate = inner.state.borrow_mut();
+            let ret = unsafe {
+                ll::lfs_file_opencfg(
+                    fsstate.as_mut_ptr(),
+                    &mut state.file,
+                    path.as_ptr(),
+                    self.0.bits() as i32,
+                    &state.config,
+                )
+            };
+            drop(fsstate);
 
-        io::check_ret(ret)?;
-        fs.handle().incr();
+            io::check_ret(ret)?;
+            inner.incr();
+            Ok(())
+        })?;
+
         Ok(File { fs, state })
     }
 }
@@ -621,15 +638,17 @@ where
     ///
     /// This function will create a file if it does not exist, and will truncate it if it does.
     pub fn create(fs: FS, path: &Path) -> io::Result<Self> {
-        if fs.handle().transaction_mode.get() {
-            Err(io::Error::TransactionInProgress)
-        } else {
-            OpenOptions::new()
-                .create(true)
-                .truncate(true)
-                .write(true)
-                .open(fs, path)
-        }
+        fs.lock(|inner| {
+            if inner.transaction_mode.get() {
+                Err(io::Error::TransactionInProgress)
+            } else {
+                OpenOptions::new()
+                    .create(true)
+                    .truncate(true)
+                    .write(true)
+                    .open(fs, path)
+            }
+        })
     }
 
     /// Attempts to open a file in read-only mode.
@@ -638,12 +657,14 @@ where
     }
 
     fn checked_open(fs: FS, path: &Path, check: bool) -> io::Result<Self> {
-        if check && fs.handle().transaction_mode.get() {
-            Err(io::Error::TransactionInProgress)
-        } else {
-            // XXX it seems that the C code lets you write to files opened in read-only mode?
-            OpenOptions::default().read(true).open(fs, path)
-        }
+        fs.lock(|inner| {
+            if check && inner.transaction_mode.get() {
+                Err(io::Error::TransactionInProgress)
+            } else {
+                // XXX it seems that the C code lets you write to files opened in read-only mode?
+                OpenOptions::default().read(true).open(fs, path)
+            }
+        })
     }
 
     /// Synchronizes the file to disk and consumes this file handle, releasing resources (e.g.
@@ -662,47 +683,48 @@ where
 
     /// Returns the size of the file, in bytes, this metadata is for.
     pub fn len(&mut self) -> io::Result<usize> {
-        let mut state = self.fs.handle().state.borrow_mut();
-        let ret = unsafe { ll::lfs_file_size(state.as_mut_ptr(), &mut self.state.file) };
-        drop(state);
+        let ret = self.fs.lock(|inner| {
+            let mut state = inner.state.borrow_mut();
+            unsafe { ll::lfs_file_size(state.as_mut_ptr(), &mut self.state.file) }
+        });
         io::check_ret(ret).map(|sz| sz as usize)
     }
 
     /// Reads data from the file
     pub fn read(&mut self, buf: &mut [u8]) -> io::Result<usize> {
-        let mut state = self.fs.handle().state.borrow_mut();
-        let ret = unsafe {
-            ll::lfs_file_read(
-                state.as_mut_ptr(),
-                &mut self.state.file,
-                buf.as_mut_ptr().cast(),
-                buf.len().try_into().unwrap_or(u32::max_value()),
-            )
-        };
-        drop(state);
+        let ret = self.fs.lock(|inner| {
+            let mut state = inner.state.borrow_mut();
+            unsafe {
+                ll::lfs_file_read(
+                    state.as_mut_ptr(),
+                    &mut self.state.file,
+                    buf.as_mut_ptr().cast(),
+                    buf.len().try_into().unwrap_or(u32::max_value()),
+                )
+            }
+        });
         io::check_ret(ret).map(|sz| sz as usize)
     }
 
     /// Changes the position of the file
     pub fn seek(&mut self, pos: SeekFrom) -> io::Result<usize> {
-        let mut state = self.fs.handle().state.borrow_mut();
-        let ret = unsafe {
+        let ret = self.fs.lock(|inner| unsafe {
+            let mut state = inner.state.borrow_mut();
             ll::lfs_file_seek(
                 state.as_mut_ptr(),
                 &mut self.state.file,
                 pos.off(),
                 pos.whence() as i32,
             )
-        };
-        drop(state);
+        });
         io::check_ret(ret).map(|off| off as usize)
     }
 
     /// Synchronizes the file to disk
     pub fn sync(&mut self) -> io::Result<()> {
-        let mut state = self.fs.handle().state.borrow_mut();
-        let ret = unsafe { ll::lfs_file_sync(state.as_mut_ptr(), &mut self.state.file) };
-        drop(state);
+        let ret = self.fs.lock(|inner| unsafe {
+            ll::lfs_file_sync(inner.state.borrow_mut().as_mut_ptr(), &mut self.state.file)
+        });
         io::check_ret(ret).map(drop)
     }
 
@@ -710,27 +732,28 @@ where
     ///
     /// To synchronize the file to disk call the `sync` method
     pub fn write(&mut self, data: &[u8]) -> io::Result<usize> {
-        let mut state = self.fs.handle().state.borrow_mut();
-        let ret = unsafe {
+        let ret = self.fs.lock(|inner| unsafe {
+            let mut state = inner.state.borrow_mut();
             ll::lfs_file_write(
                 state.as_mut_ptr(),
                 &mut self.state.file,
                 data.as_ptr().cast(),
                 data.len().try_into().unwrap_or(u32::max_value()),
             )
-        };
-        drop(state);
+        });
         io::check_ret(ret).map(|sz| sz as usize)
     }
 
     fn close_in_place(&mut self) -> io::Result<()> {
-        let mut state = self.fs.handle().state.borrow_mut();
-        let ret = unsafe { ll::lfs_file_close(state.as_mut_ptr(), &mut self.state.file) };
-        drop(state);
-        io::check_ret(ret)?;
+        self.fs.lock(|inner| unsafe {
+            let mut state = inner.state.borrow_mut();
+            let ret = ll::lfs_file_close(state.as_mut_ptr(), &mut self.state.file);
+            io::check_ret(ret)?;
+            inner.decr();
+            Ok(())
+        })?;
         // now that we have unliked (self.)`dir` from (self.)`fs` we can release `dir`'s memory
         unsafe { ManuallyDrop::drop(&mut self.state) }
-        self.fs.handle().decr();
         Ok(())
     }
 }
@@ -893,6 +916,20 @@ where
         &self.inner
     }
 
+    // NOTE these (C) free functions deserve some comments.
+    //
+    // These are basically C ABI versions of `Storage`'s methods. Because C aliasing information
+    // cannot be trusted we stick to shared references (`&self`) in `Storage` methods to be on the
+    // safe side.
+    //
+    // A more troubling issue is that we do not require `Storage` to be `Sync`. This a bit of a
+    // gamble because the C library could be spawning threads and calling these `lfs_config_*`
+    // functions concurrently. Ensuring soundness on this front pretty much requires reading the C
+    // source code. As far as we could tell these functions are only called by the main `lfs_*` API
+    // (e.g. `lfs_file_open`). This Rust wrapper (`impl Filesystem`) will only call those functions
+    // after `lock`-ing the filesystem so `lfs_config_*`, themselves, do not need to be thread /
+    // interrupt safe (as they'll always be called from a critical section -- on single core at
+    // least)
     extern "C" fn lfs_config_read(
         config: *const ll::lfs_config,
         block: ll::lfs_block_t,

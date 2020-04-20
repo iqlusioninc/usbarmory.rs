@@ -90,6 +90,50 @@ compile_error!(
     "the `unsafe-x86` Cargo feature must be enabled -- READ THE DOCS FIRST -- to use this crate on x86_64"
 );
 
+/// Implementation detail
+///
+/// We use this type to *prevent* the creation of singletons in safe code -- in particular we do
+/// *not* want the `Filesystem` singleton (handle) to be created before the filesystem has been
+/// mounted
+#[doc(hidden)]
+#[derive(Clone, Copy)]
+pub struct Private {
+    _inner: PhantomData<*mut ()>,
+}
+
+#[doc(hidden)]
+impl Private {
+    /// Macro implementation detail
+    ///
+    /// # Safety
+    /// `unsafe` to prevent construction of singletons in safe code
+    pub unsafe fn new() -> Self {
+        Self {
+            _inner: PhantomData,
+        }
+    }
+}
+
+#[cfg(feature = "sync-cortex-a")]
+unsafe impl Send for Private {}
+
+#[cfg(feature = "sync-cortex-a")]
+unsafe impl Sync for Private {}
+
+// not interrupt/thread safe
+#[cfg(not(feature = "sync-cortex-a"))]
+pub fn lock<T>(f: impl FnOnce() -> T) -> T {
+    f()
+}
+
+// interrupt safe
+#[cfg(feature = "sync-cortex-a")]
+pub fn lock<T>(f: impl FnOnce() -> T) -> T {
+    cortex_a::no_interrupts(f)
+}
+
+/// Implementation detail
+/// Variation of `Private` that's always `!Send` and `!Sync`
 #[doc(hidden)]
 #[derive(Clone, Copy)]
 pub struct NotSendOrSync {

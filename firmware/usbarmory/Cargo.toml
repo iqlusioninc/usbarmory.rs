@@ -38,7 +38,7 @@ path = "../imx6ul-pac"
 path = "../usbarmory-rt"
 
 [features]
-fs = ["littlefs"]
+fs = ["littlefs/sync-cortex-a"]
 # choose the location of the .text and .rodata sections -- pick only one feature
 dram = ["usbarmory-rt/dram"]
 ocram = ["usbarmory-rt/ocram"]

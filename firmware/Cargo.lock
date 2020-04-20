@@ -351,6 +351,7 @@ dependencies = [
  "ascii",
  "bitflags",
  "c-stubs",
+ "cortex-a",
  "cstr_core",
  "cty 0.2.1",
  "generic-array 0.13.2",

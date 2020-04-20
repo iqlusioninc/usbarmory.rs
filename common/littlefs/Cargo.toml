@@ -8,6 +8,7 @@ version = "0.0.0"
 [dependencies]
 bitflags = "1.2.1"
 c-stubs = { path = "../c-stubs" }
+cortex-a = { path = "../../firmware/cortex-a", optional = true }
 cty = "0.2.1"
 generic-array = "0.13.2"
 heapless = "0.5.4"
@@ -37,4 +38,6 @@ default-features = false
 version = "=0.1.0"
 
 [features]
+# makes `impl Filesystem` interrupt safe on ARM Cortex-A
+sync-cortex-a = ["cortex-a"]
 unsafe-x86 = []

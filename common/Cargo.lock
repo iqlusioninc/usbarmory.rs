@@ -141,6 +141,10 @@ name = "consts"
 version = "0.0.0"
 
 [[package]]
+name = "cortex-a"
+version = "0.0.0"
+
+[[package]]
 name = "cstr_core"
 version = "0.1.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -273,6 +277,7 @@ dependencies = [
  "ascii",
  "bitflags",
  "c-stubs",
+ "cortex-a",
  "cstr_core",
  "cty 0.2.1",
  "generic-array 0.13.2",

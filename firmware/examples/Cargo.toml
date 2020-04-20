@@ -41,6 +41,10 @@ required-features = ["fs"]
 name = "emmc-fs-read-dir"
 required-features = ["fs"]
 
+[[example]]
+name = "rtfm-10-fs"
+required-features = ["fs"]
+
 [dependencies]
 block-cipher-trait = "0.6.2"
 consts = { path = "../../common/consts" }
