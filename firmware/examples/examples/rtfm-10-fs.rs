@@ -23,16 +23,20 @@
 #![no_main]
 #![no_std]
 
-use core::convert::TryInto;
+use core::{convert::TryInto, str};
 
 use exception_reset as _; // default exception handler
 use panic_serial as _; // panic handler
 use usbarmory::{
     emmc::eMMC,
-    fs::{self, File, Fs},
+    fs::{self, File, Fs, Path},
     println,
     storage::MbrDevice,
 };
+
+fn filename() -> &'static Path {
+    b"foo.txt\0".try_into().unwrap()
+}
 
 #[rtfm::app]
 const APP: () = {
@@ -55,7 +59,7 @@ const APP: () = {
 
     // NOTE `&f` denotes a "share-only" resource; this resource will always appear as a shared
     // reference (`&-`) in tasks. One does not need to call `lock` on these resources to use them.
-    #[idle(resources = [&f], spawn = [foo, bar])]
+    #[idle(resources = [&f], spawn = [foo, bar, baz])]
     fn idle(cx: idle::Context) -> ! {
         // resource appears as a shared reference to the resource data: `&Fs`
         let f: &Fs = cx.resources.f;
@@ -76,6 +80,13 @@ const APP: () = {
             println!("[idle] {:?}", ent);
         }
 
+        let filename = filename();
+        let file = File::open(*f, filename).unwrap();
+        println!("[idle] opened {}", filename);
+
+        // files can be send between tasks
+        cx.spawn.baz(file).ok().unwrap();
+
         usbarmory::reset()
     }
 
@@ -85,11 +96,12 @@ const APP: () = {
         // makes a copy of the `Fs` handle
         let f: Fs = *cx.resources.f;
 
-        let mut file = File::create(f, b"foo.txt\0".try_into().unwrap()).unwrap();
+        let filename = filename();
+        let mut file = File::create(f, filename).unwrap();
         file.write(b"Hello!").unwrap();
         file.close().unwrap();
 
-        println!("[foo] created file foo.txt");
+        println!("[foo] created file {}", filename);
     }
 
     // this task cannot perform FS operations because it doesn't have access to the `Fs` handle
@@ -97,5 +109,15 @@ const APP: () = {
     #[task]
     fn bar(_cx: bar::Context) {
         println!("[bar] no FS access");
+    }
+
+    #[task]
+    fn baz(_cx: baz::Context, mut f: File<Fs>) {
+        let filename = filename();
+        let mut buf = [0; 32];
+        let n = f.read(&mut buf).unwrap();
+        println!("[baz] read({}) -> {:?}", filename, str::from_utf8(&buf[..n]));
+        f.close().unwrap();
+        println!("[baz] closed {}", filename);
     }
 };

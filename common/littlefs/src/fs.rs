@@ -628,6 +628,11 @@ where
     state: ManuallyDrop<Box<F>>,
 }
 
+// NOTE(unsafe) this is safe because `Box<F>` ("boxed FileState") owns its contents and is pinned,
+// plus `FS` (handle to the filesystem) is marked as interrupt-safe (only true when "sync-cortex-a"
+// is enabled)
+unsafe impl<FS> Send for File<FS> where FS: Filesystem + Send {}
+
 // NOTE(allow) `std::fs` version does not have an `is_empty` method
 #[allow(clippy::len_without_is_empty)]
 impl<FS> File<FS>
