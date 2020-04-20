@@ -6,6 +6,17 @@
 //! RTFM's `lock` API -- the `fs` and `File` APIs already use locks internally.
 //!
 //! - Access control: only tasks that list `Fs` in `resources` can perform FS operations.
+//!
+//! Expected output:
+//!
+//! ```
+//! (..)
+//! [idle] DirEntry { metadata: Metadata { file_name: ".", file_type: Dir, size: 0 } }
+//! [foo] created file foo.txt
+//! [bar] no FS access
+//! [idle] DirEntry { metadata: Metadata { file_name: "..", file_type: Dir, size: 0 } }
+//! [idle] DirEntry { metadata: Metadata { file_name: "foo.txt", file_type: File, size: 6 } }
+//! ```
 
 #![deny(unsafe_code)]
 #![deny(warnings)]
@@ -42,16 +53,21 @@ const APP: () = {
         init::LateResources { f }
     }
 
+    // NOTE `&f` denotes a "share-only" resource; this resource will always appear as a shared
+    // reference (`&-`) in tasks. One does not need to call `lock` on these resources to use them.
     #[idle(resources = [&f], spawn = [foo, bar])]
     fn idle(cx: idle::Context) -> ! {
-        let f = *cx.resources.f;
+        // resource appears as a shared reference to the resource data: `&Fs`
+        let f: &Fs = cx.resources.f;
 
-        let mut first = true;
-        for ent in fs::read_dir(f, b"/\0".try_into().unwrap()).unwrap() {
+        for (i, ent) in fs::read_dir(*f, b"/\0".try_into().unwrap())
+            .unwrap()
+            .into_iter()
+            .enumerate()
+        {
             let ent = ent.unwrap();
 
-            if first {
-                first = false;
+            if i == 1 {
                 // these tasks will preempt `idle`
                 cx.spawn.foo().unwrap();
                 cx.spawn.bar().unwrap();
@@ -63,10 +79,11 @@ const APP: () = {
         usbarmory::reset()
     }
 
-    // interrupts `idle`, who's walking over the contents of the `/` directory
+    // this task interrupts `idle`, who's walking over the contents of the `/` directory
     #[task(resources = [&f])]
     fn foo(cx: foo::Context) {
-        let f = *cx.resources.f;
+        // makes a copy of the `Fs` handle
+        let f: Fs = *cx.resources.f;
 
         let mut file = File::create(f, b"foo.txt\0".try_into().unwrap()).unwrap();
         file.write(b"Hello!").unwrap();
@@ -79,6 +96,6 @@ const APP: () = {
     // (resource `f`)
     #[task]
     fn bar(_cx: bar::Context) {
-        println!("[bar]");
+        println!("[bar] no FS access");
     }
 };
