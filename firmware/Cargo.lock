@@ -220,6 +220,7 @@ dependencies = [
  "exception-reset",
  "heapless",
  "imx6ul-pac",
+ "littlefs2",
  "panic-serial",
  "usb-device",
  "usbarmory",
