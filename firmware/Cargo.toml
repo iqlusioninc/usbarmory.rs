@@ -2,6 +2,7 @@
 members = [
   "cortex-a",
   "cortex-a-rtfm",
+  "examples",
   "exception-reset",
   "imx6ul-pac",
   "memlog",

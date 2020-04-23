@@ -10,15 +10,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "aligned"
-version = "0.3.2"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "eb1ce8b3382016136ab1d31a1b5ce807144f8b7eb2d5f16b2108f0f07edceb94"
-dependencies = [
- "as-slice",
-]
-
-[[package]]
 name = "ansi_term"
 version = "0.11.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -60,15 +51,6 @@ name = "autocfg"
 version = "1.0.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "f8aac770f1885fd7e387acedd76065302551364496e46b3dd00860b2f8359b9d"
-
-[[package]]
-name = "bare-metal"
-version = "0.2.5"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "5deb64efa5bd81e31fcd1938615a6d98c82eafcbcd787162b6f63b91d6bac5b3"
-dependencies = [
- "rustc_version",
-]
 
 [[package]]
 name = "bindgen"
@@ -199,25 +181,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "cortex-m"
-version = "0.6.2"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "2954942fbbdd49996704e6f048ce57567c3e1a4e2dc59b41ae9fde06a01fc763"
-dependencies = [
- "aligned",
- "bare-metal",
- "volatile-register",
-]
-
-[[package]]
-name = "cortex-m-semihosting"
-version = "0.3.5"
-source = "git+https://github.com/japaric/cortex-m-semihosting?branch=cortex-a#585e741cef93a0a1376326ea864f4b17ea9ad429"
-dependencies = [
- "cortex-m",
-]
-
-[[package]]
 name = "cty"
 version = "0.2.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -243,6 +206,24 @@ dependencies = [
  "log",
  "regex",
  "termcolor",
+]
+
+[[package]]
+name = "examples"
+version = "0.0.0"
+dependencies = [
+ "block-cipher-trait",
+ "consts",
+ "cortex-a",
+ "cortex-a-rtfm",
+ "digest",
+ "exception-reset",
+ "heapless",
+ "imx6ul-pac",
+ "littlefs2",
+ "panic-serial",
+ "usb-device",
+ "usbarmory",
 ]
 
 [[package]]
@@ -503,30 +484,6 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "08d43f7aa6b08d49f382cde6a7982047c3426db949b1424bc4b7ec9ae12c6ce2"
 
 [[package]]
-name = "rustc_version"
-version = "0.2.3"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "138e3e0acb6c9fb258b19b67cb8abd63c00679d2851805ea151465464fe9030a"
-dependencies = [
- "semver",
-]
-
-[[package]]
-name = "semver"
-version = "0.9.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "1d7eb9ef2c18661902cc47e535f9bc51b78acd254da71d375c2f6720d9a40403"
-dependencies = [
- "semver-parser",
-]
-
-[[package]]
-name = "semver-parser"
-version = "0.7.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "388a1df253eca08550bef6c72392cfe7c30914bf41df5269b68cbd6ff8f570a3"
-
-[[package]]
 name = "shlex"
 version = "0.1.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -623,20 +580,15 @@ name = "usbarmory"
 version = "0.0.0"
 dependencies = [
  "arrayref",
- "as-slice",
  "block-cipher-trait",
  "c-stubs",
  "consts",
  "cortex-a",
- "cortex-a-rtfm",
- "cortex-m-semihosting",
  "digest",
- "exception-reset",
  "heapless",
  "imx6ul-pac",
  "littlefs2",
  "memlog",
- "panic-serial",
  "rand_core",
  "typenum",
  "usb-device",
@@ -655,12 +607,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "vcell"
-version = "0.1.2"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "876e32dcadfe563a4289e994f7cb391197f362b6315dc45e8ba4aa6f564a4b3c"
-
-[[package]]
 name = "vec_map"
 version = "0.8.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -671,15 +617,6 @@ name = "version_check"
 version = "0.9.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "078775d0255232fb988e6fccf26ddc9d1ac274299aaedcedce21c6f72cc533ce"
-
-[[package]]
-name = "volatile-register"
-version = "0.2.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "0d67cb4616d99b940db1d6bd28844ff97108b498a6ca850e5b6191a532063286"
-dependencies = [
- "vcell",
-]
 
 [[package]]
 name = "which"

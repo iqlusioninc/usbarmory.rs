@@ -61,7 +61,8 @@ stage and will not be ready to use for some time.
 ## Building examples
 
 ``` rust
-$ # on this directory
+$ # run this from the parent directory (`firmware`)
+$ # the source code of examples is at `firmware/examples`
 $ cargo build --example $example_name
 ```
 
@@ -79,13 +80,13 @@ in the [Embedded Rust book][book])
 [book]: https://rust-embedded.github.io/book/start/qemu.html
 
 ``` console
-$ # working directory: usbarmory
+$ # working directory: `firmware`
 $ qemu-system-arm \
   -cpu cortex-a7 \
   -machine mcimx6ul-evk  \
   -nographic \
   -semihosting-config enable=on,target=native \
-  -kernel ../target/armv7a-none-eabi/release/examples/qemu-hello
+  -kernel target/armv7a-none-eabi/release/examples/qemu-hello
 ```
 
 If a example doesn't explicitly terminate itself, press `C-a` + `c` to bring up
@@ -109,14 +110,15 @@ the size of the program once it's loaded in memory. To see the real size of the
 program you need to run the `size` program on the ELF file.
 
 ``` rust
+$ # run these commands from the parent directory (`firmware`)
 $ cargo build --example hello --release
 
-$ stat --printf="%s\n" ../target/armv7a-none-eabi/release/examples/hello
+$ stat --printf="%s\n" target/armv7a-none-eabi/release/examples/hello
 40104
 
 $ # if you installed `arm-none-eabi-binutils`
-$ arm-none-eabi-size -Ax ../target/armv7a-none-eabi/release/examples/hello
-../target/armv7a-none-eabi/release/examples/hello  :
+$ arm-none-eabi-size -Ax target/armv7a-none-eabi/release/examples/hello
+target/armv7a-none-eabi/release/examples/hello  :
 section             size       addr
 .text              0x564   0x91f820
 .rodata            0x27b   0x91fd84
@@ -254,7 +256,7 @@ Bus 001 Device 022: ID 15a2:0080 Freescale Semiconductor, Inc.
 
 ### Loading an ELF image
 
-Navigate to the `firmware/usbarmory` and use `cargo run` to load a program into
+Navigate to the `firmware` directory and use `cargo run` to load a program into
 memory. 
 
 **IMPORTANT** Set the `COLD_BOOT` environment variable when loading a program

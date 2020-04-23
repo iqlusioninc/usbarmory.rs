@@ -1,0 +1,52 @@
+[package]
+authors = ["iqlusion"]
+edition = "2018"
+name    = "examples"
+version = "0.0.0"
+license = "Apache-2.0 OR MIT"
+
+[[example]]
+name = "emmc-fs"
+required-features = ["fs"]
+
+[[example]]
+name = "emmc-fs2"
+required-features = ["fs"]
+
+[[example]]
+name = "emmc-fs3"
+required-features = ["fs"]
+
+[[example]]
+name = "emmc-fs4"
+required-features = ["fs"]
+
+[[example]]
+name = "emmc-fs-format"
+required-features = ["fs"]
+
+[dependencies]
+block-cipher-trait = "0.6.2"
+consts = { path = "../../common/consts" }
+cortex-a = { path = "../cortex-a" }
+cortex-a-rtfm = { path = "../cortex-a-rtfm" }
+digest = "0.8.1"
+exception-reset = { path = "../exception-reset" }
+heapless = "0.5.3"
+panic-serial = { path = "../panic-serial" }
+usb-device = "0.2.5"
+
+[dependencies.littlefs2]
+optional = true
+version = "0.1.0-alpha.0"
+
+[dependencies.pac]
+package = "imx6ul-pac"
+path = "../imx6ul-pac"
+
+[dependencies.usbarmory]
+features = ["ocram"]
+path = "../usbarmory"
+
+[features]
+fs = ["usbarmory/fs", "littlefs2"]
