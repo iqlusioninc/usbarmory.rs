@@ -187,6 +187,22 @@ dependencies = [
 ]
 
 [[package]]
+name = "cstr_core"
+version = "0.1.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "7829882406e7b36cff95319f674b72fc51dd3b0e6968f33db8f6a26903c1e128"
+dependencies = [
+ "cty 0.1.5",
+ "memchr 1.0.2",
+]
+
+[[package]]
+name = "cty"
+version = "0.1.5"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "c4e1d41c471573612df00397113557693b5bf5909666a8acb253930612b93312"
+
+[[package]]
 name = "cty"
 version = "0.2.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -356,6 +372,18 @@ dependencies = [
  "cty 0.2.1",
  "generic-array 0.13.2",
  "heapless",
+ "littlefs2-sys",
+]
+
+[[package]]
+name = "littlefs2"
+version = "0.1.0-alpha.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "abdd4ddd5caedd104a0627e4abbe1c001a088fc3ce996a210ce5547193f542a3"
+dependencies = [
+ "bitflags",
+ "cty 0.2.1",
+ "generic-array 0.13.2",
  "littlefs2-sys",
 ]
 
