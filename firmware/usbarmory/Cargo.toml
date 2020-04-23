@@ -11,18 +11,6 @@ readme      = "README.md"
 categories  = ["embedded", "hardware-support", "no-std"]
 keywords    = ["arm", "cortex-a"]
 
-[[example]]
-name = "emmc-fs"
-required-features = ["fs"]
-
-[[example]]
-name = "emmc-fs2"
-required-features = ["fs"]
-
-[[example]]
-name = "emmc-fs-format"
-required-features = ["fs"]
-
 [dependencies]
 arrayref = "0.3.6"
 block-cipher-trait = "0.6.2"
@@ -48,17 +36,9 @@ path = "../imx6ul-pac"
 
 [dependencies.usbarmory-rt]
 path = "../usbarmory-rt"
-## choose the location of the .text and .rodata sections -- pick only one line
-# features = ["dram"]
-features = ["ocram"]
-
-[dev-dependencies]
-as-slice = "0.1.3"
-cortex-a-rtfm = { path = "../cortex-a-rtfm" }
-cortex-m-semihosting = { git = "https://github.com/japaric/cortex-m-semihosting", branch = "cortex-a" }
-exception-reset = { path = "../exception-reset" }
-heapless = "0.5.3"
-panic-serial = { path = "../panic-serial" }
 
 [features]
 fs = ["littlefs2"]
+# choose the location of the .text and .rodata sections -- pick only one feature
+dram = ["usbarmory-rt/dram"]
+ocram = ["usbarmory-rt/ocram"]

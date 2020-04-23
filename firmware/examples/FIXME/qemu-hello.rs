@@ -1,3 +1,7 @@
+// FIXME the initialization (pre-main) code in the usbarmory{,-rt} crates accesses hardware
+// peripherals that aren't implemented in QEMU. This causes the initialization code to hang before
+// `main` is reached
+
 #![no_main]
 #![no_std]
 

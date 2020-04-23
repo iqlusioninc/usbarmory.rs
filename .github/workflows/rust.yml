@@ -196,12 +196,12 @@ jobs:
           sudo ln -s /usr/bin/llvm-config{-9,}
 
       - name: Build examples using the dev profile
-        working-directory: ./firmware/usbarmory
+        working-directory: ./firmware/examples
         run: |
           cargo build --examples --features fs
 
       - name: Build examples using the release profile
-        working-directory: ./firmware/usbarmory
+        working-directory: ./firmware/examples
         run: |
           cargo build --examples --features fs --release
 
