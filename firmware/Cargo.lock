@@ -92,15 +92,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "block-cipher-trait"
-version = "0.6.2"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "1c924d49bd09e7c06003acda26cd9742e796e34282ec6c1189404dee0c1f4774"
-dependencies = [
- "generic-array 0.12.3",
-]
-
-[[package]]
 name = "byteorder"
 version = "1.3.4"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -221,7 +212,7 @@ dependencies = [
 name = "examples"
 version = "0.0.0"
 dependencies = [
- "block-cipher-trait",
+ "block-cipher",
  "consts",
  "cortex-a",
  "cortex-a-rtfm",

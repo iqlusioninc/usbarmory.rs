@@ -16,7 +16,7 @@
 #![no_main]
 #![no_std]
 
-use block_cipher_trait::BlockCipher as _;
+use block_cipher::{BlockCipher, NewBlockCipher};
 use exception_reset as _; // default exception handler
 use panic_serial as _; // panic handler
 use usbarmory::{dcp::Aes128, memlog, memlog_flush_and_reset};
