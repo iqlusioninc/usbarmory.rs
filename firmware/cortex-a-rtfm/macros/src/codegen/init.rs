@@ -45,7 +45,7 @@ pub fn codegen(
                         })
                         .collect::<Vec<_>>()
                 })
-                .unwrap_or_else(|| vec![]);
+                .unwrap_or_else(Vec::new);
 
             if !late_fields.is_empty() {
                 let late_resources = util::late_resources_ident(cname);

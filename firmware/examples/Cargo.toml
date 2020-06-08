@@ -26,7 +26,7 @@ name = "emmc-fs-format"
 required-features = ["fs"]
 
 [dependencies]
-block-cipher-trait = "0.6.2"
+block-cipher = "0.7"
 consts = { path = "../../common/consts" }
 cortex-a = { path = "../cortex-a" }
 cortex-a-rtfm = { path = "../cortex-a-rtfm" }

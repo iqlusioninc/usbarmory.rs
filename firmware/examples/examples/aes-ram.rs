@@ -3,7 +3,7 @@
 //! Encryption has been checked against the following x86_64 Rust code
 //!
 //! ``` rust
-//! use aesni::{block_cipher_trait::BlockCipher, Aes128}; // aesni = "0.6.0"
+//! use aesni::{block_cipher::BlockCipher, Aes128}; // aesni = "0.6.0"
 //!
 //! let key = [185, /* .. */, 72];
 //! let plaintext = [179, /* .. */, 242];
@@ -28,7 +28,7 @@
 #![no_main]
 #![no_std]
 
-use block_cipher_trait::BlockCipher as _;
+use block_cipher::{BlockCipher, NewBlockCipher};
 use exception_reset as _; // default exception handler
 use panic_serial as _; // panic handler
 use usbarmory::{dcp::Aes128, memlog, memlog_flush_and_reset};
