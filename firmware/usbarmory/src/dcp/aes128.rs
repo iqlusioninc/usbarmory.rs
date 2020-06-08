@@ -7,8 +7,7 @@ use core::{
 use arrayref::array_ref;
 use block_cipher::{
     generic_array::{typenum::consts, GenericArray},
-    BlockCipher,
-    NewBlockCipher,
+    BlockCipher, NewBlockCipher,
 };
 use pac::HW_DCP;
 
@@ -50,7 +49,6 @@ impl NewBlockCipher for Aes128 {
 }
 
 impl BlockCipher for Aes128 {
-
     type BlockSize = consts::U16;
     type ParBlocks = consts::U1;
 
