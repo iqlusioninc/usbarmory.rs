@@ -4,7 +4,7 @@ use core::{
     sync::atomic::{self, AtomicBool, Ordering},
 };
 
-use block_cipher_trait::generic_array::{typenum::consts, GenericArray};
+use digest::generic_array::{typenum::consts, GenericArray};
 use digest::{BlockInput, FixedOutput, Input, Reset};
 use heapless::Vec;
 use pac::hw_dcp::HW_DCP;

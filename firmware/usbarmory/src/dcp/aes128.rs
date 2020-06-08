@@ -5,9 +5,10 @@ use core::{
 };
 
 use arrayref::array_ref;
-use block_cipher_trait::{
+use block_cipher::{
     generic_array::{typenum::consts, GenericArray},
     BlockCipher,
+    NewBlockCipher,
 };
 use pac::HW_DCP;
 
@@ -40,14 +41,18 @@ impl Drop for Aes128 {
     }
 }
 
-impl BlockCipher for Aes128 {
+impl NewBlockCipher for Aes128 {
     type KeySize = consts::U16;
-    type BlockSize = consts::U16;
-    type ParBlocks = consts::U1;
 
     fn new(key: &GenericArray<u8, consts::U16>) -> Self {
         Self::new_ram(key).expect("the `Aes128` is currently in use")
     }
+}
+
+impl BlockCipher for Aes128 {
+
+    type BlockSize = consts::U16;
+    type ParBlocks = consts::U1;
 
     fn decrypt_block(&self, block: &mut GenericArray<u8, consts::U16>) {
         self.xcrypt(block, false)

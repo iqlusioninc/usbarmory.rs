@@ -13,7 +13,7 @@ keywords    = ["arm", "cortex-a"]
 
 [dependencies]
 arrayref = "0.3.6"
-block-cipher-trait = "0.6.2"
+block-cipher = "0.7"
 consts = { path = "../../common/consts" }
 c-stubs = { path = "../../common/c-stubs" }
 cortex-a = { path = "../cortex-a" }
@@ -22,6 +22,7 @@ heapless = "0.5.3"
 memlog = { path = "../memlog" }
 rand_core = "0.5.1"
 typenum = "1.11.2"
+usbarmory-rt = { path = "../usbarmory-rt", features = ["dram"]}
 usb-device = "0.2.5"
 zerocopy = "0.3.0"
 
@@ -33,9 +34,6 @@ version = "0.1.0-alpha.0"
 features = ["ccm_analog", "hw_dcp", "rng", "src", "uart", "usb_analog", "usb_uog", "usbphy", "usdhc", "wdog"]
 package = "imx6ul-pac"
 path = "../imx6ul-pac"
-
-[dependencies.usbarmory-rt]
-path = "../usbarmory-rt"
 
 [features]
 fs = ["littlefs2"]
