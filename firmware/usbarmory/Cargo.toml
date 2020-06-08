@@ -22,7 +22,7 @@ heapless = "0.5.3"
 memlog = { path = "../memlog" }
 rand_core = "0.5.1"
 typenum = "1.11.2"
-usbarmory-rt = { path = "../usbarmory-rt", features = ["dram"]}
+usbarmory-rt = { path = "../usbarmory-rt" }
 usb-device = "0.2.5"
 zerocopy = "0.3.0"
 
