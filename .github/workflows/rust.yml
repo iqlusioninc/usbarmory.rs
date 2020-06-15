@@ -56,6 +56,51 @@ jobs:
         run: |
           cargo check
 
+  sanitize-c:
+    name: sanitize Rust wrappers around C code
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout sources
+        uses: actions/checkout@v2
+
+      - name: Install nightly toolchain
+        uses: actions-rs/toolchain@v1
+        with:
+          toolchain: nightly
+          override: true
+
+      - name: Run ASan
+        working-directory: ./common/littlefs
+        env:
+          RUSTFLAGS: -Z sanitizer=address
+        run: |
+          cargo r --features unsafe-x86 --target x86_64-unknown-linux-gnu --example dir-close
+          cargo r --features unsafe-x86 --target x86_64-unknown-linux-gnu --example dir-forget
+          cargo r --features unsafe-x86 --target x86_64-unknown-linux-gnu --example dir-forget-2
+          cargo r --features unsafe-x86 --target x86_64-unknown-linux-gnu --example file-close
+          cargo r --features unsafe-x86 --target x86_64-unknown-linux-gnu --example file-forget
+          cargo r --features unsafe-x86 --target x86_64-unknown-linux-gnu --example dir-close --release
+          cargo r --features unsafe-x86 --target x86_64-unknown-linux-gnu --example dir-forget --release
+          cargo r --features unsafe-x86 --target x86_64-unknown-linux-gnu --example dir-forget-2 --release
+          cargo r --features unsafe-x86 --target x86_64-unknown-linux-gnu --example file-close --release
+          cargo r --features unsafe-x86 --target x86_64-unknown-linux-gnu --example file-forget --release
+
+      - name: Run MSan
+        working-directory: ./common/littlefs
+        env:
+          RUSTFLAGS: -Z sanitizer=memory
+        run: |
+          cargo r --features unsafe-x86 --target x86_64-unknown-linux-gnu --example dir-close
+          cargo r --features unsafe-x86 --target x86_64-unknown-linux-gnu --example dir-forget
+          cargo r --features unsafe-x86 --target x86_64-unknown-linux-gnu --example dir-forget-2
+          cargo r --features unsafe-x86 --target x86_64-unknown-linux-gnu --example file-close
+          cargo r --features unsafe-x86 --target x86_64-unknown-linux-gnu --example file-forget
+          cargo r --features unsafe-x86 --target x86_64-unknown-linux-gnu --example dir-close --release
+          cargo r --features unsafe-x86 --target x86_64-unknown-linux-gnu --example dir-forget --release
+          cargo r --features unsafe-x86 --target x86_64-unknown-linux-gnu --example dir-forget-2 --release
+          cargo r --features unsafe-x86 --target x86_64-unknown-linux-gnu --example file-close --release
+          cargo r --features unsafe-x86 --target x86_64-unknown-linux-gnu --example file-forget --release
+
 # NOTE the `common` directory is currently empty so this is a no-op
 # common-test:
 #   name: Run tests on the host

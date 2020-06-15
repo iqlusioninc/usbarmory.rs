@@ -138,7 +138,7 @@ pub fn impl_mutex(
             type T = #ty;
 
             #[inline(always)]
-            fn lock<R>(&mut self, f: impl FnOnce(&mut #ty) -> R) -> R {
+            fn lock<R>(&mut self, __f: impl FnOnce(&mut #ty) -> R) -> R {
                 /// Priority ceiling
                 const CEILING: u8 = #ceiling;
 
@@ -147,7 +147,7 @@ pub fn impl_mutex(
                         #ptr,
                         #priority,
                         CEILING,
-                        f,
+                        __f,
                     )
                 }
             }

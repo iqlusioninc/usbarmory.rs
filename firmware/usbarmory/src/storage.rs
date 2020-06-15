@@ -1,6 +1,6 @@
 //! Partition table and block device access.
 
-use core::{fmt, mem::size_of};
+use core::{cell::Cell, fmt, mem::size_of};
 
 use memlog::memlog;
 use zerocopy::{AsBytes, FromBytes, LayoutVerified};
@@ -9,7 +9,11 @@ use zerocopy::{AsBytes, FromBytes, LayoutVerified};
 ///
 /// This is meant to be implemented for "managed" devices that have their own controller for
 /// scheduling page erases and doing wear leveling, such as SD and MMC cards used by the Armory.
-pub trait ManagedBlockDevice {
+///
+/// # Safety
+///
+/// - Implementers of this trait must be *owned* singletons
+pub unsafe trait ManagedBlockDevice {
     /// The error type used by the block device implementation.
     type Error: fmt::Debug + fmt::Display;
 
@@ -27,32 +31,8 @@ pub trait ManagedBlockDevice {
     /// The `lba` parameter indicates the linera block address to write to. If it is outside of the
     /// valid range, an error must be returned.
     ///
-    /// This may write to a buffer and not to persistent storage. `flush` may be used to write all
-    /// buffered data to persistent storage.
-    fn write(&mut self, block: &Block, lba: u64) -> Result<(), Self::Error>;
-
-    /// Flushes all buffered writes to persistent storage.
-    fn flush(&mut self) -> Result<(), Self::Error>;
-}
-
-impl<'a, D: ManagedBlockDevice> ManagedBlockDevice for &'a mut D {
-    type Error = D::Error;
-
-    fn total_blocks(&self) -> u64 {
-        (**self).total_blocks()
-    }
-
-    fn read(&self, block: &mut Block, lba: u64) -> Result<(), Self::Error> {
-        (**self).read(block, lba)
-    }
-
-    fn write(&mut self, block: &Block, lba: u64) -> Result<(), Self::Error> {
-        (**self).write(block, lba)
-    }
-
-    fn flush(&mut self) -> Result<(), Self::Error> {
-        (**self).flush()
-    }
+    /// This may write to a buffer and not to persistent storage.
+    fn write(&self, block: &Block, lba: u64) -> Result<(), Self::Error>;
 }
 
 /// Block size used by the storage subsystem.
@@ -91,7 +71,7 @@ pub struct MbrDevice<D: ManagedBlockDevice> {
 
 impl<D: ManagedBlockDevice> MbrDevice<D> {
     /// Creates a new MBR-partitioned block device by writing the given partition `table` into it
-    pub fn create(mut raw: D, part_table: &PartitionTable) -> Result<Self, MbrError<D::Error>> {
+    pub fn create(raw: D, part_table: &PartitionTable) -> Result<Self, MbrError<D::Error>> {
         let total_blocks = raw.total_blocks();
         let end = part_table
             .as_slice()
@@ -164,12 +144,13 @@ impl<D: ManagedBlockDevice> MbrDevice<D> {
     /// Obtains access to the partition at index `part` (0 ..= 3).
     ///
     /// Returns a `NoPartition` error if `part` does not refer to an allocated partition.
-    pub fn partition(&mut self, part: u8) -> Result<MbrPartitionRef<'_, D>, MbrError<D::Error>> {
+    pub fn into_partition(self, part: u8) -> Result<MbrPartition<D>, MbrError<D::Error>> {
         let extent = self.part_extent(part)?;
 
-        Ok(MbrPartitionRef {
-            raw: &mut self.raw,
+        Ok(MbrPartition {
             extent,
+            lock: Cell::new(false),
+            raw: self.raw,
         })
     }
 
@@ -349,15 +330,16 @@ impl<D: fmt::Display> fmt::Display for MbrError<D> {
     }
 }
 
-/// Provides borrowed access to an MBR partition.
-///
-/// This implements `ManagedBlockDevice` and maps any access to the partition.
-pub struct MbrPartitionRef<'a, D: ManagedBlockDevice> {
-    raw: &'a mut D,
+/// Provides exclusive access to an MBR partition.
+pub struct MbrPartition<D: ManagedBlockDevice> {
+    raw: D,
     extent: PartExtent,
+    // only used when the `fs` feature is enabled
+    #[allow(dead_code)]
+    pub(crate) lock: Cell<bool>,
 }
 
-impl<'a, D: ManagedBlockDevice> ManagedBlockDevice for MbrPartitionRef<'a, D> {
+unsafe impl<D: ManagedBlockDevice> ManagedBlockDevice for MbrPartition<D> {
     type Error = MbrError<D::Error>;
 
     fn total_blocks(&self) -> u64 {
@@ -374,7 +356,7 @@ impl<'a, D: ManagedBlockDevice> ManagedBlockDevice for MbrPartitionRef<'a, D> {
             .map_err(MbrError::Device)
     }
 
-    fn write(&mut self, block: &Block, lba: u64) -> Result<(), Self::Error> {
+    fn write(&self, block: &Block, lba: u64) -> Result<(), Self::Error> {
         if lba >= u64::from(self.extent.sectors) {
             return Err(MbrError::OutOfRangeAccess);
         }
@@ -382,9 +364,5 @@ impl<'a, D: ManagedBlockDevice> ManagedBlockDevice for MbrPartitionRef<'a, D> {
         self.raw
             .write(block, lba + u64::from(self.extent.start))
             .map_err(MbrError::Device)
-    }
-
-    fn flush(&mut self) -> Result<(), Self::Error> {
-        self.raw.flush().map_err(MbrError::Device)
     }
 }

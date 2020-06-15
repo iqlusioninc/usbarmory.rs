@@ -26,9 +26,9 @@ usbarmory-rt = { path = "../usbarmory-rt" }
 usb-device = "0.2.5"
 zerocopy = "0.3.0"
 
-[dependencies.littlefs2]
+[dependencies.littlefs]
 optional = true
-version = "0.1.0-alpha.0"
+path = "../../common/littlefs"
 
 [dependencies.pac]
 features = ["ccm_analog", "hw_dcp", "rng", "src", "uart", "usb_analog", "usb_uog", "usbphy", "usdhc", "wdog"]
@@ -36,7 +36,7 @@ package = "imx6ul-pac"
 path = "../imx6ul-pac"
 
 [features]
-fs = ["littlefs2"]
+fs = ["littlefs/sync-cortex-a"]
 # choose the location of the .text and .rodata sections -- pick only one feature
 dram = ["usbarmory-rt/dram"]
 ocram = ["usbarmory-rt/ocram"]

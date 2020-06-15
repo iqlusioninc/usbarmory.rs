@@ -13,13 +13,13 @@ use exception_reset as _; // default exception handler
 use panic_serial as _; // panic handler
 use usbarmory::{
     emmc::eMMC,
-    fs::{self, File, Fs},
+    fs::{File, Fs, SeekFrom},
     memlog, memlog_flush_and_reset,
     storage::MbrDevice,
 };
 
-static FILENAME: &[u8] = b"baz.txt\0";
-static TESTSTR: &[u8] = b"Hello File!";
+static FILENAME: &[u8] = b"hello.txt\0";
+static TEXT: &[u8] = b"Hello File!";
 
 // NOTE binary interfaces, using `no_mangle` and `extern`, are extremely unsafe
 // as no type checking is performed by the compiler; stick to safe interfaces
@@ -37,23 +37,24 @@ fn main() -> ! {
 
     let filename = FILENAME.try_into().unwrap();
     let mut f1 = File::create(f, filename).unwrap();
-    memlog!("file created");
-    f1.write(TESTSTR).unwrap();
-    memlog!("wrote data to file (but not yet committed it to disk)");
+    memlog!("created {}", filename);
+    let n = f1.write(TEXT).unwrap();
+    f1.close().unwrap();
+    memlog!("wrote {}B to file", n);
 
-    fs::remove(f, filename).unwrap();
-    memlog!("removed file from disk");
+    let mut f1 = File::open(f, filename).unwrap();
+    memlog!("opened {}", filename);
 
-    if let Err(e) = File::open(f, filename) {
-        if e == fs::Error::NoSuchEntry {
-            memlog!("file doesn't exist (as expected)");
-        } else {
-            panic!("{:?}", e);
-        }
-    } else {
-        panic!("file exists on disk");
-    }
+    let off = f1.seek(SeekFrom::Start(4)).unwrap();
+    memlog!("moved cursor to byte {}", off);
 
+    let mut buf = [0; 32];
+    let n = f1.read(&mut buf).unwrap();
+
+    let off = off as usize;
+    assert_eq!(&buf[..n], &TEXT[off..]);
+
+    memlog!("file contents look OK");
     memlog!("DONE");
 
     // then reset the board

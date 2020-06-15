@@ -6,7 +6,7 @@ version = "0.7.10"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "8716408b8bc624ed7f65d223ddb9ac2d044c0547b6fa4b0d554f3a9540496ada"
 dependencies = [
- "memchr",
+ "memchr 2.3.3",
 ]
 
 [[package]]
@@ -34,6 +34,12 @@ dependencies = [
  "generic-array 0.13.2",
  "stable_deref_trait",
 ]
+
+[[package]]
+name = "ascii"
+version = "1.0.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "bbf56136a5198c7b01a49e3afcbef6cf84597273d298f54432926024107b0109"
 
 [[package]]
 name = "atty"
@@ -101,7 +107,7 @@ checksum = "08c48aae112d48ed9f069b33538ea9e3e90aa263cfa3d1c24309612b1f7472de"
 name = "c-stubs"
 version = "0.0.0"
 dependencies = [
- "cty",
+ "cty 0.2.1",
 ]
 
 [[package]]
@@ -179,6 +185,22 @@ dependencies = [
  "rtfm-syntax",
  "syn",
 ]
+
+[[package]]
+name = "cstr_core"
+version = "0.1.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "7829882406e7b36cff95319f674b72fc51dd3b0e6968f33db8f6a26903c1e128"
+dependencies = [
+ "cty 0.1.5",
+ "memchr 1.0.2",
+]
+
+[[package]]
+name = "cty"
+version = "0.1.5"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "c4e1d41c471573612df00397113557693b5bf5909666a8acb253930612b93312"
 
 [[package]]
 name = "cty"
@@ -278,13 +300,14 @@ dependencies = [
 
 [[package]]
 name = "heapless"
-version = "0.5.3"
+version = "0.5.4"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "10b591a0032f114b7a77d4fbfab452660c553055515b7d7ece355db080d19087"
+checksum = "8ffa511365b12346c5fbe759d82f80d3aa70d9f1ba01955594f84a1a6bbab985"
 dependencies = [
  "as-slice",
  "generic-array 0.13.2",
  "hash32",
+ "stable_deref_trait",
 ]
 
 [[package]]
@@ -347,26 +370,41 @@ dependencies = [
 ]
 
 [[package]]
+name = "littlefs"
+version = "0.0.0"
+dependencies = [
+ "ascii",
+ "bitflags",
+ "c-stubs",
+ "cortex-a",
+ "cstr_core",
+ "cty 0.2.1",
+ "generic-array 0.13.2",
+ "heapless",
+ "littlefs2-sys",
+]
+
+[[package]]
 name = "littlefs2"
 version = "0.1.0-alpha.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "abdd4ddd5caedd104a0627e4abbe1c001a088fc3ce996a210ce5547193f542a3"
 dependencies = [
  "bitflags",
- "cty",
+ "cty 0.2.1",
  "generic-array 0.13.2",
  "littlefs2-sys",
 ]
 
 [[package]]
 name = "littlefs2-sys"
-version = "0.1.3"
+version = "0.1.5"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "3cd7c91f37cf16e17a81aecd2ad7d4ef2085dbfbcd42b29fc9d89a0be43543f3"
+checksum = "d3c47073d0d700b19b987e44159383a44c6b99665153c368af0e64e0a66d1954"
 dependencies = [
  "bindgen",
  "cc",
- "cty",
+ "cty 0.2.1",
 ]
 
 [[package]]
@@ -377,6 +415,12 @@ checksum = "14b6052be84e6b71ab17edffc2eeabf5c2c3ae1fdb464aae35ac50c67a44e1f7"
 dependencies = [
  "cfg-if",
 ]
+
+[[package]]
+name = "memchr"
+version = "1.0.2"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "148fab2e51b4f1cfc66da2a7c32981d1d3c083a803978268bb11fe4b86925e7a"
 
 [[package]]
 name = "memchr"
@@ -397,7 +441,7 @@ version = "5.1.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "0b471253da97532da4b61552249c521e01e736071f71c1a4f7ebbfbf0a06aad6"
 dependencies = [
- "memchr",
+ "memchr 2.3.3",
  "version_check",
 ]
 
@@ -458,7 +502,7 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "7f6946991529684867e47d86474e3a6d0c0ab9b82d5821e314b1ede31fa3a4b3"
 dependencies = [
  "aho-corasick",
- "memchr",
+ "memchr 2.3.3",
  "regex-syntax",
  "thread_local",
 ]
@@ -596,7 +640,7 @@ dependencies = [
  "digest",
  "heapless",
  "imx6ul-pac",
- "littlefs2",
+ "littlefs",
  "memlog",
  "rand_core",
  "typenum",
