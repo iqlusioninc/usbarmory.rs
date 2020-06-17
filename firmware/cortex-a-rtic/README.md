@@ -1,6 +1,6 @@
 # `cortex-a-rtic`
 
-[Real Time for The Masses][rtic] (RTFM) for Cortex-A processors that use ARM's
+[Real-Time Interrupt-driven Concurrency][rtic] (RTIC) for Cortex-A processors that use ARM's
 GIC (General Interrupt Controller) as their interrupt controller
 
 [rtic]: https://rtic.rs
