@@ -1,0 +1,21 @@
+[package]
+authors = ["iqlusion"]
+edition = "2018"
+license = "Apache-2.0 OR MIT"
+name    = "cortex-a-rtic"
+version = "0.0.0"
+
+[lib]
+name = "rtic"
+
+[dependencies]
+cortex-a = { path = "../cortex-a" }
+cortex-a-rtic-macros = { path = "macros" }
+heapless = "0.5.1"
+rtic-core = "0.3.0"
+usbarmory-rt = { path = "../usbarmory-rt" }
+
+[dependencies.pac]
+features = ["gicc", "gicd"]
+package = "imx6ul-pac"
+path = "../imx6ul-pac"

@@ -10,7 +10,7 @@ use usbarmory::{println, serial::Serial};
 
 // NOTE binary interfaces, using `no_mangle` and `extern`, are extremely unsafe
 // as no type checking is performed by the compiler; stick to safe interfaces
-// like `#[rtfm::app]`
+// like `#[rtic::app]`
 #[no_mangle]
 fn main() -> ! {
     // this operation will trigger the `UndefinedInstruction` handler defined
