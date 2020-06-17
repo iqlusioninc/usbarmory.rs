@@ -1,9 +1,9 @@
-# `cortex-a-rtfm`
+# `cortex-a-rtic`
 
-[Real Time for The Masses][rtfm] (RTFM) for Cortex-A processors that use ARM's
+[Real Time for The Masses][rtic] (RTFM) for Cortex-A processors that use ARM's
 GIC (General Interrupt Controller) as their interrupt controller
 
-[rtfm]: https://rtfm.rs
+[rtic]: https://rtic.rs
 
 This port supports the following functionality
 

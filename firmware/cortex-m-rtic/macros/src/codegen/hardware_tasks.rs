@@ -1,6 +1,6 @@
 use proc_macro2::TokenStream as TokenStream2;
 use quote::quote;
-use rtfm_syntax::{analyze::Analysis, ast::App, Context};
+use rtic_syntax::{analyze::Analysis, ast::App, Context};
 
 use crate::codegen::{locals, module, resources_struct};
 
@@ -37,10 +37,10 @@ pub fn codegen(
             unsafe extern "C" fn #symbol() {
                 const PRIORITY: u8 = #priority;
 
-                rtfm::export::run(PRIORITY, || {
+                rtic::export::run(PRIORITY, || {
                     crate::#name(
                         #locals_new
-                        #name::Context::new(&rtfm::export::Priority::new(PRIORITY))
+                        #name::Context::new(&rtic::export::Priority::new(PRIORITY))
                     )
                 });
             }
@@ -83,7 +83,7 @@ pub fn codegen(
             #(#attrs)*
             #[allow(non_snake_case)]
             fn #name(#(#locals_pat,)* #context: #name::Context) {
-                use rtfm::Mutex as _;
+                use rtic::Mutex as _;
 
                 #(#stmts)*
             }

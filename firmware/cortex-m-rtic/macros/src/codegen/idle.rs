@@ -1,6 +1,6 @@
 use proc_macro2::TokenStream as TokenStream2;
 use quote::quote;
-use rtfm_syntax::{analyze::Analysis, ast::App, Context};
+use rtic_syntax::{analyze::Analysis, ast::App, Context};
 
 use crate::codegen::{locals, module, resources_struct};
 
@@ -61,7 +61,7 @@ pub fn codegen(
         let user_idle = Some(quote!(
             #(#attrs)*
             fn #cname(#(#locals_pat,)* #context: #cname::Context) -> ! {
-                use rtfm::Mutex as _;
+                use rtic::Mutex as _;
 
                 #(#stmts)*
             }
@@ -70,7 +70,7 @@ pub fn codegen(
         let locals_new = locals_new.iter();
         let call_idle = quote!(#cname(
             #(#locals_new,)*
-            #cname::Context::new(&rtfm::export::Priority::new(#PRIORITY))
+            #cname::Context::new(&rtic::export::Priority::new(#PRIORITY))
         ));
 
         (const_app, root_idle, user_idle, call_idle)
@@ -81,7 +81,7 @@ pub fn codegen(
             None,
             quote!(loop {
                 // FIXME the processor is not waking up from WFI
-                // rtfm::export::wfi()
+                // rtic::export::wfi()
             }),
         )
     }

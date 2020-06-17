@@ -1,6 +1,6 @@
 use proc_macro2::TokenStream as TokenStream2;
 use quote::quote;
-use rtfm_syntax::{ast::App, Context};
+use rtic_syntax::{ast::App, Context};
 
 use crate::codegen::util;
 
@@ -78,7 +78,7 @@ pub fn codegen(ctxt: Context<'_>, resources_tick: bool, app: &App) -> TokenStrea
                     #[doc = #doc]
                     #[derive(Clone, Copy)]
                     pub struct Spawn<'a> {
-                        priority: &'a rtfm::export::Priority,
+                        priority: &'a rtic::export::Priority,
                     }
                 ));
 
@@ -88,7 +88,7 @@ pub fn codegen(ctxt: Context<'_>, resources_tick: bool, app: &App) -> TokenStrea
                     /// Tasks that can be spawned from this context
                     #[derive(Clone, Copy)]
                     pub struct Spawn<'a> {
-                        priority: &'a rtfm::export::Priority,
+                        priority: &'a rtic::export::Priority,
                     }
                 ));
 
@@ -101,7 +101,7 @@ pub fn codegen(ctxt: Context<'_>, resources_tick: bool, app: &App) -> TokenStrea
                 impl<'a> Spawn<'a> {
                     #[doc(hidden)]
                     #[inline(always)]
-                    pub unsafe fn priority(&self) -> &rtfm::export::Priority {
+                    pub unsafe fn priority(&self) -> &rtic::export::Priority {
                         self.priority
                     }
                 }
@@ -131,7 +131,7 @@ pub fn codegen(ctxt: Context<'_>, resources_tick: bool, app: &App) -> TokenStrea
     let priority = if ctxt.is_init() {
         None
     } else {
-        Some(quote!(priority: &#lt rtfm::export::Priority))
+        Some(quote!(priority: &#lt rtic::export::Priority))
     };
 
     items.push(quote!(

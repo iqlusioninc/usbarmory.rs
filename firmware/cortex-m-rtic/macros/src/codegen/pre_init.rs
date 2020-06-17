@@ -2,7 +2,7 @@ use std::collections::HashSet;
 
 use proc_macro2::TokenStream as TokenStream2;
 use quote::quote;
-use rtfm_syntax::{analyze::Analysis, ast::App};
+use rtic_syntax::{analyze::Analysis, ast::App};
 
 use crate::codegen::util;
 
@@ -28,11 +28,11 @@ pub fn codegen(app: &App, analysis: &Analysis) -> Vec<TokenStream2> {
     }
 
     // enable the GIC
-    stmts.push(quote!(rtfm::export::enable_gic();));
+    stmts.push(quote!(rtic::export::enable_gic();));
 
     // set the priority mask to its lowest (logical) value
     let logical_prio = crate::IDLE_PRIORITY;
-    stmts.push(quote!(rtfm::export::set_priority_mask(#logical_prio);));
+    stmts.push(quote!(rtic::export::set_priority_mask(#logical_prio);));
 
     // set SGI priorities
     let sgis_in_use = app
@@ -44,7 +44,7 @@ pub fn codegen(app: &App, analysis: &Analysis) -> Vec<TokenStream2> {
     for sgi in 0..sgis_in_use as u8 {
         let logical_prio = util::sgi2prio(sgi);
         stmts.push(quote!(
-            rtfm::export::set_priority(u16::from(#sgi), #logical_prio);
+            rtic::export::set_priority(u16::from(#sgi), #logical_prio);
         ));
     }
 
@@ -53,8 +53,8 @@ pub fn codegen(app: &App, analysis: &Analysis) -> Vec<TokenStream2> {
         let logical_prio = task.args.priority;
         let symbol = &task.args.binds;
         stmts.push(quote!(
-            rtfm::export::set_priority(rtfm::export::Interrupt::#symbol.irq(), #logical_prio);
-            rtfm::export::enable_spi(rtfm::export::Interrupt::#symbol.irq());
+            rtic::export::set_priority(rtic::export::Interrupt::#symbol.irq(), #logical_prio);
+            rtic::export::enable_spi(rtic::export::Interrupt::#symbol.irq());
         ));
     }
 

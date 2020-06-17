@@ -1,6 +1,6 @@
 use proc_macro2::TokenStream as TokenStream2;
 use quote::quote;
-use rtfm_syntax::{ast::App, Context};
+use rtic_syntax::{ast::App, Context};
 use syn::Ident;
 
 use crate::codegen::util;
@@ -32,7 +32,7 @@ pub fn codegen(spawner: Context<'_>, name: &Ident, app: &App) -> TokenStream2 {
     let inputs = util::inputs_ident(name);
     quote!(
         unsafe {
-            use rtfm::Mutex as _;
+            use rtic::Mutex as _;
 
             let input = #tupled;
             if let Some(index) = #dequeue {
@@ -40,7 +40,7 @@ pub fn codegen(spawner: Context<'_>, name: &Ident, app: &App) -> TokenStream2 {
 
                 #enqueue
 
-                rtfm::export::pend_sgi(#sgi);
+                rtic::export::pend_sgi(#sgi);
 
                 Ok(())
             } else {

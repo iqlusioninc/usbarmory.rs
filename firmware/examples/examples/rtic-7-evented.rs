@@ -18,7 +18,7 @@ use usbarmory::{
     serial::{Event, Serial},
 };
 
-#[rtfm::app]
+#[rtic::app]
 const APP: () = {
     struct Resources {
         leds: Leds,

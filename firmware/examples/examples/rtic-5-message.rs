@@ -13,7 +13,7 @@ use usbarmory::{println, serial::Serial};
 
 const THRESHOLD: u32 = 100_000;
 
-#[rtfm::app]
+#[rtic::app]
 const APP: () = {
     #[init(spawn = [ping])]
     fn init(cx: init::Context) {

@@ -18,7 +18,7 @@ use usbarmory::{memlog, memlog_flush_and_reset};
 
 // NOTE binary interfaces, using `no_mangle` and `extern`, are extremely unsafe
 // as no type checking is performed by the compiler; stick to safe interfaces
-// like `#[rtfm::app]`
+// like `#[rtic::app]`
 #[no_mangle]
 fn main() -> ! {
     // these operations complete fast

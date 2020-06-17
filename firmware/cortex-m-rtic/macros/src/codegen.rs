@@ -1,6 +1,6 @@
 use proc_macro2::TokenStream;
 use quote::quote;
-use rtfm_syntax::{analyze::Analysis, ast::App};
+use rtic_syntax::{analyze::Analysis, ast::App};
 
 mod assertions;
 mod dispatchers;

@@ -1,6 +1,6 @@
 use proc_macro2::TokenStream as TokenStream2;
 use quote::quote;
-use rtfm_syntax::{analyze::Analysis, ast::App};
+use rtic_syntax::{analyze::Analysis, ast::App};
 
 use crate::codegen::util;
 
@@ -48,8 +48,8 @@ pub fn codegen(app: &App, analysis: &Analysis) -> Vec<TokenStream2> {
 
                 let n = util::capacity_typenum(channel.capacity, true);
                 let rq = util::rq_ident(level);
-                let rq_ty = quote!(rtfm::export::RQ<#t, #n>);
-                let rq_expr = quote!(rtfm::export::Queue(rtfm::export::iQueue::u8()));
+                let rq_ty = quote!(rtic::export::RQ<#t, #n>);
+                let rq_expr = quote!(rtic::export::Queue(rtic::export::iQueue::u8()));
 
                 let doc = format!(
                     "Queue of tasks ready to be dispatched at priority level {}",
@@ -63,7 +63,7 @@ pub fn codegen(app: &App, analysis: &Analysis) -> Vec<TokenStream2> {
                 if let Some(ceiling) = channel.ceiling {
                     items.push(quote!(
                         struct #rq<'a> {
-                            priority: &'a rtfm::export::Priority,
+                            priority: &'a rtic::export::Priority,
                         }
                     ));
 
@@ -99,7 +99,7 @@ pub fn codegen(app: &App, analysis: &Analysis) -> Vec<TokenStream2> {
                                 let #tupled =
                                     #inputs.get_unchecked(usize::from(index)).as_ptr().read();
                                 #fq.split().0.enqueue_unchecked(index);
-                                let priority = &rtfm::export::Priority::new(PRIORITY);
+                                let priority = &rtic::export::Priority::new(PRIORITY);
                                 #name(
                                     #locals_new
                                     #name::Context::new(priority)
@@ -135,7 +135,7 @@ pub fn codegen(app: &App, analysis: &Analysis) -> Vec<TokenStream2> {
                     /// The priority of this interrupt handler
                     const PRIORITY: u8 = #level;
 
-                    rtfm::export::run(PRIORITY, || {
+                    rtic::export::run(PRIORITY, || {
                         #(#stmts)*
                     });
                 }

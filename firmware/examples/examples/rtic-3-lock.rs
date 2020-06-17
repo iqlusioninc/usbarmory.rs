@@ -12,7 +12,7 @@
 //! E
 //! ```
 //!
-//! [1]: https://rtfm.rs/0.5/book/en/by-example/resources.html#lock
+//! [1]: https://rtic.rs/0.5/book/en/by-example/resources.html#lock
 
 #![deny(unsafe_code)]
 #![deny(warnings)]
@@ -23,7 +23,7 @@ use exception_reset as _; // default exception handler
 use panic_serial as _; // panic handler
 use usbarmory::{println, serial::Serial};
 
-#[rtfm::app]
+#[rtic::app]
 const APP: () = {
     // The resources abstraction lets you share memory between tasks
     struct Resources {

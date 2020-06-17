@@ -1,6 +1,6 @@
 use proc_macro2::{Ident, Span, TokenStream as TokenStream2};
 use quote::quote;
-use rtfm_syntax::{ast::App, Context};
+use rtic_syntax::{ast::App, Context};
 use syn::{Attribute, LitInt, PatType};
 
 // Because we are using priority compression these mappings are trivial
@@ -21,7 +21,7 @@ pub fn link_section_uninit() -> TokenStream2 {
     // static INDEX: AtomicUsize = AtomicUsize::new(0);
 
     // let index = INDEX.fetch_add(1, Ordering::Relaxed);
-    // let section = format!(".uninit.rtfm{}", index);
+    // let section = format!(".uninit.rtic{}", index);
 
     // quote!(#[link_section = #section])
 }
@@ -41,7 +41,7 @@ pub fn capacity_typenum(capacity: u8, round_up_to_power_of_two: bool) -> TokenSt
 
     let ident = Ident::new(&format!("U{}", capacity), Span::call_site());
 
-    quote!(rtfm::export::consts::#ident)
+    quote!(rtic::export::consts::#ident)
 }
 
 /// Identifier for the free queue
@@ -134,7 +134,7 @@ pub fn impl_mutex(
 
     quote!(
         #(#cfgs)*
-        impl<'a> rtfm::Mutex for #path<'a> {
+        impl<'a> rtic::Mutex for #path<'a> {
             type T = #ty;
 
             #[inline(always)]
@@ -143,7 +143,7 @@ pub fn impl_mutex(
                 const CEILING: u8 = #ceiling;
 
                 unsafe {
-                    rtfm::export::lock(
+                    rtic::export::lock(
                         #ptr,
                         #priority,
                         CEILING,

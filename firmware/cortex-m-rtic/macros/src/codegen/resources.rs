@@ -1,6 +1,6 @@
 use proc_macro2::TokenStream as TokenStream2;
 use quote::quote;
-use rtfm_syntax::{
+use rtic_syntax::{
     analyze::{Analysis, Ownership},
     ast::App,
 };
@@ -85,7 +85,7 @@ pub fn codegen(
         quote!()
     } else {
         quote!(mod resources {
-            use rtfm::export::Priority;
+            use rtic::export::Priority;
 
             #(#mod_resources)*
         })

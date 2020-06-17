@@ -2,7 +2,7 @@ use std::collections::HashSet;
 
 use proc_macro2::TokenStream as TokenStream2;
 use quote::quote;
-use rtfm_syntax::ast::App;
+use rtic_syntax::ast::App;
 
 use crate::codegen::{spawn_body, util};
 
@@ -46,7 +46,7 @@ pub fn codegen(app: &App) -> Vec<TokenStream2> {
                     items.push(quote!(
                         #(#cfgs)*
                         unsafe fn #spawn(
-                            priority: &rtfm::export::Priority
+                            priority: &rtic::export::Priority
                             #(,#args)*
                         ) -> Result<(), #ty> {
                             #body

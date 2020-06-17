@@ -29,7 +29,7 @@ const MAX_PACKET_SIZE: u16 = 512;
 // memory pool used for bulk packets
 pool!(P: [u8; MAX_PACKET_SIZE as usize]);
 
-#[rtfm::app()]
+#[rtic::app()]
 const APP: () = {
     struct Resources {
         bulk_class: BulkClass<'static, Usbd>,

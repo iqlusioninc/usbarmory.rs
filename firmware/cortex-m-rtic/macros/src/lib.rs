@@ -5,7 +5,7 @@
 use std::{fs, path::Path};
 
 use proc_macro::TokenStream;
-use rtfm_syntax::{Core, Settings};
+use rtic_syntax::{Core, Settings};
 
 mod check;
 mod codegen;
@@ -26,7 +26,7 @@ pub fn app(args: TokenStream, input: TokenStream) -> TokenStream {
     settings.optimize_priorities = true;
     settings.parse_binds = true;
 
-    let (app, analysis) = match rtfm_syntax::parse(args, input, settings) {
+    let (app, analysis) = match rtic_syntax::parse(args, input, settings) {
         Err(e) => return e.to_compile_error().into(),
         Ok(x) => x,
     };
@@ -39,7 +39,7 @@ pub fn app(args: TokenStream, input: TokenStream) -> TokenStream {
 
     // try to write the expanded code to disk
     if Path::new("target").exists() {
-        fs::write("target/rtfm-expansion.rs", ts.to_string()).ok();
+        fs::write("target/rtic-expansion.rs", ts.to_string()).ok();
     }
 
     ts.into()

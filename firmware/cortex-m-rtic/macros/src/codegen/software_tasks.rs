@@ -1,6 +1,6 @@
 use proc_macro2::TokenStream as TokenStream2;
 use quote::quote;
-use rtfm_syntax::{analyze::Analysis, ast::App, Context};
+use rtic_syntax::{analyze::Analysis, ast::App, Context};
 
 use crate::codegen::{locals, module, resources_struct, util};
 
@@ -38,8 +38,8 @@ pub fn codegen(
 
                 let fq = util::fq_ident(name);
 
-                let fq_ty = quote!(rtfm::export::FQ<#cap_ty>);
-                let fq_expr = quote!(rtfm::export::Queue(rtfm::export::iQueue::u8()));
+                let fq_ty = quote!(rtic::export::FQ<#cap_ty>);
+                let fq_expr = quote!(rtic::export::Queue(rtic::export::iQueue::u8()));
 
                 const_app.push(quote!(
                     /// Queue version of a free-list that keeps track of empty slots in
@@ -51,7 +51,7 @@ pub fn codegen(
                 if let Some(ceiling) = ceiling {
                     const_app.push(quote!(
                         struct #fq<'a> {
-                            priority: &'a rtfm::export::Priority,
+                            priority: &'a rtic::export::Priority,
                         }
                     ));
 
@@ -115,7 +115,7 @@ pub fn codegen(
             #(#cfgs)*
             #[allow(non_snake_case)]
             fn #name(#(#locals_pat,)* #context: #name::Context #(,#inputs)*) {
-                use rtfm::Mutex as _;
+                use rtic::Mutex as _;
 
                 #(#stmts)*
             }

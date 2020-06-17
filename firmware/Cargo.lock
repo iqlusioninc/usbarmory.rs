@@ -159,24 +159,24 @@ name = "cortex-a"
 version = "0.0.0"
 
 [[package]]
-name = "cortex-a-rtfm"
+name = "cortex-a-rtic"
 version = "0.0.0"
 dependencies = [
  "cortex-a",
- "cortex-a-rtfm-macros",
+ "cortex-a-rtic-macros",
  "heapless",
  "imx6ul-pac",
- "rtfm-core",
+ "rtic-core",
  "usbarmory-rt",
 ]
 
 [[package]]
-name = "cortex-a-rtfm-macros"
+name = "cortex-a-rtic-macros"
 version = "0.0.0"
 dependencies = [
  "proc-macro2",
  "quote",
- "rtfm-syntax",
+ "rtic-syntax",
  "syn",
 ]
 
@@ -215,7 +215,7 @@ dependencies = [
  "block-cipher",
  "consts",
  "cortex-a",
- "cortex-a-rtfm",
+ "cortex-a-rtic",
  "digest",
  "exception-reset",
  "heapless",
@@ -470,13 +470,13 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "7fe5bd57d1d7414c6b5ed48563a2c855d995ff777729dcd91c369ec7fea395ae"
 
 [[package]]
-name = "rtfm-core"
+name = "rtic-core"
 version = "0.3.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "9ec893edb2aa5b70320b94896ffea22a7ebb1cf3f942bb67cd5b60a865a63493"
 
 [[package]]
-name = "rtfm-syntax"
+name = "rtic-syntax"
 version = "0.4.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "4455e23c34df3d66454e7e218a4d76a7f83321d04a806be614463341cec4116e"

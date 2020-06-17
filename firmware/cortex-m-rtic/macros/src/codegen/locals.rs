@@ -1,6 +1,6 @@
 use proc_macro2::TokenStream as TokenStream2;
 use quote::quote;
-use rtfm_syntax::{
+use rtic_syntax::{
     ast::{App, Local},
     Context, Map,
 };

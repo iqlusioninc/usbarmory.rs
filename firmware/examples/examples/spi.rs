@@ -25,7 +25,7 @@ const UART2_IRQ: u8 = 59;
 
 // NOTE binary interfaces, using `no_mangle` and `extern`, are extremely unsafe
 // as no type checking is performed by the compiler; stick to safe interfaces
-// like `#[rtfm::app]`
+// like `#[rtic::app]`
 #[no_mangle]
 fn main() -> ! {
     let gicc = GICC::take().expect("UNREACHABLE");

@@ -1,6 +1,6 @@
 use proc_macro2::TokenStream;
 use quote::quote;
-use rtfm_syntax::analyze::Analysis;
+use rtic_syntax::analyze::Analysis;
 
 pub fn codegen(analysis: &Analysis) -> Vec<TokenStream> {
     let mut stmts = vec![];
@@ -15,7 +15,7 @@ pub fn codegen(analysis: &Analysis) -> Vec<TokenStream> {
     }
 
     // enable the interrupts -- this completes the `init`-ialization phase
-    stmts.push(quote!(rtfm::export::enable_irq();));
+    stmts.push(quote!(rtic::export::enable_irq();));
 
     stmts
 }

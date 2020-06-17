@@ -19,7 +19,7 @@ use exception_reset as _; // default exception handler
 use panic_serial as _; // panic handler
 use usbarmory::{println, serial::Serial};
 
-#[rtfm::app]
+#[rtic::app]
 const APP: () = {
     // this is a safe version of the `no_mangle` main that the other examples use
     #[idle(spawn = [foo])]

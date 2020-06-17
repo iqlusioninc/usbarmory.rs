@@ -1,7 +1,7 @@
 use std::collections::HashSet;
 
 use proc_macro2::Span;
-use rtfm_syntax::ast::App;
+use rtic_syntax::ast::App;
 use syn::parse;
 
 pub fn app(app: &App) -> parse::Result<()> {
