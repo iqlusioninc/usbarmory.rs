@@ -185,9 +185,9 @@ jobs:
       #     which flip-lld || cargo install `cat dev-dependencies.txt`
 
       # TODO cache in dev-dependencies.txt when available on crates.io
-      - name: Install flip-lld
+      - name: Install flip-link
         run: |
-          cargo install --git https://github.com/japaric/flip-lld --rev b1028b9b140150379ecdcea2c07580af933378e9
+          cargo install --git https://github.com/knurling-rs/flip-link --branch main
 
       - name: Install build dependencies
         run: |
