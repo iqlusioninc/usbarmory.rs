@@ -19,7 +19,7 @@ jobs:
         uses: actions-rs/toolchain@v1
         with:
           target: armv7a-none-eabi
-          toolchain: 1.42.0
+          toolchain: 1.46.0
           override: true
 
       - name: Install build dependencies
@@ -43,7 +43,7 @@ jobs:
       - name: Install stable toolchain
         uses: actions-rs/toolchain@v1
         with:
-          toolchain: 1.42.0
+          toolchain: 1.46.0
           override: true
 
       - name: Install build dependencies
@@ -151,7 +151,7 @@ jobs:
         uses: actions-rs/toolchain@v1
         with:
           target: armv7a-none-eabi
-          toolchain: 1.42.0
+          toolchain: 1.46.0
           override: true
 
       - name: Cache cargo registry
@@ -185,9 +185,9 @@ jobs:
       #     which flip-lld || cargo install `cat dev-dependencies.txt`
 
       # TODO cache in dev-dependencies.txt when available on crates.io
-      - name: Install flip-lld
+      - name: Install flip-link
         run: |
-          cargo install --git https://github.com/japaric/flip-lld --rev b1028b9b140150379ecdcea2c07580af933378e9
+          cargo install --git https://github.com/knurling-rs/flip-link --branch main
 
       - name: Install build dependencies
         run: |
@@ -237,7 +237,7 @@ jobs:
         uses: actions-rs/toolchain@v1
         with:
           target: armv7a-none-eabi
-          toolchain: 1.42.0
+          toolchain: 1.46.0
           override: true
 
       - name: Install clippy
