@@ -10,13 +10,13 @@
 runner = "usd-runner"
 
 rustflags = [
-  "-C", "linker=flip-lld",
+  "-C", "linker=flip-link",
   "-C", "link-arg=-Tlink.x",
 ]
 
 [target.armv7a-none-eabihf]
 rustflags = [
-  "-C", "linker=flip-lld",
+  "-C", "linker=flip-link",
   "-C", "link-arg=-Tlink.x",
 ]
 

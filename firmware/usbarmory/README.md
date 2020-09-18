@@ -23,8 +23,8 @@ stage and will not be ready to use for some time.
 
 ## Build dependencies
 
-- [flip-lld], linker wrapper that adds zero-cost stack overflow protection.
-  `cargo install --git https://github.com/japaric/flip-lld`.
+- [flip-link], linker wrapper that adds zero-cost stack overflow protection.
+  `cargo install --git https://github.com/knurling-rs/flip-link --branch main`.
 
 - `armv7a-none-eabi` compiler support. Install with `rustup target add
   armv7a-none-eabi`.
@@ -537,7 +537,7 @@ without any additional terms or conditions.
 
 [usbarmory]: https://github.com/f-secure-foundry/usbarmory/wiki
 [F-Secure]: https://foundry.f-secure.com/
-[flip-lld]: https://github.com/japaric/flip-lld
+[flip-link]: https://github.com/knurling-rs/flip-link
 [CONTRIBUTING.md]: https://github.com/iqlusioninc/usbarmory.rs/blob/develop/CONTRIBUTING.md
 [CODE_OF_CONDUCT.md]: https://github.com/iqlusioninc/usbarmory.rs/blob/develop/CODE_OF_CONDUCT.md
 [Apache License, Version 2.0]: https://www.apache.org/licenses/LICENSE-2.0
